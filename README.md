@@ -5,6 +5,10 @@ The i2b2 Web Client is a web based client that is installed on a web server. Thi
 The i2b2 Web Client Repository contains the source code for the i2b2 Web Client.
 
 
+### Documentation
+Additional information about the i2b2 Web Client can be found on the [i2b2 Community Wiki](http://community.i2b2.org/wiki/dashboard.action "i2b2 Community Wiki") within the [i2b2 Sponsored Project - i2b2 Web Client](http://community.i2b2.org/wiki/display/webclient/Web+Client+Home) space.
+
+
 ## Development / Maintenance
 The code for the i2b2 Web Client is maintained by the i2b2 team.
 
