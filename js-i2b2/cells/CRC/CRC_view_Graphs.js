@@ -501,7 +501,21 @@ try {
 			],
 			type: 'bar',
 			color: function (color, d) {return graph_color;},
-			labels: true
+                labels: {
+                    format: {
+                        y: function (v, id) {
+							if (i2b2.PM.model.isObfuscated) {
+								if(v == 0){
+									return i2b2.CRC.view.graphs.sObfuscatedText;
+								} else {
+									return v + " +/- 3";
+								}
+							} else {
+								return v;
+							}
+						}
+                    }
+                }
 		},
 		legend: {
 			//position: 'inset'

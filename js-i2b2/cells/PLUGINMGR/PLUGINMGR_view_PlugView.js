@@ -63,7 +63,8 @@ i2b2.PLUGINMGR.view.PlugView.ResizeHeight = function(e) {
 			case "Analysis":
 				ve.show();
 				if (i2b2.WORK && i2b2.WORK.isLoaded) {
-					var z = h - 390 + 142;
+					//var z = h - 390 + 142;
+					var z = h - 390 + 142 + 153;
 				} else {
 					var z = h - 390 + 100;
 				}
@@ -85,7 +86,8 @@ i2b2.PLUGINMGR.view.PlugView.ResizeHeight = function(e) {
 				if (i2b2.hive.MasterView.getViewMode() == "AnalysisZoomed") {
 					tn.style.height = (h - 34);
 				} else {
-					tn.style.height = (h - 283);
+					//tn.style.height = (h - 283);
+					tn.style.height = (h - 283 + 155);
 				}
 			}
 			if (t.Resize) {

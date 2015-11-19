@@ -143,11 +143,15 @@
 <link href="js-ext/c3code/c3.css" rel="stylesheet" type="text/css">
 <script src="js-ext/c3code/c3.js"></script>
 <!-- Load jquery code and turn off $ -->
+<link rel="stylesheet" type="text/css" href="assets/jquery.qtip.min.css" />
+
 <script src="js-ext/jquerycode/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="js-ext/jquery.qtip.min.js"></script>
 <script>
 $.noConflict();
 // Code that uses other library's $ can follow here.
 </script>
+
 
 <!-- load i2b2 framework -->
 <script type="text/javascript" src="js-i2b2/i2b2_loader.js"></script>
@@ -222,6 +226,28 @@ function initI2B2()
 				// create the splitter object only after login and not in admin-only mode
 				i2b2.hive.mySplitter = new Splitter(splitterName, {cont: 'screenQueryData'});
 				i2b2.hive.MasterView.initViewMode(); //tdw9
+				
+				jQuery('#pluginsMenu').qtip({
+					content: {
+						text: jQuery('#PluginListBox')
+					},
+					style: {
+						width:500
+					},
+					show: {
+							event: 'click'
+					},
+					position: {
+						my: 'top right',  // Position my top left...
+						at: 'bottom left', // at the bottom right of...
+					},
+					hide: {
+						event: 'unfocus'
+					}
+				});
+				i2b2.PLUGINMGR.view.list.BuildCategories();
+				i2b2.PLUGINMGR.view.list.Render();
+				
 			}
 			$('viewMode-Project').innerHTML = "Project: " + i2b2.PM.model.login_projectname;
 			$('viewMode-User').innerHTML = "User: " + i2b2.PM.model.login_fullname;
@@ -337,7 +363,7 @@ YAHOO.util.Event.addListener(window, "load", init);
     	        &nbsp;|&nbsp;
             </span>
             --> 
-        <span id="viewMode-Analysis"> <a href="Javascript:void(0)" onClick="i2b2.hive.MasterView.setViewMode('Analysis');">Analysis Tools</a> &nbsp;|&nbsp; </span> <span id="debugMsgSniffer" style="display:none"> <a href="Javascript:void(0)" onClick="i2b2.hive.MsgSniffer.show();">Message Log</a> &nbsp;|&nbsp; </span> <a id="helpLink" href="Javascript:void(0)" onClick="i2b2.hive.HelpViewer.show();">Help</a> &nbsp;|&nbsp; <a id="helpLink" href="Javascript:void(0)" onClick="i2b2.PM.changePassword.show();">Change Password</a> &nbsp;|&nbsp; <a href="Javascript:void(0);" onClick="i2b2.PM.doLogout();">Logout</a> </div></td>
+        <span id="viewMode-Analysis"> <a href="Javascript:void(0)" onClick="i2b2.hive.MasterView.setViewMode('Analysis');">Analysis Tools</a> <a href="#" onclick="return false;" id="pluginsMenu"><img src="assets/images/p_dropdown.png" align="absbottom" border="0"/></a>&nbsp;|&nbsp; </span> <span id="debugMsgSniffer" style="display:none"> <a href="Javascript:void(0)" onClick="i2b2.hive.MsgSniffer.show();">Message Log</a> &nbsp;|&nbsp; </span> <a id="helpLink" href="Javascript:void(0)" onClick="i2b2.hive.HelpViewer.show();">Help</a> &nbsp;|&nbsp; <a id="helpLink" href="Javascript:void(0)" onClick="i2b2.PM.changePassword.show();">Change Password</a> &nbsp;|&nbsp; <a href="Javascript:void(0);" onClick="i2b2.PM.doLogout();">Logout</a> </div></td>
   </tr>
 </table>
 <div id="screenQueryData" style="display:none"> 
@@ -821,7 +847,7 @@ YAHOO.util.Event.addListener(window, "load", init);
     </div>
   </div>
   <!-- ############### <Workplace> ############### -->
-  <div class="PluginListBox" style="display:none;"></div>
+  <div class="PluginListBox" style="display:none;overflow-y:scroll;"></div>
   <!-- ############### </Workplace> ############### --> 
   <!-- ############### <PluginMgr List View> ############### -->
   <div id="anaPluginListBox" style="display:none">
@@ -845,7 +871,7 @@ YAHOO.util.Event.addListener(window, "load", init);
     <div class="txtBoundBox Name">Plugin Name</div>
     <div style="clear:both"></div>
     </a>
-    <div class="PluginListBox">
+    <div id="PluginListBox" class="PluginListBox">
       <div class="topmenu" oncontextmenu="return false">
         <form style="margin-top:1px;" action="javascript:void(0)">
           <div style="float:left;">
@@ -878,7 +904,7 @@ YAHOO.util.Event.addListener(window, "load", init);
     </div>
     <div class="PluginViewBox">
       <div id="anaPluginViewFrame" oncontextmenu="return false">
-        <div class="initialMsg">Select a plugin to load from the "Plugins" window.</div>
+        <div class="initialMsg"><a href="#" onclick="javascript:jQuery('#pluginsMenu').qtip('show');return false;">Select a plugin to load</a></div>
       </div>
       <iframe id="anaPluginIFRAME" src="assets/blank.html" style="display:none"></iframe>
     </div>
