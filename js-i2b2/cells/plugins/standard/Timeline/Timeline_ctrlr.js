@@ -7,6 +7,7 @@
  * ----------------------------------------------------------------------------------------
  * updated 11-06-08: 	Initial Launch [Griffin Weber] 
  * updated 01-13-09:	Performance tuning, added details dialogs [Nick Benik]
+ * updated 11-09-15:	Hid "<br>" in any of the concept names
  */
 
 i2b2.Timeline.Init = function(loadedDiv) {
@@ -229,7 +230,7 @@ i2b2.Timeline.conceptsRender = function() {
 				}			
 			
 			
-			s += '<a class="concptItem" href="JavaScript:i2b2.Timeline.conceptDelete('+i1+');">' + i2b2.h.Escape(i2b2.Timeline.model.concepts[i1].sdxInfo.sdxDisplayName) + tt + '</a>';
+			s += '<a class="concptItem" href="JavaScript:i2b2.Timeline.conceptDelete('+i1+');">' + i2b2.h.Escape(i2b2.h.HideBreak(i2b2.Timeline.model.concepts[i1].sdxInfo.sdxDisplayName)) + tt + '</a>';
 		}
 		// show the delete message
 		$("Timeline-DeleteMsg").style.display = 'block';
@@ -658,7 +659,7 @@ i2b2.Timeline.getResults = function() {
 				for (i1=0; i1<i2b2.Timeline.model.concepts.length; i1++) {
 					if (patients[patientID].concepts[i1].length) {
 						s += '<tr>';
-						s += '<td class="ptPanel">' + i2b2.h.Escape(i2b2.Timeline.model.concepts[i1].sdxInfo.sdxDisplayName) + '</td>';
+						s += '<td class="ptPanel">' + i2b2.h.Escape(i2b2.h.HideBreak(i2b2.Timeline.model.concepts[i1].sdxInfo.sdxDisplayName)) + '</td>';
 						s += '<td class="ptObsTD" valign="top"><div class="spacer">&nbsp;</div>';
 						s += '<div class="ptObsDIV">';
 						s += '<div class="ptObsBack"></div>';
