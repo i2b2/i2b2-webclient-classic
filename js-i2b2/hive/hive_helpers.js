@@ -5,7 +5,8 @@
  * @author		Nick Benik, Griffin Weber MD PhD
  * @version 	1.3
  * ----------------------------------------------------------------------------------------
- * updated 9-15-08: RC4 launch [Nick Benik] 
+ * updated 09-15-08: RC4 launch [Nick Benik] 
+ * updated 11-09-15: added .HideBreak() & .getXNodeValNoKids() [Wayne Chan]
  */
 console.group('Load & Execute component file: hive > helpers');
 console.time('execute time');
@@ -108,6 +109,15 @@ i2b2.h.getXNodeVal = function(xmlElement, nodeName, includeChildren) {
 	return final;
 }
 
+i2b2.h.getXNodeValNoKids = function(xmlElement, nodeName) {
+	var gotten = i2b2.h.XPath(xmlElement, "descendant-or-self::"+nodeName+"/text()");
+	if (gotten.length > 0) {
+		return gotten[0].nodeValue;
+	} else {
+		return undefined;
+	}
+}
+
 i2b2.h.GenerateAlphaNumId = function(ReqIdLength) {
 	var IdLen = 0;
 	var retId = "";
@@ -170,6 +180,17 @@ i2b2.h.GenerateISO8601DateTime = function(inDate) {
 	if (minute <= 9) minute = "0" + minute;
 	if (second <= 9) second = "0" + second;
 	return (year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + timezone);
+};
+
+
+i2b2.h.HideBreak = function(inStrValue) {
+	if (typeof inStrValue == "number") {
+		var t = inStrValue.toString();
+	} else {
+		var t = new String(inStrValue);
+		t = t.replace(/<br>/gi, " ");
+	}
+	return t;
 };
 
 
