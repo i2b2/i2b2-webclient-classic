@@ -97,7 +97,7 @@ function QueryToolController() {
 				i2b2.CRC.ctrlr.QT.doQueryClear();
 				var dObj = {};
 				dObj.name = i2b2.h.getXNodeVal(results.refXML,'name');
-				$('queryName').innerHTML = dObj.name;
+				this.doSetQueryName(dObj.name); // BUG FIX - WEBCLIENT-102
 				dObj.timing = i2b2.h.XPath(qd[0],'descendant-or-self::query_timing/text()');
 				dObj.timing = dObj.timing[0].nodeValue;				
 
