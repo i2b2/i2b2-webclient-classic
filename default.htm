@@ -145,19 +145,13 @@
 <!-- Load jquery code and turn off $ -->
 <link rel="stylesheet" type="text/css" href="assets/jquery.qtip.min.css" />
 
-<script src="js-ext/jquerycode/jquery-1.11.1.js"></script>
+<script src="js-ext/jquerycode/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js-ext/jquery.qtip.min.js"></script>
 <script>
-$.noConflict();
+  var $j = $.noConflict(); 
 // Code that uses other library's $ can follow here.
 </script>
 
-<!-- swc20151104 added following to support ExportXLS, CARE- & WISE- plugins --> 
-<script type="text/javascript" src="js-ext/jquerycode/jquery-1.11.1.min.js"></script>
-<script>
-  var $j = jQuery.noConflict(); 
-</script>
-     
 <!-- load i2b2 framework -->
 <script type="text/javascript" src="js-i2b2/i2b2_loader.js"></script>
 <link type="text/css" href="assets/i2b2.css" rel="stylesheet" />
