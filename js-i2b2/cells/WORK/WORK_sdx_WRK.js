@@ -84,7 +84,10 @@ i2b2.sdx.TypeControllers.WRK.RenderHTML= function(sdxData, options, targetDiv) {
 			o.group = i2b2.h.getXNodeVal(x, "group_id");
 			o.userid = i2b2.h.getXNodeVal(x, "user_id");
 			o.created = null;
-			newOptions.icon = "sdx_CRC_QM_workplace.jpg";
+			if(o.name.indexOf("(t)") == 0) // BUG FIX - WEBCLIENT-125
+				newOptions.icon = "sdx_CRC_QMT.gif";
+			else
+				newOptions.icon = "sdx_CRC_QM_workplace.jpg";
 			newOptions.showchildren = false;
 			newOptions.title = o.name;
 			break;
