@@ -143,7 +143,7 @@ i2b2.PM._processUserConfig = function (data) {
 		
 		return;
 	}	
-	
+		i2b2.PM.model.otherAuthMethod = false;
 		i2b2.PM.model.isAdmin = false;
 	try { 
 		var t = i2b2.h.XPath(data.refXML, '//user/full_name')[0];
@@ -155,6 +155,15 @@ i2b2.PM._processUserConfig = function (data) {
 			i2b2.PM.model.isAdmin = true;
 		}		
 	} catch(e) {}		
+	try { // BUG FIX: WEBCLIENT-130
+		var t = i2b2.h.XPath(data.refXML, '//user/param[@name="authentication_method"]')[0];
+		if((i2b2.h.getXNodeVal(t, 'param').toUpperCase() == "NTLM") || (t != undefined)){
+			i2b2.PM.model.otherAuthMethod = true;
+		}
+	} catch(e) {}
+	
+	
+	
 	i2b2.PM.model.login_domain = data.msgParams.sec_domain;
 	i2b2.PM.model.shrine_domain = Boolean.parseTo(data.msgParams.is_shrine);
 	i2b2.PM.model.login_project = data.msgParams.sec_project;
