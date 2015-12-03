@@ -194,12 +194,13 @@ i2b2.ONT.ctrlr.FindBy = {
 
 			}
 
-			// BUG FIX: WEBCLIENT-139
+			// BUG FIX: WEBCLIENT-139 & WEBCLIENT-150
 			searchCatsCount++;
 			if(searchCatsCount == searchCats.length){ // found last scopedCallback AJAX call
 				if(totalCount == 0){
 					alert('No records found.');
 				}
+				$('ontFindNameButtonWorking').innerHTML = "";
 			}
 			
 				// $('ontFindNameButtonWorking').innerHTML = treeObj.getRoot().children.length + " Found";
@@ -226,8 +227,6 @@ i2b2.ONT.ctrlr.FindBy = {
 	
 			 
 			i2b2.ONT.ajax.GetNameInfo("ONT:FindBy", searchOptions, scopedCallback);
-	
-			setTimeout(function(){ $('ontFindNameButtonWorking').innerHTML = ""; }, 3000);
 
 		}
 			
