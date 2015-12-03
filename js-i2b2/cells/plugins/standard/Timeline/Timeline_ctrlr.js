@@ -332,7 +332,7 @@ i2b2.Timeline.showObservation = function(localkey) {
 	      minHeight: 100, 
 	      status: false 
 	}); 
-	
+	/*
 	resize.on('resize', function(args) { 
 	    var panelHeight = args.height; 
 	    this.cfg.setProperty("height", panelHeight + "px"); 
@@ -354,6 +354,7 @@ i2b2.Timeline.showObservation = function(localkey) {
 	        resize.set("maxHeight", null); 
 	    } 
 	}, panel, true);  
+	*/
 		}
 	
 			// AJAX CALL USING THE EXISTING CRC CELL COMMUNICATOR

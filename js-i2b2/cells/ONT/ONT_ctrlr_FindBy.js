@@ -118,19 +118,19 @@ i2b2.ONT.ctrlr.FindBy = {
 			//			errorStatus: string [only with error=true]
 			//			errorMsg: string [only with error=true]
 
-		//Create a new treeobject so it does not append 
-		//treeObj = new YAHOO.widget.TreeView("ontSearchNamesResults");
-		var treeObj = i2b2.ONT.view.find.yuiTreeName;
-		// treeObj.removeChildren(treeObj.getRoot());
-		//treeObj.setDynamicLoad(i2b2.sdx.Master.LoadChildrenFromTreeview,1);
-		// register the treeview with the SDX subsystem to be a container for CONCPT objects
-		i2b2.sdx.Master.AttachType("ontSearchNamesResults","CONCPT");
-		
-		var jsTreeObjPath = 'i2b2.ONT.view.find.yuiTreeName';
-		var tmpNode;
+			//Create a new treeobject so it does not append 
+			//treeObj = new YAHOO.widget.TreeView("ontSearchNamesResults");
+			var treeObj = i2b2.ONT.view.find.yuiTreeName;
+			// treeObj.removeChildren(treeObj.getRoot());
+			//treeObj.setDynamicLoad(i2b2.sdx.Master.LoadChildrenFromTreeview,1);
+			// register the treeview with the SDX subsystem to be a container for CONCPT objects
+			i2b2.sdx.Master.AttachType("ontSearchNamesResults","CONCPT");
+			
+			var jsTreeObjPath = 'i2b2.ONT.view.find.yuiTreeName';
+			var tmpNode;
 
-		i2b2.ONT.ctrlr.FindBy.ButtonOn();
-		// fire multiple AJAX calls
+			i2b2.ONT.ctrlr.FindBy.ButtonOn();
+			// fire multiple AJAX calls
 	
 			
 						//Determine if a error occured
@@ -193,6 +193,15 @@ i2b2.ONT.ctrlr.FindBy = {
 				treeObj.draw();
 
 			}
+
+			// BUG FIX: WEBCLIENT-139
+			searchCatsCount++;
+			if(searchCatsCount == searchCats.length){ // found last scopedCallback AJAX call
+				if(totalCount == 0){
+					alert('No records found.');
+				}
+			}
+			
 				// $('ontFindNameButtonWorking').innerHTML = treeObj.getRoot().children.length + " Found";
 
 			//document.getElementById('ontFindNameButtonWorking').style.display = 'none';
@@ -208,17 +217,20 @@ i2b2.ONT.ctrlr.FindBy = {
 		searchOptions.ont_search_strategy = inSearchData.Strategy;
 		searchOptions.ont_search_string = inSearchData.SearchStr;
 			
-				l = searchCats.length;
+		l = searchCats.length;
 		var totalCount = 0;
+		var searchCatsCount = 0;
+		
 		for (var i=0; i<l; i++) {
 			searchOptions.ont_category = searchCats[i];
 	
 			 
 			i2b2.ONT.ajax.GetNameInfo("ONT:FindBy", searchOptions, scopedCallback);
 	
-	setTimeout(function(){ $('ontFindNameButtonWorking').innerHTML = ""; }, 3000);
+			setTimeout(function(){ $('ontFindNameButtonWorking').innerHTML = ""; }, 3000);
 
 		}
+			
 
 
 	},
