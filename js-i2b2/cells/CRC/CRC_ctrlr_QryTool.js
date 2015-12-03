@@ -922,7 +922,7 @@ function QueryToolController() {
 								//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
 								s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
 								s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
-								s += '\t\t\t<tooltip>' + sdxData.origData.tooltip + '</tooltip>\n';
+								s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
 								s += '\t\t\t<class>ENC</class>\n';
 								s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';	
 							}

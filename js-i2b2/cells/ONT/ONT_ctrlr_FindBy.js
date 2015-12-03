@@ -143,7 +143,8 @@ i2b2.ONT.ctrlr.FindBy = {
 						alert("The number of terms that were returned exceeded the maximum number currently set as " + i2b2.ONT.view['find'].params.max+ ".  Please try again with a more specific search or increase the maximum number of terms that can be returned as defined in the options screen.");
 					else
 						alert("ERROR: "+s[0].firstChild.nodeValue);	
-					document.getElementById('ontFindNameButtonWorking').style.display = 'none';						
+					document.getElementById('ontFindNameButtonWorking').style.display = 'none';	
+					$('ontFindNameButtonWorking').innerHTML = "";					
 					return;
 				} catch (e) {
 					alert("An unknown error has occured during your rest call attempt!");
