@@ -846,28 +846,28 @@ function QueryToolController() {
 				// Occurs constraint
 				s += '\t\t<total_item_occurrences>'+((panel_list[p].occurs*1)+1)+'</total_item_occurrences>\n';
 				// Concepts
-				for (i=0; i < panel_list[p].items.length; i++) {
+				for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
 					var sdxData = panel_list[p].items[i];
 					s += '\t\t<item>\n';
 						switch(sdxData.sdxInfo.sdxType) {
 						case "QM":	
 							s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
-							s += '\t\t\t<item_name>' + sdxData.origData.title + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + sdxData.origData.name + '</tooltip>\n';
+							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
 						case "PRS":	
 							s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-							s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
 						case "ENS":	
 							s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-							s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
@@ -897,9 +897,9 @@ function QueryToolController() {
 								
 								s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
 								s += '\t\t\t<item_key>' + key + '</item_key>\n';
-								s += '\t\t\t<item_name>' +  name + '</item_name>\n';
+								s += '\t\t\t<item_name>' +  i2b2.h.Escape(name) + '</item_name>\n';
 								// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
-								s += '\t\t\t<tooltip>' + tooltip + '</tooltip>\n';
+								s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
 								s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
 								s += '\t\t\t<class>ENC</class>\n';
 	
