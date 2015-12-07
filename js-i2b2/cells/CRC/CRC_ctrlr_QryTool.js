@@ -1306,9 +1306,22 @@ function QueryToolController() {
 					var params = i2b2.h.XPath(xml_v, 'descendant::data[@column]/text()/..');
 					for (var i2 = 0; i2 < params.length; i2++) {
 						var name = params[i2].getAttribute("name"); // snm0 - here for prev query
+						// BUG FIX: WEBCLIENT-147
 					//	$('infoQueryStatusText').innerHTML += "<div style=\"margin-left: 20px; clear: both; height: 16px; line-height: 16px;\">";
-						$('infoQueryStatusText').innerHTML += "<div style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + params[i2].firstChild.nodeValue + "" +  (i2b2.PM.model.userRoles.indexOf("DATA_LDS") == -1 ? "&plusmn;3" : "")  +   "</font></div>";
-						i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column") + " : " + params[i2].firstChild.nodeValue + "" +  (i2b2.PM.model.isObfuscated ? "&plusmn;3" : "") + "\n"; //snm0						
+						if (i2b2.PM.model.isObfuscated) {
+							if (params[i2].firstChild.nodeValue < 4)
+							{
+							    var value = "<3";
+							} else {
+								var value = params[i2].firstChild.nodeValue + "&plusmn;3";
+							}
+						} else {
+							var value = params[i2].firstChild.nodeValue;
+							
+						}
+					
+						$('infoQueryStatusText').innerHTML += "<div style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + value  +   "</font></div>";
+						i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column") + " : " + value + "\n"; //snm0						
 					//$('infoQueryStatusText').innerHTML += "</div>";						//i2b2.h.XPath(newxml, 'descendant-or-self::result/data')[0].firstChild.nodeValue;
 
 					}
