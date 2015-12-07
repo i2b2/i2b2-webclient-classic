@@ -75,12 +75,26 @@ i2b2.Timeline.prsDropped = function(sdxData) {
 };
 
 i2b2.Timeline.conceptDropped = function(sdxData, showDialog) {
+	showDialog = typeof showDialog !== 'undefined' ? showDialog : true;
 	sdxData = sdxData[0];	// only interested in first record
+	
 	if (sdxData.origData.isModifier) {
+		if(showDialog)
 			alert("Modifier item being dropped is not supported.");
-			return false;	
+		return false;	
 	}
 	
+	if (typeof sdxData.origData.table_name == 'undefined'){ // BUG FIX: WEBCLIENT-138
+		var results = i2b2.ONT.ajax.GetTermInfo("ONT", {ont_max_records:'max="1"', ont_synonym_records:'false', ont_hidden_records: 'false', concept_key_value: sdxData.origData.key}).parse();
+		if(results.model.length > 0){
+			sdxData = results.model[0];
+		}
+ 	}
+	if (sdxData.origData.table_name == "patient_dimension"){
+		if(showDialog)
+			alert("Patient dimension item being dropped is not supported.");
+		return false;
+	}
 	// save the info to our local data model
 	i2b2.Timeline.model.concepts.push(sdxData);
 	
@@ -643,7 +657,7 @@ i2b2.Timeline.getResults = function() {
 				}
 			}
 			
-			//i2b2.Timeline.model.patients = patients;
+			i2b2.Timeline.model.patients = patients;
 			
 			var first_time = first_date.getTime()*1.0;
 			var last_time = last_date.getTime()*1.0;
