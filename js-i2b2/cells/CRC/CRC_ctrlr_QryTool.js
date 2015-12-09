@@ -207,6 +207,31 @@ function QueryToolController() {
 						po.items = [];
 						var pi = i2b2.h.XPath(qp[i1], 'descendant::item[item_key]');
 						for (i2=0; i2<pi.length; i2++) {
+							// BUG FIX: WEBCLIENT-136
+							if(i2 == 0){ // look at first item only in panel for date constraint
+								if(po.dateFrom == false){
+									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from');
+									if (t) {
+										po.dateFrom = {};
+										po.dateFrom.Year = t.substring(0,4); //t[0];
+										po.dateFrom.Month = t.substring(5,7); //t[1];
+										po.dateFrom.Day = t.substring(8,10); //t[2];
+									} else {
+										po.dateFrom = false;
+									}
+								}
+								if(po.dateTo == false){
+									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to');
+									if (t) {
+										po.dateTo = {};
+										po.dateTo.Year =  t.substring(0,4); //t[0];
+										po.dateTo.Month =  t.substring(5,7); // t[1];
+										po.dateTo.Day = t.substring(8,10);// t[2];
+									} else {
+										po.dateTo = false;
+									}
+								}
+							}
 							var item = {};
 							// get the item's details from the ONT Cell
 							var ckey = i2b2.h.getXNodeVal(pi[i2],'item_key');
@@ -828,12 +853,12 @@ function QueryToolController() {
 				s += '\t<panel>\n';
 				s += '\t\t<panel_number>' + (p+1) + '</panel_number>\n';
 				// date range constraints
-				if (panel_list[p].dateFrom) {
-					s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
-				}
-				if (panel_list[p].dateTo) {
-					s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
-				}
+				//if (panel_list[p].dateFrom) {
+				//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
+				//}
+				//if (panel_list[p].dateTo) {
+				//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
+				//}
 				s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
 				// Exclude constraint (invert flag)
 				if (panel_list[p].exclude) {
@@ -849,6 +874,17 @@ function QueryToolController() {
 				for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
 					var sdxData = panel_list[p].items[i];
 					s += '\t\t<item>\n';
+						if(panel_list[p].dateFrom || panel_list[p].dateTo){ // BUG FIX: WEBCLIENT-136
+							s += '\t\t\t<constrain_by_date>\n';
+							if (panel_list[p].dateFrom) {
+								s += '\t\t\t\t<date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
+								
+							}
+							if (panel_list[p].dateTo) {
+								s += '\t\t\t\t<date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
+							}
+							s += '\t\t\t</constrain_by_date>\n';
+						}
 						switch(sdxData.sdxInfo.sdxType) {
 						case "QM":
 							if(sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
