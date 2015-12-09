@@ -6,9 +6,9 @@
 <!--
  *  *************************
  *       i2b2 Web Client
- *           v1.7.06
+ *           v1.7.07
  *  *************************
- *  @modified: 08/06/15
+ *  @modified: 12/09/15
  *  Contributors:
  *     Nick Benik
  *     Griffin Weber, MD, PhD
@@ -16,12 +16,12 @@
  *     Shawn Murphy MD, PhD
  *     David Wang
  *     Hannah Murphy
- *	   Nich Wattanasin
+ *     Nich Wattanasin
  *
  */-->
 
 <script type="text/javascript">
-	var i2b2build = "1.7.006   [08/06/15 4:07 PM] ";
+	var i2b2build = "1.7.007   [12/09/15 4:07 PM] ";
 </script>
 
 <!-- LOAD YUI FROM Yahoo's CDN
@@ -169,6 +169,14 @@ var rightSideProportion = 0.65;
 var initBrowserViewPortDim = document.viewport.getDimensions();
 var rightSideWidth = initBrowserViewPortDim.width * rightSideProportion; 	// this component will take up 75% of the screen
 
+// following added to support webclient plugin manager / installer only
+var i2b2Admin = "";    
+function invokeWCPinstaller() {
+    window.open("plugin_installer/admin.php?rul=" + i2b2.PM.model.url + "&noisreVcw=" + i2b2.ClientVersion + "&niamod=" + i2b2.PM.model.login_domain + 
+                "&esur=" + i2b2.PM.model.login_username + "&esion=0123456789qwertyuioplkjhgfdsazxcvbnmPOIUYTREWQASDFGHJKLMNBVCXZ&yek=" +
+                i2b2.PM.model.login_password); 
+}
+
 function initI2B2() 
 {
 	//debugOnScreen("default.htm.initI2B2: browserViewPort = " + initBrowserViewPortDim.width + " " + initBrowserViewPortDim.height );
@@ -253,6 +261,7 @@ function initI2B2()
 			$('viewMode-User').title = i2b2.PM.model.userRoles;
 			if (i2b2.PM.model.otherAuthMethod) { $('changePasswordLink').hide(); }
 			if (i2b2.PM.model.login_debugging) { $('debugMsgSniffer').show(); }
+			if (i2b2.PM.model.isAdmin) { $('PluginsGalleryLink').innerHTML = 'Install More Plugins from i2b2 Gallery...'; }
 		}), i2b2
 	);
 
@@ -888,6 +897,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         </form>
       </div>
       <div id="anaPluginList" oncontextmenu="return false"></div>
+	  <div id="PluginGalleryFooter"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="Javascript:void(0)" onClick="invokeWCPinstaller();" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:12;color:#285D96;" >View More Plugins in i2b2 Gallery...</a></div>
     </div>
     <div style="clear:both;"></div>
   </div>
