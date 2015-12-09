@@ -774,15 +774,19 @@ function i2b2_PanelController(parentCtrlr) {
 				icon: "sdx_CRC_PRS.jpg"
 			};		
 		} else if (sdxConcept.sdxInfo.sdxType == "QM") {
+			var iconSrc = "sdx_CRC_QM.gif";
 			var sdxDataNode = i2b2.sdx.Master.EncapsulateData('QM',sdxConcept.origData);
 			var title = sdxConcept.origData.titleCRC;
 			if (title == undefined)
 			{
 				title = sdxConcept.origData.title;
 			}
+			if(title.indexOf("(PrevQuery)(t)") == 0) { // BUG FIX - WEBCLIENT-125
+				iconSrc = "sdx_CRC_QMT.gif";
+			}
 			var renderOptions = {
 				title: title,
-				icon: "sdx_CRC_QM.gif"
+				icon: iconSrc
 			};
 		
 		}
