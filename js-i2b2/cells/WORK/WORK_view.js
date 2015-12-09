@@ -351,7 +351,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
                 var sdxDataNode = i2b2.sdx.Master.EncapsulateData('WRK', o);
                 var sdxRenderData = i2b2.sdx.Master.RenderHTML(parentNode.tree.id, sdxDataNode, {
                     'title': title,
-					'tooltip': 	nodeData.annotation.replace("\n",""); // PARTIAL BUG-FIX: WEBCLIENT-98
+					'tooltip': 	nodeData.annotation.replace("\n","") // PARTIAL BUG-FIX: WEBCLIENT-98
                 });
 				if (!sdxRenderData) { break; }
                 var renderObj = i2b2.sdx.Master.AppendTreeNode(parentNode.tree, parentNode, sdxRenderData);
