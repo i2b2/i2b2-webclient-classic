@@ -850,7 +850,10 @@ function QueryToolController() {
 					var sdxData = panel_list[p].items[i];
 					s += '\t\t<item>\n';
 						switch(sdxData.sdxInfo.sdxType) {
-						case "QM":	
+						case "QM":
+							if(sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
+									s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
+							else
 							s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
 							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
 							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
