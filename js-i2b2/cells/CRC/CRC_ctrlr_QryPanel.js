@@ -60,6 +60,7 @@ function i2b2_PanelController(parentCtrlr) {
 		this._redrawTree(pd);
 		this._redrawButtons(pd);
 		this._redrawTiming(pd);
+		this._redrawDates(pd); // nw096 - Date Constraints overhaul
 		//}
 	}
 
@@ -203,7 +204,32 @@ function i2b2_PanelController(parentCtrlr) {
 			Element.removeClassName(this.refButtonDates,'queryPanelButtonSelected');					
 		}
 	}
+	
+	// ================================================================================================== //
+	this._redrawDates = function(pd) {
+		if (undefined===pd) { pd = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][this.panelCurrentIndex]; }
+		
+		jQuery('#QPD'+(this.panelCurrentIndex+1)+' [class^="sdxDefault"]').find('span.itemDateConstraint').remove();
+		if(pd.items.length > 0){
+			for(var i=0;i<pd.items.length;i++){
+				if(pd.items[i].dateFrom && pd.items[i].dateTo){
+					jQuery('<span class="itemDateConstraint">&nbsp;['+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+' to '+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.panelCurrentIndex+1)+' [class^="sdxDefault"]')[i]);
+				}
+				if(pd.items[i].dateFrom && !pd.items[i].dateTo){
+					jQuery('<span class="itemDateConstraint">&nbsp;[&ge;'+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+']</span>').appendTo(jQuery('#QPD'+(this.panelCurrentIndex+1)+' [class^="sdxDefault"]')[i]);					
+				}
+				if(!pd.items[i].dateFrom && pd.items[i].dateTo){
+					jQuery('<span class="itemDateConstraint">&nbsp;[&le;'+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.panelCurrentIndex+1)+' [class^="sdxDefault"]')[i]);										
+				}
+			}
+		}
+	}
 
+// ================================================================================================== //
+	this.showDateConstraint = function(key, extData) {
+		i2b2.CRC.ctrlr.dateConstraint.showDate(this.panelCurrentIndex, key, extData);
+	}
+	
 // ================================================================================================== //
 	this.showLabValues = function(key, extData) {
 		i2b2.CRC.view.modalLabValues.show(this.panelCurrentIndex, this, key, extData, false);
@@ -543,6 +569,14 @@ function i2b2_PanelController(parentCtrlr) {
 		//delete sdxConcept.ModValues;
 		sdxConcept.itemNumber = this.itemNumber++;
 		
+		// nw096 - Date Constraints overhaul
+		if(dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][targetPanelIndex].dateFrom){
+			sdxConcept.dateFrom = dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][targetPanelIndex].dateFrom;
+		}
+		if(dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][targetPanelIndex].dateTo){
+			sdxConcept.dateTo = dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][targetPanelIndex].dateTo;
+		}
+		
 		// save data
 		this._addConcept(sdxConcept,this.yuiTree.root, true);
 		// reset the query name to be blank and flag as having dirty data
@@ -834,6 +868,7 @@ function i2b2_PanelController(parentCtrlr) {
 			 if (tvChildren[i].data.nodeid===htmlID) { 
 				this.yuiTree.removeNode(tvChildren[i],false);
 				this._redrawTree.call(this, pd);
+				this._redrawDates.call(this, pd);
 				break;
 			}
 		}
@@ -843,6 +878,7 @@ function i2b2_PanelController(parentCtrlr) {
 		if (pd.items.length == 0) { this.doDelete(); }
 		// clear the query name if it was set
 		this.QTController.doSetQueryName.call(this,'');
+		this._redrawDates();
 	}
 
 // ================================================================================================== //
@@ -1020,6 +1056,8 @@ function i2b2_PanelController(parentCtrlr) {
 		var idx = this.panelCurrentIndex - this.ctrlIndex;
 		if (idx < 0) { idx = 0; }
 		i2b2.CRC.ctrlr.QT.doShowFrom(idx);
+		
+		
 	}	
 }
 

@@ -109,6 +109,7 @@ i2b2.CRC.view.QT.ContextMenuPreprocess = function(p_oEvent) {
 					// custom build the context menu according to the concept that was clicked
 					var mil = [];
 					var op = i2b2.CRC.view.QT;
+					mil.push( { text: "Set Date Constraint", onclick: { fn: op.ContextMenuRouter, obj: 'dates' }} );
 					// all nodes can be deleted
 					mil.push( { text: "Delete", onclick: { fn: op.ContextMenuRouter, obj: 'delete' }} );
 					if (i2b2.CRC.view.QT.contextRecord.origData.isModifier) {
@@ -202,6 +203,10 @@ i2b2.CRC.view.QT.ContextMenuRouter = function(a, b, actionName) {
 	};
 	// route accordingly
 	switch(actionName) {
+		case "dates":
+			// nw096 - Date Constraints overhaul
+			cdat.ctrlr.showDateConstraint(cdat.ctrlr, cdat.data);
+			break;
 		case "delete":
 			// delete item from the panel
 			cdat.ctrlr._deleteConcept(cdat.data.renderData.htmlID, cdat.data);

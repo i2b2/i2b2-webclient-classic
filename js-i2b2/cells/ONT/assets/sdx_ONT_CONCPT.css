@@ -24,3 +24,7 @@
 	background:#FFFFBB !important;	
 }
 
+span.itemDateConstraint {
+    font-size: 11px;
+    color: #336592;
+}

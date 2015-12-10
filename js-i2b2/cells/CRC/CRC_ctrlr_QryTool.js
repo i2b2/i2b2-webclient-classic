@@ -34,6 +34,12 @@ function QueryToolController() {
 		$('queryName').innerHTML = inName;
 		i2b2.CRC.model.queryCurrent.name = inName;
 	}
+	
+// ================================================================================================== //
+	this.doUpdateDatesInPanel = function(panelIndex) { // nw096 - date constraints over
+		var dm = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex];
+		
+	}
 
 // ================================================================================================== //
 	this.doQueryClear = function() {
@@ -166,6 +172,7 @@ function QueryToolController() {
 						i2b2.CRC.ctrlr.QT._redrawAllPanels();
 						
 						// extract the data for each panel
+						var itm = {};
 						var po = {};
 						po.panel_num = i2b2.h.getXNodeVal(qp[i1],'panel_number');
 						var t = i2b2.h.getXNodeVal(qp[i1],'invert');
@@ -208,30 +215,24 @@ function QueryToolController() {
 						var pi = i2b2.h.XPath(qp[i1], 'descendant::item[item_key]');
 						for (i2=0; i2<pi.length; i2++) {
 							// BUG FIX: WEBCLIENT-136
-							if(i2 == 0){ // look at first item only in panel for date constraint
 								if(po.dateFrom == false){
 									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from');
 									if (t) {
-										po.dateFrom = {};
-										po.dateFrom.Year = t.substring(0,4); //t[0];
-										po.dateFrom.Month = t.substring(5,7); //t[1];
-										po.dateFrom.Day = t.substring(8,10); //t[2];
-									} else {
-										po.dateFrom = false;
+										itm.dateFrom = {};
+										itm.dateFrom.Year = t.substring(0,4); //t[0];
+										itm.dateFrom.Month = t.substring(5,7); //t[1];
+										itm.dateFrom.Day = t.substring(8,10); //t[2];
 									}
 								}
 								if(po.dateTo == false){
 									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to');
 									if (t) {
-										po.dateTo = {};
-										po.dateTo.Year =  t.substring(0,4); //t[0];
-										po.dateTo.Month =  t.substring(5,7); // t[1];
-										po.dateTo.Day = t.substring(8,10);// t[2];
-									} else {
-										po.dateTo = false;
+										itm.dateTo = {};
+										itm.dateTo.Year =  t.substring(0,4); //t[0];
+										itm.dateTo.Month =  t.substring(5,7); // t[1];
+										itm.dateTo.Day = t.substring(8,10);// t[2];
 									}
 								}
-							}
 							var item = {};
 							// get the item's details from the ONT Cell
 							var ckey = i2b2.h.getXNodeVal(pi[i2],'item_key');
@@ -364,6 +365,13 @@ function QueryToolController() {
 										// We do want 2 copies of the Lab Values: one is original from server while the other one is for user manipulation
 										sdxDataNode.LabValues = o.LabValues;	
 									}
+									if (itm.dateFrom) {
+										sdxDataNode.dateFrom = itm.dateFrom;
+									}
+									
+									if (itm.dateTo) {
+										sdxDataNode.dateTo = itm.dateTo;
+									}
 											//o.xmlOrig = c;
 											if (i2b2.h.XPath(pi[i2], 'descendant::constrain_by_modifier').length > 0) {
 										//if (i2b2.h.getXNodeVal(pi[i2],'constrain_by_modifier') != null) {
@@ -483,7 +491,14 @@ function QueryToolController() {
 							{
 								withRenderData.LabValues = 	dm.panels[k][pi].items[pii].LabValues;
 							}
-							
+							if (dm.panels[k][pi].items[pii].dateFrom)
+							{
+								withRenderData.dateFrom = 	dm.panels[k][pi].items[pii].dateFrom;
+							}
+							if (dm.panels[k][pi].items[pii].dateTo)
+							{
+								withRenderData.dateTo = 	dm.panels[k][pi].items[pii].dateTo;
+							}
 							dm.panels[k][pi].items[pii] = withRenderData;
 						}
 					}
@@ -874,14 +889,14 @@ function QueryToolController() {
 				for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
 					var sdxData = panel_list[p].items[i];
 					s += '\t\t<item>\n';
-						if(panel_list[p].dateFrom || panel_list[p].dateTo){ // BUG FIX: WEBCLIENT-136
+						if(panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo){ // BUG FIX: WEBCLIENT-136
 							s += '\t\t\t<constrain_by_date>\n';
-							if (panel_list[p].dateFrom) {
-								s += '\t\t\t\t<date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
+							if (panel_list[p].items[i].dateFrom) {
+								s += '\t\t\t\t<date_from>'+panel_list[p].items[i].dateFrom.Year+'-'+padNumber(panel_list[p].items[i].dateFrom.Month,2)+'-'+padNumber(panel_list[p].items[i].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
 								
 							}
-							if (panel_list[p].dateTo) {
-								s += '\t\t\t\t<date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
+							if (panel_list[p].items[i].dateTo) {
+								s += '\t\t\t\t<date_to>'+panel_list[p].items[i].dateTo.Year+'-'+padNumber(panel_list[p].items[i].dateTo.Month,2)+'-'+padNumber(panel_list[p].items[i].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
 							}
 							s += '\t\t\t</constrain_by_date>\n';
 						}

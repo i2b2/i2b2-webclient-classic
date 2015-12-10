@@ -1064,6 +1064,43 @@ YAHOO.util.Event.addListener(window, "load", init);
               </table></td>
           </tr>
         </table>
+		<span><br/>Setting this will apply the date constraint to the entire panel.<br/><br/>Any item-level date constraints will be overwritten.</span>
+      </center>
+      <br />
+      <br />
+    </div>
+  </div>
+  <div id="item_calendarDiv" style="z-index:1520; display:none;"></div>
+  <!-- DO NOT MOVE calendarDivMask IE 5/6/7 has major z-index bug -->
+  <div id="item_calendarDivMask" style="display:none; z-index:1510; position:absolute; background-image:url('null.gif')" onClick="i2b2.CRC.ctrlr.dateConstraint.hideItemCalendar()"></div>
+  <div id="constraintDate" style="display:none;">
+    <div class="hd" style="background:#6677AA;">Constrain Item by Date Range</div>
+    <div class="bd"> <br />
+      <center>
+        <table style="font-size:12px">
+          <tr>
+            <td>From:</td>
+            <td></td>
+            <td>To:</td>
+          </tr>
+          <tr>
+            <td class="dateBorder"><table>
+                <tr>
+                  <td valign="middle"><input id="item_checkboxDateStart" type="checkbox" onChange="i2b2.CRC.ctrlr.dateConstraint.toggleItemDate()" /></td>
+                  <td valign="middle"><input id="item_constraintDateStart" value="01/31/2008" style="width:75px;" disabled="disabled" /></td>
+                  <td valign="middle"><a href="Javascript:i2b2.CRC.ctrlr.dateConstraint.doShowItemCalendar('S')"><img id="item_dropDateStart" style="position:relative; top:1px; border:none;" class="calendarDropdown" src="assets/images/b_dropdown.gif" alt="" /></a>&nbsp;</td>
+                </tr>
+              </table></td>
+            <td>&nbsp;&nbsp;&nbsp;</td>
+            <td class="dateBorder"><table>
+                <tr>
+                  <td valign="middle"><input id="item_checkboxDateEnd" type="checkbox" onChange="i2b2.CRC.ctrlr.dateConstraint.toggleItemDate()" /></td>
+                  <td valign="middle"><input id="item_constraintDateEnd" value="12/31/2008" style="width:75px;" disabled="disabled" /></td>
+                  <td valign="middle"><a href="Javascript:i2b2.CRC.ctrlr.dateConstraint.doShowItemCalendar('E');"><img id="item_dropDateEnd" style="position:relative; top:1px" class="calendarDropdown" border="0" src="assets/images/b_dropdown.gif" alt=""/></a>&nbsp;</td>
+                </tr>
+              </table></td>
+          </tr>
+        </table>
       </center>
       <br />
       <br />
