@@ -1525,6 +1525,19 @@ function QueryToolController() {
 	}
 
 // ================================================================================================== //
+	this.doRemoveTemporal = function() { // nw096 - WEBCLIENT-155 Removes last temporal relationship
+		if(this.tenporalBuilders == 0){
+			alert('You must leave a minimum of one temporal relationship.');
+		} else {
+			if(jQuery("[id^='temporalbuilder_']").length > 1){
+				this.tenporalBuilders = this.tenporalBuilders - 1;
+				$('temporalbuilders').lastChild.remove();
+			}
+		}
+	}
+	
+	
+// ================================================================================================== //
 	this.doScrollFirst = function() {
 		this.doShowFrom(0);
 	}
