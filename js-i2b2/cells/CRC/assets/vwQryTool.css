@@ -145,7 +145,8 @@ DIV#crcQueryToolBox DIV.qryTemporalConstraint .yuimenuitemlabel {width:200px;}
 DIV#crcQueryToolBox DIV.qryTemporalConstraint Button {
 line-height:1;
 /*width:75px;*/
-min-height:1em;
+/*min-height:1em;*/
+min-height: 13px;
 }
 DIV#crcQueryToolBox DIV#qryToolFooter {
 	border-top:1px solid #667788;
