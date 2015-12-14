@@ -224,6 +224,7 @@ function initI2B2()
 				i2b2.hive.MasterView.setViewMode('Admin');
 				$('viewMode-Patients').style.display = 'none';
 				$('viewMode-Analysis').style.display = 'none';
+				$('adminPlugins').show();
 				// hide the splitter from view since we don't need it in admin-only mode
 				var splitter = $( splitterName );
 				splitter.style.visibility="hidden";
@@ -261,7 +262,6 @@ function initI2B2()
 			$('viewMode-User').title = i2b2.PM.model.userRoles;
 			if (i2b2.PM.model.otherAuthMethod) { $('changePasswordLink').hide(); }
 			if (i2b2.PM.model.login_debugging) { $('debugMsgSniffer').show(); }
-			if (i2b2.PM.model.isAdmin) { $('adminPlugins').show(); }
 		}), i2b2
 	);
 
