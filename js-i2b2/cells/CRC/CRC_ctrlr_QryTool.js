@@ -172,7 +172,7 @@ function QueryToolController() {
 						i2b2.CRC.ctrlr.QT._redrawAllPanels();
 						
 						// extract the data for each panel
-						var itm = {};
+						
 						var po = {};
 						po.panel_num = i2b2.h.getXNodeVal(qp[i1],'panel_number');
 						var t = i2b2.h.getXNodeVal(qp[i1],'invert');
@@ -214,6 +214,7 @@ function QueryToolController() {
 						po.items = [];
 						var pi = i2b2.h.XPath(qp[i1], 'descendant::item[item_key]');
 						for (i2=0; i2<pi.length; i2++) {
+							var itm = {};
 							// BUG FIX: WEBCLIENT-136
 								if(po.dateFrom == false){
 									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from');
