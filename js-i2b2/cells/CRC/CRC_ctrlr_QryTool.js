@@ -168,6 +168,10 @@ function QueryToolController() {
 					
 					var total_panels = qp.length;
 					for (var i1=0; i1<total_panels; i1++) {
+						var allDateFromsAreSame = true;
+						var allDateTosAreSame = true;
+						var allDateFroms = {};
+						var allDateTos = {};
 						i2b2.CRC.ctrlr.QT.temporalGroup = j;
 						i2b2.CRC.ctrlr.QT._redrawAllPanels();
 						
@@ -216,28 +220,43 @@ function QueryToolController() {
 						for (i2=0; i2<pi.length; i2++) {
 							var itm = {};
 							// BUG FIX: WEBCLIENT-136
-								if(po.dateFrom == false){
-									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from');
-									if (t) {
-										itm.dateFrom = {};
-										itm.dateFrom.Year = t.substring(0,4); //t[0];
-										itm.dateFrom.Month = t.substring(5,7); //t[1];
-										itm.dateFrom.Day = t.substring(8,10); //t[2];
-									}
-								} else { // WEBCLIENT-162: Backwards compatible <panel_date_from> support
-									itm.dateFrom = po.dateFrom;
+							if(po.dateFrom == false){
+								var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from');
+								if (t) {
+									itm.dateFrom = {};
+									itm.dateFrom.Year = t.substring(0,4); //t[0];
+									itm.dateFrom.Month = t.substring(5,7); //t[1];
+									itm.dateFrom.Day = t.substring(8,10); //t[2];
 								}
-								if(po.dateTo == false){
-									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to');
-									if (t) {
-										itm.dateTo = {};
-										itm.dateTo.Year =  t.substring(0,4); //t[0];
-										itm.dateTo.Month =  t.substring(5,7); // t[1];
-										itm.dateTo.Day = t.substring(8,10);// t[2];
-									}
-								} else { // WEBCLIENT-162: Backwards compatible <panel_date_to> support
-									itm.dateTo = po.dateTo;
+							} else { // WEBCLIENT-162: Backwards compatible <panel_date_from> support
+								itm.dateFrom = po.dateFrom;
+							}
+							if(po.dateTo == false){
+								var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to');
+								if (t) {
+									itm.dateTo = {};
+									itm.dateTo.Year =  t.substring(0,4); //t[0];
+									itm.dateTo.Month =  t.substring(5,7); // t[1];
+									itm.dateTo.Day = t.substring(8,10);// t[2];
 								}
+							} else { // WEBCLIENT-162: Backwards compatible <panel_date_to> support
+								itm.dateTo = po.dateTo;
+							}
+							// Set panel date by looking at item dates
+							if ((pi.length > 1) && (i2 < pi.length - 1) && allDateFromsAreSame && allDateTosAreSame){
+								if(i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from') != i2b2.h.getXNodeVal(pi[i2 + 1],'constrain_by_date/date_from')){
+									allDateFromsAreSame = false;
+								} else {
+									allDateFroms = itm.dateFrom;
+								}
+								if(i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to') != i2b2.h.getXNodeVal(pi[i2 + 1],'constrain_by_date/date_to')){
+									allDateTosAreSame = false;
+								} else {
+									allDateTos = itm.dateTo;
+								}
+							}
+							
+								
 							var item = {};
 							// get the item's details from the ONT Cell
 							var ckey = i2b2.h.getXNodeVal(pi[i2],'item_key');
@@ -466,6 +485,16 @@ function QueryToolController() {
 								
 							}
 						}
+						
+						if(allDateFromsAreSame && allDateFromsAreSame){
+							if(typeof allDateTos !== "undefined"){
+								po.dateTo = allDateTos;
+							}
+							if(typeof allDateFroms !== "undefined"){
+								po.dateFrom = allDateFroms;
+							}
+						}
+						
 						dObj.panels[po.panel_num] = po;
 					}
 					// reindex the panels index (panel [1,3,5] should be [0,1,2])
