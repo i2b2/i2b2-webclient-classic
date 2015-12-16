@@ -825,12 +825,12 @@ function i2b2_PanelController(parentCtrlr) {
 			var iconSrc = "sdx_CRC_QM.gif";
 			var sdxDataNode = i2b2.sdx.Master.EncapsulateData('QM',sdxConcept.origData);
 			var title = sdxConcept.origData.titleCRC;
-			if (title == undefined)
-			{
+			if(typeof title === 'undefined')
 				title = sdxConcept.origData.title;
-			}
-			if(title.indexOf("(PrevQuery)(t)") == 0) { // BUG FIX - WEBCLIENT-125
-				iconSrc = "sdx_CRC_QMT.gif";
+			if(typeof title !== 'undefined'){ // BUG FIX - WEBCLIENT-149
+				if(title.indexOf("(PrevQuery)(t)") == 0) { // BUG FIX - WEBCLIENT-125
+					iconSrc = "sdx_CRC_QMT.gif";
+				}
 			}
 			var renderOptions = {
 				title: title,
