@@ -558,10 +558,8 @@ YAHOO.util.Event.addListener(window, "load", init);
       <div class="opXML"> 
         <!--				<a href="JavaScript:showXML('WORK','main','Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
         <!--				<a href="JavaScript:showXML('WORK','main','Response');" class="debug"><img src="assets/images/msg_response.gif" border="0" width="16" height="16" alt="Show XML Response" title="Show XML Response" /></a> --> 
-        <a href="JavaScript:showXML('WORK','main','Stack');" class="debug"><img src="assets/images/msg_stack.gif" border="0" width="16" height="16"  alt="Show XML Message Stack" title="Show XML Message Stack" /></a> <a href="JavaScript:i2b2.WORK.view.main.refreshTree();">
-        <div style="display: inline;" id="refWorkQS"> <img width="16" id="refreshWorkImg" border="0" height="16" src="assets/images/refreshButton.gif" alt="Refresh Workplace" title="Refresh Workplace"> </div>
-        <div style="display: none;" id="refWork2QS"> <img width="16" border="0" height="16" src="assets/images/loadera16.gif" alt="Refresh Workplace" title="Refresh Workplace"> </div>
-        </a> 
+        <a href="JavaScript:showXML('WORK','main','Stack');" class="debug"><img src="assets/images/msg_stack.gif" border="0" width="16" height="16"  alt="Show XML Message Stack" title="Show XML Message Stack" /></a> 
+		<a href="JavaScript:i2b2.WORK.view.main.refreshTree();"><div style="display: inline;" id="refWorkQS"><img width="16" id="refreshWorkImg" border="0" height="16" src="assets/images/refreshButton.gif" alt="Refresh Workplace" title="Refresh Workplace"></div><div style="display: none;" id="refWork2QS"><img width="16" border="0" height="16" src="assets/images/loadera16.gif" alt="Refresh Workplace" title="Refresh Workplace"></div></a> 
         
         <!--				<a href="JavaScript:i2b2.WORK.view.main.showOptions();"><img src="assets/images/options.gif" border="0" width="16" height="16" alt="Show Options" title="Show Options" /></a> --> 
         <a href="JavaScript:i2b2.WORK.view.main.ZoomView();"><img id="wrkZoomImg" width="16" height="16" border="0" src="js-i2b2/cells/WORK/assets/zoom_icon.gif" alt="Resize Workspace" title="Resize Workspace" /></a> </div>
@@ -586,10 +584,8 @@ YAHOO.util.Event.addListener(window, "load", init);
       <div class="opXML"> 
         <!--				<a href="JavaScript:showXML('CRC','history','Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
         <!--				<a href="JavaScript:showXML('CRC','history','Response');" class="debug"><img src="assets/images/msg_response.gif" border="0" width="16" height="16" alt="Show XML Response" title="Show XML Response" /></a> --> 
-        <a href="JavaScript:showXML('CRC','history','Stack');" class="debug"><img src="assets/images/msg_stack.gif" border="0" width="16" height="16"  alt="Show XML Message Stack" title="Show XML Message Stack" /></a> <a href="JavaScript:i2b2.CRC.ctrlr.history.Refresh();">
-        <div style="display: inline;" id="refPrevQS"> <img id="refreshPQImg" width="16" border="0" height="16" src="assets/images/refreshButton.gif" alt="Refresh Previous Queries" title="Refresh Previous Queries"> </div> 
-        <div style="display: none;" id="refPrev2QS"> <img width="16" border="0" height="16" src="assets/images/loadera16.gif" alt="Refresh Previous Queries" title="Refresh Previous Queries"> </div>
-        </a> <a href="JavaScript:i2b2.CRC.view.history.showOptions();"><img src="assets/images/options.gif" border="0" width="16" height="16" alt="Show Options" title="Show Options" /></a> <a href="JavaScript:i2b2.CRC.view.history.ZoomView();"><img id="histZoomImg" width="16" height="16" border="0" src="js-i2b2/cells/WORK/assets/zoom_icon.gif" alt="Resize Workspace" title="Resize Workspace" /></a> </div>
+        <a href="JavaScript:showXML('CRC','history','Stack');" class="debug"><img src="assets/images/msg_stack.gif" border="0" width="16" height="16"  alt="Show XML Message Stack" title="Show XML Message Stack" /></a> 
+		<a href="JavaScript:i2b2.CRC.ctrlr.history.Refresh();"><div style="display: inline;" id="refPrevQS"><img id="refreshPQImg" width="16" border="0" height="16" src="assets/images/refreshButton.gif" alt="Refresh Previous Queries" title="Refresh Previous Queries"></div><div style="display: none;" id="refPrev2QS"> <img width="16" border="0" height="16" src="assets/images/loadera16.gif" alt="Refresh Previous Queries" title="Refresh Previous Queries"></div></a> <a href="JavaScript:i2b2.CRC.view.history.showOptions();"><img src="assets/images/options.gif" border="0" width="16" height="16" alt="Show Options" title="Show Options" /></a> <a href="JavaScript:i2b2.CRC.view.history.ZoomView();"><img id="histZoomImg" width="16" height="16" border="0" src="js-i2b2/cells/WORK/assets/zoom_icon.gif" alt="Resize Workspace" title="Resize Workspace" /></a> </div>
     </div>
     <div class="bodyBox">
       <div id="crcNavDisp">
@@ -1035,7 +1031,7 @@ YAHOO.util.Event.addListener(window, "load", init);
   <!-- ############### </Option Screens> ############### -->
   <div id="calendarDiv" style="z-index:1520; display:none;"></div>
   <!-- DO NOT MOVE calendarDivMask IE 5/6/7 has major z-index bug -->
-  <div id="calendarDivMask" style="display:none; z-index:1510; position:absolute; background-image:url('null.gif')" onClick="i2b2.CRC.ctrlr.dateConstraint.hideCalendar()"></div>
+  <div id="calendarDivMask" style="display:none; z-index:1510; position:absolute;" onClick="i2b2.CRC.ctrlr.dateConstraint.hideCalendar()"></div>
   <div id="constraintDates" style="display:none;">
     <div class="hd" style="background:#6677AA;">Constrain Group by Date Range</div>
     <div class="bd"> <br />
@@ -1072,7 +1068,7 @@ YAHOO.util.Event.addListener(window, "load", init);
   </div>
   <div id="item_calendarDiv" style="z-index:1520; display:none;"></div>
   <!-- DO NOT MOVE calendarDivMask IE 5/6/7 has major z-index bug -->
-  <div id="item_calendarDivMask" style="display:none; z-index:1510; position:absolute; background-image:url('null.gif')" onClick="i2b2.CRC.ctrlr.dateConstraint.hideItemCalendar()"></div>
+  <div id="item_calendarDivMask" style="display:none; z-index:1510; position:absolute;" onClick="i2b2.CRC.ctrlr.dateConstraint.hideItemCalendar()"></div>
   <div id="constraintDate" style="display:none;">
     <div class="hd" style="background:#6677AA;">Constrain Item by Date Range</div>
     <div class="bd"> <br />
