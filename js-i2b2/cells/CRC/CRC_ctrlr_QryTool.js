@@ -223,6 +223,8 @@ function QueryToolController() {
 										itm.dateFrom.Month = t.substring(5,7); //t[1];
 										itm.dateFrom.Day = t.substring(8,10); //t[2];
 									}
+								} else { // WEBCLIENT-162: Backwards compatible <panel_date_from> support
+									itm.dateFrom = po.dateFrom;
 								}
 								if(po.dateTo == false){
 									var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to');
@@ -232,6 +234,8 @@ function QueryToolController() {
 										itm.dateTo.Month =  t.substring(5,7); // t[1];
 										itm.dateTo.Day = t.substring(8,10);// t[2];
 									}
+								} else { // WEBCLIENT-162: Backwards compatible <panel_date_to> support
+									itm.dateTo = po.dateTo;
 								}
 							var item = {};
 							// get the item's details from the ONT Cell
