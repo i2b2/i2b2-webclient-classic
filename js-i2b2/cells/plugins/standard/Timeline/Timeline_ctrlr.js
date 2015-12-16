@@ -90,7 +90,7 @@ i2b2.Timeline.conceptDropped = function(sdxData, showDialog) {
 			sdxData = results.model[0];
 		}
  	}
-	if (sdxData.origData.table_name == "patient_dimension"){
+	if (sdxData.origData.table_name.toUpperCase() == "PATIENT_DIMENSION"){
 		if(showDialog)
 			alert("Patient dimension item being dropped is not supported.");
 		return false;
