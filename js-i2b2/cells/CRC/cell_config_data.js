@@ -22,6 +22,7 @@
 		"CRC_view_QryTool.js",
 		"CRC_view_Graphs.js",
 		"CRC_view_Status.js",
+		"CRC_view_QueryReport.js",
 		"CRC_view_modLabRange.js",
 		"i2b2_msgs.js"
 	],

@@ -176,6 +176,7 @@ function i2b2_PanelController(parentCtrlr) {
 	this._redrawButtons = function(pd) {
 		$('infoQueryStatusText').innerHTML = "";		
 		$('infoQueryStatusChart').innerHTML = "";
+		$('infoQueryStatusReport').innerHTML = "";
 
 		// set panel GUI according to data in the "pd" object
 		if (undefined===pd) { pd = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][this.panelCurrentIndex]; }
@@ -486,6 +487,7 @@ function i2b2_PanelController(parentCtrlr) {
 	this.doTiming = function(sTiming) { 
 		$('infoQueryStatusText').innerHTML = "";	
 		$('infoQueryStatusChart').innerHTML = "";
+		$('infoQueryStatusReport').innerHTML = "";
 
 		if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup].length==0) { return;}
 		var bVal;
@@ -874,6 +876,7 @@ function i2b2_PanelController(parentCtrlr) {
 		var pd = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][this.panelCurrentIndex];
 		$('infoQueryStatusText').innerHTML = "";
 		$('infoQueryStatusChart').innerHTML = "";
+		$('infoQueryStatusReport').innerHTML = "";
 
 		if (undefined===htmlID) { return; } 
 		// remove the node in the treeview
@@ -901,6 +904,7 @@ function i2b2_PanelController(parentCtrlr) {
 	this._renameConcept = function(key, isModifier, pd) {
 		$('infoQueryStatusText').innerHTML = "";
 		$('infoQueryStatusChart').innerHTML = "";
+		$('infoQueryStatusReport').innerHTML = "";
 
 		//var pd = i2b2.CRC.model.queryCurrent.panels[this.panelCurrentIndex];
 		// remove the concept from panel
@@ -1066,6 +1070,7 @@ function i2b2_PanelController(parentCtrlr) {
 	this.doDelete = function() { 
 		$('infoQueryStatusText').innerHTML = "";
 		$('infoQueryStatusChart').innerHTML = "";
+		$('infoQueryStatusReport').innerHTML = "";
 		// function fired when the [X] icon for the GUI panel is clicked
 		i2b2.CRC.ctrlr.QT.panelDelete(this.panelCurrentIndex);
 		// redraw the panels 

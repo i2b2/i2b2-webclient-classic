@@ -60,6 +60,10 @@
 <link rel="stylesheet" type="text/css" href="js-ext/yui/build/assets/skins/sam/skin.css">
 <link rel="stylesheet" type="text/css" href="js-i2b2/ui.styles/ui.styles.css">
 
+<!-- Load Moment.js for parsing and formatting date/time -->
+<script type="text/javascript" src="js-ext/moment.min.js"></script>
+<link type="text/css" href="js-i2b2/cells/CRC/assets/query_report.css" rel="stylesheet" />
+
 <!-- Bug in IE - use MINIMUM number of LINK and STYLE tags in the DOM as possible: http://support.microsoft.com/kb/262161 -->
 <style>
  @import url(js-ext/yui/build/fonts/fonts-min.css);
@@ -172,7 +176,7 @@ var rightSideWidth = initBrowserViewPortDim.width * rightSideProportion; 	// thi
 // following added to support webclient plugin manager / installer only
 var i2b2Admin = "";    
 function invokeWCPinstaller() {
-    window.open("plugin_installer/admin.php?rul=" + i2b2.PM.model.url + "&noisreVcw=" + i2b2.ClientVersion + "&niamod=" + i2b2.PM.model.login_domain + 
+    window.open(i2b2.PM.model.installer_path + "admin.php?rul=" + i2b2.PM.model.url + "&noisreVcw=" + i2b2.ClientVersion + "&niamod=" + i2b2.PM.model.login_domain + 
                 "&esur=" + i2b2.PM.model.login_username + "&esion=0123456789qwertyuioplkjhgfdsazxcvbnmPOIUYTREWQASDFGHJKLMNBVCXZ&yek=" +
                 i2b2.PM.model.login_password); 
 }
@@ -224,7 +228,9 @@ function initI2B2()
 				i2b2.hive.MasterView.setViewMode('Admin');
 				$('viewMode-Patients').style.display = 'none';
 				$('viewMode-Analysis').style.display = 'none';
-				$('adminPlugins').show();
+				if(typeof i2b2.PM.model.installer_path !== "undefined"){
+					$('adminPlugins').show();
+				}
 				// hide the splitter from view since we don't need it in admin-only mode
 				var splitter = $( splitterName );
 				splitter.style.visibility="hidden";
@@ -262,6 +268,9 @@ function initI2B2()
 			$('viewMode-User').title = i2b2.PM.model.userRoles;
 			if (i2b2.PM.model.otherAuthMethod) { $('changePasswordLink').hide(); }
 			if (i2b2.PM.model.login_debugging) { $('debugMsgSniffer').show(); }
+			if(typeof i2b2.PM.model.installer_path !== "undefined"){
+				$('PluginGalleryFooter').show();
+			}
 		}), i2b2
 	);
 
@@ -330,6 +339,12 @@ YAHOO.util.Event.addListener(window, "load", init);
   <div class="bd" id="help-viewer-body">
     <iframe width="23%" frameborder="0"  height="98%" src="help/toc.html" name="left"></iframe>
 	<iframe width="75%" frameborder="0" height="98%" src="help/content.html" style="overflow-x:hidden;" name="right"></iframe>
+  </div>
+  <div class="ft"></div>
+</div>
+<div id="queryReport-viewer-panel" style="display:none;">
+  <div class="hd">Query Report</div>
+  <div class="bd" id="queryReport-viewer-body">
   </div>
   <div class="ft"></div>
 </div>
@@ -846,10 +861,14 @@ YAHOO.util.Event.addListener(window, "load", init);
       <div class="tabBox tabQueryGraphs" onClick="i2b2.CRC.view.status.selectTab('graphs')">
         <div>Graph Results</div>
       </div>
+	  <div class="tabBox tabQueryReport" onClick="i2b2.CRC.view.status.selectTab('queryReport')">
+        <div>Query Report</div>
+      </div>
     </div>
     <div class="StatusBox">
       <div id="infoQueryStatusText" class="StatusBoxText" oncontextmenu="return false"></div>
       <div id="infoQueryStatusChart" class="StatusBoxChart" oncontextmenu="return false" style="display:none"></div>
+	  <div id="infoQueryStatusReport" class="StatusBoxReport" oncontextmenu="return false" style="display:none"></div>
     </div>
   </div>
   <!-- ############### <Workplace> ############### -->
@@ -893,7 +912,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         </form>
       </div>
       <div id="anaPluginList" oncontextmenu="return false"></div>
-	  <div id="PluginGalleryFooter"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="Javascript:void(0)" onClick="invokeWCPinstaller();" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:12;color:#285D96;" >View More Plugins in i2b2 Gallery...</a></div>
+	  <div id="PluginGalleryFooter" style="display:none"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="Javascript:void(0)" onClick="invokeWCPinstaller();" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:12;color:#285D96;" >View More Plugins in i2b2 Gallery...</a></div>
     </div>
     <div style="clear:both;"></div>
   </div>

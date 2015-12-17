@@ -35,6 +35,7 @@ i2b2.CRC.view.status.showDisplay = function() {
 	$('infoQueryStatusText').parentNode.parentNode.select('DIV.tabBox.tabQueryStatus')[0].addClassName('active');
 	$('infoQueryStatusText').show();
 	$('infoQueryStatusChart').hide();
+	$('infoQueryStatusReport').hide();  //Query Report BG
 }
 // ================================================================================================== //
 i2b2.CRC.view.status.selectTab = function(tabCode) {
@@ -42,14 +43,22 @@ i2b2.CRC.view.status.selectTab = function(tabCode) {
 	switch (tabCode) {
 		case "graphs":
 			this.currentTab = 'graphs';
-			this.cellRoot.view['status'].hideDisplay();
 			this.cellRoot.view['graphs'].showDisplay();
+			this.cellRoot.view['status'].hideDisplay();
+			this.cellRoot.view['queryReport'].hideDisplay();  //Query Report BG
 		break;
 		case "status":
 			this.currentTab = 'status';
 			this.cellRoot.view['status'].showDisplay();
 			this.cellRoot.view['graphs'].hideDisplay();
+			this.cellRoot.view['queryReport'].hideDisplay();  //Query Report BG
 		break;
+		case "queryReport":
+			this.currentTab = 'queryReport';
+			this.cellRoot.view['queryReport'].showDisplay();
+			this.cellRoot.view['graphs'].hideDisplay();
+			this.cellRoot.view['status'].hideDisplay();
+			break;
 	}
 }
 // ================================================================================================== //
