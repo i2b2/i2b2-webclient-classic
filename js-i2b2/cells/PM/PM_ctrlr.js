@@ -62,6 +62,9 @@ i2b2.PM.doLogin = function() {
 			} else {
 				i2b2.PM.model.admin_only = false;
 			}
+			if (typeof p[val].installer !== undefined) {
+				i2b2.PM.model.installer_path = p[val].installer;
+			} 
 			
 		}
 	} else {
