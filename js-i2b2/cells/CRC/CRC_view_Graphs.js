@@ -403,7 +403,6 @@ try {
             + "text-align: center;"
             + "vertical-align: middle;"
             + "background-color: white;"
-            + "height: 100%;"
             + "width: 100%;";
 	document.getElementById(sDivName).setAttribute("style",sDivStyle);
 	// establish table in Div and set up its style.
@@ -948,7 +947,6 @@ try {
             + "text-align: center;"
             + "vertical-align: middle;"
             + "background-color: white;"
-            + "height: 100%;"
             + "width: 100%;";
 	child.setAttribute("style",sDivStyle);
 	// establish table in Div and set up its style.

@@ -253,6 +253,12 @@ function QueryToolController() {
 							} else { // WEBCLIENT-162: Backwards compatible <panel_date_to> support
 								itm.dateTo = po.dateTo;
 							}
+							if ((pi.length == 1) && (i2 == 0)){
+								if(typeof i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from' === "undefined"))
+									allDateFromsAreSame = false;
+								if(typeof i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to' === "undefined"))
+									allDateTosAreSame = false;
+							}
 							// Set panel date by looking at item dates
 							if ((pi.length > 1) && (i2 < pi.length - 1) && allDateFromsAreSame && allDateTosAreSame){
 								if(i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from') != i2b2.h.getXNodeVal(pi[i2 + 1],'constrain_by_date/date_from')){

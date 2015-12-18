@@ -132,6 +132,39 @@ i2b2.CRC.view.status.ResizeHeight = function()
 				ve = ve.style;
 				if (i2b2.WORK && i2b2.WORK.isLoaded) 
 				{
+					if (i2b2.CRC.view.status.isZoomed) {
+						$('infoQueryStatusText').style.height = h - 97;
+						$('infoQueryStatusChart').style.height = h - 97;
+						$('infoQueryStatusReport').style.height = h - 97;
+						ve.top = 45;
+						$('crcQueryToolBox').hide();
+					} else {
+						$('infoQueryStatusText').style.height = '146px';
+						$('infoQueryStatusChart').style.height = '146px';
+						$('infoQueryStatusReport').style.height = '146px';
+						ve.top = h-198;
+						$('crcQueryToolBox').show();
+						
+					}
+					
+
+				} 
+				else 
+				{
+					if (i2b2.CRC.view.status.isZoomed) {
+						$('infoQueryStatusText').style.height = h - 97;
+						$('infoQueryStatusChart').style.height = h - 97;
+						$('infoQueryStatusReport').style.height = h - 97;
+						$('infoDownloadStatusData').style.height = h - 97;
+						ve.top = 45;
+					} else {
+						$('infoQueryStatusText').style.height = '190px';
+						ve.top = h-242;
+					}
+					
+				}
+			/*
+				{
 					$('infoQueryStatusText').style.height = '146px';
 					ve.top = h-198;
 				} 
@@ -139,13 +172,21 @@ i2b2.CRC.view.status.ResizeHeight = function()
 				{
 					$('infoQueryStatusText').style.height = '190px';
 					ve.top = h-242;
-				}
+				}*/
 				break;
 			default:
 				ve.hide();
 		}
 	}
 }
+// ================================================================================================== //
+
+i2b2.CRC.view.status.ZoomView = function() {
+	i2b2.hive.MasterView.toggleZoomWindow("status");
+}
+
+
+
 // ================================================================================================== //
 i2b2.events.initView.subscribe((function(eventTypeName, newMode) {
 // -------------------------------------------------------
@@ -198,6 +239,10 @@ i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, zoomMsg) {
 				this.visible = false;
 				this.isZoomed = false;
 				i2b2.CRC.view.status.hide();
+				break;
+			case "status":
+				this.isZoomed = true;
+				this.visible = true;
 		}
 	} else {
 		switch (newMode.window) {
@@ -205,6 +250,10 @@ i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, zoomMsg) {
 				this.isZoomed = false;
 				this.visible = true;
 				i2b2.CRC.view.status.show();
+				break;
+			case "status":
+				this.isZoomed = false;
+				this.visible = true;
 		}
 	}
 	this.ResizeHeight();
