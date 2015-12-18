@@ -85,13 +85,13 @@ i2b2.PLUGINMGR.ctrlr.main =
 					var doc = $('anaPluginIFRAME').contentDocument;
 					if (!doc) {var doc = $('anaPluginIFRAME').contentWindow.document; }
 					doc.open(); 
-					doc.write('<a href="#" onclick="javascript:jQuery(\'#pluginsMenu\').qtip(\'show\');return false;">Select a plugin to load</a>');
+					doc.write('<a href="#" style="color:#6677aa" onclick="javascript:jQuery(\'#pluginsMenu\').qtip(\'show\');return false;">Select a plugin to load</a>');
 					doc.close();
 				} else {
 					// clear DIV
 					var trgt = $('anaPluginViewFrame');
 					while (trgt.childNodes.length > 0) { trgt.removeChild(trgt.firstChild); }
-					trgt.innerHTML = '<div class="initialMsg"><a href="#" onclick="javascript:jQuery(\'#pluginsMenu\').qtip(\'show\');return false;">Select a plugin to load</a></div>';
+					trgt.innerHTML = '<div class="initialMsg"><a href="#" style="color:#6677aa" onclick="javascript:jQuery(\'#pluginsMenu\').qtip(\'show\');return false;">Select a plugin to load</a></div>';
 				}				
 				delete i2b2.PLUGINMGR.ctrlr.main.currentPluginCtrlr;
 			} else {

@@ -29,9 +29,8 @@ DIV#anaPluginViewBox DIV#anaPluginViewFrame {
 
 
 DIV#anaPluginViewFrame DIV.initialMsg {
-	color:#999999;
-	font-size:14px;
-	font-style:italic;
+	color:#6677aa;
+	font-size:20px;
 	position:relative;
 	text-align:center;
 	top:49%;	

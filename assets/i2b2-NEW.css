@@ -191,7 +191,7 @@ DIV#PluginListBox DIV.topmenu {
 DIV#PluginListBox DIV#anaPluginList {
 	background: #C3CED4;
 	border: 1px solid #667788;
-	height: 200px;
+	height: 350px;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
