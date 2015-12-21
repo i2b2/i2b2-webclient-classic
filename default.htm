@@ -8,7 +8,7 @@
  *       i2b2 Web Client
  *           v1.7.07
  *  *************************
- *  @modified: 12/09/15
+ *  @modified: 12/21/15
  *  Contributors:
  *     Nick Benik
  *     Griffin Weber, MD, PhD
@@ -21,7 +21,7 @@
  */-->
 
 <script type="text/javascript">
-	var i2b2build = "1.7.007   [12/09/15 4:07 PM] ";
+	var i2b2build = "1.7.007   [12/21/15 4:07 PM] ";
 </script>
 
 <!-- LOAD YUI FROM Yahoo's CDN
@@ -176,9 +176,37 @@ var rightSideWidth = initBrowserViewPortDim.width * rightSideProportion; 	// thi
 // following added to support webclient plugin manager / installer only
 var i2b2Admin = "";    
 function invokeWCPinstaller() {
-    window.open(i2b2.PM.model.installer_path + "admin.php?rul=" + i2b2.PM.model.url + "&noisreVcw=" + i2b2.ClientVersion + "&niamod=" + i2b2.PM.model.login_domain + 
-                "&esur=" + i2b2.PM.model.login_username + "&esion=0123456789qwertyuioplkjhgfdsazxcvbnmPOIUYTREWQASDFGHJKLMNBVCXZ&yek=" +
-                i2b2.PM.model.login_password); 
+    var mapForm = document.createElement("form");
+    mapForm.target = "_blank";    
+    mapForm.method = "POST";
+    mapForm.action = i2b2.PM.model.installer_path + "admin.php";
+    var mapInput1 = document.createElement("input");
+    mapInput1.type = "hidden";
+    mapInput1.name = "rul";
+    mapInput1.value = i2b2.PM.model.url;
+    mapForm.appendChild(mapInput1); // Add it to the form
+    var mapInput2 = document.createElement("input");
+    mapInput2.type = "hidden";
+    mapInput2.name = "noisreVcw";
+    mapInput2.value = i2b2.ClientVersion;
+    mapForm.appendChild(mapInput2); // Add it to the form
+    var mapInput3 = document.createElement("input");
+    mapInput3.type = "hidden";
+    mapInput3.name = "niamod";
+    mapInput3.value = i2b2.PM.model.login_domain;
+    mapForm.appendChild(mapInput3); // Add it to the form
+    var mapInput4 = document.createElement("input");
+    mapInput4.type = "hidden";
+    mapInput4.name = "esur";
+    mapInput4.value = i2b2.PM.model.login_username;
+    mapForm.appendChild(mapInput4); // Add it to the form
+    var mapInput5 = document.createElement("input");
+    mapInput5.type = "hidden";
+    mapInput5.name = "yek";
+    mapInput5.value = i2b2.PM.model.login_password;
+    mapForm.appendChild(mapInput5); // Add it to the form    
+    document.body.appendChild(mapForm);
+    mapForm.submit();
 }
 
 function pluginMenu() {
