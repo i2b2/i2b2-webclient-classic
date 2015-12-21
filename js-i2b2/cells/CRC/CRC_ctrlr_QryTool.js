@@ -3561,6 +3561,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 		return value;
 	}
 	
+	
+	
 	this.PrintElem = function(divIdToPrint)
     {
         // Popup(jQuery("#" + divToPrint).html());
