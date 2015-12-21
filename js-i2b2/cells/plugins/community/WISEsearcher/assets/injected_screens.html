@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+/*======================================================================================================================
+ * @projectDescription	Workplace Items Sharing Enhancement - Searcher 
+ *                                      (Tool for finding & listing all items in the Workplace that contain specified search terms in their annotations or names).
+ * @inherits		        i2b2
+ * @namespace		i2b2.WISEsearcher
+ * @author		        S. Wayne Chan, Biomedical Research Informatics Development Group (BRIDG) and Biomedical Research Informatics Consulting & Knowledge Service (BRICKS),
+ *                                     Div. of Health Informatics and Implementation Science (HIIS), Dept. of Quantitative Health Sciences (QHS), 
+ *                                     University of Massachusetts Medical School (UMMS), Worcester, MA
+ * @version 		        1.1 (for i2b2 v1.3 - v1.6.0.2)
+ * @acknowledgement   This module leveraged off  
+ *                                      - the general construct / format /style  / template used in the i2b2 web client plugin examples by N. Benik & G. Weber 
+ *                                      - the XLS export feature of the ExportXLS plugin by M. Bucalo, Universita' di Pavia
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * @copyright		        Copyright 2011 University of Massachusetts Medical School.
+ * @license/disclaimer    This file is part of WISE-Searcher plugin for the i2b2 webclient.
+ *
+ *			WISE-Searcher plugin for the i2b2 webclient is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by 
+ *			the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *			WISE-Searcher plugin for the i2b2 webclient is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ *			You should have received a copy of the GNU General Public License along with WISE-Searcher plugin for the i2b2 webclient.  If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * updated history (dateformat: YYYYMMDD) 
+ * 20110812 S. Wayne Chan (v.1.0) Developed initial version.
+ * 20110817 S. Wayne Chan (v.1.0) changed the absolute path to relative path in referencing /export-files/SaveToExcel.php
+ * 20110927 S. Wayne Chan (v.1.0) updated "Terms of Use".
+ * 20111028 S. Wayne Chan (v.1.0) added “copyright” & “license/disclaimer” sections in header following UMMS legal signoff.
+ * 20120111 S. Wayne Chan (v.1.1) added "Case option"; added "Version History" & "Availability" sections, & justified text in Help tab.
+ * 20120113 S. Wayne Chan (v.1.1) added "export to csv" support for Chrome, Firefox, & Safari.
+ * 20120117 S. Wayne Chan (v.1.1) added "export to csv" support for Internet Explorer..
+ * 20120118 S. Wayne Chan (v.1.1) added "Exclude terms" support.
+ * 20151208 S. W. Chan  (v.1.1.1) Updated "Installation Guide" to be compatible with the new Webclient Plugin Installer, etc.
+ *                                moved Save*.php files into same subfolder
+ *======================================================================================================================
+ */
+-->
+<html>
+    <body>	<div id="WISEsearcher-mainDiv">	    <div id="WISEsearcher-TABS" class="yui-navset">
+		<ul class="yui-nav">
+		    <li id="WISEsearcher-TAB0" class="selected"><a href="#WISEsearcher-TAB0"><em>Specify Search</em></a></li>
+		    <li id="WISEsearcher-TAB1"><a href="#WISEsearcher-TAB1"><em>Result</em></a></li>
+		    <li id="WISEsearcher-TAB2"><a href="#WISEsearcher-TAB2"><em>Help</em></a></li>
+		</ul>
+		<div class="yui-content" id="WISEsearcher-CONTENT">
+ 		    <div><!-- TAB0 -->
+			<div class="WISEsearcher-MainContent">
+			    <div class="WISEsearcher-MainContentPad">
+				<div>Enter the search and exclude (if any) terms, separated by commas (","), in the corresponding text areas below.<br>
+                                     Then select the appropriate search condition radio buttons.</b><br><br>
+                                     Finally, click the <span style="font-family:monospace">"Result"</span> tab to perform the search, and display the found items.
+                                </div>
+				<br/>
+				<div><p><hr size="1" noshade></div>
+				<div id="WISEsearcher-caseOptions" class="matchOptions">
+				    <form>
+					<br/><b>Case option:</b><br/>
+					<input type="radio" checked name="caseCriteria" value="o" onclick="i2b2.WISEsearcher.caseChanged('o');");">
+					Observe case differences (case-sensitive).<br/>
+					<input type="radio" 	    name="caseCriteria" value="i" onclick="i2b2.WISEsearcher.caseChanged('i');");">
+					Ignore case differences (case-insensitive).
+				    </form>
+				</div>
+				<div><p><hr size="1" noshade></div>
+				<div id="WISEsearcher-searchTerms" class="searchTerms">
+				    Search term(s) (comma-separated):<br/>
+				    <textarea></textarea>
+				</div>
+				<div id="WISEsearcher-matchOptions" class="matchOptions">
+				    <form>
+					<br/><b>Match option:</b><br/>
+					<input type="radio"         name="matchCriteria" value="a" onclick="i2b2.WISEsearcher.matchChanged('a');");">
+					    Include any item that contains (in its annotation or name) all the specified terms.<br/>
+					<input type="radio" checked name="matchCriteria" value="1" onclick="i2b2.WISEsearcher.matchChanged('1');");">
+					    Include any item that contains at least one of the specified terms.<br/>
+				    </form>
+				</div>
+				<div><p><hr size="1" noshade></div>
+				<div id="WISEsearcher-excludeTerms" class="searchTerms">
+				    Exclude term(s) (comma-separated):<br/>
+				    <textarea></textarea>
+				</div>
+				<div id="WISEsearcher-excludeOptions" class="matchOptions">
+				    <form>
+					<br/><b>Exclude option:</b><br/>
+					<input type="radio"         name="excludeCriteria" value="a" onclick="i2b2.WISEsearcher.excludeChanged('a');");">
+                                            Exclude any item that contains all the specified terms.<br/>
+					<input type="radio" checked name="excludeCriteria" value="1" onclick="i2b2.WISEsearcher.excludeChanged('1');");">
+                                            Exclude any item that contains at least one of the specified terms.<br/>
+				    </form>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		    <div><!-- TAB 1 -->
+			<div class="WISEsearcher-MainContent">
+			    <div class="results-directions">Please return to the <span style="font-family:monospace">"Specify Search"</span> tab and provide the search term(s) first.</div>
+			    <div class="results-finished" style="display:none;">
+				<div id="results-display"> 
+			          <!-- warning not needed any more, with introduction of "results-export-csv-IE"
+				    <div class="results-warn" style="color:#3300FF;">
+					Sorry, exporting the table below to a CSV file is not supported on Internet Explorer (due to linefeed problem specific to this type of browser) 
+					-- please browse with Firefox, Chrome, or Safari instead if you prefer to export to a CSV file.
+				    </div>
+                                  -->
+				    <div class="results-export-csv" style="display:none;">
+<!-- 
+					<form action="./export-files/Save2Csv.php?ext=WISE-search" method="post" 
+ -->
+					<form action="" id="save2csv" method="post"  target="_blank"
+                          onsubmit='$j("#datatocsv").val($j("<div>").append($j("#csvTable").eq(0).clone()).html())'>
+                          <!-- requires /var/www/html/webclient/js-ext/jquery-1.6.1-min.js & corresponding update to /var/www/html/webclient/default.htm -->
+					    <input type="submit" value=" Export table below to a CSV file " 
+						   style="height:20px; color:#FFFFFF; font-family:Verdana; font-weight:bold; background-color:#72A2D4;" >
+					    <input type="hidden" id="datatocsv" name="datatocsv">
+					</form>	
+				    </div>				    
+				    <div class="results-export-csv-IE" style="display:none;">
+					<input type="button" value="Export table below to a CSV file" onclick="i2b2.WISEsearcher.IEwriteCsvTable();" 
+					       style="height:20px; color:#FFFFFF; font-family:Verdana; font-weight:bold; background-color:#72A4D2;" >
+					<br/>&nbsp;
+				    </div>
+				    <div class="results-export-xls" style="display:none;">
+<!-- 
+					<form action="./export-files/SaveToExcel.php?ext=WISE-search" method="post" target="_blank" 
+ -->
+					<form action="" id="save2xls" method="post" target="_blank" 
+                          onsubmit='$j("#datatodisplay").val($j("<div>").append($j("#ReportTable").eq(0).clone()).html());'>
+	                      <!-- requires /var/www/html/webclient/js-ext/jquery-1.6.1-min.js & corresponding update to /var/www/html/webclient/default.htm -->
+					    <input type="submit" value="Export table below to an Excel spreadsheet" 
+						   style="height:20px; color:#FFFFFF; font-family:Verdana; font-weight:bold; background-color:#72A4D2;" >
+					    <input type="hidden" id="datatodisplay" name="datatodisplay">
+					</form>	
+				    </div>
+   				    <table>
+					<tr>
+					    <td class="results-tabulation">
+						<div class="searchResult"></div>
+					    </td>
+					</tr>
+				    </table>
+ 				    <div class="searchResult-xls"></div>
+				    <div class="searchResult-csv"></div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		    <div><!-- TAB 2 -->
+			<div>
+			    <div class="WISEsearcher-MainContent">
+				<div class="WISEsearcher-MainContentPad" style="text-align:justify">
+				    <h1>Introduction</h1>
+					This plugin is part of the WISE (Workplace Items Sharing Enhancement) Tool Set developed as a result of feedback and suggestions from the i2b2 users
+					community in the University of Massachusetts Medical School.  As its name implies, the purpose of this tool set is to facilitate and enhance the sharing of 
+					the items or objects in the Workplace panel of the i2b2 web client; to the extend that unnecessary repetitions of preious works can be prevented or minimized.
+                                        <p>This plugin provides the following main functions:
+					<ol>
+					    <li>Finds all Workplace items / objects (folders, queries, patient sets, etc.) containing the terms provided (in either their annotations or their names), 
+                                                in the conditions selected.</li>
+					    <li>Excludes any Workplace items containing the exclusion terms provided (in either their annotations or their names), per condition specified.
+					    <li>Tabulates such found items (with their corresponding icons) in the alphabetical order of their paths.</li>
+					    <li>Optionally exports aforementioned tabulated data (without the item icons) into an Excel spreadsheet file or / and a CSV file conveniently.</li>
+					</ol>
+  				    <p>
+				    <h1>Instructions</h1>
+					<ol>
+					    <li>Navigate to the <span style="font-family:monospace">"Specify Search"</span> tab. 
+					           Enter the comma-separated search terms into the input text area.</li>
+					    <li>Select the appropriate <span style="font-family:monospace"><i>Case, Match, & Exclusion option</i></span> radio buttons.</li>
+					    <li>Finally, click the <span style="font-family:monospace">"Result"</span> tab to view the tabulated search result.</li>
+					</ol>
+                                    <p>				    <h1>Browser Compatibilities</h1>
+					<ul>
+				            <li>This plugin works on the following browsers: Firefox (v.4.0.1), Chrome (v.12 - v.17), Safari (v.5.0.5), and Internet Explorer (v8 & v.9).</li>
+					    <li>The i2b2 Web client itself does not work on the following browser: Opera (v.11.50 or v.11.61).</li>
+					</ul>
+				    <p>
+				    <h1>Version History</h1>
+  					<table style="border-collapse:collapse; text-align:justify" width="100%"> 					
+					    <tr>
+						<td valign="top" style="border:1px solid black; padding:4px">1.0</td>
+						<td valign="top" style="border:1px solid black; padding:4px">Inital release</td>
+						<td valign="top" style="border:1px solid black; padding:4px">Q3 2011</td>
+					    </tr>
+					    <tr>
+						<td valign="top" style="border:1px solid black; padding:4px">1.1</td>
+						<td valign="top" style="border:1px solid black; padding:4px">
+						 Added supports for 'ignoring case', 'exclusion terms', & 'CSV export', etc.; 
+						 updated both XLS & CSV exports to be independent of server php setting; 
+						 & fixed the unscrollable panel problem, on IE, against i2b2 webclient v1.6.0.2
+						</td>
+						<td valign="top" style="border:1px solid black; padding:4px">Q1 2012</td>
+					    </tr>
+					    <tr>
+						<td valign="top" style="border:1px solid black; padding:4px">1.1.1</td>
+						<td valign="top" style="border:1px solid black; padding:4px">
+						 Updated "Installation Guide" to be compatible with the new Webclient Plugin Installer.
+						</td>
+						<td valign="top" style="border:1px solid black; padding:4px">Q4 2015</td>
+					    </tr>
+					</table>
+				    <p>
+				    <h1>Availability</h1>
+					This plugin is free to the rest of the i2b2 community.  It can be downloaded from the 
+					<a href="http://micard.umassmed.edu/downloads.php#WISE-tools"  target="_blank" title="website to download this plugin">
+					 University of Massachusetts Medical School website for i2b2 related downloads.
+                                        </a>  
+				    <p>
+				    <h1>Terms of Use</h1>
+					This plugin is published under the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU GPL v3 license</a>.
+                                        <br/><br/>  
+					This software is distributed as a plugin to the i2b2 v1.3 & v1.6RC2 webclient framework, and may be used free of charge.  It is distributed in the hope that it
+					will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+				    <p>
+				    <h1>About Us</h1>
+					This plugin was created by S. Wayne Chan & the Bio-Medical Informatics (BMI) Core Team, University of Massachusetts Medical School, Worcester, MA.<br/><br/>
+					<i><code>Copyright 2011, 2012 University of Massachusetts Medical School.</code></i>  
+				    <p>
+				    <h1>Acknowledgement</h1>
+					This plugin leveraged off the following:
+					<ul>
+					    <li>the general construct / format /style  / template used in the i2b2 web client plugin examples by N. Benik & G. Weber;</li>
+					    <li>the <span style="font-family:monospace">XLS</span> export feature of the <span style="font-family:monospace">ExportXLS</span> plugin 
+                                                by M. Bucalo, Universita' di Pavia.</li>
+					</ul>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,1 @@
+# dev-PLUGIN-WISE-searcher

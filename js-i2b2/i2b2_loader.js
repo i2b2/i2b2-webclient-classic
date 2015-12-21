@@ -41,26 +41,6 @@ i2b2.hive.tempCellsList = [
 		   forceLoading: true,
 		   forceConfigMsg: { params: [] }
 		},
-//		{ code:	"ExampHello",
-//		   forceLoading: true,
-//		   forceConfigMsg: { params: [] },
-//		   forceDir: "cells/plugins/examples"
-//		},
-//		{ code:	"ExampTabs",
-//		   forceLoading: true,
-//		   forceConfigMsg: { params: [] },
-//		   forceDir: "cells/plugins/examples"
-//		},
-//		{ code:	"ExampPDO",
-//		   forceLoading: true,
-//		   forceConfigMsg: { params: [] },
-//		   forceDir: "cells/plugins/examples"
-//		},
-//		{ code:	"ExampComm",
-//		   forceLoading: true,
-//		   forceConfigMsg: { params: [] },
-//		   forceDir: "cells/plugins/examples"
-//		},
 		{ code:	"Dem1Set",
 		   forceLoading: true,
 		   forceConfigMsg: { params: [] },
@@ -79,12 +59,31 @@ i2b2.hive.tempCellsList = [
 		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
 		   forceDir: "cells/plugins/standard"
 		},
-        { code: "ProjectRequest",
-            forceLoading: true,
-            forceConfigMsg: { params: [] },
+		{ code:	"WISEsearcher",
+		   forceLoading: true,
+		   forceConfigMsg: { params: [] },
+		   roles: [ "DATA_OBFSC", "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
+		   forceDir: "cells/plugins/community"
+		},
+		{ code:	"CAREcncptDem",
+		   forceLoading: true,
+		   forceConfigMsg: { params: [] },
 		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
-            forceDir: "cells/plugins/standard"
-        }
+		   forceDir: "cells/plugins/community"
+		},
+		{ code:	"CAREobsTally",
+		   forceLoading: true,
+		   forceConfigMsg: { params: [] },
+		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
+		   forceDir: "cells/plugins/community"
+		},
+		{ code:	"ExportXLS",
+		   forceLoading: true,
+		   forceConfigMsg: { params: [] },
+		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
+		   forceDir: "cells/plugins/community"
+		}		
+
 		
 	];
 // ================================================================================================== //

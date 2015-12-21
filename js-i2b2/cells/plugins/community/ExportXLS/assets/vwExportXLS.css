@@ -1,0 +1,260 @@
+/**
+ * @projectDescription	i2b2 XLS Export Plugin 
+ * @inherits			i2b2
+ * @namespace			i2b2.ExportXLS
+ * @authors 	        Mauro Bucalo [Universita' di Pavia]; S. Wayne Chan [University of Massachusetts Medical School]; Axel Newe [FAU Erlangen-Nuremberg]
+ * =========================================================================================================================================================================
+ *    date    ver. update summary [coding engineer / developer, institute]
+ * ---------- ---- -------------------------------------------------------
+ * 2011-06-10 1.0  Initial Launch, for i2b2 v1.5 [Mauro Bucalo, Universita' di Pavia] 
+ * 2011-07-18 1.1  Misc. compatibility (i2b2 v1.3), interface, & tabulation enhancements (for local users only) [S. Wayne Chan, University of Massachusetts Medical School]
+ * 2012-01-xx 1.6  Updated for i2b2 v1.6 [Mauro Bucalo, Universita' di Pavia]
+ * 2012-02-13 2.0  More compatibility (Internet Explorer), interface, & tabulation enhancements [S. Wayne Chan, University of Massachusetts Medical School]
+ * 2013-01-09 3.0  Added many features (CSV export, tabulating options, formatting options, paged queries...), heavily re-engineered [Axel Newe, FAU Erlangen-Nuremberg] 
+ * 2013-10-30 3.1  Fixed several minor bugs & added 'Locality' tabulation column, etc. (for local users only) [S. Wayne Chan, University of Massachusetts Medical School]
+ * 2013-11-15 3.2  Added option to select target subset from a large patient set & termination at server failure, enhanced progress feedbacks [Wayne Chan, UMass Med School]
+ */
+
+/*** CSS for main plugin wrapper ***/
+DIV#ExportXLS-mainDiv {
+	padding: 0px;
+}
+
+/*** CSS for tab background ***/
+DIV#ExportXLS-TABS DIV.yui-content {
+	background: #FFF;
+}
+
+DIV#ExportXLS-TABS DIV.ExportXLS-MainContent {
+    background:#FFF;
+    border:solid #63758C;
+    border-width:1px 0;
+    overflow:auto;
+    height:100%;
+}
+DIV#ExportXLS-TABS DIV.ExportXLS-MainContentPad {
+	padding:10px 10px;
+    text-align:justify;
+	vertical-align:baseline;
+}
+DIV#ExportXLS-TABS DIV.ExportXLS-MainContentPad  .inlineimg {
+	vertical-align:middle;
+}
+
+/*** CSS for the 'Specify Data' tab ***/
+DIV#ExportXLS-mainDiv DIV.lbl {
+	padding: 6px 0px;
+	width:80px;
+	text-align:right;
+	float: left;
+	font-weight:bold;
+	color:#666;
+	margin: 15px 10px 0px 0px;
+}
+DIV#ExportXLS-mainDiv DIV.droptrgtlbl {
+	padding: 6px 0px;
+	width:100px;
+	text-align:right;
+	float: left;
+	font-weight:bold;
+	color:#666;
+	margin: 15px 10px 0px 0px;
+}
+DIV#ExportXLS-mainDiv DIV.droptrgt {
+	padding: 0;
+	background: #DEEBEF;
+	margin-top: 15px;
+	text-align:left;
+	border: 1px solid #63758C;
+	width:320px;
+	overflow:hidden;
+	white-space:nowrap;
+}
+DIV#ExportXLS-mainDiv #ExportXLS-PRSDROP {
+	padding: 5px 10px;
+	overflow:hidden;
+	white-space:nowrap;
+	width:300px;
+}
+DIV#ExportXLS-mainDiv #ExportXLS-PatSetSize {
+	font-size:11px;
+	margin: 1px 0 0 50px;
+	color:#666;
+}
+DIV#ExportXLS-mainDiv #ExportXLS-PatStartNum {
+	font-size:12px;
+	margin: 1px 0 0 70px;
+	color:#666;
+}
+DIV#ExportXLS-mainDiv #ExportXLS-PatSummary {
+	font-size:11px;
+	margin: 1px 0 0 50px;
+	color:#666;
+}
+DIV#ExportXLS-mainDiv DIV.droptrgt .concptItem {
+	padding: 5px 10px;
+	overflow:hidden;
+	white-space:nowrap;
+	display:block;
+	color:#000;
+	text-decoration:none;
+}
+DIV#ExportXLS-mainDiv DIV.droptrgt .concptItem:hover {
+	background-color:#FCC;
+}
+DIV#ExportXLS-mainDiv DIV.droptrgt .concptDiv {
+	height:1px;
+	overflow:hidden;
+	background-color:#63758C;
+}
+DIV#ExportXLS-mainDiv #ExportXLS-DeleteMsg {
+	font-size:11px;
+	margin: 2px 0 0 90px;
+	display:none;
+}
+DIV#ExportXLS-mainDiv DIV.patDim {
+	padding: 6px 0px;
+	width:166px;
+	text-align:right;
+	float: left;
+	font-weight:bold;
+	color:#666;
+	margin: 15px 10px 0px 0px;
+}
+
+/*** CSS for the 'Output Options' tab ***/
+DIV#ExportXLS-mainDiv DIV.optionlbl {
+	padding: 6px 0px;
+	width:100px;
+	text-align:right;
+	font-weight:bold;
+	color:#666;
+	margin: 15px 10px 0px 0px;
+}
+DIV#ExportXLS-mainDiv DIV.optionitems {
+	background: #DEEBEF;
+	border: 1px solid #63758C;
+	padding: 2px 5px;
+	text-align:justify;
+	display:block;
+	color:#000;
+	text-decoration:none;
+}
+DIV#ExportXLS-mainDiv DIV.optionitems .optionitemdropbox {
+	width:420px;
+}
+DIV#ExportXLS-mainDiv DIV.optionitems .concptDiv {
+	height:1px; 
+	overflow:hidden;
+	background-color:#63758C;
+}
+DIV#ExportXLS-mainDiv DIV.outputOptions {
+	padding: 0;
+	/*background: #DEEBEF;*/
+	margin-top: 15px;
+	text-align:left;
+	border: 1px solid #63758C;
+	width:320px;
+	overflow:hidden;
+	white-space:nowrap;
+}
+DIV#ExportXLS-mainDiv DIV.outputOptions form {
+	margin:0;
+	padding:0;
+}
+DIV#ExportXLS-mainDiv DIV.outputOptions span {
+	margin-right: 15px;
+}
+
+/*** CSS for the 'View Results' tab ***/
+DIV#ExportXLS-TABS DIV.results-directions {
+	padding: 10px;
+	text-align:left;
+}
+DIV#ExportXLS-TABS DIV.results-working {
+	margin:10px;
+	text-align:center;
+}
+DIV#ExportXLS-TABS DIV.results-working-hard {
+	margin:10px;
+	text-align:center;
+}
+DIV#ExportXLS-TABS DIV.results-text {
+	margin:10px;
+}
+DIV#ExportXLS-TABS DIV.results-serverFailed {
+	padding: 10px;
+    text-align:justify;
+	font-weight:bold;
+	color: red;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO {
+	text-align:center;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO TABLE {
+	margin:10px 5px 5px 5px;
+	border-collapse:collapse;
+	width:97%;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO TABLE TH {
+	border:solid 1px #63758C;
+	background-color:#CEDBEF;
+	padding:5px;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO TABLE TD {
+	overflow:auto;
+	border:solid 1px #63758C;
+	background-color:#DEEBEF;
+	padding:5px;
+	text-align:center; 
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO .instructionTable TABLE {
+	margin:10px 5px 0px 5px;
+	border:none;
+	width:97%;
+	text-align:center;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO .instructionTable TABLE TD {
+	background-color:#FFFFFF;
+	border:none;	
+	overflow:auto;
+	padding:5px;
+	text-align:left; 
+	vertical-align:top;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO .InfoPDO-Request {
+	padding:0px;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO .InfoPDO-Response {
+	padding:0px;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO .originalXML {
+	overflow:hidden;
+	padding:0px;
+	margin:0px;
+}
+DIV#ExportXLS-mainDiv DIV#ExportXLS-InfoPDO TABLE TD DIV PRE {
+	margin:0px;
+	left:5px;
+	right:5px;
+	display:block;
+	overflow:auto;
+	padding:5px;
+}
+
+/*** CSS for the 'Plugin Help' tab ***/
+DIV#ExportXLS-TABS H1 {
+	margin:0 0 10px 0;
+	font-size:16px;
+	color:#42558C;
+	font-weight:bold;
+}
+DIV#ExportXLS-TABS H2 {
+	margin:10px 0 10px 0;
+	font-size:13px;
+	color:#42558C;
+	font-weight:bold;
+}
+DIV#ExportXLS-TABS HR {
+	margin:0;
+}
