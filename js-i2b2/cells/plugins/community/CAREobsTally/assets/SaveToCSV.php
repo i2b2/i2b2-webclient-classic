@@ -5,4 +5,4 @@ header("Content-disposition: attachment;filename=\"$filename\"");
 header("Pragma: public");
 header("Cache-Control: ");
 ?>
-<?=$_REQUEST['csvdata']?>
+<?php echo $_REQUEST['csvdata']?>
