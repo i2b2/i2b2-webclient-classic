@@ -61,6 +61,12 @@ i2b2.h.XPath = function(xmlDoc, xPath) {
 	}
 	try {
 		if (window.ActiveXObject  || "ActiveXObject" in window) {
+			if((!!navigator.userAgent.match(/Trident.*rv\:11\./)) && (typeof xmlDoc.selectNodes == "undefined")) { // IE11 handling
+				var doc = new ActiveXObject('Microsoft.XMLDOM');
+				doc.loadXML(new XMLSerializer().serializeToString(xmlDoc));
+				xmlDoc = doc;
+			}
+			
 			// Microsoft's XPath implementation
 			// HACK: setProperty attempts execution when placed in IF statements' test condition, forced to use try-catch
 			try {  
@@ -71,6 +77,7 @@ i2b2.h.XPath = function(xmlDoc, xPath) {
 				} catch(e) {}
 			} 
 			retArray = xmlDoc.selectNodes(xPath);
+			
 		}
 		else if (document.implementation && document.implementation.createDocument) {
 			// W3C XPath implementation (Internet standard)

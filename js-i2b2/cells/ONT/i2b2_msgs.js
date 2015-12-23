@@ -22,7 +22,9 @@ i2b2.ONT.cfg.parsers.ExtractConcepts = function(){
 			var o = new Object;
 			o.xmlOrig = c[i];
 			o.name = i2b2.h.getXNodeVal(c[i],'name');
-			o.hasChildren = i2b2.h.getXNodeVal(c[i],'visualattributes').substring(0,2);
+			o.hasChildren = i2b2.h.getXNodeVal(c[i],'visualattributes');
+			if(typeof o.hasChildren !== "undefined")
+				o.hasChildren = i2b2.h.getXNodeVal(c[i],'visualattributes').substring(0,2);
 			o.level = i2b2.h.getXNodeVal(c[i],'level');
 			o.key = i2b2.h.getXNodeVal(c[i],'key');
 			o.tooltip = i2b2.h.getXNodeVal(c[i],'tooltip');
