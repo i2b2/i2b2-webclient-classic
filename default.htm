@@ -937,7 +937,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         </form>
       </div>
       <div id="anaPluginList" oncontextmenu="return false"></div>
-	  <div id="PluginGalleryFooter" style="display:none;background:#667788;height:22px;padding-left:4px;"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="Javascript:void(0)" onClick="invokeWCPinstaller();" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:13px;color:#FFF;" >View More Plugins in i2b2 Gallery...</a></div>
+	  <div style="background:#667788;height:22px;padding-left:4px;"><span id="PluginGalleryFooter" style="display:none;float:left"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="Javascript:void(0)" onClick="invokeWCPinstaller();" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:13px;color:#FFF;" >View More Plugins in i2b2 Gallery...</a></span><span style="float:right;margin-right:5px"><a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');return false;" style="text-decoration:none;font-size:13px;color:#FFF;" ><img src="assets/images/p_close.png" align="absbottom" border="0" style="margin-top:2px;" /></a> <a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');return false;" style="text-decoration:none;font-size:13px;color:#FFF;">Close</a></span></div>
     </div>
     <div style="clear:both;"></div>
   </div>
@@ -955,7 +955,7 @@ YAHOO.util.Event.addListener(window, "load", init);
     </div>
     <div class="PluginViewBox">
       <div id="anaPluginViewFrame" oncontextmenu="return false">
-        <div class="initialMsg"><a href="#" style="color:#6677aa" onclick="pluginMenu();return false;">Select a plugin to load</a></div>
+        <div class="initialMsg"><a href="#" style="color:#6677aa" onclick="jQuery('#pluginsMenu').qtip('show');return false;">Select a plugin to load</a></div>
       </div>
       <iframe id="anaPluginIFRAME" src="assets/blank.html" style="display:none"></iframe>
     </div>
