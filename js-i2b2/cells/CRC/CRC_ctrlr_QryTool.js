@@ -1423,7 +1423,6 @@ function QueryToolController() {
 					for (var i2 = 0; i2 < params.length; i2++) {
 						var name = params[i2].getAttribute("name"); // snm0 - here for prev query
 						// BUG FIX: WEBCLIENT-147
-					//	$('infoQueryStatusText').innerHTML += "<div style=\"margin-left: 20px; clear: both; height: 16px; line-height: 16px;\">";
 						if (i2b2.PM.model.isObfuscated) {
 							if (params[i2].firstChild.nodeValue < 4)
 							{
@@ -2357,7 +2356,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 					}
 				});
 			}
-			text = text.replace(/\±/g, "&plusmn;");
+			text = text.replace(/\xB1/g, "&plusmn;");
+			text = text.replace(/\&lt;/g, "<");
 			this.createHTMLForPrinting(text,fromPrintButton,previewQueryOnly);
 		}
 		else{
@@ -3097,13 +3097,21 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 		var contDiv = null;
 		var reultsTable = new Element('table',{'class':'reultsTable'});
 		patientNumItem.each(function(item){
+			var itemValue = item.value;
+			if (i2b2.PM.model.isObfuscated) {
+				if (itemValue < 4){
+					itemValue = i2b2.CRC.view.graphs.sObfuscatedText;
+				} else {
+					itemValue += i2b2.CRC.view.graphs.sObfuscatedEnding;
+				}
+			}
 			contDiv = new Element('div',{'id':reultsContDivId});
 			var trObj = new Element('tr');
 			var tdObj = new Element('td' , {'class' : 'descResultshead'}).update('Total Patients Matching Query');
 			reultsTable.insert(trObj.insert(tdObj));
 			
 			trObj = new Element('tr');
-			tdObj = new Element('td' , {'class' : 'descResults'}).update(item.value);
+			tdObj = new Element('td' , {'class' : 'descResults'}).update(itemValue);
 			reultsTable.insert(trObj.insert(tdObj));
 			contDiv.insert(reultsTable);
 		}); 
@@ -3203,16 +3211,24 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 				reultsContDivId = "table-" + resultNumber++ ;
 				valueHash.each(function(item){
 					//Populate results table
+					var itemValue = item.value;
+					if (i2b2.PM.model.isObfuscated) {
+						if (itemValue < 4){
+							itemValue = i2b2.CRC.view.graphs.sObfuscatedText;
+						} else {
+							itemValue += i2b2.CRC.view.graphs.sObfuscatedEnding;
+						}
+					}
 					contDiv = new Element('div',{'id':reultsContDivId});
 					trObj = new Element('tr');
 					tdNameObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(item.key);
-					tdValueObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(item.value);
+					tdValueObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(itemValue);
 					reultsTable.insert(trObj.insert(tdNameObj).insert(tdValueObj));
 					contDiv.insert(reultsTable);
 					//Generate data for charts
 					var quotedItemLabel = '"' + item.key + '"';
 					labelsPerChart[index] = quotedItemLabel;
-					values[index]=item.value;
+					values[index]=itemValue;
 					index++;
 				});
 				var subResultDivId = "subResults-" + resultNumber;
@@ -3259,7 +3275,21 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 								],
 								type: 'bar',
 								color: function (color, d) {return "darkblue";},
-								labels: true
+								labels: {
+									format: {
+										y: function (v, id) {
+											if (i2b2.PM.model.isObfuscated) {
+												if(v == 0){
+													return i2b2.CRC.view.graphs.sObfuscatedText;
+												} else {
+													return v + i2b2.CRC.view.graphs.sObfuscatedEnding.replace(/\&plusmn;/g, " +/- ");
+												}
+											} else {
+												return v;
+											}
+										}
+									}
+								}
 							},
 							padding: {
 								left: 60,

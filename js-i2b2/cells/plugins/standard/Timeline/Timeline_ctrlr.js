@@ -78,6 +78,12 @@ i2b2.Timeline.conceptDropped = function(sdxData, showDialog) {
 	showDialog = typeof showDialog !== 'undefined' ? showDialog : true;
 	sdxData = sdxData[0];	// only interested in first record
 	
+	if(sdxData.sdxInfo.sdxType == "QM"){ // item is a previous query
+		if(showDialog)
+			alert("Previous query item being dropped is not supported.");
+		return false;
+	}
+	
 	if (sdxData.origData.isModifier) {
 		if(showDialog)
 			alert("Modifier item being dropped is not supported.");

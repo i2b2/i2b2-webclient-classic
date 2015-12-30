@@ -507,7 +507,7 @@ try {
 								if(v == 0){
 									return i2b2.CRC.view.graphs.sObfuscatedText;
 								} else {
-									return v + " +/- 3";
+									return v + i2b2.CRC.view.graphs.sObfuscatedEnding.replace(/\&plusmn;/g, " +/- ");
 								}
 							} else {
 								return v;
