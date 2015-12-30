@@ -11,7 +11,7 @@
 	"package" : "https://github.com/i2b2/dev-PLUGIN-WISE-searcher/archive/master.zip",
     "userManual" : "https://github.com/i2b2/dev-PLUGIN-WISE-searcher/blob/master/WISEsearcher_v1.1.1_User_Manual.pdf",
     "installGuide" : "https://github.com/i2b2/dev-PLUGIN-WISE-searcher/blob/master/WISEsearcher_v1.1.1_installation_guide.pdf",
-    "configuration" : "None per ce; be sure that <small>short_open_tag=On</small> in <i>/etc/php.ini</i>.",
+    "configuration" : "None.",
     "wikiSite" : "http://community.i2b2.org/wiki/display/WISE/WISE-searcher",
     "contributors" : "University of Massachusetts Medical School"
         

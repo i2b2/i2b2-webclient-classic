@@ -18,6 +18,8 @@
  * 2014-03-27 3.3  updated new observation value columns for easier user understanding [Wayne Chan, UMass Med School]
  * 2015-11-06 3.4  fixed compatibility issue with the new prototype.js v.1.7.2 (ships with webclient v1.7.0.7), other minor touch-ups,   
  *                 & fixed selected patient subset size and starting & ending patient numbers off by 1 problems [Wayne Chan]
+ * 2015-12-30 3.4  Hid "<br>" in any of the concept names (under all tab pages, as well as in exported .XLS & .CSV files)
+ *                 & fixed .CSV concept contents for '1 row per patient' (to prevent them from scattering across multiple lines)  [Wayne Chan]                 
  */
 
  i2b2.ExportXLS.DEBUG_GetPropertyList = function(object)
@@ -1078,7 +1080,7 @@ i2b2.ExportXLS.GetObservationDataDictionaryFromObservationNode = function(observ
 i2b2.ExportXLS.FillObservationSetsDictionaryFromObservationSetNode = function(observationSetNode)
 {
 	var panelName = observationSetNode.attr('panel_name');
-	var displayName = i2b2.ExportXLS.GetObservationSetDisplayName(panelName);
+	var displayName = i2b2.h.HideBreak(i2b2.ExportXLS.GetObservationSetDisplayName(panelName));
 	
 	var thisObservationSetDictionary = i2b2.ExportXLS.ObservationSets[panelName];
 	
@@ -1872,7 +1874,10 @@ i2b2.ExportXLS.CreateCSV = function()
 		
 		for (var j = 0; j < matrix_row.length; j++)
 		{
-			var cell = matrix_row[j];
+			var cell = "" + matrix_row[j]; // render it as string, to utilize its .replace() method
+			if (i2b2.ExportXLS.OutputFormatIs("aggregated")) {
+				cell = cell.replace(/\n$/, '').replace(/\n/g, ', ');
+			}
 			csv_line += cellDelimiter + cell + cellDelimiter + ';';
 		}
 	

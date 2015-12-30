@@ -303,7 +303,7 @@
 								  <li>Optionally adds a selection of demographic patient details.</li>
 								  <li>Optionally resolves concept codes and displays their denotation.</li>
 								  <li>Optionally includes ontology path of concept codes.</li>
-								  <li>Exports tabulated data into a CSV or XLS file that can easily be used by Excel, SPSS and other statistics software.</li>
+								  <li>Exports tabulated data into a CSV (delimited by semi-colons instead of comma) or XLS file that can easily be used by Excel, SPSS and other statistics software.</li>
 								</ul>
 								<p>
 								<h1>Instructions</h1>
@@ -340,7 +340,7 @@
 									  <li>If you want to export the table into a CSV file, click the <img class="inlineimg" src="./export-files/exportCSVBtn.png"> button. This initiates the download of a file onto your desktop.  The file is named 'i2b2-export_patient-observations_[timestamp].csv'.</li>
 									  <li>If you want to export the table into an HTML encoded Excel file, click the <img class="inlineimg" src="./export-files/exportHTMLXLSBtn.png"> button. This initiates the download of a file named 'i2b2-export_patient-observations_[timestamp].html.xls'. The file is HTML, but due to the suffix it can directly be opened with Excel. If you want to open it in a web browser, simply remove the '.xls' suffix.<br><b>Note:</b> Excel may launch a warning message if the file is loaded. This message can be ignored/confirmed (click 'Yes').</li>
 -->
-									  <li>If you want to export the table into a CSV file, click the <img class="inlineimg" id="csvBtn" src=""> button. This initiates the download of a file onto your desktop.  The file is named 'i2b2-export_patient-observations_[timestamp].csv'.</li>
+									  <li>If you want to export the table into a CSV (delimited by semi-colons instead of comma) file, click the <img class="inlineimg" id="csvBtn" src=""> button. This initiates the download of a file onto your desktop.  The file is named 'i2b2-export_patient-observations_[timestamp].csv'.</li>
 									  <li>If you want to export the table into an HTML encoded Excel file, click the <img class="inlineimg" id="xlsBtn" src=""> button. This initiates the download of a file named 'i2b2-export_patient-observations_[timestamp].html.xls'. The file is HTML, but due to the suffix it can directly be opened with Excel. If you want to open it in a web browser, simply remove the '.xls' suffix.<br><b>Note:</b> Excel may launch a warning message if the file is loaded. This message can be ignored/confirmed (click 'Yes').</li>
 									</ul>
 								  </li>
@@ -358,6 +358,8 @@
    								  <li>This plugin also tries to provide updates on the current subgroup the server (i2b2 hive) is fetching. However, in the cases when the server (i2b2 hive) itself started paging (i.e. query-subgrouping), then the current subgroup # being fetched may exceed the original stated total number of subgroups.</li>
 								  <li>The '<u>1 row per patient, 1 column per observation set</u>' option of tabulation is the only output option where the first column starting number will match the specified value of 'Starting Patient'.</li>
 								  <li>The '<u>1 row per observation (detailed, 1 column per observation detail)</u>' option of tabulation is the only output option where the 'Observation Value' column will contain the appropriate 'Observation BLOBs' (if the 'valuetype_cd' is 'B' and the user has the "DATA_DEID" access right).</li>
+								  <li>Since certain fields, such as 'Locality' and 'Concept' with 'Resolved Concept/Modifier Codes' and 'Ontology Path', may contain comma as content, the exported CSV file is delimited by semi-colons, instead of comma.<br/>
+								      &nbsp;&nbsp;&nbsp;&nbsp;- Please use appropriate caution and settings when importing this exported CSV file into your data analysis software.</li>
 								</ul>
 								<p>
 								<h1>Browser Compatibilities</h1>

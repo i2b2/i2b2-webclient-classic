@@ -11,7 +11,7 @@
 	"package" : "https://github.com/i2b2/dev-PLUGIN-CARE-concept-observation-tally-demographics-histograms/archive/master.zip",
     "userManual" : "https://github.com/i2b2/dev-PLUGIN-CARE-concept-observation-tally-demographics-histograms/blob/master/CARE-observationTallys v1.2 User Manual.pdf",
     "installGuide" : "https://github.com/i2b2/dev-PLUGIN-CARE-concept-observation-tally-demographics-histograms/blob/master/CARE-observationTallys v1.2 Installation Guide.pdf",
-    "configuration" : "None per ce; be sure that <small>short_open_tag=On</small> in <i>/etc/php.ini</i>.",
+    "configuration" : "None.",
     "wikiSite" : "http://community.i2b2.org/wiki/display/CARE/CARE+-+Concept+Observation+Tally+Demographics+Histograms",
     "contributors" : "University of Massachusetts Medical School"
         

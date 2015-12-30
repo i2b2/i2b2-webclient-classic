@@ -11,7 +11,7 @@
 	"package" : "https://github.com/i2b2/dev-PLUGIN-exportXLS/archive/master.zip",
     "userManual" : "https://github.com/i2b2/dev-PLUGIN-exportXLS/blob/master/ExportXLS v3.4 User Manual.pdf",
     "installGuide" : "https://github.com/i2b2/dev-PLUGIN-exportXLS/blob/master/ExportXLS v3.4 Installation Guide.pdf",
-    "configuration" : "Refer to the corresponding section (last half) of the Installation Guide.  Also, be sure that <small>short_open_tag=On</small> in <i>/etc/php.ini</i>.",
+    "configuration" : "Refer to the corresponding section (last half) of the Installation Guide.",
     "wikiSite" : "http://community.i2b2.org/wiki/display/ExportXLS/ExportXLS+Home",
     "contributors" : "Universit&agrave; di Pavia; University of Massachusetts Medical School; Friedrich Alexander University Erlangen-Nuremberg; H&ocirc;pital Ambroise Par&eacute"
         

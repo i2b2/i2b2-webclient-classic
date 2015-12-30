@@ -37,6 +37,7 @@
  * 20151109 S. Wayne Chan (v.1.2) fixed compatibility issue with the prototype.js v.1.7.2 (ships with webclient v1.7.0.7), 
  * 20151215 S. Wayne Chan (v.1.2) added .SetAccessories() to facilitate moving the Save*.php files, etc. into the local 
  *                                 /asset subfolder; & other minor touch-ups.
+ * 20151230 S. Wayne Chan (v.1.2) fixed JIRA issue PLUGINS-10 ('Marital Status' value is always 'undefined').                                
  *==========================================================================================================================
  */
 
@@ -283,7 +284,7 @@ i2b2.CAREcncptDem.ProcessAllData = function() {
 		sex_cd:'Gender',
 		race_cd:'Race',
 		language_cd:'Language',
-		marital_status:'Marital Status',
+		marital_status_cd:'Marital Status',
 		religion_cd:'Religion',
 		vital_status_cd:'Vital Status (Deceased)'
 	};
