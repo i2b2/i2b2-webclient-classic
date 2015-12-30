@@ -2357,6 +2357,7 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 					}
 				});
 			}
+			text = text.replace(/\±/g, "&plusmn;");
 			this.createHTMLForPrinting(text,fromPrintButton,previewQueryOnly);
 		}
 		else{
@@ -2412,12 +2413,10 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 			{
 				QueryReportDiv = $('infoQueryStatusReport');
 				QueryReportDiv.innerHTML = this.PrintQueryBody;
-				var printLinks = $$('.no-print');
+				var printLinks = $$('a.printReportButton.no-print');
 				if(printLinks)
 					printLinks.each(function(printLink){
-						var link = printLink.down('a');
-						if(link)
-							link.href="javascript:i2b2.CRC.ctrlr.QT.PrintElem('infoQueryStatusReport')";
+						printLink.href="javascript:i2b2.CRC.ctrlr.QT.PrintElem('infoQueryStatusReport')";
 					});
 
 			}
@@ -3626,9 +3625,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 	this.PrintQueryBody = 
 			"<div id=\"QueryReportLoading\"><img src=\"js-i2b2/cells/CRC/assets/loading.gif\" alt=\"Loading\"/></div>"+
 			"<div id='QueryReportContainer' class='no-show'>"+
-			"<span style='float:right;'><img src='assets/images/report_logo.png'/></span>"+
-			"<span class='no-print' style='font-family:Arial;font-size:15px;'><img src=\"js-i2b2/cells/CRC/assets/print.png\"/> <a href='javascript:window.print()' title='Click here to print the report.'>Print Report</a></span>"+
-			"<div class='QRMainHeader'>Query Report</div>"+
+			"<a class='printReportButton no-print' href='javascript:window.print()' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
+			"<div class='QRMainHeader'>i2b2 Query Report</div>"+
 			"<table id='queryDetailsTable'></table>"+
 			"<div class='descHead'>Query Definition</div>"+
 			"<table id='qdHeaderTable'></table>"+
@@ -3637,15 +3635,14 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 			"<table id='temporalQryEventsRelationsTable'></table>"+
 			"<div id='qrsTitle' class='descHead'>Query Results</div>"+
 			"<br><div id='queryResultsContainer'></div>" + 
-			"<span class='no-print' style='font-family:Arial;font-size:15px;'><img src=\"js-i2b2/cells/CRC/assets/print.png\"/> <a href='javascript:window.print()' title='Click here to print the report.'>Print Report</a></span>"+
+			"<a class='printReportButton no-print' href='javascript:window.print()' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
 			"</div>";
 			
 	this.PrintQueryBodyForPanel = 
 			"<div id=\"QueryReportLoading\"><img src=\"js-i2b2/cells/CRC/assets/loading.gif\" alt=\"Loading\"/></div>"+
 			"<div id='QueryReportContainer' class='no-show'>"+
-			"<span style='float:right;'><img src='assets/images/report_logo.png'/></span>"+
-			"<span class='no-print' style='font-family:Arial;font-size:15px;'><img src=\"js-i2b2/cells/CRC/assets/print.png\"/> <a href='javascript:i2b2.CRC.ctrlr.QT.PrintElem(\"queryReport-viewer-body\")' title='Click here to print the report.'>Print Report</a></span>"+
-			"<div class='QRMainHeader'>Query Report</div>"+
+			"<a class='printReportButton no-print' href='javascript:i2b2.CRC.ctrlr.QT.PrintElem(\"queryReport-viewer-body\")' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
+			"<div class='QRMainHeader'>i2b2 Query Report</div>"+
 			"<table id='queryDetailsTable'></table>"+
 			"<div class='descHead'>Query Definition</div>"+
 			"<table id='qdHeaderTable'></table>"+
@@ -3654,7 +3651,7 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 			"<table id='temporalQryEventsRelationsTable'></table>"+
 			"<div id='qrsTitle' class='descHead'>Query Results</div>"+
 			"<br><div id='queryResultsContainer'></div>" + 
-			"<span class='no-print' style='font-family:Arial;font-size:15px;'><img src=\"js-i2b2/cells/CRC/assets/print.png\"/> <a href='javascript:i2b2.CRC.ctrlr.QT.PrintElem(\"queryReport-viewer-body\")' title='Click here to print the report.'>Print Report</a></span>"+
+			"<a class='printReportButton no-print' href='javascript:i2b2.CRC.ctrlr.QT.PrintElem(\"queryReport-viewer-body\")' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
 			"</div>";
 			
 	this.queryReportViewer = {

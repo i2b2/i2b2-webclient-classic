@@ -6,6 +6,42 @@
     }
 }
 
+/* open-sans-regular - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../../../assets/fonts/open-sans-v13-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Open Sans'), local('OpenSans'),
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+
+#QueryReportContainer {
+	margin-left:10px;
+	
+}
+
+.printReportButton {
+	font-family: Arial;
+    font-size: 13px;
+    float: right;
+    padding: 5px;
+    margin-top: 5px;
+    background-color: #6677AA;
+    font-weight: bold;
+	color: #FFF;
+	border: 1px solid #667788;
+	text-decoration: none;
+}
+
+.printReportButton:hover {
+	background-color: #7687bf;
+}
+
 #infoQueryStatusReport{
 	font-family: 'Open Sans', sans-serif;
 }
@@ -25,7 +61,7 @@
 	border-bottom: 1px solid #000;
 	font-weight: bold;
 	font-size: 28px;
-	padding-top: 30px;
+	padding-top: 15px;
 	font-family: 'Open Sans', sans-serif;
 	padding-bottom: 8px;
 }
@@ -49,7 +85,6 @@
 
 .subTitleDivs
 {
-    width: 100%; 
 	color: #6699CC;
 	font-family: Open Sans;
 	font-size: 16px;
