@@ -109,6 +109,7 @@ i2b2.CRC.view.QT.ContextMenuPreprocess = function(p_oEvent) {
 					// custom build the context menu according to the concept that was clicked
 					var mil = [];
 					var op = i2b2.CRC.view.QT;
+					mil.push( { text: "Set Date Constraint", onclick: { fn: op.ContextMenuRouter, obj: 'dates' }} );
 					// all nodes can be deleted
 					mil.push( { text: "Delete", onclick: { fn: op.ContextMenuRouter, obj: 'delete' }} );
 					if (i2b2.CRC.view.QT.contextRecord.origData.isModifier) {
@@ -202,6 +203,10 @@ i2b2.CRC.view.QT.ContextMenuRouter = function(a, b, actionName) {
 	};
 	// route accordingly
 	switch(actionName) {
+		case "dates":
+			// nw096 - Date Constraints overhaul
+			cdat.ctrlr.showDateConstraint(cdat.ctrlr, cdat.data);
+			break;
 		case "delete":
 			// delete item from the panel
 			cdat.ctrlr._deleteConcept(cdat.data.renderData.htmlID, cdat.data);
@@ -544,6 +549,8 @@ i2b2.CRC.view.QT.ResizeHeight = function() {
 
 i2b2.CRC.view.QT.addNewTemporalGroup = function() {
 
+					$('addDefineGroup-button').disable();
+					
 					i2b2.CRC.ctrlr.QT.temporalGroup = i2b2.CRC.model.queryCurrent.panels.length;
 					//i2b2.CRC.ctrlr.QT.temporalGroup = i2b2.CRC.ctrlr.QT.temporalGroup + 1;
 					
@@ -554,7 +561,7 @@ i2b2.CRC.view.QT.addNewTemporalGroup = function() {
 					} else {
 						var aMenuItemData=[];
 						 aMenuItemData[0] = {text: "Event " + (i2b2.CRC.ctrlr.QT.temporalGroup), value: i2b2.CRC.ctrlr.QT.temporalGroup} ;
-						defineTemporalButton.getMenu().itemData = aMenuItemData  ;
+						defineTemporalButton.getMenu().itemData = aMenuItemData;
 						}
 					
 					i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup] = {};
@@ -563,13 +570,47 @@ i2b2.CRC.view.QT.addNewTemporalGroup = function() {
 					i2b2.CRC.ctrlr.QT._redrawAllPanels();	
 					
 					//Add to define a query	
-					var select = document.getElementById("instancevent1[0]");
-					select.options[select.options.length] = new Option( 'Event '+i2b2.CRC.ctrlr.QT.temporalGroup, i2b2.CRC.ctrlr.QT.temporalGroup);
+					for( var i = 0; i < i2b2.CRC.ctrlr.QT.tenporalBuilders + 1; i++){
+						var select = document.getElementById("instancevent1["+i+"]");
+						select.options[select.options.length] = new Option( 'Event '+i2b2.CRC.ctrlr.QT.temporalGroup, i2b2.CRC.ctrlr.QT.temporalGroup);
 	
-					 select = document.getElementById("instancevent2[0]");
-					select.options[select.options.length] = new Option( 'Event '+i2b2.CRC.ctrlr.QT.temporalGroup, i2b2.CRC.ctrlr.QT.temporalGroup);
+						select = document.getElementById("instancevent2["+i+"]");
+						select.options[select.options.length] = new Option( 'Event '+i2b2.CRC.ctrlr.QT.temporalGroup, i2b2.CRC.ctrlr.QT.temporalGroup);
+					}
 
-}
+					alert('New Event ' + i2b2.CRC.ctrlr.QT.temporalGroup + ' has been added.');
+					
+					$('addDefineGroup-button').enable();
+					
+					
+					
+};
+
+i2b2.CRC.view.QT.deleteLastTemporalGroup = function() {
+	
+	if(i2b2.CRC.model.queryCurrent.panels.length > 3){
+		var currentPanels = i2b2.CRC.model.queryCurrent.panels.length - 1;
+		i2b2.CRC.model.queryCurrent.panels.pop();
+		defineTemporalButton.getMenu().removeItem(defineTemporalButton.getMenu().getItems().length-1);
+		
+		for( var i = 0; i < i2b2.CRC.ctrlr.QT.tenporalBuilders + 1; i++){
+			var select = document.getElementById("instancevent1["+i+"]");
+			select.remove(select.length - 1);
+		
+			select = document.getElementById("instancevent2["+i+"]");
+			select.remove(select.length - 1);
+		}
+		
+		alert('Event ' + currentPanels + ' has been removed.');
+		//i2b2.CRC.ctrlr.QT.temporalGroup = i2b2.CRC.model.queryCurrent.panels.length;
+		
+		defineTemporalButton.getMenu().getItem(0).element.click()
+	
+	} else {
+		alert('You must leave a minimum of two events.');
+		
+	}
+};
 
 // This is done once the entire cell has been loaded
 console.info("SUBSCRIBED TO i2b2.events.afterCellInit");
@@ -970,12 +1011,18 @@ i2b2.events.afterCellInit.subscribe(
 					{ lazyLoad: "false", type: "menu", menu: "menubutton1select", name:"querytiming" });
 
 		defineTemporalButton = new YAHOO.widget.Button( "defineTemporal", 
-					{ lazyLoad: false, type: "menu", menu: "menubutton2select", name:"definetemporal" });
+					{ lazyloadmenu: false, type: "menu", menu: "menubutton2select", name:"definetemporal" });
 
 
 			var addDefineGroup = new YAHOO.widget.Button("addDefineGroup"); 
 				addDefineGroup.on("click", function (event) {
 					i2b2.CRC.view.QT.addNewTemporalGroup();
+
+						});
+						
+			var removeDefineGroup = new YAHOO.widget.Button("removeDefineGroup"); 
+				removeDefineGroup.on("click", function (event) {
+					i2b2.CRC.view.QT.deleteLastTemporalGroup();
 
 						});
 

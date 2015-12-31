@@ -2,10 +2,12 @@
  * @projectDescription	Displays demographic information for a single patient set.
  * @inherits	i2b2
  * @namespace	i2b2.Dem1Set
- * @author	Nick Benik, Griffin Weber MD PhD
- * @version 	1.3
+ * @author		Nick Benik, Griffin Weber MD PhD
+ * @version 	1.4
  * ----------------------------------------------------------------------------------------
- * updated 12-22-08: 	Initial Launch [Griffin Weber] 
+ * 2008-12-22:  Initial Launch [Griffin Weber] 
+ * 2015-10-26:  Fixed issue with JSON not working [Mike Mendis]
+ * 2015-12-30:  Fixed missing 'Marital Status' histogram issue (JIRA PLUGINS-10) [Wayne Chan]      
  */
 
 i2b2.Dem1Set.Init = function(loadedDiv) {
@@ -122,8 +124,7 @@ i2b2.Dem1Set.getResults = function() {
 			}
 			
 			// collapse the hash objects to regular objects and save to the Plugin's data model
-			i2b2.Dem1Set.model.sumCounts = eval("("+hData.toJSON()+")");
-
+			i2b2.Dem1Set.model.sumCounts = eval("(" + Object.toJSON(hData) +")"); 
 			var s = '';
 			
 			s += '<div class="intro">';
@@ -147,7 +148,7 @@ i2b2.Dem1Set.getResults = function() {
 					sex_cd:'Sex',
 					race_cd:'Race',
 					language_cd:'Language',
-					marital_status:'Marital Status',
+					marital_status_cd:'Marital Status',
 					religion_cd:'Religion',
 					vital_status_cd:'Vital Status (Deceased)'
 				};

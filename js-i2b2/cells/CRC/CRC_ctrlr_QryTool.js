@@ -34,6 +34,12 @@ function QueryToolController() {
 		$('queryName').innerHTML = inName;
 		i2b2.CRC.model.queryCurrent.name = inName;
 	}
+	
+// ================================================================================================== //
+	this.doUpdateDatesInPanel = function(panelIndex) { // nw096 - date constraints over
+		var dm = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex];
+		
+	}
 
 // ================================================================================================== //
 	this.doQueryClear = function() {
@@ -97,9 +103,20 @@ function QueryToolController() {
 				i2b2.CRC.ctrlr.QT.doQueryClear();
 				var dObj = {};
 				dObj.name = i2b2.h.getXNodeVal(results.refXML,'name');
-				$('queryName').innerHTML = dObj.name;
+				this.doSetQueryName(dObj.name); // BUG FIX - WEBCLIENT-102
 				dObj.timing = i2b2.h.XPath(qd[0],'descendant-or-self::query_timing/text()');
-				dObj.timing = dObj.timing[0].nodeValue;				
+				dObj.timing = dObj.timing[0].nodeValue;
+				if($("crcQueryToolBox.bodyBox")){
+					var userId = i2b2.h.getXNodeVal(results.refXML,'user_id');
+					var existingUserIdElemList = $$("#userIdElem");
+					if(existingUserIdElemList)
+					{
+						existingUserIdElemList.each(function(existingUserIdElem){
+							existingUserIdElem.remove();
+						});
+					}
+					$("crcQueryToolBox.bodyBox").insert(new Element('input',{'type':'hidden','id':'userIdElem','value':userId}));
+				}
 
 				//i2b2.CRC.view.QT.queryTimingButtonset("label", dObj.timing);
 				i2b2.CRC.view.QT.setQueryTiming(dObj.timing);
@@ -162,10 +179,15 @@ function QueryToolController() {
 					
 					var total_panels = qp.length;
 					for (var i1=0; i1<total_panels; i1++) {
+						var allDateFromsAreSame = true;
+						var allDateTosAreSame = true;
+						var allDateFroms = {};
+						var allDateTos = {};
 						i2b2.CRC.ctrlr.QT.temporalGroup = j;
 						i2b2.CRC.ctrlr.QT._redrawAllPanels();
 						
 						// extract the data for each panel
+						
 						var po = {};
 						po.panel_num = i2b2.h.getXNodeVal(qp[i1],'panel_number');
 						var t = i2b2.h.getXNodeVal(qp[i1],'invert');
@@ -207,6 +229,51 @@ function QueryToolController() {
 						po.items = [];
 						var pi = i2b2.h.XPath(qp[i1], 'descendant::item[item_key]');
 						for (i2=0; i2<pi.length; i2++) {
+							var itm = {};
+							// BUG FIX: WEBCLIENT-136
+							if(po.dateFrom == false){
+								var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from');
+								if (t) {
+									itm.dateFrom = {};
+									itm.dateFrom.Year = t.substring(0,4); //t[0];
+									itm.dateFrom.Month = t.substring(5,7); //t[1];
+									itm.dateFrom.Day = t.substring(8,10); //t[2];
+								}
+							} else { // WEBCLIENT-162: Backwards compatible <panel_date_from> support
+								itm.dateFrom = po.dateFrom;
+							}
+							if(po.dateTo == false){
+								var t = i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to');
+								if (t) {
+									itm.dateTo = {};
+									itm.dateTo.Year =  t.substring(0,4); //t[0];
+									itm.dateTo.Month =  t.substring(5,7); // t[1];
+									itm.dateTo.Day = t.substring(8,10);// t[2];
+								}
+							} else { // WEBCLIENT-162: Backwards compatible <panel_date_to> support
+								itm.dateTo = po.dateTo;
+							}
+							if ((pi.length == 1) && (i2 == 0)){
+								if(typeof i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from' === "undefined"))
+									allDateFromsAreSame = false;
+								if(typeof i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to' === "undefined"))
+									allDateTosAreSame = false;
+							}
+							// Set panel date by looking at item dates
+							if ((pi.length > 1) && (i2 < pi.length - 1) && allDateFromsAreSame && allDateTosAreSame){
+								if(i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_from') != i2b2.h.getXNodeVal(pi[i2 + 1],'constrain_by_date/date_from')){
+									allDateFromsAreSame = false;
+								} else {
+									allDateFroms = itm.dateFrom;
+								}
+								if(i2b2.h.getXNodeVal(pi[i2],'constrain_by_date/date_to') != i2b2.h.getXNodeVal(pi[i2 + 1],'constrain_by_date/date_to')){
+									allDateTosAreSame = false;
+								} else {
+									allDateTos = itm.dateTo;
+								}
+							}
+							
+								
 							var item = {};
 							// get the item's details from the ONT Cell
 							var ckey = i2b2.h.getXNodeVal(pi[i2],'item_key');
@@ -339,6 +406,13 @@ function QueryToolController() {
 										// We do want 2 copies of the Lab Values: one is original from server while the other one is for user manipulation
 										sdxDataNode.LabValues = o.LabValues;	
 									}
+									if (itm.dateFrom) {
+										sdxDataNode.dateFrom = itm.dateFrom;
+									}
+									
+									if (itm.dateTo) {
+										sdxDataNode.dateTo = itm.dateTo;
+									}
 											//o.xmlOrig = c;
 											if (i2b2.h.XPath(pi[i2], 'descendant::constrain_by_modifier').length > 0) {
 										//if (i2b2.h.getXNodeVal(pi[i2],'constrain_by_modifier') != null) {
@@ -428,6 +502,16 @@ function QueryToolController() {
 								
 							}
 						}
+						
+						if(allDateFromsAreSame && allDateTosAreSame){
+							if(typeof allDateTos !== "undefined"){
+								po.dateTo = allDateTos;
+							}
+							if(typeof allDateFroms !== "undefined"){
+								po.dateFrom = allDateFroms;
+							}
+						}
+						
 						dObj.panels[po.panel_num] = po;
 					}
 					// reindex the panels index (panel [1,3,5] should be [0,1,2])
@@ -458,7 +542,14 @@ function QueryToolController() {
 							{
 								withRenderData.LabValues = 	dm.panels[k][pi].items[pii].LabValues;
 							}
-							
+							if (dm.panels[k][pi].items[pii].dateFrom)
+							{
+								withRenderData.dateFrom = 	dm.panels[k][pi].items[pii].dateFrom;
+							}
+							if (dm.panels[k][pi].items[pii].dateTo)
+							{
+								withRenderData.dateTo = 	dm.panels[k][pi].items[pii].dateTo;
+							}
 							dm.panels[k][pi].items[pii] = withRenderData;
 						}
 					}
@@ -642,6 +733,12 @@ function QueryToolController() {
 			};
 			var loopBackSubmit = function() {
 				i2b2.CRC.view.dialogQryRun.submitterFunction();
+			};
+			var handlePreview = function() {
+				var queryNameInput = $('dialogQryRun').select('INPUT.inputQueryName')[0];
+				if(!queryNameInput)
+					queryNameInput.value = "No Query Name is currently provided";
+				i2b2.CRC.ctrlr.QT.doPrintQueryNew(true,queryNameInput.value,true);
 			};
 			i2b2.CRC.view.dialogQryRun = new YAHOO.widget.SimpleDialog("dialogQryRun", {
 					width: "400px",
@@ -828,12 +925,12 @@ function QueryToolController() {
 				s += '\t<panel>\n';
 				s += '\t\t<panel_number>' + (p+1) + '</panel_number>\n';
 				// date range constraints
-				if (panel_list[p].dateFrom) {
-					s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
-				}
-				if (panel_list[p].dateTo) {
-					s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
-				}
+				//if (panel_list[p].dateFrom) {
+				//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
+				//}
+				//if (panel_list[p].dateTo) {
+				//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
+				//}
 				s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
 				// Exclude constraint (invert flag)
 				if (panel_list[p].exclude) {
@@ -846,28 +943,42 @@ function QueryToolController() {
 				// Occurs constraint
 				s += '\t\t<total_item_occurrences>'+((panel_list[p].occurs*1)+1)+'</total_item_occurrences>\n';
 				// Concepts
-				for (i=0; i < panel_list[p].items.length; i++) {
+				for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
 					var sdxData = panel_list[p].items[i];
 					s += '\t\t<item>\n';
+						if(panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo){ // BUG FIX: WEBCLIENT-136
+							s += '\t\t\t<constrain_by_date>\n';
+							if (panel_list[p].items[i].dateFrom) {
+								s += '\t\t\t\t<date_from>'+panel_list[p].items[i].dateFrom.Year+'-'+padNumber(panel_list[p].items[i].dateFrom.Month,2)+'-'+padNumber(panel_list[p].items[i].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
+								
+							}
+							if (panel_list[p].items[i].dateTo) {
+								s += '\t\t\t\t<date_to>'+panel_list[p].items[i].dateTo.Year+'-'+padNumber(panel_list[p].items[i].dateTo.Month,2)+'-'+padNumber(panel_list[p].items[i].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
+							}
+							s += '\t\t\t</constrain_by_date>\n';
+						}
 						switch(sdxData.sdxInfo.sdxType) {
-						case "QM":	
+						case "QM":
+							if(sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
+									s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
+							else
 							s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
-							s += '\t\t\t<item_name>' + sdxData.origData.title + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + sdxData.origData.name + '</tooltip>\n';
+							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
 						case "PRS":	
 							s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-							s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
 						case "ENS":	
 							s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-							s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
@@ -897,9 +1008,9 @@ function QueryToolController() {
 								
 								s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
 								s += '\t\t\t<item_key>' + key + '</item_key>\n';
-								s += '\t\t\t<item_name>' +  name + '</item_name>\n';
+								s += '\t\t\t<item_name>' +  i2b2.h.Escape(name) + '</item_name>\n';
 								// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
-								s += '\t\t\t<tooltip>' + tooltip + '</tooltip>\n';
+								s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
 								s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
 								s += '\t\t\t<class>ENC</class>\n';
 	
@@ -922,7 +1033,7 @@ function QueryToolController() {
 								//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
 								s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
 								s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
-								s += '\t\t\t<tooltip>' + sdxData.origData.tooltip + '</tooltip>\n';
+								s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
 								s += '\t\t\t<class>ENC</class>\n';
 								s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';	
 							}
@@ -1243,20 +1354,24 @@ function QueryToolController() {
 					
 					
 					var start_date = i2b2.h.XPath(temp, 'descendant-or-self::start_date')[0].firstChild.nodeValue;
-						if (!Object.isUndefined(start_date)) {
-							//alert(sDate.substring(0,4) + ":" + sDate.substring(5,7)  + ":" + sDate.substring(8,10));
-							//012345678901234567890123
-							//2010-12-21T16:12:01.427
-							start_date =  new Date(start_date.substring(0,4), start_date.substring(5,7)-1, start_date.substring(8,10), start_date.substring(11,13), start_date.substring(14,16),start_date.substring(17,19),start_date.substring(20,23));
-						}						
-						var end_date = i2b2.h.XPath(temp, 'descendant-or-self::end_date')[0].firstChild.nodeValue;
-						if (!Object.isUndefined(end_date)) {
-							//alert(sDate.substring(0,4) + ":" + sDate.substring(5,7)  + ":" + sDate.substring(8,10));
-							end_date =  new Date(end_date.substring(0,4), end_date.substring(5,7)-1,  end_date.substring(8,10),  end_date.substring(11,13),end_date.substring(14,16), end_date.substring(17,19), end_date.substring(20,23));
-						}	
-					
-						$('infoQueryStatusText').innerHTML = '<div style="clear:both;"><div style="float:left; font-weight:bold">Finished Query: "'+queryName+'"</div>';
-						$('infoQueryStatusText').innerHTML += '<div style="float:right">['+ (Math.floor((end_date - start_date)/100))/10 +' secs]</div></div>';
+					var startDateElem = "";
+					if (!Object.isUndefined(start_date)) {
+						//alert(sDate.substring(0,4) + ":" + sDate.substring(5,7)  + ":" + sDate.substring(8,10));
+						//012345678901234567890123
+						//2010-12-21T16:12:01.427
+						startDateElem = "<input type=\"hidden\" id=\"startDateElem\" value=" + start_date + ">";
+						start_date =  new Date(start_date.substring(0,4), start_date.substring(5,7)-1, start_date.substring(8,10), start_date.substring(11,13), start_date.substring(14,16),start_date.substring(17,19),start_date.substring(20,23));
+					}						
+					var end_date = i2b2.h.XPath(temp, 'descendant-or-self::end_date')[0].firstChild.nodeValue;
+					var endDateElem = "";
+					if (!Object.isUndefined(end_date)) {
+						//alert(sDate.substring(0,4) + ":" + sDate.substring(5,7)  + ":" + sDate.substring(8,10));
+						endDateElem = "<input type=\"hidden\" id=\"endDateElem\" value=" + end_date + ">";  // Query Report BG
+						end_date =  new Date(end_date.substring(0,4), end_date.substring(5,7)-1,  end_date.substring(8,10),  end_date.substring(11,13),end_date.substring(14,16), end_date.substring(17,19), end_date.substring(20,23));
+					}	
+				
+					$('infoQueryStatusText').innerHTML = '<div style="clear:both;"><div style="float:left; font-weight:bold">Finished Query: "'+queryName+'"</div>';
+					$('infoQueryStatusText').innerHTML += '<div style="float:right">['+ (Math.floor((end_date - start_date)/100))/10 +' secs]</div></div>'+ startDateElem + endDateElem;
 
 				
 				//	$('infoQueryStatusText').innerHTML += '<div style="clear:both;"><div style="float:left; font-weight:bold">Finished Query: "'+queryName+'"</div><div style="margin-left:20px; clear:both; height:16px; line-height:16px; "><div height:16px; line-height:16px; ">Compute Time: ' + (Math.floor((end_date - start_date)/100))/10 + ' secs</div></div>';
@@ -1287,7 +1402,8 @@ function QueryToolController() {
 				for (var i=0; i<l; i++) {
 					var temp = ri_list[i];
 					var description = i2b2.h.XPath(temp, 'descendant-or-self::description')[0].firstChild.nodeValue;
-					$('infoQueryStatusText').innerHTML += "<div style=\"clear: both;   padding-top: 10px; font-weight: bold;\">" + description + "</div>";
+					description = description.replace(/'/g, "&#39;");
+					$('infoQueryStatusText').innerHTML += "<div class=\"mainGrp\" style=\"clear: both;   padding-top: 10px; font-weight: bold;\">" + description + "</div>";
 					i2b2.CRC.ctrlr.QT.sCompiledResultsTest += description + '\n';  //snm0					
 
 				} 
@@ -1306,9 +1422,21 @@ function QueryToolController() {
 					var params = i2b2.h.XPath(xml_v, 'descendant::data[@column]/text()/..');
 					for (var i2 = 0; i2 < params.length; i2++) {
 						var name = params[i2].getAttribute("name"); // snm0 - here for prev query
-					//	$('infoQueryStatusText').innerHTML += "<div style=\"margin-left: 20px; clear: both; height: 16px; line-height: 16px;\">";
-						$('infoQueryStatusText').innerHTML += "<div style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + params[i2].firstChild.nodeValue + "" +  (i2b2.PM.model.userRoles.indexOf("DATA_LDS") == -1 ? "&plusmn;3" : "")  +   "</font></div>";
-						i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column") + " : " + params[i2].firstChild.nodeValue + "" +  (i2b2.PM.model.isObfuscated ? "&plusmn;3" : "") + "\n"; //snm0						
+						// BUG FIX: WEBCLIENT-147
+						if (i2b2.PM.model.isObfuscated) {
+							if (params[i2].firstChild.nodeValue < 4)
+							{
+							    var value = "<3";
+							} else {
+								var value = params[i2].firstChild.nodeValue + "&plusmn;3";
+							}
+						} else {
+							var value = params[i2].firstChild.nodeValue;
+							
+						}
+					
+						$('infoQueryStatusText').innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + value  +   "</font></div>";
+						i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column") + " : " + value + "\n"; //snm0						
 					//$('infoQueryStatusText').innerHTML += "</div>";						//i2b2.h.XPath(newxml, 'descendant-or-self::result/data')[0].firstChild.nodeValue;
 
 					}
@@ -1457,6 +1585,19 @@ function QueryToolController() {
 		
 	}
 
+// ================================================================================================== //
+	this.doRemoveTemporal = function() { // nw096 - WEBCLIENT-155 Removes last temporal relationship
+		if(this.tenporalBuilders == 0){
+			alert('You must leave a minimum of one temporal relationship.');
+		} else {
+			if(jQuery("[id^='temporalbuilder_']").length > 1){
+				this.tenporalBuilders = this.tenporalBuilders - 1;
+				$('temporalbuilders').lastChild.remove();
+			}
+		}
+	}
+	
+	
 // ================================================================================================== //
 	this.doScrollFirst = function() {
 		this.doShowFrom(0);
@@ -1935,6 +2076,1653 @@ function QueryToolController() {
 		  	alert("Currently no query is available for printing. \nPlease generate a query before clicking on [Print Query] button.");
 		}
 	}
+	
+	
+/**********************
+* Query Report BG 
+**********************/	
+
+this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
+	{
+		//This request is to populate the query report pane in the query results section
+		if(!fromPrintButton){
+			//If the status box is empty no need to proceed
+			if($('infoQueryStatusText').innerHTML=="") return;
+			
+			//Clean the corresponding div before repopulating
+			if(!fromPrintButton)
+				$("infoQueryStatusReport").innerHTML="";
+			
+		}
+		
+		//Clean and populate the variables for printing
+		this.ClearVariablesForPrinting();
+		if(queryNameInput.length>0 || previewQueryOnly)
+			this.queryPanelObjForPrinting.name = queryNameInput;
+		else{
+			var nameObj = document.getElementById("queryName");
+			var v_i2b2_quey_name = i2b2.CRC.model.queryCurrent.name;
+			if(nameObj){
+				this.queryPanelObjForPrinting.name = nameObj.innerHTML;
+			}
+		}
+		
+		var startDateElm = $("startDateElem");
+		if(startDateElm)
+			this.QI_Rec_ForPrinting.start_date = startDateElm.value;
+		
+		var endDateElm = $("endDateElem");
+		if(endDateElm)
+			this.QI_Rec_ForPrinting.end_date = endDateElm.value;
+		
+		var userIdElm = $("userIdElem");
+		if(userIdElm)
+			this.query_user_id = userIdElm.value;
+		
+		var v_cnt_panels = i2b2.CRC.model.queryCurrent.panels[0].length;
+		if(v_cnt_panels > 0){
+			this.queryPanelObjForPrinting.timing = i2b2.CRC.ctrlr.QT.queryTiming;
+			
+			var isTemporal = false;
+			if (this.queryTiming == "TEMPORAL") {
+				isTemporal = true;	
+			}
+			this.queryPanelObjForPrinting.subQryRelationStructure = [];
+			this.queryPanelObjForPrinting.mainQryStructure = [];
+			this.queryPanelObjForPrinting.subQryStructure = [];
+			this.queryPanelObjForPrinting.hasSubquery = false;
+			
+			
+			for (var ip = 0; ip < i2b2.CRC.model.queryCurrent.panels.length; ip++)
+			{
+				var v_cnt_panels = i2b2.CRC.model.queryCurrent.panels[ip].length;
+				//Get information for each query panel
+				var panels = [];
+				for(x =0; x < v_cnt_panels; x++){
+					var po = {};
+					//po.dateTo = i2b2.CRC.model.queryCurrent.panels[ip][x].dateTo;
+					//po.dateFrom = i2b2.CRC.model.queryCurrent.panels[ip][x].dateFrom;
+					po.exclude = i2b2.CRC.model.queryCurrent.panels[ip][x].exclude;
+					po.occurs = i2b2.CRC.model.queryCurrent.panels[ip][x].occurs;
+					po.relevance = i2b2.CRC.model.queryCurrent.panels[ip][x].relevance;
+					po.timing = i2b2.CRC.model.queryCurrent.panels[ip][x].timing;
+					po.subquery = false;
+					if (isTemporal && ip>0){
+						po.name = "Event" + ip;
+						po.subquery = true;
+					}
+					
+					var v_items = i2b2.CRC.model.queryCurrent.panels[ip][x].items;
+										
+					
+														
+					po.items = [];
+					
+					for(n = 0; n < v_items.length; n++){
+						
+						var itemObj = {};
+						var v_strDateTo = null;
+						var v_strDateFrom = null;
+						//Handle JS Dates
+						if((v_items[n].dateTo == null) ||
+						   (v_items[n].dateTo == undefined)  ||
+						   (v_items[n].dateTo == false)
+						){
+						  v_strDateTo = "none";				   
+						}
+						else{
+						  v_strDateTo = 
+							v_items[n].dateTo.Month +"/"+
+							v_items[n].dateTo.Day  +"/" +
+							v_items[n].dateTo.Year;
+						}
+						itemObj.dateTo = v_strDateTo
+
+						//Handle JS Dates
+						if((v_items[n].dateFrom == null) ||
+						   (v_items[n].dateFrom == undefined)  ||
+						   (v_items[n].dateFrom == false)
+						){
+						  v_strDateFrom = "none";				   
+						}
+						else{
+						  v_strDateFrom =
+							v_items[n].dateFrom.Month +"/"+
+							v_items[n].dateFrom.Day  +"/" +
+							v_items[n].dateFrom.Year;
+						}
+						itemObj.dateFrom = v_strDateFrom;
+						
+						
+						itemObj.tooltip = v_items[n].origData.tooltip? v_items[n].origData.tooltip:"";
+						itemObj.name = 	v_items[n].origData.result_instance_id ? 
+										(v_items[n].origData.title ? v_items[n].origData.title : 
+										(v_items[n].origData.titleCRC ? v_items[n].origData.titleCRC : ""))
+										:(v_items[n].origData.newName ? v_items[n].origData.newName 
+										: (v_items[n].origData.name?v_items[n].origData.name:""));
+						itemObj.hasChildren = v_items[n].origData.hasChildren;
+						po.items.push(itemObj);
+						//itemObj.level = 	
+					}
+					panels[x] = po;
+				}
+				if(panels.length>0){
+					if (isTemporal)
+					{
+						if (ip > 0)
+							this.queryPanelObjForPrinting.subQryStructure.push(panels);
+						else
+							this.queryPanelObjForPrinting.mainQryStructure.push(panels);
+					}
+					else
+						this.queryPanelObjForPrinting.mainQryStructure.push(panels);
+				}
+			}
+			
+			if(isTemporal)
+			{
+				var evntRelDiv = document.getElementById('temporalbuilders');
+				if(evntRelDiv)
+				{
+					var relationNodes = evntRelDiv.childNodes;
+					this.queryPanelObjForPrinting.subQryRelationStructure = [];
+					var subQryRelationStructureIndex = 0;
+					for(i=0; i < relationNodes.length; i++)
+					{
+						var thisRelNode = relationNodes[i];
+						var rel = {};
+						rel.spans = [];
+						var spanIndex = 0;
+						var spanObj = {};
+						var bytime1 = false;
+						var bytime2 = false;
+						var allChildren = thisRelNode.childNodes;
+						
+						for(j=0; j < allChildren.length; j++)
+						{
+							var currentNode = allChildren[j];
+							if(currentNode.id){
+								if(currentNode.id.indexOf("preloc1") >= 0)
+								{
+									rel.firstQryJoinCol = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf("instanceopf1") >= 0)
+								{
+									rel.firstQryOp = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf("instancevent1") >= 0)
+								{
+									rel.firstQryEvntNm = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf("postloc") >= 0)
+								{
+									rel.operator = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf("preloc2") >= 0)
+								{
+									rel.secondQryJoinCol = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf("instanceopf2") >= 0)
+								{
+									rel.secondQryOp = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf("instancevent2") >= 0)
+								{
+									rel.secondQryEvntNm = getSelectedValueFromOptions(currentNode.options);
+								}
+								if((currentNode.id.indexOf('bytime1') >= 0) && currentNode.checked)
+								{
+									bytime1 = true;
+								}
+								if(currentNode.id.indexOf('byspan1') >= 0 && bytime1)
+								{
+									spanObj.oprator = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf('bytimevalue1') >= 0 && bytime1)
+								{
+									spanObj.value = currentNode.value;
+								}
+								if(currentNode.id.indexOf('bytimeunit1') >= 0 && bytime1)
+								{
+									spanObj.units = getSelectedValueFromOptions(currentNode.options);
+									rel.spans[spanIndex++] = spanObj;
+								}
+								if((currentNode.id.indexOf('bytime2') >= 0) && currentNode.checked)
+								{
+									bytime2 = true;
+									spanObj = {};
+								}
+								if(currentNode.id.indexOf('byspan2') >= 0 && bytime2)
+								{
+									spanObj.oprator = getSelectedValueFromOptions(currentNode.options);
+								}
+								if(currentNode.id.indexOf('bytimevalue2') >= 0 && bytime2)
+								{
+									spanObj.value = currentNode.value;
+								}
+								if(currentNode.id.indexOf('bytimeunit2') >= 0 && bytime2)
+								{
+									spanObj.units = getSelectedValueFromOptions(currentNode.options);
+									rel.spans[spanIndex++] = spanObj;
+								}	 
+							}
+						}
+						if(allChildren.length > 0)
+							this.queryPanelObjForPrinting.subQryRelationStructure[subQryRelationStructureIndex++] = rel ;
+					}
+				}
+			}
+			//All variables are ready to print. 
+			var infoQueryStatusTextObj = $('infoQueryStatusText');
+			if(infoQueryStatusTextObj)
+			{
+				var allGroups = $H();
+				var queryStatusNodes = infoQueryStatusTextObj.childNodes;
+				for(i=0; i < queryStatusNodes.length; i++)
+				{
+					var thisNode = queryStatusNodes[i];
+					if(thisNode.className == "mainGrp")
+					{
+						allGroups.set(jQuery(thisNode).text(),"");
+					}
+				}
+				var text = "";
+				allGroups.each(function(mainGrp){
+					var mainClassName = mainGrp.key;
+					text += mainClassName + "\n";
+					for(i=0; i < queryStatusNodes.length; i++)
+					{
+						var thisNode = queryStatusNodes[i];
+						var trimmedMainClassName = mainClassName.replace(/ +/g, "");
+						var trimmedClassName = "";
+						if(thisNode.className)
+							trimmedClassName = thisNode.className.replace(/ +/g, "");
+						
+						if(trimmedClassName == trimmedMainClassName)
+						{
+							var thisChildrenNodes = thisNode.childNodes;
+							for(j = 0; j < thisChildrenNodes.length; j++)
+							{
+								var childNode = thisChildrenNodes[j];
+								if(childNode)
+								{
+									if(childNode.nodeType == 3)
+										text += jQuery(childNode).text();//.textContent;
+									else
+										text += childNode.innerHTML + "\n";
+								}
+							}
+						}
+					}
+				});
+			}
+			text = text.replace(/\xB1/g, "&plusmn;");
+			text = text.replace(/\&lt;/g, "<");
+			this.createHTMLForPrinting(text,fromPrintButton,previewQueryOnly);
+		}
+		else{
+		  	alert("Currently no query is available for printing. \nPlease generate a query before clicking on [Print Query] button.");
+		}
+	}
+	
+	this.ClearVariablesForPrinting = function()
+	{
+		this.queryPanelObjForPrinting = {};
+		this.QI_Rec_ForPrinting = new Object();
+		this.QueryResultsForPrinting = {};
+		this.QueryResultsForPrintingIndex = 0;
+		this.QueryResultsNum = 0;
+		this.query_user_id=null;
+		this.XMLResultsStringForPrint = "";
+		var uniqueItems = $H();
+		queryReportWin = null;
+	};
+	
+	this.createHTMLForPrinting = function(resultText,printFromId,previewQueryOnly)
+	{
+		var QueryReportWin = null;
+		var QueryReportDiv = null;
+		var ua = window.navigator.userAgent;
+		var msie = ua.indexOf("MSIE ");
+		var browserIsIE = false;
+		if (msie > 0)
+			browserIsIE = true;
+		if(!(window.ActiveXObject) && "ActiveXObject" in window)
+			browserIsIE = true;
+		var savedHTML = null;
+		
+		if(this.queryPanelObjForPrinting.mainQryStructure.length > 0){
+			if(printFromId || previewQueryOnly){
+				if(browserIsIE){
+					i2b2.CRC.ctrlr.QT.queryReportViewer.yuiPanel = null;
+					i2b2.CRC.ctrlr.QT.queryReportViewer.show();
+					QueryReportDiv = jQuery(i2b2.CRC.ctrlr.QT.queryReportViewer.yuiPanel.body)//.find('#queryReport-viewer-body');
+				}
+				else{ //Open a new window for printing query for non-IE browsers
+					QueryReportWin = window.open("",'shrinePrintWindow','width=800,height=750,menubar=yes,resizable=yes,scrollbars=yes');
+					//Request came for query preview generation. Need to load the child window with template
+					// if(previewQueryOnly){
+						var doc = QueryReportWin.document;
+						doc.write(this.PrintQueryTemplate);
+						doc.write(this.PrintQueryBody);
+						doc.close();
+					// }
+				}
+			}
+			else
+			{
+				QueryReportDiv = $('infoQueryStatusReport');
+				QueryReportDiv.innerHTML = this.PrintQueryBody;
+				var printLinks = $$('a.printReportButton.no-print');
+				if(printLinks)
+					printLinks.each(function(printLink){
+						printLink.href="javascript:i2b2.CRC.ctrlr.QT.PrintElem('infoQueryStatusReport')";
+					});
+
+			}
+			
+			//Populate the query details section
+			try{
+				if(QueryReportWin)
+					this.getQueryDetails(this.queryPanelObjForPrinting,this.query_user_id,previewQueryOnly,QueryReportWin,"queryDetailsTable");
+					
+				if(QueryReportDiv)
+					this.getQueryDetails(this.queryPanelObjForPrinting,this.query_user_id,previewQueryOnly,false,"queryDetailsTable");
+			}
+			catch(e)
+			{
+				console.error(e);
+			}
+			
+			//Populate the query description section
+			
+			try{
+				if(QueryReportWin)
+					this.getQrTiming(this.queryPanelObjForPrinting,QueryReportWin,"qdHeaderTable");
+				if(QueryReportDiv)
+					this.getQrTiming(this.queryPanelObjForPrinting,false,"qdHeaderTable");
+			}
+			catch(e)
+			{
+				console.error(e);
+			}
+			
+			//Populate the query structure description section
+				
+			var qdDescription = this.getQueryDescription(this.queryPanelObjForPrinting.mainQryStructure);
+			if(qdDescription)
+			{
+				try{
+					var Row = "<tr><td width=\"5px\"><div class=\"tabSpace\"></div></td>";
+					var Cell = "<td class=\"eventsRelHdr\">" + "All Groups" + "</td>";
+					Row = Row + Cell;
+					
+					if(QueryReportWin)
+						jQuery("#qdContainerTable",QueryReportWin.document).append(Row);
+					if(QueryReportDiv)
+						jQuery("#qdContainerTable").append(Row);
+						
+					if(QueryReportWin)
+						jQuery("#qdContainerTable",QueryReportWin.document).append(qdDescription);
+					if(QueryReportDiv)
+						jQuery("#qdContainerTable").append(qdDescription);
+				}
+				catch(e)
+				{
+					console.error(e);
+				}
+			}
+			
+			//Populate temporal query events description section
+			var qdDescription = this.getQueryDescription(this.queryPanelObjForPrinting.subQryStructure);
+			if(qdDescription)
+			{
+				try{
+					var Row = "<tr><td width=\"5px\"><div class=\"tabSpace\"></div></td>";
+					var Cell = "<td class=\"eventsRelHdr\">" + "All Events" + "</td>";
+					Row = Row + Cell;
+					
+					if(QueryReportWin)
+						jQuery("#temporalQryEventsContainerTable",QueryReportWin.document).append(Row);
+					if(QueryReportDiv)
+						jQuery("#temporalQryEventsContainerTable").append(Row);
+						
+					if(QueryReportWin)
+						jQuery("#temporalQryEventsContainerTable",QueryReportWin.document).append(qdDescription);
+					if(QueryReportDiv)
+						jQuery("#temporalQryEventsContainerTable").append(qdDescription);
+				}
+				catch(e)
+				{
+					console.error(e);
+				}
+			}
+			
+			//Populate temporal query events relation section
+			if(this.queryPanelObjForPrinting.subQryStructure && this.queryPanelObjForPrinting.subQryStructure.length>0){
+				var temporalQEventsRelTable = null;
+				if(QueryReportWin)
+					temporalQEventsRelTable = QueryReportWin.document.getElementById("temporalQryEventsRelationsTable");
+				if(QueryReportDiv)
+					temporalQEventsRelTable = $("temporalQryEventsRelationsTable");
+				
+				try{
+					var qdDescription = this.getTemporalQueryEventRelations(temporalQEventsRelTable);
+				}	
+				catch(e)
+				{
+					console.error(e);
+				}	
+			}			
+			
+			if(!previewQueryOnly){
+				//Populate the query results section
+				if(resultText.length>0)
+					var resultsArray = parseInputIntoArray(resultText, false);
+				else
+					var resultsArray = parseInputIntoArray(this.XMLResultsStringForPrint, false);
+				
+				if(resultsArray && resultsArray.length>0){
+					try{
+						if(QueryReportWin)
+							this.createResultsForPrint(resultsArray,QueryReportWin);
+						else{
+							if(browserIsIE)
+								this.createResultsForPrintInPanel(resultsArray);
+							else
+								this.createResultsForPrint(resultsArray,false);
+						}
+					}
+					catch(e)
+					{
+						console.error(e);
+					}
+				}
+				else  // There is no results, so no need to show Query Results section
+				{
+					var resultTitleDiv = null;
+					if(QueryReportWin)
+						resultTitleDiv = QueryReportWin.document.getElementById("qrsTitle");
+					if(QueryReportDiv)
+						resultTitleDiv = $("qrsTitle");
+						
+					if(resultTitleDiv){
+						resultTitleDiv.parentNode.removeChild(resultTitleDiv);
+					}
+				}
+			}
+			else  // This window is to only show the query structure preview, so no need to show Query Results section
+			{
+				var resultTitleDiv = null;
+				if(QueryReportWin)
+					resultTitleDiv = QueryReportWin.document.getElementById("qrsTitle");
+				if(QueryReportDiv)
+					resultTitleDiv = $("qrsTitle");
+					
+				if(resultTitleDiv){
+					resultTitleDiv.parentNode.removeChild(resultTitleDiv);
+				}
+			}
+			var loaderDiv = null;
+			if(QueryReportWin)
+				loaderDiv = QueryReportWin.document.getElementById("QueryReportLoading");
+			if(QueryReportDiv){
+				// if(browserIsIE && printFromId)
+					loaderDiv = jQuery(QueryReportDiv).find('#QueryReportLoading');
+				// else
+					// loaderDiv = jQuery("#infoQueryStatusReport #QueryReportLoading");
+			}
+				
+			if(loaderDiv)
+				jQuery(loaderDiv).addClass("no-show");
+				
+			var resultsDiv = null;
+			if(QueryReportWin)
+				resultsDiv = QueryReportWin.document.getElementById("QueryReportContainer");
+			if(QueryReportDiv){
+				// if(browserIsIE && printFromId)
+					resultsDiv = jQuery(QueryReportDiv).find('#QueryReportContainer');
+				// else
+					// resultsDiv = $("#infoQueryStatusReport #QueryReportContainer");
+			}
+
+			if(resultsDiv)
+				jQuery(resultsDiv).removeClass("no-show");
+				
+			if((browserIsIE) && (printFromId || previewQueryOnly))
+			{
+				// this.PrintElem();
+				// jQuery(resultsDiv).html(savedHTML);
+			}
+		}
+		else{
+			alert("Currently no query is available for printing. \nPlease generate a query before clicking on [Print Query] button.");
+		}
+	};
+	
+// =====================================================================================================//
+
+	function sqlToJsDate(sqlDate){
+		//sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
+		var sqlDateArr1 = sqlDate.split("-");
+		//format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']
+		var sYear = sqlDateArr1[0].toString();
+		var sMonth = sqlDateArr1[1].toString();
+		var sqlDateArr2 = sqlDateArr1[2].split("T");
+		//format of sqlDateArr2[] = ['dd', 'hh:mm:ss.ms']
+		var sDay = sqlDateArr2[0].toString();
+		var sqlDateArr3 = sqlDateArr2[1].split(":");
+		//format of sqlDateArr3[] = ['hh','mm','ss.ms']
+		var sHour = sqlDateArr3[0].toString();
+		var sMinute = sqlDateArr3[1].toString();
+		var sqlDateArr4 = sqlDateArr3[2].split(".");
+		//format of sqlDateArr4[] = ['ss','ms']
+		var sSecond = sqlDateArr4[0].toString();
+		var sqlDateArr4 = sqlDateArr4[1].split("Z");
+		var sMillisecond = sqlDateArr4[0];
+		return new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond,sMillisecond);
+	}
+	
+	function isDate(val) {
+		val = new Date(val);
+		try{
+			return new Date(val.getYear(),val.getMonth(),val.getDate(),val.getHours(),val.getMinutes(),val.getSeconds(),val.getMilliseconds());
+		}
+		catch(e){
+			return false;
+		}
+	}
+	
+	this.getQueryDetails = function(queryObj,query_user_id,previewQueryOnly,QueryReportWin,objId){
+		var username = this.getQueryUserFullName(query_user_id);
+		var instanceRec = this.QI_Rec_ForPrinting;
+		var dateInfoProvided = false;
+		var diff = "";
+		if(instanceRec.start_date && instanceRec.end_date){
+			var start_date = moment(instanceRec.start_date).format("YYYY-MM-DD HH:mm:ss"); //sqlToJsDate(instanceRec.start_date);
+			var end_date = moment(instanceRec.end_date).format("YYYY-MM-DD HH:mm:ss");//sqlToJsDate(instanceRec.end_date);
+			if(end_date && start_date)
+			{
+				try{
+					var startDateMillsecElm = $("startDateMillsecElem");
+					var endDateMillsecElm = $("endDateMillsecElem");
+					if(startDateMillsecElm && endDateMillsecElm )
+					{
+						diff = (Math.floor((endDateMillsecElm.value - startDateMillsecElm.value)/100))/10;
+					}
+					else
+					{
+						diff = moment.duration((moment(instanceRec.end_date)).diff(moment(instanceRec.start_date)));
+						diff = (Math.floor((diff.asMilliseconds())/100))/10;
+					}
+					dateInfoProvided = true;
+				}
+				catch(e){
+					console.log(e);
+				}
+				
+			}
+		}
+		var text = "";
+		var qrNameNotProvided = false;
+		if(queryObj.name.length <= 0){
+			text = 'No Query Name is currently provided';
+			qrNameNotProvided = true;
+		}
+		else{
+			if(previewQueryOnly)
+				text = 'The query is entitled "' + queryObj.name + '"';
+			else
+				text = 'The query entitled "' + queryObj.name ;
+		}
+		
+		if(dateInfoProvided == true && !previewQueryOnly){
+		text = (qrNameNotProvided ? 'The query "' : '') + text + '" submitted on ' +  
+			start_date.toLocaleString('en-GB') + ', was successfully completed on '+  
+			end_date.toLocaleString('en-GB') + '. This query was performed by "'+ username + 
+			'". The search was completed in ' + 
+			diff.toString() + ' seconds.' ;
+		}
+		
+		if(QueryReportWin)
+			jQuery("#" + objId,QueryReportWin.document).append('<tr><td>' + text.toString() + '</td></tr>');
+		else
+			jQuery("#" + objId).append('<tr><td>' + text.toString() + '</td></tr>');
+	};
+	
+	this.getQrTiming = function(queryObj,QueryReportWin,objId){
+		var tdText = "";
+		if(queryObj.timing)
+		{
+			switch(queryObj.timing)
+			{
+				case "ANY":
+				  tdText = " Temporal Constraint: Treat All Groups Independently";
+				  break;
+				case "SAMEVISIT":
+				  tdText = " Temporal Constraint: Selected groups occur in the same financial encounter";
+				  break;
+				case "TEMPORAL":   //Temporal query
+				  query_order = "Groups occur in the same sequence from left to right";
+				  tdText = " Temporal Constraint: Population in which events occur";
+			}
+			if(QueryReportWin)
+				jQuery("#" + objId,QueryReportWin.document).append('<tr><td>' + tdText + '</td></tr>');
+			else
+				jQuery("#" + objId).append('<tr><td>' + tdText + '</td></tr>');
+		}
+	};
+	
+	this.getQueryDescription = function(queryObj) {
+		var elemToAppend = "";
+		
+		if(queryObj.length > 0)
+		{
+			elemToAppend = "<tr>";
+			var panelNum = 0;
+			elemToAppend = elemToAppend + "<td width=\"5px\"><div class=\"tabSpace\"></div></td>";
+			
+			var tdObj = "<td width=\"610px\">";
+			
+			queryObj.each(function(queryData){
+				var andCounter = 0;
+				var subQryEventNameDisplayed = false;
+				queryData.each(function(panelData){
+					var orCounter = 0;
+					var numItemsInPanel = panelData.items.length;
+					
+					var panelContdivObj = "<div class=\"panelContainer";
+					var PanelTableObj = "<table width=\"615px\" border=\"0\">";
+					var PanelTableTrObj = "<tr>";
+					var PanelTableTd1Obj = "<td width=\"5px\"><div class=\"tabSpace\"></div></td>";
+					PanelTableTrObj = PanelTableTrObj + PanelTableTd1Obj;
+					var PanelTableTd2Obj = "<td width=\"610px\">";
+					panelNum++ ;
+					var panelOperatorDivId = "PanelOp-" + panelNum;
+					var panelOperatorDiv = "<div id=\"" + panelOperatorDivId + "\" class=\"opDiv\">";
+					if(andCounter == 0){
+						andCounter++ ;
+						if (panelData.exclude)
+						{
+							panelOperatorDiv = panelOperatorDiv + "NOT";
+							panelContdivObj = panelContdivObj + " notOpPanel";
+						}
+					}
+					else
+					{
+						var text = "AND";
+						if (panelData.exclude)
+						{
+							text = "AND   NOT";
+							panelContdivObj = panelContdivObj + " notOpPanel";
+						}
+						panelOperatorDiv = panelOperatorDiv + text;
+						andCounter++ ;
+					}
+					var panelItemDiv = "<div class=\"panelItem\">";
+					
+					var panelTiming = "";
+					switch(panelData.timing)
+						{
+						case "ANY":
+						  panelTiming = "Independent of Visit";
+						  break;
+						case "SAMEVISIT":
+						  panelTiming = "Occurs in Same Encounter";
+						  break;
+						case "SAMEINSTANCENUM":
+						  panelTiming = "Items Instance will be the same";
+						  break;
+						}
+						
+					var panelItemOccurrenceText = "# of times an item is recorded is > " + panelData.occurs;
+					
+					panelData.items.each(function(itemData){
+						var data = itemData;
+						if(!(typeof itemData.origData == 'undefined'))
+							data = itemData.origData;
+						var qrPanelItemTableObj = "<table class=\"qrPanelItemTable\">";
+						var qrPanelItemTableTrObj = "<tr>";
+						var imageObj = null;
+						
+
+						var itemDateFrom = "";
+						if(itemData.dateFrom)
+						{
+							if(itemData.dateFrom.Month && itemData.dateFrom.Day && itemData.dateFrom.Year)
+								itemDateFrom = itemData.dateFrom.Month + "/" + itemData.dateFrom.Day + "/" + itemData.dateFrom.Year;
+							else
+							{
+								itemDateFrom = itemData.dateFrom;
+							}
+						}
+						
+						var itemDateTo = "";
+						if(itemData.dateTo)
+						{
+							if(itemData.dateTo.Month && itemData.dateTo.Day && itemData.dateTo.Year)
+								panelDateTo = itemData.dateTo.Month + "/" + itemData.dateTo.Day + "/" + itemData.dateTo.Year;
+							else
+							{
+								itemDateTo = itemData.dateTo;
+							}
+						}
+						
+						var itemDateRangeText = "From earliest date available to latest date available";
+						if(itemData.dateFrom && itemData.dateTo)
+						{
+							if(itemDateFrom == "none")
+								itemDateFrom = "earliest date available";
+							if(itemDateTo == "none")
+								itemDateTo = "latest date available";
+							itemDateRangeText = "From " + itemDateFrom + " to " + itemDateTo;
+						}
+						else
+						{
+							if(itemDateFrom == "none")
+								itemDateFrom = "earliest date available";
+							if(itemDateTo == "none")
+								itemDateTo = "latest date available";
+							if(itemData.dateFrom && !itemData.dateTo)
+								itemDateRangeText = "From " + itemDateFrom + " to latest date available";
+							
+							if(!itemData.dateFrom && itemData.dateTo)
+								itemDateRangeText = "From earliest date available to " + itemDateTo;
+						}
+						
+						
+						//Evaluate the lab values
+						var str_lab_values = "";
+						if(data.LabValues){
+							var v_lab_values = data.LabValues;
+							
+							if(v_lab_values.GeneralValueType == "NUMBER") {
+								var labOp = "";
+								switch(v_lab_values.NumericOp)
+								{
+									case "LT":
+										labOp = " <";
+										break;
+									case "LE":
+										labOp = " <=";
+										break;
+									case "EQ":
+										labOp = " =";
+										break;
+									case "BETWEEN":
+										labOp = " Between";
+										break;
+									case "GE":
+										labOp = " >=";
+										break;
+									case "GT":
+										labOp = " >";
+										break;
+								}
+								str_lab_values =
+									 labOp +" ";
+									
+									if((v_lab_values.ValueLow != null) ||
+									   (v_lab_values.ValueLow != undefined)
+									){
+										str_lab_values +=
+										v_lab_values.ValueLow + " - "+
+										v_lab_values.ValueHigh;
+									} else {
+										str_lab_values +=
+										v_lab_values.Value;
+									}							
+									str_lab_values += " "+ v_lab_values.UnitsCtrl;
+							}
+							//String
+							else if((v_lab_values.ValueString != null) ||
+								(v_lab_values.ValueString != undefined)
+							){
+								str_lab_values =
+									"By String: "+
+									v_lab_values.ValueString;
+							}
+							//Flag
+							else if((v_lab_values.ValueFlag != null) ||
+								(v_lab_values.ValueFlag != undefined)
+							){
+								var v_flag = "Normal";
+								if(v_lab_values.ValueFlag == "H"){
+								  v_flag = "High";
+								}
+								else if(v_lab_values.ValueFlag == "L"){
+								  v_flag = "Low";
+								}
+							
+								str_lab_values = 
+								"By Flag: "+ v_flag;
+							}
+							// End evaluate lab values
+						}
+						if(data.hasChildren)  //It is a previous query inside a query, so no item-icon provided
+						{	
+							if( data.hasChildren.indexOf("LA") >=0 )
+							{
+								imageObj = "<img src=\"js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_leaf.gif\" style=\"float:left;margin-top:5px;margin-right:5px;\">";
+							}
+							else
+							{
+								imageObj = "<img src=\"js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_branch-exp.gif\" style=\"float:left;margin-top: 5px;margin-right: 5px;\">";
+							}
+						}
+						if(imageObj)
+						{
+							var nameText = "";
+							if(data.newName)
+								nameText = data.newName;
+							else
+								nameText = data.name;
+							var qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:18px;\"><div width=\"400px\" style=\"display:inline;\">" + imageObj + "<div>" + "    " + nameText + str_lab_values + "</div></div>" + "</td>";
+						}
+						else
+						{
+						var qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:18px;\">" + data.name + str_lab_values + "</td>";
+						}
+						
+						
+						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj;
+						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj + "</tr>";
+						
+						qrPanelItemTableTrObj = "<tr>";
+						qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:14px;\">" + data.tooltip + "</td>";
+						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+						
+						qrPanelItemTableTrObj = "<tr>";
+						qrPanelItemTableTdObj = "<td width=\"610px\"  style=\"font-size:14px;\">" + panelTiming + "</td>" ;
+						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+						
+						qrPanelItemTableTrObj = "<tr>";
+						qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-size:14px;\">" + itemDateRangeText + "</td>" ;
+						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+						
+						qrPanelItemTableTrObj = "<tr>";
+						qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-size:14px;\">" + panelItemOccurrenceText + "</td>" ;
+						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+						
+						qrPanelItemTableObj = qrPanelItemTableObj + "</table>";
+						panelItemDiv = panelItemDiv + "<br>" + qrPanelItemTableObj + "<br>";
+						
+						if(++orCounter < numItemsInPanel)
+						{
+							var orDiv = "<div style=\"font-size: 20px;font-style: italic;font-weight: bold;\">" + "OR" + "</div>";
+							panelItemDiv = panelItemDiv + orDiv;
+						}
+						
+					});
+					panelItemDiv = panelItemDiv + "</div>";
+					PanelTableTd2Obj = PanelTableTd2Obj + panelItemDiv + "</td>";
+					PanelTableTrObj = PanelTableTrObj + PanelTableTd2Obj + "</tr>";
+					PanelTableObj = PanelTableObj + PanelTableTrObj + "</table>";
+					panelContdivObj = panelContdivObj + "\">" + PanelTableObj + "</div>";
+					
+					panelOperatorDiv = panelOperatorDiv + "</div>";
+					if(panelData.subquery)
+					{
+						if(!subQryEventNameDisplayed){
+							var eventNameDiv = "<div class=\"opDiv\">" + panelData.name + "</div>";
+							tdObj = tdObj + eventNameDiv + panelOperatorDiv + panelContdivObj;
+							subQryEventNameDisplayed = true;
+						}
+						else
+							tdObj = tdObj + panelOperatorDiv + panelContdivObj;
+					}
+					else
+						tdObj = tdObj + panelOperatorDiv + panelContdivObj;
+					
+				});
+			});
+		}
+		if(elemToAppend)
+			elemToAppend = elemToAppend + tdObj + "</td></tr>";
+		return elemToAppend;
+	};
+	
+	this.getTemporalQueryEventRelations = function(eventsRelTable){
+		if(this.queryPanelObjForPrinting.subQryRelationStructure.length > 0 )
+		{
+			var Row = new Element('tr');
+			var Cell = new Element('td',{'width':'5px'});
+			var divInCell = new Element('div',{'class':'tabSpace'});
+			Row.insert(Cell.insert(divInCell));
+			Cell = new Element('td',{'class':'eventsRelHdr'}).update('Order of Events');
+			Row.insert(Cell);
+			var tempDiv = new Element('div');
+			tempDiv.insert(Row);
+			jQuery(eventsRelTable).append(jQuery(tempDiv).html());
+		}
+		
+		this.queryPanelObjForPrinting.subQryRelationStructure.each(function(relation){
+			var Row = new Element('tr');
+			var Cell = new Element('td',{'width':'5px'});
+			var divInCell = new Element('div',{'class':'tabSpace'});
+			Row.insert(Cell.insert(divInCell));
+			
+			Cell = new Element('td', {'class' : 'eventsRel'});
+			var mnSpan = new Element('span', {'class' : 'eventsRelSpan'});
+			var mainSpan = new Element('center');
+			var textFirst = relation.firstQryJoinCol + " " + relation.firstQryOp + "  occurrence for " + relation.firstQryEvntNm;
+			var firstSpan = new Element('span').update(textFirst);
+			mainSpan.insert(firstSpan).insert(new Element('br'));
+			var relationOperator = "";
+			switch(relation.operator)
+			{
+				case "LESS":
+					relationOperator = "Occurs Before";
+					break;
+				case "LESSEQUAL":
+					relationOperator = "Occurs On Or Before";
+					break;
+				case "EQUAL":
+					relationOperator = "Occurs Simultaneously With";
+					break;
+				case "GREATER":
+					relationOperator = "Occurs After";
+					break;
+				case "GREATEREQUAL":
+					relationOperator = "Occurs On or After";
+					break;
+				default:
+					break;
+			}
+			var textOperator = relationOperator.length>0 ? relationOperator : relation.operator;
+			var opSpan = new Element('span').update(textOperator);
+			mainSpan.insert(opSpan).insert(new Element('br'));
+			var textSecond = relation.secondQryJoinCol + " of " + relation.secondQryOp + "  occurrence of " + relation.secondQryEvntNm;
+			var secondSpan = new Element('span').update(textSecond);
+			mainSpan.insert(secondSpan).insert(new Element('br'));
+			
+			var firstSpan = true;
+			relation.spans.each(function(thisSpan){
+				switch(thisSpan.oprator)
+				{
+					case "GREATER" :
+						thisSpan.oprator = ">";
+						break;
+					case "GREATEREQUAL" :
+						thisSpan.oprator = ">=";
+						break;
+					case "EQUAL" :
+						thisSpan.oprator = "=";
+						break;
+					case "LESSEQUAL" :
+						thisSpan.oprator = "<=";
+						break;
+					case "LESS" :
+						thisSpan.oprator = "<";
+						break;
+					default:
+						break;
+				}
+				var text = "";
+				if(firstSpan)
+				{
+					text = " By " + thisSpan.oprator + " " + thisSpan.value + " " + thisSpan.units;
+					firstSpan = false;
+				}
+				else
+				{
+					text = " And " + thisSpan.oprator + " " + thisSpan.value + " " + thisSpan.units;
+				}
+				mainSpan.insert((new Element('span')).update(text)).insert(new Element('br'));
+			});
+			mnSpan.insert(mainSpan);
+			Row.insert((Cell).insert(mnSpan));
+			var tempDiv = new Element('div');
+			tempDiv.insert(Row);
+			jQuery(eventsRelTable).append(jQuery(tempDiv).html());
+		});
+	};
+			
+	this.createResultsForPrint = function(dataArray,child){
+		//Take care of the patient number element separately
+		patientNumItem = $H();
+		var resultNumber = 0;
+		dataArray.each(function(data){
+			if(data[1].trim().toLowerCase().indexOf('number of patients') >= 0)
+			{
+				patientNumItem.set('Total Patients Matching Query',data[4].trim());
+			}
+		});
+		
+		var reultsContDivId = "table-" + resultNumber++ ;
+		var contDiv = null;
+		var reultsTable = new Element('table',{'class':'reultsTable'});
+		patientNumItem.each(function(item){
+			var itemValue = item.value;
+			if (i2b2.PM.model.isObfuscated) {
+				if (itemValue < 4){
+					itemValue = i2b2.CRC.view.graphs.sObfuscatedText;
+				} else {
+					itemValue += i2b2.CRC.view.graphs.sObfuscatedEnding;
+				}
+			}
+			contDiv = new Element('div',{'id':reultsContDivId});
+			var trObj = new Element('tr');
+			var tdObj = new Element('td' , {'class' : 'descResultshead'}).update('Total Patients Matching Query');
+			reultsTable.insert(trObj.insert(tdObj));
+			
+			trObj = new Element('tr');
+			tdObj = new Element('td' , {'class' : 'descResults'}).update(itemValue);
+			reultsTable.insert(trObj.insert(tdObj));
+			contDiv.insert(reultsTable);
+		}); 
+		
+		if(child){
+			jQuery("#queryResultsContainer",child.document).append('<div class="subTitleDivs">Total Number of Cases</div>');
+			jQuery("#queryResultsContainer",child.document).append(jQuery(contDiv).html());
+			jQuery("#queryResultsContainer",child.document).append('<br>');
+		}
+		else
+		{
+			jQuery("#queryResultsContainer").append('<div class="subTitleDivs">Total Number of Cases</div>');
+			jQuery("#queryResultsContainer").append(jQuery(contDiv).html());
+			jQuery("#queryResultsContainer").append('<br>');
+		}
+		
+		
+		//Take care of other results
+		uniqueItems = $H();
+		for (var i = 0; i < dataArray.length; i++) {
+			var key = dataArray[i][1].trim();
+			if (key.trim().toLowerCase().indexOf('number of patients') == -1 )
+			{
+				uniqueItems.set(key,$H());
+			}
+		}
+			
+		uniqueItems.each(function(pair){
+			var key = pair.key;
+			var item = pair.value;
+			dataArray.each(function(data){
+				if(data[1].trim() == key)
+				{
+					var subKey = data[3].trim();
+					var val = data[4].trim();
+					item.set(subKey,val);
+				}
+			});
+		});
+		
+		// var chartId = 0;
+		try {
+			jQuery("#infoQueryStatusText").append('<div id="chartsDiv"></div>');
+			uniqueItems.each(function(pair){
+				//Table Creation
+				var valueHash = pair.value;
+				var labelsPerChart = [];
+				var values = [];
+				var index = 0;
+				
+				var key = pair.key;
+				
+				//Create results table header
+				var tableHeadingText = "Total Unique Patients by ";
+				var reultsTable = new Element('table' , {'class':'reultsTable'});
+				
+				var td1Header = "";
+				var td2Header = "Counts";
+				
+				if(key.search(/age/i) >= 0)
+				{
+					td1Header = 'Age';
+				}
+				else{
+					if(key.search(/gender/i) >= 0)
+					{
+						td1Header = 'Gender';
+					}
+					else{
+						if(key.search(/race/i) >= 0)
+						{
+							td1Header = 'Race';
+						}
+						else{
+							if(key.search(/vital status/i) >= 0)
+							{
+								td1Header = 'Vital Status';
+							}
+							else{
+								if(key.search(/specimen type/i) >= 0)
+								{
+									td1Header = 'Specimen type';
+								}
+								else
+									td1Header = key;
+							}
+						}
+					}
+				}
+				tableHeadingText += td1Header;
+				
+				var trObj = new Element('tr');
+				var tdNameObj = new Element('td', {'class' : 'descResultshead' , 'width' : '50%'}).update(td1Header);
+				var tdValueObj = new Element('td', {'class' : 'descResultshead' , 'width' : '50%'}).update(td2Header);
+				reultsTable.insert(trObj.insert(tdNameObj).insert(tdValueObj));
+				
+				reultsContDivId = "table-" + resultNumber++ ;
+				valueHash.each(function(item){
+					//Populate results table
+					var itemValue = item.value;
+					if (i2b2.PM.model.isObfuscated) {
+						if (itemValue < 4){
+							itemValue = i2b2.CRC.view.graphs.sObfuscatedText;
+						} else {
+							itemValue += i2b2.CRC.view.graphs.sObfuscatedEnding;
+						}
+					}
+					contDiv = new Element('div',{'id':reultsContDivId});
+					trObj = new Element('tr');
+					tdNameObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(item.key);
+					tdValueObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(itemValue);
+					reultsTable.insert(trObj.insert(tdNameObj).insert(tdValueObj));
+					contDiv.insert(reultsTable);
+					//Generate data for charts
+					var quotedItemLabel = '"' + item.key + '"';
+					labelsPerChart[index] = quotedItemLabel;
+					values[index]=itemValue;
+					index++;
+				});
+				var subResultDivId = "subResults-" + resultNumber;
+				
+				if(child){
+					jQuery("#queryResultsContainer",child.document).append('<div id="' + subResultDivId + '"></div>');
+					jQuery("#" + subResultDivId,child.document).append('<div class="subTitleDivs">' + tableHeadingText + '</div>');
+					jQuery("#" + subResultDivId,child.document).append(jQuery(contDiv).html());
+					jQuery("#" + subResultDivId,child.document).append('<br>');
+				}
+				else{
+					jQuery("#queryResultsContainer").append('<div id="' + subResultDivId + '"></div>');
+					jQuery("#" + subResultDivId).append('<div class="subTitleDivs">' + tableHeadingText + '</div>');
+					jQuery("#" + subResultDivId).append(jQuery(contDiv).html());
+					jQuery("#" + subResultDivId).append('<br>');
+				}
+				
+				//Chart Creation
+				try{
+					jQuery("#chartsDiv").append('<div id="chart"></div>');
+					var c3xaxis = pair.value.keys();
+					c3xaxis.splice(0, 0, 'x');
+					var c3values = pair.value.values();
+					var sBreakdownText = "";
+					var iPbLocation = pair.key.toLowerCase().indexOf(" patient breakdown");
+					if (iPbLocation != -1) {
+						sBreakdownText = pair.key.substring(0,iPbLocation);
+					} else {
+						sBreakdownText = pair.key;
+					}
+					c3values.splice(0, 0, sBreakdownText);
+					
+					if(!(typeof c3 === 'undefined')){
+						var chart = c3.generate({
+							size: { 
+								width: 800,
+								height: 250
+							},
+							data: {
+								x: 'x',
+								columns: [
+									c3xaxis,
+									c3values
+								],
+								type: 'bar',
+								color: function (color, d) {return "darkblue";},
+								labels: {
+									format: {
+										y: function (v, id) {
+											if (i2b2.PM.model.isObfuscated) {
+												if(v == 0){
+													return i2b2.CRC.view.graphs.sObfuscatedText;
+												} else {
+													return v + i2b2.CRC.view.graphs.sObfuscatedEnding.replace(/\&plusmn;/g, " +/- ");
+												}
+											} else {
+												return v;
+											}
+										}
+									}
+								}
+							},
+							padding: {
+								left: 60,
+								bottom: 40
+							},
+							axis: {
+								x: {
+									type: 'category',
+									tick: {
+										rotate: 25
+									},
+									height: 45
+								},
+								y: {
+									label: {
+										text: 'Number of Patients',
+									}
+								}
+							},
+							bar: {
+								width: {
+									ratio: 0.50 // this makes bar width 75% of length between ticks
+								}
+							},
+							legend: {
+							  item: {
+								onclick: function (id) {}
+							  },
+							  position: 'right'
+							}
+						});
+						
+						if(chart){
+							if(child){
+								jQuery("#" + subResultDivId,child.document).append('<div id="chart" width="auto"></div>');
+								jQuery("#" + subResultDivId + " #chart",child.document).append(chart.element);
+							}
+							else
+							{
+								var chartId = 'chart-' + resultNumber;
+								jQuery("#" + subResultDivId).append('<div id=\"' + chartId + '\" class=\"qrGraphs\" width="auto"></div>');
+								var chartDiv = jQuery("#" + subResultDivId + " #" + chartId);
+								chartDiv.append(chart.element);
+							}
+						}
+					}
+				}
+				catch(e) {
+					jQuery("#chartsDiv").remove();
+					console.error(e);
+				}
+				jQuery("#queryResultsContainer",child.document).append('<br>');
+			});
+			jQuery("#chartsDiv").remove();
+		}
+		catch(err) {
+			jQuery("#chartsDiv").remove();
+			console.error(err);
+		}
+	};
+	
+	this.createResultsForPrintInPanel = function(dataArray){
+		jQuery("#queryResultsContainer").append('<div id="AllTables" class="QRSDiv"></div>');
+		jQuery("#queryResultsContainer").append('<br>');
+		jQuery("#queryResultsContainer").append('<div id="AllGraphs" class="QRSDiv"></div>');
+		//Take care of the patient number element separately
+		patientNumItem = $H();
+		var resultNumber = 0;
+		dataArray.each(function(data){
+			if(data[1].trim().toLowerCase().indexOf('number of patients') >= 0)
+			{
+				patientNumItem.set('Total Patients Matching Query',data[4].trim());
+			}
+		});
+		
+		var reultsContDivId = "table-" + resultNumber++ ;
+		var contDiv = null;
+		var reultsTable = new Element('table',{'class':'reultsTable'});
+		patientNumItem.each(function(item){
+			contDiv = new Element('div',{'id':reultsContDivId});
+			var trObj = new Element('tr');
+			var tdObj = new Element('td' , {'class' : 'descResultshead'}).update('Total Patients Matching Query');
+			reultsTable.insert(trObj.insert(tdObj));
+			
+			trObj = new Element('tr');
+			tdObj = new Element('td' , {'class' : 'descResults'}).update(item.value);
+			reultsTable.insert(trObj.insert(tdObj));
+			contDiv.insert(reultsTable);
+		}); 
+		
+		jQuery("#queryResultsContainer #AllTables").append('<div class="subTitleDivs">Total Number of Cases</div>');
+		jQuery("#queryResultsContainer #AllTables").append(jQuery(contDiv).html());
+		jQuery("#queryResultsContainer #AllTables").append('<br>');
+		
+		
+		//Take care of other results
+		uniqueItems = $H();
+		for (var i = 0; i < dataArray.length; i++) {
+			var key = dataArray[i][1].trim();
+			if (key.trim().toLowerCase().indexOf('number of patients') == -1 )
+			{
+				uniqueItems.set(key,$H());
+			}
+		}
+			
+		uniqueItems.each(function(pair){
+			var key = pair.key;
+			var item = pair.value;
+			dataArray.each(function(data){
+				if(data[1].trim() == key)
+				{
+					var subKey = data[3].trim();
+					var val = data[4].trim();
+					item.set(subKey,val);
+				}
+			});
+		});
+		
+		var chartId = 0;
+		var sDivName = "";
+		try {
+			uniqueItems.each(function(pair){
+				//Table Creation
+				var valueHash = pair.value;
+				var labelsPerChart = [];
+				var values = [];
+				var index = 0;
+				
+				var key = pair.key;
+				
+				//Create results table header
+				var tableHeadingText = "Total Unique Patients by ";
+				var reultsTable = new Element('table' , {'class':'reultsTable'});
+				
+				var td1Header = "";
+				var td2Header = "Counts";
+				if(key.search(/age/i) >= 0)
+				{
+					td1Header = 'Age';
+				}
+				else{
+					if(key.search(/gender/i) >= 0)
+					{
+						td1Header = 'Gender';
+					}
+					else{
+						if(key.search(/race/i) >= 0)
+						{
+							td1Header = 'Race';
+						}
+						else{
+							if(key.search(/vital status/i) >= 0)
+							{
+								td1Header = 'Vital Status';
+							}
+							else{
+								if(key.search(/specimen type/i) >= 0)
+								{
+									td1Header = 'Specimen type';
+								}
+								else
+									td1Header = key;
+							}
+						}
+					}
+				}
+				tableHeadingText += td1Header;
+				
+				var trObj = new Element('tr');
+				var tdNameObj = new Element('td', {'class' : 'descResultshead' , 'width' : '50%'}).update(td1Header);
+				var tdValueObj = new Element('td', {'class' : 'descResultshead' , 'width' : '50%'}).update(td2Header);
+				reultsTable.insert(trObj.insert(tdNameObj).insert(tdValueObj));
+				
+				reultsContDivId = "table-" + resultNumber++ ;
+				valueHash.each(function(item){
+					//Populate results table
+					contDiv = new Element('div',{'id':reultsContDivId});
+					trObj = new Element('tr');
+					tdNameObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(item.key);
+					tdValueObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(item.value);
+					reultsTable.insert(trObj.insert(tdNameObj).insert(tdValueObj));
+					contDiv.insert(reultsTable);
+					//Generate data for charts
+					var quotedItemLabel = '"' + item.key + '"';
+					labelsPerChart[index] = quotedItemLabel;
+					values[index]=item.value;
+					index++;
+				});
+				
+				jQuery("#queryResultsContainer #AllTables").append('<div class="subTitleDivs">' + tableHeadingText + '</div>');
+				jQuery("#queryResultsContainer #AllTables").append(jQuery(contDiv).html());
+				jQuery("#queryResultsContainer #AllTables").append('<br>');
+				
+				//Chart Creation
+				try{
+					var c3xaxis = pair.value.keys();
+					c3xaxis.splice(0, 0, 'x');
+					var c3values = pair.value.values();
+					var sBreakdownText = "";
+					var iPbLocation = pair.key.toLowerCase().indexOf(" patient breakdown");
+					if (iPbLocation != -1) {
+						sBreakdownText = pair.key.substring(0,iPbLocation);
+					} else {
+						sBreakdownText = pair.key;
+					}
+					c3values.splice(0, 0, sBreakdownText);
+					
+					sDivName = "chart" + chartId++;
+					jQuery("#queryResultsContainer #AllGraphs").append("<div id=\"" + sDivName + "\"></div>");
+					jQuery("#queryResultsContainer #AllGraphs").append('<br>');
+					
+					if(!(typeof c3 === 'undefined')){
+						var chart = c3.generate({
+							bindto: '#AllGraphs #' + sDivName,
+							size: { 
+								width: 700,
+								height: 250
+							},
+							data: {
+								x: 'x',
+								columns: [
+									c3xaxis,
+									c3values
+								],
+								type: 'bar',
+								color: function (color, d) {return "darkblue";},
+								labels: true
+							},
+							padding: {
+								left: 60,
+								bottom: 40
+							},
+							axis: {
+								x: {
+									type: 'category',
+									tick: {
+										rotate: 25
+									},
+									height: 45
+								},
+								y: {
+									label: {
+										text: 'Number of Patients',
+									}
+								}
+							},
+							bar: {
+								width: {
+									ratio: 0.50 // this makes bar width 75% of length between ticks
+								}
+							},
+							legend: {
+							  item: {
+								onclick: function (id) {}
+							  }
+							}
+						});
+						
+					}
+				}
+				catch(e) {
+					console.error(e);
+				}
+			});
+		}
+		catch(err) {
+			console.error(err);
+		}
+	};
+	
+	this.getQueryUserFullName = function(query_user_id)
+	{
+		var returnValue = query_user_id;
+		if(query_user_id)
+		{
+			try {
+				var response = i2b2.PM.ajax.getUser("CRC:PrintQueryNew", {user_id:query_user_id});
+				response.parse();
+				var data = response.model[0];
+				if (data.full_name) { returnValue = data.full_name;}
+				} 
+			catch (e) {}
+		}
+		return returnValue;
+	};
+	
+	function getSelectedValueFromOptions(options)
+	{
+		var value = null;
+		for(k = 0; k < options.length; k++) {
+			var thisOption = options[k];
+			if(thisOption.selected == true)
+			{
+				value = options[k].innerHTML;
+				break;
+			}
+		}
+		return value;
+	}
+	
+	
+	
+	this.PrintElem = function(divIdToPrint)
+    {
+        // Popup(jQuery("#" + divToPrint).html());
+		if(jQuery("#" + divIdToPrint)){
+			var contents = jQuery("#" + divIdToPrint).html();
+			var frame1 = jQuery("<iframe />");
+			frame1[0].name = "frame1";
+			frame1.css({ "position": "absolute", "top": "-1000000px" });
+			jQuery("body").append(frame1);
+			var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
+			frameDoc.document.open();
+			//Create a new HTML document.
+			frameDoc.document.write("<html><head><title>Query Report</title>");
+			//Append the external CSS file.
+			frameDoc.document.write("<link rel=\"stylesheet\" href=\"js-i2b2/cells/CRC/assets/print_query.css\">");
+			frameDoc.document.write('<link href=\'js-ext/c3code/c3.css\' rel=\'stylesheet\' type=\'text/css\'></head><body>');
+			frameDoc.document.write("</head><body>");
+			//Append the DIV contents.
+			frameDoc.document.write(contents);
+			frameDoc.document.write('</body></html>');
+			frameDoc.document.close();
+			
+			setTimeout(function () {
+				window.frames["frame1"].focus();
+				window.frames["frame1"].print();
+				frame1.remove();
+			}, 500);
+		}
+		else
+			alert("Query report can't be printed!");
+    };
+	
+	
+	function Popup(htmlToPrint) 
+    {
+        var mywindow = window.open("",'shrinePrintWindow','width=800,height=750,menubar=yes,resizable=yes,scrollbars=yes');
+		mywindow.document.write('<html><head><title>Query Report</title><link rel=\'stylesheet\' TYPE=\'text/css\' href=\'js-i2b2/cells/CRC/assets/print_query.css\'>');
+		mywindow.document.write('<link href=\'js-ext/c3code/c3.css\' rel=\'stylesheet\' type=\'text/css\'></head><body>');
+        mywindow.document.write(htmlToPrint);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10
+
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+    }
+	
+	this.PrintQueryTemplate = "<head>"+
+			"<title>Query Report</title>"+
+			// "<script type=\"text/javascript\" src=\"js-i2b2/cells/CRC/CRC_ctrlr_Query_Report.js\"></script>"+
+			"<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'  type='text/css'>"+
+			"<link rel='stylesheet' TYPE='text/css' href='js-i2b2/cells/CRC/assets/print_query.css'>"+
+			"<link href='js-ext/c3code/c3.css' rel='stylesheet' type='text/css'>"+
+			"</head>"+
+			"<body>"+
+			"</body>";
+			
+	this.PrintQueryBody = 
+			"<div id=\"QueryReportLoading\"><img src=\"js-i2b2/cells/CRC/assets/loading.gif\" alt=\"Loading\"/></div>"+
+			"<div id='QueryReportContainer' class='no-show'>"+
+			"<a class='printReportButton no-print' href='javascript:window.print()' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
+			"<div class='QRMainHeader'>i2b2 Query Report</div>"+
+			"<table id='queryDetailsTable'></table>"+
+			"<div class='descHead'>Query Definition</div>"+
+			"<table id='qdHeaderTable'></table>"+
+			"<table id='qdContainerTable'></table><br>"+
+			"<table id='temporalQryEventsContainerTable'></table><br>"+
+			"<table id='temporalQryEventsRelationsTable'></table>"+
+			"<div id='qrsTitle' class='descHead'>Query Results</div>"+
+			"<br><div id='queryResultsContainer'></div>" + 
+			"<a class='printReportButton no-print' href='javascript:window.print()' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
+			"</div>";
+			
+	this.PrintQueryBodyForPanel = 
+			"<div id=\"QueryReportLoading\"><img src=\"js-i2b2/cells/CRC/assets/loading.gif\" alt=\"Loading\"/></div>"+
+			"<div id='QueryReportContainer' class='no-show'>"+
+			"<a class='printReportButton no-print' href='javascript:i2b2.CRC.ctrlr.QT.PrintElem(\"queryReport-viewer-body\")' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
+			"<div class='QRMainHeader'>i2b2 Query Report</div>"+
+			"<table id='queryDetailsTable'></table>"+
+			"<div class='descHead'>Query Definition</div>"+
+			"<table id='qdHeaderTable'></table>"+
+			"<table id='qdContainerTable'></table><br>"+
+			"<table id='temporalQryEventsContainerTable'></table><br>"+
+			"<table id='temporalQryEventsRelationsTable'></table>"+
+			"<div id='qrsTitle' class='descHead'>Query Results</div>"+
+			"<br><div id='queryResultsContainer'></div>" + 
+			"<a class='printReportButton no-print' href='javascript:i2b2.CRC.ctrlr.QT.PrintElem(\"queryReport-viewer-body\")' title='Click here to print the report.'><img align='absbottom' border='0' src='assets/images/printer.png'/> Print Report</a>"+
+			"</div>";
+			
+	this.queryReportViewer = {
+		show: function() {
+			if (!i2b2.CRC.ctrlr.QT.queryReportViewer.yuiPanel) {
+				// show non-modal dialog with help documentation		
+				var panel = new YAHOO.widget.Panel("queryReport-viewer-panel", { 
+					draggable: true,
+					zindex:10000,
+					width: "900px", 
+					height: "550px", 
+					autofillheight: "body", 
+					constraintoviewport: true, 
+					context: ["showbtn", "tl", "bl"]
+				}); 
+				$("queryReport-viewer-panel").show();
+				
+				panel.setBody(i2b2.CRC.ctrlr.QT.PrintQueryBodyForPanel);
+				
+				panel.beforeHideEvent.subscribe(function() {
+					if($("queryReport-viewer-body"))
+						$("queryReport-viewer-body").innerHTML="";
+				});
+				panel.render(document.body); 
+				panel.show(); 
+				i2b2.CRC.ctrlr.QT.queryReportViewer.yuiPanel = panel;
+				
+			} else {
+				i2b2.CRC.ctrlr.QT.queryReportViewer.yuiPanel.show();
+			}
+		},
+		hide: function() {
+			try {
+				i2b2.CRC.ctrlr.QT.queryReportViewer.yuiPanel.hide();
+			} catch (e) {}
+		}
+	};
+	
+/**********************
+* END Query Report BG 
+**********************/	
 
 }
 

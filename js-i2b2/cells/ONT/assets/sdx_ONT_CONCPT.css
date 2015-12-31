@@ -24,3 +24,12 @@
 	background:#FFFFBB !important;	
 }
 
+span.itemDateConstraint {
+    font-size: 11px;
+    color: #336592;
+}
+
+span.itemExclude {
+    font-size: 8px;
+    color: red;
+}

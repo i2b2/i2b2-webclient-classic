@@ -5,7 +5,8 @@
  * @author		Nick Benik, Griffin Weber MD PhD
  * @version 	1.3
  * ----------------------------------------------------------------------------------------
- * updated 9-15-08: RC4 launch [Nick Benik] 
+ * updated 09-15-08: RC4 launch [Nick Benik] 
+ * updated 11-09-15: added .HideBreak() & .getXNodeValNoKids() [Wayne Chan]
  */
 console.group('Load & Execute component file: hive > helpers');
 console.time('execute time');
@@ -60,6 +61,12 @@ i2b2.h.XPath = function(xmlDoc, xPath) {
 	}
 	try {
 		if (window.ActiveXObject  || "ActiveXObject" in window) {
+			if((!!navigator.userAgent.match(/Trident.*rv\:11\./)) && (typeof xmlDoc.selectNodes == "undefined")) { // IE11 handling
+				var doc = new ActiveXObject('Microsoft.XMLDOM');
+				doc.loadXML(new XMLSerializer().serializeToString(xmlDoc));
+				xmlDoc = doc;
+			}
+			
 			// Microsoft's XPath implementation
 			// HACK: setProperty attempts execution when placed in IF statements' test condition, forced to use try-catch
 			try {  
@@ -70,6 +77,7 @@ i2b2.h.XPath = function(xmlDoc, xPath) {
 				} catch(e) {}
 			} 
 			retArray = xmlDoc.selectNodes(xPath);
+			
 		}
 		else if (document.implementation && document.implementation.createDocument) {
 			// W3C XPath implementation (Internet standard)
@@ -106,6 +114,15 @@ i2b2.h.getXNodeVal = function(xmlElement, nodeName, includeChildren) {
 		final = undefined;
 	}
 	return final;
+}
+
+i2b2.h.getXNodeValNoKids = function(xmlElement, nodeName) {
+	var gotten = i2b2.h.XPath(xmlElement, "descendant-or-self::"+nodeName+"/text()");
+	if (gotten.length > 0) {
+		return gotten[0].nodeValue;
+	} else {
+		return undefined;
+	}
 }
 
 i2b2.h.GenerateAlphaNumId = function(ReqIdLength) {
@@ -170,6 +187,17 @@ i2b2.h.GenerateISO8601DateTime = function(inDate) {
 	if (minute <= 9) minute = "0" + minute;
 	if (second <= 9) second = "0" + second;
 	return (year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + timezone);
+};
+
+
+i2b2.h.HideBreak = function(inStrValue) {
+	if (typeof inStrValue == "number") {
+		var t = inStrValue.toString();
+	} else {
+		var t = new String(inStrValue);
+		t = t.replace(/<br>/gi, " ");
+	}
+	return t;
 };
 
 

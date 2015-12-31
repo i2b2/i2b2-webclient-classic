@@ -1,0 +1,462 @@
+/*==========================================================================================================================
+ * @projectDescription  CARE (Cohort Analysis & Refinement Expeditor) - Concept Demographics Histograms
+ *                       - Generation of histograms of demographic breakdowns for the specified subset of a patient set and 
+ *                         additional subsets from that subset that are associated to selected concepts (ontology terms).
+ * @inherits            i2b2
+ * @namespace           i2b2.CAREcncptDem
+ * @author              S. Wayne Chan, 
+ *						Biomedical Research Informatics Development Group (BRIDG),
+ *						Biomedical Research Informatics Consulting & Knowledge Service (BRICKS), and
+ *						Health Electronic Record Operationalization (HERO),
+ *                      Div. of Health Informatics and Implementation Science (HIIS), 
+ *						Dept. of Quantitative Health Sciences (QHS), 
+ *                      University of Massachusetts Medical School (UMMS, UMassMed), Worcester, MA
+ * @version             1.1 (for i2b2 v1.6 & above)
+ * @acknowledgement     This module leveraged off the construct / format /style used in the i2b2 web client plugin examples
+ *                       by N. Benik & G. Weber
+ + ------------------------------------------------------------------------------------------------------------------------
+ + @copyright           Copyright 2015 University of Massachusetts Medical School.
+ + @license/disclaimer  This file is part of CARE - Concept Demographics Histograms plugin for the i2b2 webclient.
+ +
+ +						This plugin for the i2b2 webclient is free software: you can redistribute it and/or modify it 
+ +                      under the terms of the GNU General Public License as published by the Free Software Foundation,  
+ +                      either version 3 of the License, or (at your option) any later version.
+ +
+ +						This free software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ +                      without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ +                      GNU General Public License for more details.
+ +
+ +						You should have received a copy of the GNU General Public License along with this free software.  
+ +                      If not, see <http://www.gnu.org/licenses/>.
+ + ------------------------------------------------------------------------------------------------------------------------
+ * updated history (dateformat: YYYYMMDD) 
+ * 20150211 S. Wayne Chan (v.1.0) developed initial version.  
+ * 20150520 S. Wayne Chan (v.1.1) added "Export Data" tab & other minor refinements.
+ *==========================================================================================================================
+ */
+
+
+/*** CSS for main plugin wrapper ***/
+
+DIV#CAREcncptDem-mainDiv {
+	padding: 0px;
+}
+
+
+
+/*** CSS for tab background ***/
+
+DIV#CAREcncptDem-TABS DIV.yui-content {
+	background: #FFF;
+}
+DIV#CAREcncptDem-TABS DIV.CAREcncptDem-MainContent {
+	background:#FFF;
+	border:solid #63758C;
+	border-width:1px 0;
+	overflow:auto;
+    height:100%;
+}
+DIV#CAREcncptDem-TABS DIV.CAREcncptDem-MainContentPad {
+	padding:10px 10px;
+    text-align:justify;
+	vertical-align:baseline;
+}
+DIV#CAREcncptDem-TABS DIV.CAREcncptDem-MainContentPad  .inlineimg {
+	vertical-align:middle;
+}
+
+
+
+/*** CSS for the Specify Data tab ***/
+
+DIV#CAREcncptDem-mainDiv DIV.lbl {
+	padding: 6px 0px;
+	width:80px;
+	text-align:right;
+	float: left;
+	font-weight:bold;
+	color:#666;
+	margin: 15px 10px 0px 0px;
+}
+DIV#CAREcncptDem-mainDiv DIV.droptrgtlbl {
+	padding: 6px 0px;
+	width:80px;
+	text-align:right;
+	float: left;
+	font-weight:bold;
+	color:#666;
+	margin: 15px 10px 0px 0px;
+}
+DIV#CAREcncptDem-mainDiv DIV.droptrgt {
+	padding: 0;					/* 5px 10px; */
+	background: #DEEBEF;
+	margin-top: 15px;
+	text-align: left;
+	border: 1px solid #63758C;
+	width: 380px; 				/* 320px; 300px; */
+	overflow: hidden;	
+}
+DIV#CAREcncptDem-mainDiv #CAREcncptDem-PRSDROP {
+	padding: 5px 10px;
+	overflow:hidden;
+	white-space:nowrap;
+	width:380px;                 /* 320px; 300px; */
+}
+DIV#CAREcncptDem-mainDiv #CAREcncptDem-PatSetSize {
+	font-size: 11px;		
+	margin: 1px 0 0 50px;	
+	color:#666;
+}
+DIV#CAREcncptDem-mainDiv #CAREcncptDem-PatStartNum {
+	font-size: 12px;		
+	margin: 1px 0 0 70px;	
+	color:#666;
+}
+DIV#CAREcncptDem-mainDiv #CAREcncptDem-PatSummary {
+	font-size:11px;			/* 11px; */
+	margin: 1px 0 0 50px;	/* 1px 0 0 50px; */
+	color:#666;
+}
+DIV#CAREcncptDem-mainDiv #CAREcncptDem-CONCPTDROP {
+	padding: 5px 10px;
+	overflow:hidden;
+	white-space:nowrap;
+	width:380px; /* 320px; 300px; */
+}
+DIV#CAREcncptDem-mainDiv DIV.droptrgt .concptItem {
+	padding: 4px 0px; /* 0px 8px; 2px 5px; 5px 10px; */
+	overflow:hidden;
+	white-space:nowrap;
+	display:block;
+	color:#000;
+	text-decoration:none;
+}
+DIV#CAREcncptDem-mainDiv DIV.droptrgt .concptItem:hover {
+	background-color:#FCC;
+}
+DIV#CAREcncptDem-mainDiv DIV.droptrgt .concptDiv {
+	height:1px;
+	overflow:hidden;
+	background-color:#63758C;
+}
+DIV#CAREcncptDem-mainDiv #CAREcncptDem-DeleteMsg {
+	font-size:11px;
+	margin: 2px 0 0 90px;
+	display:none;
+}
+DIV#CAREcncptDem-mainDiv #CAREcncptDem-ConceptHint {
+	font-size:13px;
+	margin: 2px 0 0 90px;
+	display:block;
+}
+
+
+
+/*** CSS for the View Results tab ***/
+
+DIV#CAREcncptDem-TABS DIV.results-directions {
+	padding: 10px;
+	text-align:left;
+}
+DIV#CAREcncptDem-TABS DIV.results-working {
+	margin:10px;
+	text-align:center; 			/* left; */
+}
+DIV#CAREcncptDem-TABS DIV.results-text {
+	margin:10px;
+}
+DIV#CAREcncptDem-TABS DIV.results-serverFailed {
+	padding: 10px;
+    text-align:justify;
+	font-weight:bold;
+	color: red;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .intro {
+	margin:10px 10px 15px 10px;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .resultLV {
+	margin:10px 0px 15px 10px;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .resultLbl {
+	margin-right:10px;
+	font-weight:bold;
+	font-size:13px;
+	color:#42558C;
+	float:left;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .resultVal {
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .demcatTitle {
+	margin:0px 10px;
+	font-weight:bold;
+	font-size:13px;
+	color:#42558C;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables TABLE {
+	margin:1px 10px 15px 10px;
+	border-collapse:collapse;
+	border:solid 1px #63758C;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables TABLE TH {
+	border:solid 1px #63758C;
+	background-color:#CEDBEF;
+	padding:1px;
+	text-align:center;
+	width:100px;
+	white-space:nowrap;
+	overflow:hidden;
+	vertical-align:center;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables TABLE TD {
+	border:solid 1px #63758C;
+	background-color:#DEEBEF;
+	padding:1px;                     /* 0px; */
+	text-align:center;
+	width:50px;
+	white-space:nowrap;
+	overflow:hidden;
+	vertical-align:center;
+	font-size:11px;                  /* 10px; */
+	line-height:10px;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .barTD0 {
+	border:none;
+	border-bottom:solid 1px #FFE;
+	background-color:#FFE;
+	padding:0px;
+	width:200px;
+	text-align:left;
+	vertical-align:middle;           /* top; */
+	font-size:11px;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .barTD1 {
+	border:none;
+	border-top:solid 1px #FFE;
+	background-color:#FFE;
+	padding:0px;
+	width:200px;
+	text-align:left;
+	vertical-align:middle;           /* top; */
+	font-size:11px;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar0 {
+	border:none;
+	background-color:#FCC;
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:1px 0 0 0;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar1 {
+	border:none;
+	background-color:#9C9;
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar2 {
+	border:none;
+	background-color:#C38EC7; /*#C45AEC; #B041FF;*/
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar3 {
+	border:none;
+	background-color:#BCC6CC;
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar4 {
+	border:none;
+	background-color:#82CAFF; /*#B4CFEC; #348781; #4863A0;*/
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar5 {
+	border:none;
+	background-color:#E9AB17;
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar6 {
+	border:none;
+	background-color:#4863A0;
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar7 {
+	border:none;
+	background-color:#FC6C85; /*#C25A7C; #736AFF;*/
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar8{
+	border:none;
+	background-color:#BCE954;
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar9 {
+	border:none;
+	background-color:#8E35EF; /*#7D1B7E; #5E5A80;*/
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar10 {
+	border:none;
+	background-color:#C24641;
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar11 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(45deg, #FCC, #FCC 10px, #606dbc 10px, #606dbc 20px);
+    background: repeating-linear-gradient(45deg, #FCC, #FCC 10px, #606dbc 10px, #606dbc 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar12{
+	border:none;
+    background: -webkit-repeating-linear-gradient(-45deg, #C24641, #C24641 10px, beige 10px, beige 20px);
+    background: repeating-linear-gradient(-45deg, #C24641, #C24641 10px, beige 10px, beige 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar13 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(45deg, #C45AEC, #C45AEC 10px, #eee 10px, #eee 20px);
+    background: repeating-linear-gradient(45deg, #C45AEC, #C45AEC 10px, #eee 10px, #eee 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar14 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(-45deg, #736AFF, #736AFF 10px, #eee 10px, #eee 20px);
+    background: repeating-linear-gradient(-45deg, #736AFF, #736AFF 10px, #eee 10px, #eee 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar15 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(45deg, #348781, #348781 10px, beige 10px, beige 20px);
+    background: repeating-linear-gradient(45deg, #348781, #348781 10px, beige 10px, beige 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar16 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(-45deg, #FCC, #FCC 10px, #E9AB17 10px, #E9AB17 20px);
+    background: repeating-linear-gradient(-45deg, #FCC, #FCC 10px, #E9AB17 10px, #E9AB17 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar17 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(45deg, #465298, #465298 10px, yellow 10px, yellow 20px);
+    background: repeating-linear-gradient(45deg, #465298, #465298 10px, yellow 10px, yellow0 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar18 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(-45deg, #999, #999 10px, #BCC6CC 10px, #BCC6CC 20px);
+    background: repeating-linear-gradient(-45deg, #999, #999 10px, #BCC6CC 10px, #BCC6CC 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar19 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(45deg, #999, #999 10px, #BCE954 10px, #BCE954 20px);
+    background: repeating-linear-gradient(45deg, #999, #999 10px, #BCE954 10px, #BCE954 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+DIV#CAREcncptDem-TABS DIV.results-finished .demTables .bar20 {
+	border:none;
+    background: -webkit-repeating-linear-gradient(-45deg, #465298, #465298 10px, #9C9 10px, #9C9 20px);
+    background: repeating-linear-gradient(-45deg, #465298, #465298 10px, #9C9 10px, #9C9 20px);	
+	height:11px;                     /* 9px; */
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+}
+
+
+
+/*** CSS for the View Export Data tab ***/
+
+DIV#CAREcncptDem-TABS DIV.export-directions {
+	padding: 10px;
+	text-align:left;
+}
+DIV#CAREcncptDem-mainDiv DIV.buttonTable TABLE {
+	margin:10px 5px 0px 5px;
+	border:none;
+	width:97%;
+	text-align:center;
+}
+DIV#CAREcncptDem-mainDiv DIV.buttonTable TABLE TD {
+	background-color:#FFFFFF;
+	border:none;	
+	overflow:auto;
+	padding:5px;
+	text-align:left; 
+	vertical-align:top;
+}
+
+
+
+/*** CSS for the Plugin Help tab ***/
+
+DIV#CAREcncptDem-TABS H1 {
+	margin:0 0 10px 0;
+	font-size:16px;
+	color:#42558C;
+	font-weight:bold;
+}
+DIV#CAREcncptDem-TABS H2 {
+	margin:10px 0 10px 0;
+	font-size:13px;
+	color:#42558C;
+	font-weight:bold;
+}
+DIV#CAREcncptDem-TABS HR {
+	margin:0;
+}

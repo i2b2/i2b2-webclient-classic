@@ -403,7 +403,6 @@ try {
             + "text-align: center;"
             + "vertical-align: middle;"
             + "background-color: white;"
-            + "height: 100%;"
             + "width: 100%;";
 	document.getElementById(sDivName).setAttribute("style",sDivStyle);
 	// establish table in Div and set up its style.
@@ -501,7 +500,21 @@ try {
 			],
 			type: 'bar',
 			color: function (color, d) {return graph_color;},
-			labels: true
+                labels: {
+                    format: {
+                        y: function (v, id) {
+							if (i2b2.PM.model.isObfuscated) {
+								if(v == 0){
+									return i2b2.CRC.view.graphs.sObfuscatedText;
+								} else {
+									return v + i2b2.CRC.view.graphs.sObfuscatedEnding.replace(/\&plusmn;/g, " +/- ");
+								}
+							} else {
+								return v;
+							}
+						}
+                    }
+                }
 		},
 		legend: {
 			//position: 'inset'
@@ -934,7 +947,6 @@ try {
             + "text-align: center;"
             + "vertical-align: middle;"
             + "background-color: white;"
-            + "height: 100%;"
             + "width: 100%;";
 	child.setAttribute("style",sDivStyle);
 	// establish table in Div and set up its style.

@@ -77,6 +77,16 @@ i2b2.hive.MasterView = {
 			// update data
 			this._currentView = newMode;
 			this.eventChangeMode.fire(newMode);
+
+			if(newMode=='Patients'){
+                this._ZoomWindows.each(function(zoomWindow){
+					if(zoomWindow == 'status'){
+						i2b2.hive.MasterView.toggleZoomWindow("status");
+						i2b2.hive.MasterView.toggleZoomWindow("status");
+					}
+				});
+			}
+
 			return true;
 		} else {
 			return false;

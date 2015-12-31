@@ -1,0 +1,157 @@
+/*======================================================================================================================
+ * @projectDescription	Workplace Items Sharing Enhancement - Searcher (Tool for finding & listing all items in the Workplace that contain specified search terms in their annotations or names).
+ * @inherits		i2b2
+ * @namespace		i2b2.WISEsearcher
+ * @author		S. Wayne Chan, Biomedical Research Informatics Development Group (BRIDG) and Biomedical Research Informatics Consulting & Knowledge Service (BRICKS),
+ *                                     Div. of Health Informatics and Implementation Science (HIIS), Dept. of Quantitative Health Sciences (QHS), 
+ *                                     University of Massachusetts Medical School (UMMS), Worcester, MA
+ * @version 		1.0 (for i2b2 v1.3)
+ * @acknowledgement     This module leveraged off  
+ *                       - the general construct / format /style  / template used in the i2b2 web client plugin examples by N. Benik & G. Weber 
+ *                       - the XLS export feature of the ExportXLS plugin by M. Bucalo, Universita' di Pavia
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * @copyright		Copyright 2011 University of Massachusetts Medical School.
+ * @license/disclaimer  This file is part of WISE-Searcher plugin for the i2b2 webclient.
+ *
+ *			WISE-Searcher plugin for the i2b2 webclient is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
+ *			the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *			WISE-Searcher plugin for the i2b2 webclient is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ *			You should have received a copy of the GNU General Public License along with WISE-Searcher plugin for the i2b2 webclient.  If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * updated history (dateformat: YYYYMMDD) 
+ * 20110812 S. Wayne Chan 	Developed initial version.  
+ * 20111028 S. Wayne Chan       added “copyright” & “license/disclaimer” sections in header following UMMS legal signoff.
+ *======================================================================================================================
+ */
+
+
+/*** CSS for main plugin wrapper ***/
+
+DIV#WISEsearcher-mainDiv {
+	padding: 0px;
+}
+
+
+
+/*** CSS for tab background ***/
+
+DIV#WISEsearcher-TABS DIV.yui-content {
+	background: #FFF;
+}
+DIV#WISEsearcher-TABS DIV.WISEsearcher-MainContent {
+    background:#FFF;
+    border:solid #63758C;
+    border-width:1px 0;
+    overflow:auto;
+    height:100%;
+}
+DIV#WISEsearcher-TABS DIV.WISEsearcher-MainContentPad {
+    padding:10px 10px;
+}
+
+
+
+/*** CSS for the Specify Search tab ***/
+
+DIV#WISEsearcher-mainDiv DIV.matchOptions {
+	padding: 0px 10px 0px 10px;
+	margin-top:1px;
+	text-align:center;
+	width:90%;
+	overflow:auto; 
+ 	border:0px dotted #FFFFFF;
+}
+DIV#WISEsearcher-mainDiv DIV.matchOptions form {
+	margin-left:0px;
+	padding:3;
+	text-align:left;
+	float:left;
+	color:#666;
+}
+DIV#WISEsearcher-mainDiv DIV.searchTerms {
+	padding: 5px 5px 0px 10px;
+	margin-top:10px;
+	text-align:left;
+	width:97%;
+	overflow:auto; 
+	font-weight:bold;
+	color:#666;
+}
+DIV#WISEsearcher-mainDiv DIV.searchTerms TEXTAREA {
+	border: 1px solid rgb(0, 0, 0);
+	float: right;
+	width: 97%;
+	height: 55px;
+	margin-right: 6px;
+	background: #FFFFCC;
+}
+
+
+
+/*** CSS for the View Results tab ***/
+
+DIV#WISEsearcher-TABS DIV.results-directions {
+	padding:10px;
+	text-align:center;
+	margin-top:5%;
+}
+DIV#WISEsearcher-TABS DIV.results-finished {
+	padding:5px;
+	text-align:center;
+	margin-top:7PX;
+}
+
+DIV#WISEsearcher-mainDiv DIV#results-display TABLE {
+	margin:10px 5px 5px 5px;
+	border-collapse:collapse;
+	width:97%;
+}
+DIV#WISEsearcher-mainDiv DIV#results-display TABLE CAPTION {
+	border:solid 1px #63758C;
+	background-color:#CCCCEE;
+	padding:3px;
+	margin-top:3px;
+}
+DIV#WISEsearcher-mainDiv DIV#results-display TABLE TH {
+	border:solid 1px #63758C;
+	background-color:#CEDBEF;
+	padding:2px;
+}
+DIV#WISEsearcher-mainDiv DIV#results-display TABLE TD {
+	overflow:auto;
+	border:solid 1px #63758C;
+	background-color:#DEEBEF;
+	padding:2px;
+	text-align:center;
+}
+DIV#WISEsearcher-mainDiv DIV#results-display .results-tabulation {
+	padding:0px;
+}
+DIV#WISEsearcher-mainDiv DIV#results-display .searchResult {
+	overflow:auto;
+	padding:0px;
+	margin:0px;
+}
+
+
+
+/*** CSS for the Plugin Help tab ***/
+
+DIV#WISEsearcher-TABS H1 {
+	margin:0 0 10px 0;
+	font-size:16px;
+	color:#42558C;
+	font-weight:bold;
+}
+DIV#WISEsearcher-TABS H2 {
+	margin:10px 0 10px 0;
+	font-size:13px;
+	color:#42558C;
+	font-weight:bold;
+}
+DIV#WISEsearcher-TABS HR {
+	margin:0;
+}

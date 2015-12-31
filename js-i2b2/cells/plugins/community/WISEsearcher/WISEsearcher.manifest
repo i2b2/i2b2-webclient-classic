@@ -1,0 +1,18 @@
+{
+	"id" : "WISEsearcher",
+	"short_name" : "WISE Searcher",
+    "name" : "Workplace Items Sharing Enhancement - Searcher",
+    "description" : "This plugin facilitates searching for similar Workplace items (folder, query, patient set, etc.) within the web client framework.",
+    "group" : "community",
+    "plugin_version" : "1.1.1",
+    "changes" : "Updated Installation Guide to be compatible with the new Webclient Plugin Installer; changed from standard to custom category, etc.",
+    "i2b2_version" : "1.7.0.7",
+    "roles" : "[ 'DATA_OBFSC', 'DATA_LDS', 'DATA_DEID', 'DATA_PROT' ]",
+	"package" : "https://github.com/i2b2/dev-PLUGIN-WISE-searcher/archive/master.zip",
+    "userManual" : "https://github.com/i2b2/dev-PLUGIN-WISE-searcher/blob/master/WISEsearcher_v1.1.1_User_Manual.pdf",
+    "installGuide" : "https://github.com/i2b2/dev-PLUGIN-WISE-searcher/blob/master/WISEsearcher_v1.1.1_installation_guide.pdf",
+    "configuration" : "None.",
+    "wikiSite" : "http://community.i2b2.org/wiki/display/WISE/WISE-searcher",
+    "contributors" : "University of Massachusetts Medical School"
+        
+}

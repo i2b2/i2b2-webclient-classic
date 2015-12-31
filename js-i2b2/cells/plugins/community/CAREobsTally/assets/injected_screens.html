@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+/*=========================================================================================================================
+ * @projectDescription  CARE (Cohort Analysis & Refinement Expeditor) - Concept Observation Tally Demographics Histograms
+ *                       - Generation of histograms of demographic breakdowns for the specified subset of a patient set  
+ *                         and additional subsets from that subset that are associated with various observation counts of 
+ *                         a selected concept (ontology terms).
+ * @inherits            i2b2
+ * @namespace           i2b2.CAREobsTally
+ * @author              S. Wayne Chan, 
+ *						Biomedical Research Informatics Development Group (BRIDG),
+ *						Biomedical Research Informatics Consulting & Knowledge Service (BRICKS), and
+ *						Health Electronic Record Operationalization (HERO),
+ *                      Div. of Health Informatics and Implementation Science (HIIS), 
+ *						Dept. of Quantitative Health Sciences (QHS), 
+ *                      University of Massachusetts Medical School (UMMS, UMassMed), Worcester, MA
+ * @version             1.1 (for i2b2 v1.6 & above)
+ * @acknowledgement     This module leveraged off the construct / format /style used in the i2b2 web client plugin examples
+ *                       by N. Benik & G. Weber
+ + ------------------------------------------------------------------------------------------------------------------------
+ + @copyright           Copyright 2015 University of Massachusetts Medical School.
+ + @license/disclaimer  This file is part of CARE - Concept Demographics Histograms plugin for the i2b2 webclient.
+ +
+ +						This plugin for the i2b2 webclient is free software: you can redistribute it and/or modify it 
+ +                      under the terms of the GNU General Public License as published by the Free Software Foundation, 
+ +                      either version 3 of the License, or (at your option) any later version.
+ +
+ +						This free software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ +                      without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See 
+ +                      the GNU General Public License for more details.
+ +
+ +						You should have received a copy of the GNU General Public License along with this free software.  
+ +                      If not, see <http://www.gnu.org/licenses/>.
+ + --------------------------------------------------------------------------------------------------------------------------
+ * updated history (dateformat: YYYYMMDD) 
+ * 20150331 S. Wayne Chan (v.1.0) developed initial version.  
+ * 20150504 S. Wayne Chan (v.1.1) added "Export Data" tab & other minor refinements.
+ * 20151215 S. Wayne Chan (v.1.2) updated, including moving the Save*.php files, etc. into same subfolder, for new release  
+ *=========================================================================================================================
+ */
+-->
+<html>
+	<body>
+		<div id='CAREobsTally-mainDiv'>
+			<div id="CAREobsTally-TABS" class="yui-navset">
+				<ul class="yui-nav">
+					<li id="CAREobsTally-TAB0" class="selected"><a href="#CAREobsTally-TAB0"><em>Specify Data</em></a></li>
+					<li id="CAREobsTally-TAB1"><a href="#CAREobsTally-TAB1"><em>Output Options</em></a></li>
+					<li id="CAREobsTally-TAB2"><a href="#CAREobsTally-TAB2"><em>View Results</em></a></li>
+					<li id="CAREobsTally-TAB3"><a href="#CAREobsTally-TAB3"><em>Export Data</em></a></li>
+					<li id="CAREobsTally-TAB4"><a href="#CAREobsTally-TAB4"><em>Plugin Help</em></a></li>
+				</ul>
+				<div class="yui-content" id="CAREobsTally-CONTENT">
+					<div id="CAREobsTally-Main">
+						<div class="CAREobsTally-MainContent">
+							<div class="CAREobsTally-MainContentPad">
+								<div>
+									Drop a patient set and a concept (ontology term) onto the appropriate input boxes below, then click the <b>"Output Options"</b> tab to specify layout of the resulting data, before clicking on the <b>"View Results"</b> tab to retrieve the demographic comparison of the cohort subsets that are associated with the selected observation counts of the specified concept <br/><br/>
+									For more information, refer to the <b>"Plugin Help"</b> tab.<br/><br/>
+								</div> 
+								<div> <hr noshade /></div>
+								<div class="droptrgtlbl">Patient Set:</div>
+								<div class="droptrgt SDX-PRS" id="CAREobsTally-PRSDROP">Drop a Patient Set here</div>
+								<div id="CAREobsTally-PatSetSize"></div>
+									<div id="CAREobsTally-PatStartNum">
+										Starting Patient:
+										<input type="text" value="1" id="CAREobsTally-StartingPat" size="2" onBlur="i2b2.CAREobsTally.SetValidValue(this, 'startPatNum');">&nbsp;&nbsp;&nbsp;Number of Patients:
+										<input type="text" value="500" id="CAREobsTally-NumberOfPats" size="4" onBlur="i2b2.CAREobsTally.SetValidValue(this, 'patCount');">&nbsp;&nbsp;
+										<a href="javascript:i2b2.CAREobsTally.ExplainStartingAndNumberOfPatients();">
+											<i>HELP</i>
+										</a>
+										<br/>Query Subgroup Size:
+										<input type="text" value = "20" id="CAREobsTally-OutputQueryPageSize" size="2" onChange="i2b2.CAREobsTally.SetValidValue(this, 'qChunkSize');">&nbsp;&nbsp;
+										<a href="javascript:i2b2.CAREobsTally.ExplainQueryPageSize();"><i>HELP</i></a>
+									</div>
+								<div id="CAREobsTally-PatSummary"></div>
+								<div class="droptrgtlbl">Concept:</div>
+								<div class="droptrgt SDX-CONCPT" id="CAREobsTally-CONCPTDROP">
+									<div class="concptItem">Drop a Concept here</div>
+								</div>
+								<div id="CAREobsTally-ConceptHint">
+									&nbsp;&nbsp;<a href="javascript:i2b2.CAREobsTally.SuggestFinerConceptGrainularity();"><i>HINT</i></a>
+								</div>						
+							</div>
+						</div>
+					</div>
+					<div id="CAREobsTally-Main">
+						<div class="CAREobsTally-MainContent">
+							<div class="CAREobsTally-MainContentPad">
+								<div>
+									Select the appropriate grouping of observation tallies against which to generate the resulting histograms below.<br/><br/>
+									For more information, refer to the <b>"Plugin Help"</b> tab.<br/><br/>
+								</div> 
+								<div><hr noshade /></div>
+								<div>
+									<br/><input type="radio" name="CAREobsTally-tallyChoice" value="1" onclick="i2b2.CAREobsTally.SetTallyChoice(1, 9)" checked="true">Group observation tallies in sequence of '<b>1, 2, 3, 4, 5, 6, 7, 8, 9, over 9</b>'
+									<br/><input type="radio" name="CAREobsTally-tallyChoice" value="2" onclick="i2b2.CAREobsTally.SetTallyChoice(1, 5)">Group observation tallies in sequence of '<b>1, 2, 3, 4, 5, over 5</b>'
+									<br/><input type="radio" name="CAREobsTally-tallyChoice" value="3" onclick="i2b2.CAREobsTally.SetTallyChoice(2, 8)">Group observation tallies in sequence of '<b>1-2, 3-4, 5-6, 7-8, over 8</b>'
+									<br/><input type="radio" name="CAREobsTally-tallyChoice" value="4" onclick="i2b2.CAREobsTally.SetTallyChoice(3, 9)">Group observation tallies in sequence of '<b>1-3, 4-6, 7-9, over 9</b>'
+									<br/><input type="radio" name="CAREobsTally-tallyChoice" value="5" onclick="i2b2.CAREobsTally.SetTallyChoice(5, 10)">Group observation tallies in sequence of '<b>1-5, 6-10, over 10</b>'
+									<br/><br/>
+								</div>
+								<div><hr noshade /></div>
+								<div>
+									<br/>Next, click on the <b>"View Results"</b> tab to retrieve the demographic comparison of the cohort subsets that are associated with the selected observation counts of the specified concept.
+								</div> 
+							</div>
+						</div>
+					</div>
+					<div id="CAREobsTally-Main">
+						<div class="CAREobsTally-MainContent">
+							<div class="results-directions">Please specify a Patient Set and a Concept at the <b>"Specify Data"</b> tab, as well as select the appropriate grouping of observation tallies against which to generate the resulting histograms at the <b>"Output Options"</b> tab, first.</div>
+							<div class="results-working" style="display:none;">
+								In progress...
+								<br/><br/>Retrieving data, from the server (i2b2 hive), to create the histograms.
+								<br/><br/><div id="results-working-progress"></div>
+								<div id="results-chunks"></div>
+								<br/><br/><div id="results-working-time"></div>
+								<div id="results-remaining-time"></div>
+								<br/><br/><div id="results-server-paging-warning"></div>
+								<br/><br/>Please wait ...
+<!--  
+								<br/><br/><br/><br/><br/><img src="./export-files/loading.gif">
+-->
+								<br/><br/><br/><br/><br/><img id="dotSpiral" src="">
+							</div>
+							<div class="results-finished" style="display:none;"></div>
+							<div class="results-serverFailed" style="display:none; ">
+							  <br/><div id="results-failure-time"></div>
+							  <br/><br/>Warning: The server (i2b2 hive) has returned an error -- apparently, it has been overwhelmed by the amount of data requested of it, and had failed!!
+							  <br/><br/>Unfortunately, this server failure has also left this current webclient session in a bad state!!
+							  <br/><br/>Please logout of this webclient session (to allow the flushing of remnants of this server failure, in certain occasions, it may even be necessary to close the current web browser) and login to a new webclient session.  Then start this webclient plugin again, and reduce either the 'Number of Patients' or 'Query Subgroup Size' (to a smaller non-zero value), or both, in the "Specify Data" tab.
+							</div>
+						</div>
+					</div>
+					<div id="CAREobsTally-Main">
+						<div class="CAREobsTally-MainContent">
+							<div class="export-directions">Please specify a Patient Set and a Concept at the <b>"Specify Data"</b> tab; then select the appropriate grouping of observation tallies against which to generate the resulting histograms at the <b>"Output Options"</b> tab; as well as review the resulting histograms at the <b>"View Results"</b> tab; repectively, first.</div>
+							<div class="buttonTable" style="display:none;">
+								<table>
+									<tr>
+										<td colspan="2" style="text-align:justify">
+										Click on one of the buttons to download the data of the histograms, of the <b>"View Results"</b> tab, in the desired format, onto your computer.</td>
+									</tr>
+									<tr><td colspan="2"><hr/></td></tr>
+									<tr>
+										<td style="text-align:right">
+<!--  										
+											<form action="./export-files/SaveToCSV.php?suffix=CARE-obsTally" method="post" target="_blank" onsubmit="$j('#csvdata').val(i2b2.CAREobsTally.ExportCSVdata())">
+												<input type="image" class="inlineimg" src="./export-files/exportCSVBtn.png">
+-->
+											<form action="" id="save2csv" method="post" target="_blank" onsubmit="$j('#csvdata').val(i2b2.CAREobsTally.ExportCSVdata())">
+												<input type="image" class="inlineimg" id="save2csvBtn" src="">
+												<input type="hidden" id="csvdata" name="csvdata">
+											</form>	
+										</td>	
+										<td style="text-align:justify">
+											This initiates the download of an 'i2b2-export_CARE-obsTally_[timestamp].csv' file.
+											<br/><code>Its data will be semi-colon (;) instead of comma (,) delimited.</code>
+										</td>
+									</tr>
+									<tr><td colspan="2"><hr/></td></tr>
+									<tr>
+										<td style="text-align:right">
+<!--  
+											<form action="./export-files/SaveToHTMLXLS.php?suffix=CARE-obsTally" method="post" target="_blank" onsubmit="$j('#htmldata').val(i2b2.CAREobsTally.ExportXLSdata())">
+												<input type="image" class="inlineimg" src="./export-files/exportHTMLXLSBtn.png">
+-->
+											<form action="" id="save2xls" method="post" target="_blank" onsubmit="$j('#htmldata').val(i2b2.CAREobsTally.ExportXLSdata())">
+												<input type="image" class="inlineimg" id="save2xlsBtn" src="">
+												<input type="hidden" id="htmldata" name="htmldata">
+											</form>	
+										</td>										
+										<td style="text-align:justify">
+											This initiates the download of an 'i2b2-export_CARE-obsTally_[timestamp].html.xls' file, which can be readily openned with MS Excel.
+											<code>
+											  <ul>
+												<li>MS Excel may launch a warning message when the file is loaded; simply click 'Yes' to proceed.</li>
+												<li>To open it in a web browser instead, simply remove the '.xls' file extension, to allow the '.html' extension take effect.</li>
+											  </ul>
+											</code>  
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div id="CAREobsTally-Main">
+						<div class="CAREobsTally-MainContent">
+							<div class="CAREobsTally-MainContentPad">
+								<h1>Introduction</h1>
+								This plugin provides the following functions:
+								<ul>
+								  <li>Generates demographic histograms on the subsets of patients associated (observed) with any various counts of observations of a selected concept (ontology term).</li>
+								  <li>Allows the usage of smaller queries of patient subgroups (from a large patient set) iteratively, in place of one single large query of that huge patient set, to reduce risk of overwhelming the server (i2b2 hive).</li>
+								  <li>Allows selection of subset of patients from a large patient set, to further reduce risk of overwhelming the server.</li>
+								  <li>Allows selection of the appropriate grouping of observation tallies against which to generate the resulting histograms.</li>
+								  <li>Provides feedbacks on current progress, elapsed time, and estimated remaining run time.</li>
+								  <li>Provides notification & suggestion in cases of paging (query-subgrouping) by the server.</li>
+								  <li>Provides termination indication & suggestion (for recovery) when the server failed.</li>
+								  <li>Provides detailed <b><i><u>'HELP'</u></i></b> and <b><i><u>'HINT'</u></i></b> dialogs in response to corresponding hotlinks strategically placed next to input fields that may need explanations or suggestion.</li>
+								  <li>Provides options to export histogram data into a CSV or XLS file that can easily be used by MS Excel, SPSS and other statistics software.</li>
+								</ul>
+								<p>
+								<h1>Instructions</h1>
+								<ol>
+								  <li>Navigate to the <b>"Specify Data"</b> tab. Drag and drop a Patient Set and a concept (ontology term) onto the appropriate input boxes:
+									<ul>
+									  <li>Enter appropriate values in the <b><i>'Starting Patient'</i></b> and <b><i>'Number of Patients'</i></b> fields that are then presented, to specify the subset of the patient set to use.  Also specify at the <b><i>'Query Subgroup Size'</i></b> field the size of smaller queries of subgroups of patients to be used iteratively, to facilitate reducing the risks of overwhelming the server (i2b2 hive).</li>
+									  <li>Click on the corresponding <b><i><u>'HELP'</u></i></b> hotlinks next to the <b><i>'Starting Patient'</i></b> and <b><i>'Number of Patients'</i></b> fields, and the <b><i><u>'HELP'</u></i></b> hotlink next to the <b><i>'Query Subgroup Size'</i></b> field, for detailed information; and enter corresponding appropriate values.</li>
+									  <li>Click on the corresponding <b><i><u>'HINT'</u></i></b> hotlink below the <b><i>'Concepts'</i></b> field for hint or suggestion for selecting concepts.</li>
+									</ul>
+								  </li>
+								  <li>Next, select the appropriate grouping of observation tallies against which to generate the resulting histograms at the <b>"Output Options"</b> tab
+								  </li>
+								  <li>Then, select the <b>"View Results"</b> tab to wait for and view the generated demographic histograms.
+								  </li>
+								  <li>Finally, select the <b>"Export Data"</b> tab to click the appropriate button to download the histogram data, in the desired form, to the local computer.
+								  </li>
+								</ol>
+								<p>
+								<h1>Caveats</h1>
+								<ul>
+								  <li>Since it is possible for the server (i2b2 hive) to take a long time to provide all the data requested, this plugin provides occasional updates of <i>'Elapsed time'</i> and <i>'estimated remaining run time'</i>, etc. displays while the data are being fetched.  These displayed values are at best rough estimates based on occasional data coming back from the server.  In the case of zero <b><i>'Query Subgroup Size'</i></b> selected (i.e. no query-subgrouping), then there would be no data coming back from the server until either of the following situations:
+									<ul>
+										<li>The whole, single, query is done.</li>
+										<li>The server itself started paging (i.e. query-subgrouping), and the result of the 1<sup>st</sup> of such paged subqueries just arrived.</li>
+										<li>The server got overwhelmed by all the excessive data and failed, returning an <i>'error'</i>.</li>
+									</ul>
+								  In any of these cases, the updates of <i>'Elapsed time'</i> and <i>'estimated remaining run time'</i> will be quite infrequent, as updates from the server (i2b2 hive) will most likely take a long time, and far and few in-between, if any.</li>
+   								  <li>This plugin also tries to provide updates on the current subgroup the server (i2b2 hive) is fetching. However, in the cases when the server (i2b2 hive) itself started paging (i.e. query-subgrouping), then the current subgroup # being fetched may exceed the original stated total number of subgroups.</li>
+								  <li>The exact behaviors of exporting data in the desired files will be different among the various browsers (Firefox, Chrome, Internet Explorer, Safari, and Opera).  Most of these browsers will present options between saving and just opening the exported file; while certain browsers, like Internet Explorer, may also open up a new blank tab page along with the export action.</li>
+								</ul>
+								<p>
+								<h1>Browser Compatibilities</h1>
+								<ul>
+								  <li>This plugin has been successfully tested with the following browsers: Firefox (v31, v35), Chrome (v41), Internet Explorer 32/64 (v10, v11), Safari (v5.1.7), and Opera (v28); all on Windows 7.</li>
+								  <li>Its "Export Data" feature does not work with Vivaldi (v1.0.94.2).</li>
+								  <li>The i2b2 web client itself does not work with Opera (v12.11, v12.16).</li>
+								</ul>
+								<p>
+								<h1>i2b2 version compatibilities</h1>
+								This current version is compatible with i2b2 v.1.6-1.7.
+								<p>
+								<h1>Version History</h1>
+								<table style="border-collapse:collapse; text-align:justify; width:100%">
+								 <tr>
+								  <td valign="top" style="border:1px solid black; padding:4px">1.0</td>
+								  <td style="border:1px solid black; padding-left:4px">
+								   Initial release, with options to use a subset of a large patient set; selection of observation tallies grouping for resulting histograms; user-friendly feedback (estimated run-time, etc.), helps & hints.<br/><small>By Wayne Chan, University of Massachusetts Medical School, Worcester, USA.</small>
+								  </td>
+								  <td valign="top" style="border:1px solid black; padding:4px">2015 Q1</td>
+ 								 </tr>
+								 <tr>
+								  <td valign="top" style="border:1px solid black; padding:4px">1.1</td>
+								  <td style="border:1px solid black; padding-left:4px">
+								   Added "Export Data" options & other minor refinements.<br/><small>By Wayne Chan, University of Massachusetts Medical School, Worcester, USA.</small>
+								  </td>
+								  <td valign="top" style="border:1px solid black; padding:4px">2015 Q2</td>
+ 								 </tr>
+								 <tr>
+								  <td valign="top" style="border:1px solid black; padding:4px">1.2</td>
+								  <td style="border:1px solid black; padding-left:4px">
+								   Fixed compatibility issue with the prototype.js v.1.7.2 (ships with webclient v1.7.0.7), & other minor touch-ups.<br/><small>By Wayne Chan.</small>
+								  </td>
+								  <td valign="top" style="border:1px solid black; padding:4px">2015 Q4</td>
+ 								 </tr>
+								</table>
+								<p>
+								<h1>Terms of Use</h1>
+								This plugin is published under the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU GPL v3 license</a>.
+                                <br/><br/>  
+								This software is distributed as a plugin to the i2b2 v1.6-1.7  webclient framework, and may be used free of charge.  It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+								PARTICULAR PURPOSE.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

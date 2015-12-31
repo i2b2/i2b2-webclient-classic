@@ -177,3 +177,107 @@ DIV.tabText {}
 //	height:390px;
 	z-index:500;
 }
+
+
+DIV#PluginListBox DIV.topmenu {
+	padding: 2px;
+	background: #DBE8EF;
+	border: 1px solid #888;
+	height: 21px;
+	text-align: right;
+	overflow:hidden;
+}
+
+DIV#PluginListBox DIV#anaPluginList {
+	background: #C3CED4;
+	border: 1px solid #667788;
+	height: 350px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+DIV#PluginListBox A.pluginRecordBox {
+	border-top: 1px solid #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	border-bottom: 1px solid #667788;
+	padding: 1px 5px;
+	display: block;
+	cursor: pointer;
+	background: #DBE8EF;
+}
+
+DIV#PluginListBox A.pluginRecordBox:hover {
+	background-color:#FFFFCC;
+	
+}
+
+DIV#PluginListBox A.pluginRecordBox DIV.Icon {
+	float: left;
+	background: #ffffff;
+	border: solid 1px #678;
+}
+
+DIV#PluginListBox A.pluginRecordBox DIV.Name {
+	font-family: arial,helvetica;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 12px;
+}
+
+
+
+
+DIV#PluginListBox A.pluginRecordBox.DETAIL DIV.txtBoundBox {
+	padding: 0 2px;
+	margin: 0px 36px 0px;
+}
+
+DIV#PluginListBox A.pluginRecordBox.DETAIL DIV.Name {
+	line-height: 14px;
+}
+
+DIV#PluginListBox A.pluginRecordBox.DETAIL DIV.Descript {
+	font-family: arial,helvetica;
+	font-size: 10px;
+	line-height: 10px;
+}
+
+DIV#PluginListBox A.pluginRecordBox.DETAIL DIV.Icon {
+	height: 32px;
+	width: 32px;
+}
+
+
+
+
+DIV#PluginListBox A.pluginRecordBox.SUMMARY {
+	padding: 0px 5px;
+	height: 16px;
+	overflow: hidden;
+}
+
+DIV#PluginListBox A.pluginRecordBox.SUMMARY DIV.txtBoundBox {
+	margin: 0px 26px 0px;
+}
+
+DIV#PluginListBox A.pluginRecordBox.SUMMARY DIV.Name {
+	line-height: 15px;
+	font-weight: normal;
+}
+
+DIV#PluginListBox A.pluginRecordBox.SUMMARY DIV.Descript {
+	font-family: arial,helvetica;
+	font-size: 10px;
+	line-height: 12px;
+}
+
+DIV#PluginListBox A.pluginRecordBox.SUMMARY DIV.Icon {
+	height: 11px;
+	width: 11px;
+	overflow: hidden;
+	margin-top: 1px;
+}
+
+
+

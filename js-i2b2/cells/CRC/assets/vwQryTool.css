@@ -144,8 +144,9 @@ DIV#crcQueryToolBox DIV.qryTemporalConstraint .yuimenuitemlabel {width:200px;}
 
 DIV#crcQueryToolBox DIV.qryTemporalConstraint Button {
 line-height:1;
-width:75px;
-min-height:1em;
+/*width:75px;*/
+/*min-height:1em;*/
+min-height: 13px;
 }
 DIV#crcQueryToolBox DIV#qryToolFooter {
 	border-top:1px solid #667788;
@@ -158,10 +159,37 @@ DIV#crcQueryToolBox DIV#qryToolFooter {
 	overflow:hidden;
 }
 
+DIV#crcQueryToolBox DIV.temporalControl {
+	width: 200px;
+	float: none;
+	position: relative;
+    background: #6677AA;
+    border: 1px solid #667788;
+    font-weight: bold;
+    font-family: arial,helvetica;
+    font-size: 11px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    color: #FFF;
+    cursor: pointer;
+	display: inline-block;
+}
+
+DIV#crcQueryToolBox DIV.temporalControl a {
+	color:#FFF;
+	text-decoration:none;
+	display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+DIV#crcQueryToolBox DIV.temporalControl a:hover{
+	background-color:#7687bf;
+}
 
 DIV#crcQueryToolBox DIV#newBox,
 DIV#crcQueryToolBox DIV#printQueryBox,
-DIV#crcQueryToolBox DIV#addTemporalBox,
 DIV#crcQueryToolBox DIV#runBox {
 	position:relative;
 	xdisplay:none;
@@ -186,7 +214,6 @@ DIV#crcQueryToolBox DIV#runBox {
 
 DIV#crcQueryToolBox DIV#newBox a,
 DIV#crcQueryToolBox DIV#printQueryBox a,
-DIV#crcQueryToolBox DIV#addTemporalBox a,
 DIV#crcQueryToolBox DIV#runBox a {
 	color:#FFF;
 	display:block;
@@ -224,7 +251,6 @@ a.topicButton:hover {
 
 DIV#crcQueryToolBox DIV#newBox a:hover,
 DIV#crcQueryToolBox DIV#printQueryBox a:hover,
-DIV#crcQueryToolBox DIV#addTemporalBox a:hover,
 DIV#crcQueryToolBox DIV#runBox a:hover {
 	background-color:#7687bf;
 }

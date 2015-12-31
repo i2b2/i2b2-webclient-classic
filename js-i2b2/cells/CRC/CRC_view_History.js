@@ -318,6 +318,12 @@ i2b2.CRC.view.history.ZoomView = function() {
 
 // =========== Context Menu Suff =========== 
 // ================================================================================================== //
+i2b2.CRC.view.history.doDisplay = function() {  // WEBCLIENT-173
+	var op = i2b2.CRC.view.history.contextRecord; // object path
+	i2b2.CRC.ctrlr.QT.doQueryLoad(op.sdxInfo.sdxKeyValue);
+}
+
+// ================================================================================================== //
 i2b2.CRC.view.history.doRename = function() { 
 	var op = i2b2.CRC.view.history.contextRecord; // object path
 	i2b2.CRC.ctrlr.history.queryRename(op.sdxInfo.sdxKeyValue, false, op); 
@@ -514,6 +520,7 @@ i2b2.events.afterCellInit.subscribe(
 					{ lazyload: true,
 					trigger: $('crcNavDisp'), 
 					itemdata: [
+						{ text: "Display",	onclick: { fn: i2b2.CRC.view.history.doDisplay } },
 						{ text: "Rename", 	onclick: { fn: i2b2.CRC.view.history.doRename } },
 						{ text: "Delete", 		onclick: { fn: i2b2.CRC.view.history.doDelete } },
 						{ text: "Refresh All",	onclick: { fn: i2b2.CRC.view.history.doRefreshAll } }

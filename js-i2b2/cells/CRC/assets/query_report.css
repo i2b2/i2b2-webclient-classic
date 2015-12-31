@@ -1,0 +1,284 @@
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
+/* open-sans-regular - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../../../assets/fonts/open-sans-v13-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Open Sans'), local('OpenSans'),
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../../../assets/fonts/open-sans-v13-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+
+#QueryReportContainer {
+	margin-left:10px;
+	
+}
+
+.printReportButton {
+	font-family: Arial;
+    font-size: 13px;
+    float: right;
+    padding: 5px;
+    margin-top: 5px;
+    background-color: #6677AA;
+    font-weight: bold;
+	color: #FFF;
+	border: 1px solid #667788;
+	text-decoration: none;
+}
+
+.printReportButton:hover {
+	background-color: #7687bf;
+}
+
+#infoQueryStatusReport{
+	font-family: 'Open Sans', sans-serif;
+}
+
+.descHead
+{
+    border-bottom:1px solid #006699;
+	font-weight:bold;
+	font-size:20px;
+	padding-top:15px;
+	color:#006699;
+	font-family: 'Open Sans', sans-serif;
+	padding-bottom: 8px;
+}
+
+.QRMainHeader{
+	border-bottom: 1px solid #000;
+	font-weight: bold;
+	font-size: 28px;
+	padding-top: 15px;
+	font-family: 'Open Sans', sans-serif;
+	padding-bottom: 8px;
+}
+
+.descResultshead
+{
+  FONT-WEIGHT: bold;
+  COLOR: #fff;
+  /* FONT-FAMILY: Arial, Helvetica, sans-serif; */
+  BACKGROUND-COLOR: #6699CC;
+  TEXT-ALIGN: center;
+}
+
+.titleDivs
+{
+    width: 100%; 
+    color: blue; 
+    font-family: Arial Black;
+    font-size: 20px;
+}
+
+.subTitleDivs
+{
+	color: #6699CC;
+	font-family: Open Sans;
+	font-size: 16px;
+	font-weight: bold;
+	padding-left: 60px;
+	padding-bottom: 5px;
+}
+
+#qdContainerTable
+{
+	width: 615px;
+	border-style: none;
+	border-spacing: 0px;
+	display: block;
+}
+
+#qdHeaderTable
+{
+	width: 625px;
+	border: 0px;
+	color : #006699;
+	font-size: 14px;
+}
+
+#queryDetailsTable
+{
+	width: 100%;
+	border-style: none;
+	padding: 10px;
+}
+
+.opDiv
+{
+	float:left;
+	width:100px;
+	/*height:20px;*/
+	padding-top:10px;
+	padding-bottom:5px;
+	font-size: 20px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.panelContainer
+{
+	float: left;
+	width:640px;
+	display: block;
+	border: 2px double black;
+	background: #CCCCCC;
+}
+
+.notOpPanel
+{
+	background: #FFA4A4;
+}
+
+.panelOperator
+{
+	height:30px;
+}
+
+.tabSpace
+{
+    float: left;
+	width: 20px;
+}
+
+.panelItem
+{
+	float: right;
+	width: 590px;
+}
+
+.chartCanvas
+{
+	display: block;
+}
+
+table.qrPanelItemTable
+{
+	background: white;
+}
+
+.QRSDiv
+{
+	display: block;
+	padding-left: 20px;
+}
+
+.qrsTable
+{
+	width: 250 px;
+	border: 1px double #6699CC;
+}
+
+.qrsTable td
+{
+	width: 50%;
+}
+
+#legendDiv
+{
+	height:60px;
+	width:100px;
+}
+
+.bar-legend
+{
+	list-style-type: none;
+	display: inline;
+}
+
+.bar-legend li
+{
+	font-size:20px;
+	display: inline;
+}
+
+.bar-legend li div.legendColor
+{
+	height:20px;
+	width:20px;
+	float:left;
+}
+
+.legendContainer
+{
+	height:25px;
+	width:100px;
+}
+
+.bar-legend .legendText
+{
+	width: 50%;
+	float:right;
+}
+
+.eventsRel
+{
+	width : 640px; 
+	border:1px solid #667788;
+	background:#7FFFD4;
+}
+
+.eventsRelHdr
+{
+	width : 640px;
+	color:#333;
+	font-weight:bold;
+
+	font-size:18px;
+}
+
+.eventsRelSpan
+{
+	color:black;
+	font-weight:bold;
+	font-family:arial,helvetica;
+	font-size:12px;
+}
+
+.reultsTable
+{
+	width : 500px;
+	border-collapse: collapse;
+	font-size:15px;
+    TEXT-ALIGN: center;
+	margin-left: 60px;
+}
+
+.reultsTable td
+{
+	border : 1px double #6699CC;
+}
+
+#QueryReportLoading img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.no-show{
+	display: none;
+}
+
+#queryReport-viewer-body{
+	overflow: auto;
+	background-color:#FFF;
+}
+
+.qrGraphs .c3-legend-item {
+    cursor: auto !important;
+}
+
+
+

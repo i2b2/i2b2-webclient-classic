@@ -15,6 +15,7 @@ console.time('execute time');
 // ================================================================================================== //
 i2b2.PM.doLogin = function() {
 	i2b2.PM.model.shrine_domain = false;
+	var input_errors = false;
 	// change the cursor
 	// show on GUI that work is being done
 	i2b2.h.LoadingMask.show();
@@ -26,12 +27,14 @@ i2b2.PM.doLogin = function() {
 		var login_username = val;
 	} else {
 		e += "\n  Username is empty";
+		input_errors = true;
 	}
 	var val = i2b2.PM.udlogin.inputPass.value;
 	if (!val.blank()) {
 		var login_password = val;
 	} else {
 		e += "\n  Password is empty";
+		input_errors = true;
 	}
 	var p = i2b2.PM.udlogin.inputDomain;
 	var val = p.options[p.selectedIndex].value;
@@ -59,6 +62,9 @@ i2b2.PM.doLogin = function() {
 			} else {
 				i2b2.PM.model.admin_only = false;
 			}
+			if (typeof p[val].installer !== undefined) {
+				i2b2.PM.model.installer_path = p[val].installer;
+			} 
 			
 		}
 	} else {
@@ -80,7 +86,11 @@ i2b2.PM.doLogin = function() {
 		domain: login_domain,
 		project: login_project
 	};
-	i2b2.PM.ajax.getUserAuth("PM:Login", parameters, callback, transportOptions);
+	if(!input_errors){
+		i2b2.PM.ajax.getUserAuth("PM:Login", parameters, callback, transportOptions);
+	} else {
+		alert(e);
+	}
 
 }
 
@@ -90,6 +100,21 @@ i2b2.PM._processUserConfig = function (data) {
 	console.group("PROCESS Login XML");
 	console.debug(" === run the following command in Firebug to view message sniffer: i2b2.hive.MsgSniffer.show() ===");
 
+	// BUG FIX - WEBCLIENT-118
+	var browserIsIE8 = false;
+	var browserIsIE11 = false;
+	var ieInCompatibilityMode = false;
+	var ua = window.navigator.userAgent;
+	var msie = ua.indexOf("MSIE ");
+	if (msie > 0)
+		browserIsIE8 = true;
+	if(browserIsIE8){
+		if (ua.indexOf("Trident/4.0") > -1) {
+			ieInCompatibilityMode = true;
+		}
+	}
+	if(!(window.ActiveXObject) && "ActiveXObject" in window)
+		browserIsIE11 = true;
 
 
 	// save the valid data that was passed into the PM cell's data model
@@ -121,7 +146,7 @@ i2b2.PM._processUserConfig = function (data) {
 		
 		return;
 	}	
-	
+		i2b2.PM.model.otherAuthMethod = false;
 		i2b2.PM.model.isAdmin = false;
 	try { 
 		var t = i2b2.h.XPath(data.refXML, '//user/full_name')[0];
@@ -133,6 +158,15 @@ i2b2.PM._processUserConfig = function (data) {
 			i2b2.PM.model.isAdmin = true;
 		}		
 	} catch(e) {}		
+	try { // BUG FIX: WEBCLIENT-130
+		var t = i2b2.h.XPath(data.refXML, '//user/param[@name="authentication_method"]')[0];
+		if((i2b2.h.getXNodeVal(t, 'param').toUpperCase() == "NTLM") || (t != undefined)){
+			i2b2.PM.model.otherAuthMethod = true;
+		}
+	} catch(e) {}
+	
+	
+	
 	i2b2.PM.model.login_domain = data.msgParams.sec_domain;
 	i2b2.PM.model.shrine_domain = Boolean.parseTo(data.msgParams.is_shrine);
 	i2b2.PM.model.login_project = data.msgParams.sec_project;
@@ -178,7 +212,11 @@ i2b2.PM._processUserConfig = function (data) {
 			if (projdetails[d].textContent) {
 				i2b2.PM.model.projects[code].details[paramName] = projdetails[d].textContent;
 			} else if (projdetails[d].firstChild) {
-				i2b2.PM.model.projects[code].details[paramName] = projdetails[d].firstChild.nodeValue.unescapeHTML();				
+				// BUG FIX - WEBCLIENT-118
+				if(((browserIsIE8 && ieInCompatibilityMode) || browserIsIE11) && paramName=="announcement")
+					i2b2.PM.model.projects[code].details[paramName] = projdetails[d].firstChild.nodeValue;                                      
+				else
+					i2b2.PM.model.projects[code].details[paramName] = projdetails[d].firstChild.nodeValue.unescapeHTML();                  
 			}
 		}
 	}

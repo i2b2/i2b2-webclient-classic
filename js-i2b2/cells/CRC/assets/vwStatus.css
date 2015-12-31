@@ -39,6 +39,16 @@ DIV#crcStatusBox DIV.StatusBoxChart {
         overflow: auto;
 }
 
+DIV#crcStatusBox DIV.StatusBoxReport {
+        background: #FFFFFF none repeat scroll 0%;
+        border: 1px solid #667788;
+        height: 144px;
+	    width: auto;
+        overflow: hidden;
+        padding: 1px 5px;
+        overflow: auto;
+}
+
 DIV#crcStatusBox DIV.StatusBoxInnerGraph {
         width: auto;
 }

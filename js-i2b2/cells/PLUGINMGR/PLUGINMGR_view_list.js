@@ -139,7 +139,7 @@ i2b2.events.changedViewMode.subscribe((function(eventTypeName, newMode) {
 	t.viewMode = newMode;
 	switch(newMode) {
 		case "Analysis":
-			t.show();
+			//t.show(); //Show List Box
 			t.BuildCategories();
 			t.Render();
 			t.splitterDragged();
@@ -276,6 +276,7 @@ i2b2.PLUGINMGR.view.list.recordClick = function(e) {
 			if (i2b2.PLUGINMGR.view.list.isZoomed) {
 				i2b2.PLUGINMGR.view.list.ZoomView();
 			}
+			jQuery('#pluginsMenu').qtip('hide');
 		}
 	}
 }

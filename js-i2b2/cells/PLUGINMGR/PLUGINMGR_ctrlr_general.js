@@ -66,6 +66,8 @@ i2b2.PLUGINMGR.ctrlr.main =
 			return false;
 		}
 		
+		i2b2.hive.MasterView.setViewMode('Analysis');
+		
 		// send unload single to any plugin that is currently loaded
 		if (!i2b2.h.isBadObjPath('i2b2.PLUGINMGR.ctrlr.main.currentPluginCtrlr')) {
 			// Something loaded. fire Unload() and exit if cancel is requested
@@ -83,13 +85,13 @@ i2b2.PLUGINMGR.ctrlr.main =
 					var doc = $('anaPluginIFRAME').contentDocument;
 					if (!doc) {var doc = $('anaPluginIFRAME').contentWindow.document; }
 					doc.open(); 
-					doc.write('Select a plugin to load from the "Plugins" window.');
+					doc.write('<a href="#" style="color:#6677aa" onclick="javascript:jQuery(\'#pluginsMenu\').qtip(\'show\');return false;">Select a plugin to load</a>');
 					doc.close();
 				} else {
 					// clear DIV
 					var trgt = $('anaPluginViewFrame');
 					while (trgt.childNodes.length > 0) { trgt.removeChild(trgt.firstChild); }
-					trgt.innerHTML = '<div class="initialMsg">Select a plugin to load from the "Plugins" window.</div>';
+					trgt.innerHTML = '<div class="initialMsg"><a href="#" style="color:#6677aa" onclick="javascript:jQuery(\'#pluginsMenu\').qtip(\'show\');return false;">Select a plugin to load</a></div>';
 				}				
 				delete i2b2.PLUGINMGR.ctrlr.main.currentPluginCtrlr;
 			} else {
@@ -163,6 +165,8 @@ i2b2.PLUGINMGR.ctrlr.main =
 				i2b2.PLUGINMGR.view.PlugView.ResizeHeight();
 				// Reconnect any drag drop handlers that have been dropped, if this plugin has been previously loaded (a YUI issue)
 				YAHOO.util.DDM.reattachHandlers();
+				
+				
 			} else {
 				alert('A problem was encounter while loading the plugin.');
 				return false;
