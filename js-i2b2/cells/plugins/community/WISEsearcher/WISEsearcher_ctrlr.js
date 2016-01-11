@@ -341,7 +341,8 @@ i2b2.WISEsearcher.climbBranches = function(branches) {
         var nlst = i2b2.h.XPath(results.refXML, "//folder[name and work_xml_i2b2_type and index and parent_index]"); 
                                                  // can't include tooltip in the call above, otherwise it'll won't return anything w/o tooltip
         for (var j = 0; j < nlst.length; j ++) {  
-	    i2b2.WISEsearcher.model.WIorigNames[k] = i2b2.WISEsearcher.trim(i2b2.h.getXNodeVal(nlst[j], "name"));
+//	    i2b2.WISEsearcher.model.WIorigNames[k] = i2b2.WISEsearcher.trim(i2b2.h.getXNodeVal(nlst[j], "name"));
+	    i2b2.WISEsearcher.model.WIorigNames[k] = i2b2.WISEsearcher.trim(i2b2.h.getXNodeValNoKids(nlst[j], "name"));
 	    i2b2.WISEsearcher.model.WIorigAnns[k] = i2b2.WISEsearcher.trim(i2b2.h.getXNodeVal(nlst[j], "tooltip"));
 	    if ("o" == i2b2.WISEsearcher.model.Case) {
             	i2b2.WISEsearcher.model.WIanns[k] = i2b2.WISEsearcher.model.WIorigAnns[k];
@@ -471,8 +472,9 @@ i2b2.WISEsearcher.matchOneSearch = function() {
     var matchedInAnn = false;
     var matchedInName = false;
     var matchedCount = 0;
-    var comma = ", ";
-    var t;
+    //var comma = ", ";
+    var semicolon = "; ";
+     var t;
     var matchedPos;
     var matchedStr1;
     var matchedStr2;
@@ -516,12 +518,14 @@ i2b2.WISEsearcher.matchOneSearch = function() {
 		    if ("" == matchedStr1) {
 			matchedStr1 = matchedStr2;
 		    } else if ("" != matchedStr2) {
-		        matchedStr1 += comma + matchedStr2;
+		        //matchedStr1 += comma + matchedStr2;
+		        matchedStr1 += semicolon + matchedStr2;
 		    }
 		}
 	        if (currWImatched) {
 		    if ("" != matchedStr1) {
-			t += comma + matchedStr1;
+			//t += comma + matchedStr1;
+			t += semicolon + matchedStr1;
 		    }
 	        } else {
                     t += matchedStr1;
@@ -752,12 +756,14 @@ i2b2.WISEsearcher.tabulateResult = function(style) {
     var rc = "Annotation Match, Name Match";
     var z;
     var zc;
+    var searchTerms = i2b2.WISEsearcher.model.allTerms.replace(/,/g, ";");
+    var skipTerms = i2b2.WISEsearcher.model.allExcludes.replace(/,/g, ";");
     if ("o" == i2b2.WISEsearcher.model.Case) {
         z = "&nbsp;&nbsp;<u><b><big><code>case-sensitive</code></big></b></u><br>Search terms: <i>'" + i2b2.WISEsearcher.model.allTerms;
-        zc = " case-sensitive\r\n   Search terms: '" + i2b2.WISEsearcher.model.allTerms;
+        zc = " case-sensitive\r\n   Search terms: '" + searchTerms;
     } else { // "i"
         z = "&nbsp;&nbsp;<u><b><big><code>case-insensitive</code></big></b></u><br>Search terms: <i>'" + i2b2.WISEsearcher.model.allTerms;
-        zc = " case-insensitive\r\n   Search terms: '" + i2b2.WISEsearcher.model.allTerms;
+        zc = " case-insensitive\r\n   Search terms: '" + searchTerms;
     }
     if ("a" == style) {
         ti += z + "'</i>;<br>Match option: <i>'Match all the specified terms.'</i>"; 
@@ -769,8 +775,8 @@ i2b2.WISEsearcher.tabulateResult = function(style) {
         tc += zc + "';\r\n    Match option: 'Match at least one of the specified terms.'";
     }   
     if (0 < i2b2.WISEsearcher.model.excludes.length) {
-        z = "<br>Exclude terms: <i>'" + i2b2.WISEsearcher.model.allExcludes + "'</i>;<br>Exclude option: <i>'Exclude any item that contains ";
-        zc = "\r\n   Exclude terms: '" + i2b2.WISEsearcher.model.allExcludes + "';\r\n    Exclude option: 'Exclude any item that contains ";
+        z = "<br>Exclude terms: <i>'" + skipTerms + "'</i>;<br>Exclude option: <i>'Exclude any item that contains ";
+        zc = "\r\n   Exclude terms: '" + skipTerms + "';\r\n    Exclude option: 'Exclude any item that contains ";
         if ("a" == style) {
 	    ti += z + "all the specified terms.'</i></caption>" + si + r; 
 	    tx += z + "all the specified terms.'</i><br>&nbsp;</caption>" + sx + r; // extra line for XLS table

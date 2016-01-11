@@ -282,7 +282,7 @@ i2b2.CAREobsTally.ProcessAllData = function() {
 i2b2.CAREobsTally.ShowLegend = function(psName, psSize, n) {
 	var s, scale, j, panelName, curCncptPats, pop, h, g, dash = (1 == i2b2.CAREobsTally.tallyInc) ? false : true;
 	var i = Math.round(n / i2b2.CAREobsTally.tallyInc), sz = new Array(i), label = new Array(i), x, s2; 
-	var cs0 = 'COHORTS; POPULATIONS\n{0}\n{1}\n{2}; {3}\n', csv, xls = '', obsGrp = '{0}', delim = '; {0} obs', cs2;	
+	var cs0 = 'COHORTS, POPULATIONS\n{0}\n{1}\n{2}, {3}\n', csv, xls = '', obsGrp = '{0}', delim = ', {0} obs', cs2;	
 	var	s0 = '<table style="width:80%">\n<tr><th style="width:75%">COHORTS<br/><small>{0}<br/>{1}</small></th><th>POPULATIONS</th></tr>\n<tr><td style="width:75%"><b>{2}</b></td><td>{3}</td></tr>'; 
 	// "width" needed to ensure no wrap for IE only, but OK with Chrome, Safari, FF, Opera, Vivaldi
 	s = $("CAREobsTally-PatSetSize").innerHTML, j = s.indexOf("(");
@@ -292,10 +292,10 @@ i2b2.CAREobsTally.ShowLegend = function(psName, psSize, n) {
 	j = 0;
 	s0 = '\n<tr><td style="width:75%">{0}% of selected patients associated with "<b>{1}</b>"</td><td>{2}</td></tr>\n</table><table width="95%">\n<tr><th style="width:75%">COHORTS</th><th colspan="2">POPULATIONS & LEGEND</th></tr>';
 						// "width" needed to ensure no wrap for IE only, but OK with Chrome, Safari, FF, Opera, Vivaldi
-	cs0 = '{0}% of selected patients associated with "{1}"; {2}\n\n\nCOHORTS; POPULATIONS\n';
+	cs0 = '{0}% of selected patients associated with "{1}", {2}\n\n\nCOHORTS, POPULATIONS\n';
 	s2 = '<tr><td style="width:75%">{0}% of these {6} patients have {1} "<b>{2}</b>" observations</td><td>{3}</td><td class="barTD1"><div class="bar{4}" style="width:{5}px;"></div></td></tr>';	
 					    // "width" needed to ensure no wrap for IE only, but OK with Chrome, Safari, FF, Opera, Vivaldi
-	cs2 = '{0}% of these {4} patients have {1} "{2}" observations; {3}\n';	
+	cs2 = '{0}% of these {4} patients have {1} "{2}" observations, {3}\n';	
 	x = '<tr><td style="width:75%">{0}% of these {4} patients have {1} "<b>{2}</b>" observations</td><td>{3}</td></tr>\n';	
 	for (panelName in i2b2.CAREobsTally.cncptPats) {
 		curCncptPats = i2b2.CAREobsTally.cncptPats[panelName];
@@ -342,7 +342,7 @@ i2b2.CAREobsTally.ShowCharts = function(DemCats) {
 		lf = ' \n', lf2 = ' \n\n', none = '"no entry"',	s0 = '<tr><th rowspan="{0}">"no entry"</th>', 
 		s1 = '<tr><th rowspan="{0}">{1}</th>', s2 = '<td>0</td>{0}{1}" style="width:0px;"></div></td>', 
 		s3 = '<td>{0}</td>{1}{2}" style="width:{3}px;"></div></td>', n = i2b2.CAREobsTally.sumCounts.length; 
-	var csv = '', delim = '; {0}', delim0 = '; 0';		
+	var csv = '', delim = ', {0}', delim0 = ', 0';		
 	for (DemCat in DemCats) {
 		DemCatValues = {};
 		DemCatValsList = [];
@@ -396,7 +396,7 @@ i2b2.CAREobsTally.ShowCharts = function(DemCats) {
 	}
 	i2b2.CAREobsTally.CSVdata += csv;
 	csv += '   \n';													// for ExportXLS
-	csv = csv.replace(/; /g, '</td><td>').replace(/ \n \n\n   \n/g, '</td></tr>!!!</table>!!!<br/>!!!');
+	csv = csv.replace(/, /g, '</td><td>').replace(/ \n \n\n   \n/g, '</td></tr>!!!</table>!!!<br/>!!!');
 	csv = csv.replace(/ \n \n\n/g, '</td></tr>!!!</table>!!!<br/>!!!<table>!!!<tr><td>');
 	csv = csv.replace(/\n/g, '</td></tr>!!!<tr><td>').replace(/!!!/g, '\n');			
 	i2b2.CAREobsTally.XLSdata += i2b2.CAREobsTally.format('\n<br/>\n<table>\n<tr><td>{0}', csv);	
@@ -569,9 +569,9 @@ i2b2.CAREobsTally.GetPatSetSizeAndUsageMsg = function(psSize) {
 	s0 = "contains some {0} patients (using patients #{1} - {2}";
 	s = i2b2.CAREobsTally.format(s0, psSize, startingPat, (1 + i2b2.CAREobsTally.qLastPatNum));
 	if (psSize > targetPatCount) {
-		s += i2b2.CAREobsTally.format(", or just {0} of the set)", targetPatCount);
+		s += i2b2.CAREobsTally.format("; or just {0} of the set)", targetPatCount);
 	} else {
-		s += ", or the entire set)";
+		s += "; or the entire set)";
 	}
 	return s; 
 } // end of GetPatSetSizeAndUsageMsg()	
