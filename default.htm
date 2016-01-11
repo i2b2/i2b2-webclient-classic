@@ -8,7 +8,7 @@
  *       i2b2 Web Client
  *           v1.7.07
  *  *************************
- *  @modified: 12/30/15
+ *  @modified: 01/11/16
  *  Contributors:
  *     Nick Benik
  *     Griffin Weber, MD, PhD
@@ -21,7 +21,7 @@
  */-->
 
 <script type="text/javascript">
-	var i2b2build = "1.7.07   [12/30/15 4:00 PM] ";
+	var i2b2build = "1.7.07   [01/11/16 1:00 PM] ";
 </script>
 
 <!-- LOAD YUI FROM Yahoo's CDN
@@ -295,6 +295,9 @@ function initI2B2()
 			if (i2b2.PM.model.login_debugging) { $('debugMsgSniffer').show(); }
 			if(typeof i2b2.PM.model.installer_path !== "undefined"){
 				$('PluginGalleryFooter').show();
+			}
+			if (i2b2.PM.model.isAdmin){
+				$('PluginsGalleryLink').innerHTML = "Click here to install plugins from i2b2 Gallery...";
 			}
 		}), i2b2
 	);
@@ -937,7 +940,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         </form>
       </div>
       <div id="anaPluginList" oncontextmenu="return false"></div>
-	  <div style="background:#667788;height:22px;padding-left:4px;"><span id="PluginGalleryFooter" style="display:none;float:left"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="Javascript:void(0)" onClick="invokeWCPinstaller();" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:13px;color:#FFF;" >Click here to view more Plugins in i2b2 Gallery...</a></span><span style="float:right;margin-right:5px"><a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');return false;" style="text-decoration:none;font-size:13px;color:#FFF;" ><img src="assets/images/p_close.png" align="absbottom" border="0" style="margin-top:2px;" /></a> <a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');return false;" style="text-decoration:none;font-size:13px;color:#FFF;">Close</a></span></div>
+	  <div style="background:#667788;height:22px;padding-left:4px;"><span id="PluginGalleryFooter" style="display:none;float:left"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="Javascript:void(0)" onClick="invokeWCPinstaller();" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:13px;color:#FFF;" >Click here to view more plugins in i2b2 Gallery...</a></span><span style="float:right;margin-right:5px"><a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');return false;" style="text-decoration:none;font-size:13px;color:#FFF;" ><img src="assets/images/p_close.png" align="absbottom" border="0" style="margin-top:2px;" /></a> <a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');return false;" style="text-decoration:none;font-size:13px;color:#FFF;">Close</a></span></div>
     </div>
     <div style="clear:both;"></div>
   </div>

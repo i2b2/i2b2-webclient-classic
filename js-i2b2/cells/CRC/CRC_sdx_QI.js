@@ -235,10 +235,24 @@ i2b2.sdx.TypeControllers.QI.getChildRecords = function(sdxParentNode, onComplete
 			o.start_date = i2b2.h.getXNodeVal(ps[i1],'start_date');
 			o.end_date = i2b2.h.getXNodeVal(ps[i1],'end_date');
 			try {
-				o.title = i2b2.h.getXNodeVal(ps[i1],'description'); //[0].nodeValue;
+				//o.title = i2b2.h.getXNodeVal(ps[i1],'description'); //[0].nodeValue;
+				o.title = i2b2.h.getXNodeVal(ps[i1],'query_result_instance/description');
 			} catch (e) {
 				o.title = i2b2.h.getXNodeVal(ps[i1],'name');
 			}
+			if (i2b2.h.getXNodeVal(ps[i1],'query_result_type/name') == "PATIENT_COUNT_XML"){ //nw096
+				if(i2b2.PM.model.isObfuscated){
+					if(parseInt(i2b2.h.getXNodeVal(ps[i1],'query_result_instance/set_size')) < 4){
+						o.title += " is <span style='background: #C9F3C9;font-weight:bold;padding: 2px;color: #0C5D0C;'>&lt;3</span>";
+					} else {
+						o.title += " is <span style='background: #C9F3C9;font-weight:bold;padding: 2px;color: #0C5D0C;'>" + i2b2.h.getXNodeVal(ps[i1],'query_result_instance/set_size') + "&plusmn;3</span>";
+					}
+					
+				} else {
+					o.title += " is <span style='background: #C9F3C9;font-weight:bold;padding: 2px;color: #0C5D0C;'>" + i2b2.h.getXNodeVal(ps[i1],'query_result_instance/set_size') + "</span>";
+				}
+			}
+			
 			if (i2b2.h.XPath(ps[i1],'query_status_type/name/text()')[0].nodeValue != "COMPLETED")
 			{
 				o.title += " - " +  i2b2.h.XPath(ps[i1],'query_status_type/name/text()')[0].nodeValue;	

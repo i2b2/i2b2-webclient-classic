@@ -325,7 +325,7 @@ i2b2.CAREcncptDem.ProcessAllData = function() {
 i2b2.CAREcncptDem.ShowLegend = function(psName, psSize, n) {
 	var s, scale, barCell, j, panelName, curCncptPats, sz, pop, s1, s2;
 	var s0 = '<table style="width:80%">\n<tr><th style="width:75%">COHORTS<br/><small>{0}<br/>{1}</small></th><th colspan="2">POPULATIONS & LEGEND</th></tr>\n<tr><td style="width:75%"><b>{2}</b></td><td>{3}</td><td class="barTD0"><div class="bar0" style="width:220px;"></div></td></tr>';	
-	var cs0 = 'COHORTS; POPULATIONS\n{0}\n{1}\n{2}; {3}\n', csv, conGrp = '{0}; all selected cohorts', delim = '; {0}';		
+	var cs0 = 'COHORTS, POPULATIONS\n{0}\n{1}\n{2}, {3}\n', csv, conGrp = '{0}, all selected cohorts', delim = ', {0}';		
 	s = $("CAREcncptDem-PatSetSize").innerHTML;
 	j = s.indexOf("(");
 	s1 = s.substring(0, j);
@@ -338,7 +338,7 @@ i2b2.CAREcncptDem.ShowLegend = function(psName, psSize, n) {
 	barCell = '{0}<td class="barTD1"><div class="bar{1}" style="width:{2}px;"></div></td></tr>'; 
 	s0 = '\n<tr><td style="width:75%">{0}% of selected patients associated with "<b>{1}</b>"</td><td>{2}</td>';
 						   // "width" needed to ensure no wrap for IE only, but OK with Chrome, Safari, FF, Opera, Vivaldi
-	cs0 = '{0}% of selected patients associated with "{1}"; {2}\n';
+	cs0 = '{0}% of selected patients associated with "{1}", {2}\n';
 	for (panelName in i2b2.CAREcncptDem.cncptPats) {
 		j ++;
 		curCncptPats = i2b2.CAREcncptDem.cncptPats[panelName];
@@ -361,7 +361,7 @@ i2b2.CAREcncptDem.ShowLegend = function(psName, psSize, n) {
 
 i2b2.CAREcncptDem.ShowCharts = function(DemCats, n) {
 	var DemCat, DemCatValues, DemCatValsList, maxVal, i, j, DemCatVal, scale, curCatVal, barCell, barWidth, s = '';
-	var csv = '', delim = '; {0}', delim0 = '; 0', demcatTitle = '<div class="demcatTitle">{0}</div><table>';
+	var csv = '', delim = ', {0}', delim0 = ', 0', demcatTitle = '<div class="demcatTitle">{0}</div><table>';
 	var sTr = '<tr>', sTrEnd = '</tr>', sTableEnd = '</table>', lf = ' \n', lf2 = ' \n\n', none = '"no entry"';	
 	var bc0 = '<td class="barTD0"><div class="bar', bc1 = '<td class="barTD1"><div class="bar';
 	var s0 = '<tr><th rowspan="{0}">"no entry"</th>', s2 = '<td>0</td>{0}{1}" style="width:0px;"></div></td>';
@@ -419,7 +419,7 @@ i2b2.CAREcncptDem.ShowCharts = function(DemCats, n) {
 	}
 	i2b2.CAREcncptDem.CSVdata += csv;
 	csv += '   \n';	// for ExportXLS
-	csv = csv.replace(/; /g, '</td><td>').replace(/ \n \n\n   \n/g, '</td></tr>!!!</table>!!!<br/>!!!');
+	csv = csv.replace(/, /g, '</td><td>').replace(/ \n \n\n   \n/g, '</td></tr>!!!</table>!!!<br/>!!!');
 	csv = csv.replace(/ \n \n\n/g, '</td></tr>!!!</table>!!!<br/>!!!<table>!!!<tr><td>');
 	csv = csv.replace(/\n/g, '</td></tr>!!!<tr><td>').replace(/!!!/g, '\n');			
 	i2b2.CAREcncptDem.XLSdata += i2b2.CAREcncptDem.format('\n<br/>\n<table>\n<tr><td>{0}', csv);	
@@ -576,9 +576,9 @@ i2b2.CAREcncptDem.GetPatSetSizeAndUsageMsg = function(psSize) {
 	s0 = "contains some {0} patients (using patients #{1} - {2}";
 	s = i2b2.CAREcncptDem.format(s0, psSize, startingPat, (1 + i2b2.CAREcncptDem.qLastPatNum));
 	if (psSize > targetPatCount) {
-		s += i2b2.CAREcncptDem.format(", or just {0} of the set)", targetPatCount);
+		s += i2b2.CAREcncptDem.format("; or just {0} of the set)", targetPatCount);
 	} else {
-		s += ", or the entire set)";
+		s += "; or the entire set)";
 	}
 	return s; 
 } // end of GetPatSetSizeAndUsageMsg()	

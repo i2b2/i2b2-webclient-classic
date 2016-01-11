@@ -132,6 +132,7 @@ i2b2.ExportXLS.ResetOptionsToDefault = function()
 	i2b2.ExportXLS.model.outputOptions.includePatientDemoData_City = false;
 	i2b2.ExportXLS.model.outputOptions.includePatientDemoData_ZIP = false;
 	i2b2.ExportXLS.model.outputOptions.includePatientDemoData_MaritalStatus = false;
+	i2b2.ExportXLS.model.CsvDelimiter = ",";	
 } 
 
 i2b2.ExportXLS.UpdateProgressMessage = function(progressMessage)
@@ -1859,6 +1860,7 @@ i2b2.ExportXLS.CreateHTMLTable = function()
 i2b2.ExportXLS.CreateCSV = function()
 {
 	var csv = "";
+	var csvDelimiter = i2b2.ExportXLS.model.CsvDelimiter;
 
 	for (var i = 0; i < i2b2.ExportXLS.ResultMatrix.length; i++)
 	{
@@ -1878,7 +1880,8 @@ i2b2.ExportXLS.CreateCSV = function()
 			if (i2b2.ExportXLS.OutputFormatIs("aggregated")) {
 				cell = cell.replace(/\n$/, '').replace(/\n/g, ', ');
 			}
-			csv_line += cellDelimiter + cell + cellDelimiter + ';';
+			//csv_line += cellDelimiter + cell + cellDelimiter + ';';
+			csv_line += cellDelimiter + cell + cellDelimiter + csvDelimiter;
 		}
 	
 		csv_line = csv_line.replace(/;$/, '');
@@ -2133,4 +2136,9 @@ i2b2.ExportXLS.getDurationInHrMinSec = function(duration)
 			return (h + " hr. " + m + " min. " + s + " sec.");
 		}
 	}
+}
+
+i2b2.ExportXLS.SetCsvDelimiter = function(delim)
+{
+	i2b2.ExportXLS.model.CsvDelimiter = delim.value;
 }
