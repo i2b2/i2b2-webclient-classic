@@ -1,18 +1,19 @@
 {
 	"id" : "CAREobsTally",
 	"short_name" : "CARE - Concept Observation Tally Demographics Histograms",
-    "name" : "CARE (Cohort Analysis & Refinement Expeditor) - Concept Observation Tally Demographics Histogram",
-    "description" : "This plugin generates the histograms of demographic break-downs of a selected subset of a Patient Set against those from that subset that are associated with various observation counts of a specified concept.",
-    "group" : "community",
-    "plugin_version" : "1.2",
-    "changes" : "Updated to ensure compatibility with i2b2 v.1.7.0.7; changed from standard to custom category, etc.",
-    "i2b2_version" : "1.7.0.7",
-    "roles" : "[ 'DATA_LDS', 'DATA_DEID', 'DATA_PROT' ]",
-	"package" : "https://github.com/i2b2/dev-PLUGIN-CARE-concept-observation-tally-demographics-histograms/archive/master.zip",
-    "userManual" : "https://github.com/i2b2/dev-PLUGIN-CARE-concept-observation-tally-demographics-histograms/blob/master/CARE-observationTallys v1.2 User Manual.pdf",
-    "installGuide" : "https://github.com/i2b2/dev-PLUGIN-CARE-concept-observation-tally-demographics-histograms/blob/master/CARE-observationTallys v1.2 Installation Guide.pdf",
-    "configuration" : "None.",
-    "wikiSite" : "http://community.i2b2.org/wiki/display/CARE/CARE+-+Concept+Observation+Tally+Demographics+Histograms",
-    "contributors" : "University of Massachusetts Medical School"
-        
+	"name" : "CARE (Cohort Analysis & Refinement Expeditor) - Concept Observation Tally Demographics Histogram",
+	"description" : "This plugin generates demographic histograms on a specified subsets of patients associated with various counts of observations for a selected concept.",
+	"group" : "community",
+	"plugin_version" : "1.3",
+	"changes" : "Fixed issue with the plugin&#39;s manifest.",
+	"i2b2_version" : "1.7.07",
+	"roles" : "[ 'DATA_LDS', 'DATA_DEID', 'DATA_PROT' ]", 
+	"authors" : "[ 'S. Wayne Chen' ]",
+	"institutions" : "[ 'University of Massachusetts Medical School' ]",
+	"keywords" : "[ 'demographics', 'histograms', 'observations', 'webclient' ]",
+    "package" : "https://github.com/i2b2plugins/wc-CARE-conceptObservationTallyDemographicsHistograms/archive/v1.3.zip",
+	"userManual" : "https://github.com/i2b2plugins/wc-CARE-conceptObservationTallyDemographicsHistograms/blob/master/CARE-observationTallys v1.2 User Manual.pdf",
+	"installGuide" : "https://github.com/i2b2plugins/wc-CARE-conceptObservationTallyDemographicsHistograms/CARE-observationTallys v1.2 Installation Guide.pdf",
+	"configuration" : "None",
+	"wikiSite" : "http://community.i2b2.org/wiki/display/CARE/CARE+-+Concept+Observation+Tally+Demographics+Histograms"
 }

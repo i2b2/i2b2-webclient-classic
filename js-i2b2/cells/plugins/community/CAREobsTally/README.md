@@ -1,5 +1,5 @@
-# PLUGIN-CARE-concept-observation-tally-demographics-histograms
-An i2b2 Web Client plugin that generates demographic histograms on the subsets of patients associated (observed) with any various counts of observations of a selected concept (ontology term).
+# CARE (Cohort Analysis & Refinement Expeditor) - Concept Observation Tally Demographics Histograms
+A plugin developed for the i2b2 Web Client plugin. This plugin generates demographic histograms on a specified subsets of patients associated (observed) with various counts of observations for a selected concept (ontology term).
 
 ## Plugin Development: 
 ### Author/s: 
