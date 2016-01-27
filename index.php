@@ -7,7 +7,7 @@
 (does not use SimpleXML library)
 
 	Author: Nick Benik
-	Last Revised: 10-28-08
+	Last Revised: 01-27-16
 
 *****************************************************************
 
@@ -15,44 +15,50 @@ This file acts as a simple i2b2 proxy cell.  If no variables have been sent it i
 user's Web browser requesting the default page for the current directory.  In this case, this file will read the 
 contents of the default.htm file and return its contents to the browser via the current HTTP connection.
 
+New Feature: 01-27-16 (nw096):
+	- the $WHITELIST has been reworked to read i2b2_config_data.js and detect the hostname of where i2b2 lives
+	- the hostname that the web client is running on is also added to the $WHITELIST, in case i2b2 lives there
+
+	** If there are other cells/URLs that you connect to that is not where your PM Cell lives, you will need
+	   to add that server's hostname to the $WHITELIST array below.
+
 */
-
-
-
-
-
 
 
 $pmURL = "http://127.0.0.1:8080/i2b2/rest/PMService/getServices";
 $pmCheckAllRequests = false;
 
-
 $WHITELIST = array(
-	"http://",
-	"http://127.0.0.1:9090/axis2/rest/",
-	"http://localhost:9090/axis2/rest/",
-	"http://127.0.0.1:7070/i2b2/rest/",
-	"http://localhost:7070/i2b2/rest/",
-	"http://webservices.i2b2.org",
-	"https://webservices.i2b2.org"
+        "http" . (($_SERVER['SERVER_PORT'] == '443') ? 's' : '' ) . "://" . $_SERVER['HTTP_HOST'],
+        "http://services.i2b2.org"
 );
-
 
 
 $BLACKLIST = array(
-	"http://127.0.0.1:9090/test",
-	"http://localhost:9090/test",
-	"http://127.0.0.1:7070/test",
-	"http://localhost:7070/test"
+        "http://127.0.0.1:9090/test",
+        "http://localhost:9090/test"
 );
 
+// There is nothing to configure below this line
 
+$matches = array();
+$config_file = fopen("i2b2_config_data.js", "r");
+if($config_file){
+  while(($line = fgets($config_file)) !== false){
+    if(strpos($line, "urlCellPM:") !== false)
+      $matches[] = $line;
+  }
+  fclose($config_file);
+}
 
-
-
-
-
-
+foreach($matches as $match){
+  $match = preg_replace('/\s+/', '', $match); // remove all whitespace
+  $match = rtrim($match, ','); // remove trailing comma, if any
+  $regex = "/(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,5}\/?/";
+  if(preg_match($regex, $match, $url)) { // match hostname
+    array_push($WHITELIST, $url[0]);
+  }
+}
 
 $PostBody = file_get_contents("php://input");
 if ($PostBody=="") {
@@ -164,6 +170,7 @@ if ($PostBody=="") {
 	// open the URL and forward the new XML in the POST body
 	$proxyRequest = curl_init($proxyURL);
 	
+	curl_setopt($proxyRequest, CURLOPT_SSL_VERIFYPEER, FALSE);
 	// these options are set for hyper-vigilance purposes
 	curl_setopt($proxyRequest, CURLOPT_COOKIESESSION, 0);
 	curl_setopt($proxyRequest, CURLOPT_FORBID_REUSE, 1);
