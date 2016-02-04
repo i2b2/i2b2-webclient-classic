@@ -112,70 +112,92 @@ i2b2.hive.tempCellsList = [
 // ================================================================================================== //
 i2b2.Init = function() {
 	//load the (user configured) i2b2Hive configuration via JSON config file
-	var config_data = i2b2.h.getJsonConfig('i2b2_config_data.js');
-	if (!config_data) {
-		alert("The user-defined I2B2 Hive Configuration message is invalid (try looking for an extra comma)");
-		return false;
-	} else {
-		i2b2.hive.cfg = config_data;
-		i2b2.hive.cfg.lstCells = {};
-		var l = i2b2.hive.tempCellsList.length;
-		for (var i=0; i<l; i++) {
-			i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code] = Object.clone(i2b2.hive.tempCellsList[i]);
-			i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].forceConfigMsg = false;
-			if (i2b2.hive.tempCellsList[i].forceConfigMsg) {
-				i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].forceConfigMsg = Object.clone(i2b2.hive.tempCellsList[i].forceConfigMsg);
+	//var config_data = i2b2.h.getJsonConfig('i2b2_config_data.js');
+	
+	var no_cache = '?____=' + Math.floor(Math.random() * 50000) + 10000;  
+	
+	var json = new Ajax.Request('i2b2_config_data.js' + no_cache, {
+		method:'GET', 
+		asynchronous:false, 
+		sanitizeJSON:true,
+		onSuccess: function(transport) {
+			
+			i2b2.hive.cfg = eval('('+transport.responseText+')');
+			//i2b2.hive.cfg = jQuery.parseJSON(transport.responseText);
+			i2b2.hive.cfg.lstCells = {};
+			var l = i2b2.hive.tempCellsList.length;
+			for (var i=0; i<l; i++) {
+				i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code] = Object.clone(i2b2.hive.tempCellsList[i]);
+				i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].forceConfigMsg = false;
+				if (i2b2.hive.tempCellsList[i].forceConfigMsg) {
+					i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].forceConfigMsg = Object.clone(i2b2.hive.tempCellsList[i].forceConfigMsg);
+				}
+				if (i2b2.hive.tempCellsList[i].roles) {
+					i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].roles = i2b2.hive.tempCellsList[i].roles;
+				} else {
+					i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].roles = ["DATA_OBFSC"];							
+				}
+				i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].params = {};
 			}
-			if (i2b2.hive.tempCellsList[i].roles) {
-				i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].roles = i2b2.hive.tempCellsList[i].roles;
-			} else {
-				i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].roles = ["DATA_OBFSC"];							
-			}
-			i2b2.hive.cfg.lstCells[i2b2.hive.tempCellsList[i].code].params = {};
+			
+			var json2 = new Ajax.Request(i2b2.hive.cfg.urlFramework+'hive/hive_config_data.js' + no_cache, {
+				method:'GET', 
+				asynchronous:false, 
+				sanitizeJSON:true,
+				onSuccess: function(transport2) {
+					config_data = eval('('+transport2.responseText+')');
+					
+					var successHandler = function(oData) { 
+					
+						//code to execute when all requested scripts have been 
+						//loaded; this code can make use of the contents of those 
+						//scripts, whether it's functional code or JSON data. 
+						console.info("EVENT FIRED i2b2.events.afterFrameworkInit");
+						i2b2.events.afterFrameworkInit.fire();
+						// Loading the hive cells
+						for (var cellKey in i2b2.hive.cfg.lstCells) {
+							i2b2[cellKey] = new i2b2_BaseCell(i2b2.hive.cfg.lstCells[cellKey]);
+						}
+						// we must always fully initialize the PM cell
+						if (i2b2['PM']) { 
+							// the project manager cell must fire the afterProjMngtInit event signal
+							i2b2['PM'].Init();
+						};			
+						// trigger user events after everything is loaded
+						console.info("EVENT FIRED i2b2.events.afterHiveInit");
+						i2b2.events.afterHiveInit.fire();
+					};
+					var failureHandler = function(oData) {
+						alert('i2b2 Framework file failed to load!\n'+oData);
+					};
+					
+					var fl = [];
+					for (var i=0; i<config_data.files.length; i++) {
+						fl.push(i2b2.hive.cfg.urlFramework+'hive/'+config_data.files[i]);
+					}
+					
+					YAHOO.util.Get.script(fl, { 
+							onSuccess: successHandler, 
+							onFailure: failureHandler,
+							data:      config_data
+					});
+				},
+				onFailure: function(){
+					alert("The I2B2 Hive Components Load message is invalid (try looking for an extra comma)");
+				}
+
+			});
+
+		},
+		onFailure: function(){
+			alert("The user-defined I2B2 Hive Configuration message is invalid (try looking for an extra comma)");
 		}
-	}
-		
-	// load the rest of the i2b2 framework files
-	var config_data = i2b2.h.getJsonConfig(i2b2.hive.cfg.urlFramework+'hive/hive_config_data.js');
-	if (!config_data) {
-		alert("The I2B2 Hive Components Load message is invalid (try looking for an extra comma)");
-		return false;
-	} else {
-		var successHandler = function(oData) { 
-		
-			//code to execute when all requested scripts have been 
-			//loaded; this code can make use of the contents of those 
-			//scripts, whether it's functional code or JSON data. 
-			console.info("EVENT FIRED i2b2.events.afterFrameworkInit");
-			i2b2.events.afterFrameworkInit.fire();
-			// Loading the hive cells
-			for (var cellKey in i2b2.hive.cfg.lstCells) {
-				i2b2[cellKey] = new i2b2_BaseCell(i2b2.hive.cfg.lstCells[cellKey]);
-			}
-			// we must always fully initialize the PM cell
-			if (i2b2['PM']) { 
-				// the project manager cell must fire the afterProjMngtInit event signal
-				i2b2['PM'].Init();
-			};			
-			// trigger user events after everything is loaded
-			console.info("EVENT FIRED i2b2.events.afterHiveInit");
-			i2b2.events.afterHiveInit.fire();
-		};
-		var failureHandler = function(oData) {
-			alert('i2b2 Framework file failed to load!\n'+oData);
-		};
-		
-		var fl = [];
-		for (var i=0; i<config_data.files.length; i++) {
-			fl.push(i2b2.hive.cfg.urlFramework+'hive/'+config_data.files[i]);
-		}
-		
-		YAHOO.util.Get.script(fl, { 
-				onSuccess: successHandler, 
-				onFailure: failureHandler,
-				data:      config_data
-		});
-	}
+
+	});
+
+	
+	
+
 }
 
 
@@ -197,17 +219,18 @@ i2b2.events.afterAllCellsLoaded = new YAHOO.util.CustomEvent("afterAllCellsLoade
 //    @descript This function retreves a JSON-defined configuration object from the given URL
 // *******************************************************
 i2b2.h.getJsonConfig = function(url) {
+	
+	var co = false;
 	var json = new Ajax.Request(url, {
 		contentType: 'text/xml',
 		method:'get', 
 		asynchronous:false, 
-		sanitizeJSON:true
+		sanitizeJSON:true,
+		onSuccess: function(transport) {
+			co = eval('('+transport.responseText+')');
+		}
 	});
-	try {
-		var co = eval('('+json.transport.responseText+')');
-	} catch(e) {
-		var co = false;
-	}
+
 	return co;
 
 }
