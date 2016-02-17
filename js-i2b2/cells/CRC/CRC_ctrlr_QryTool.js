@@ -296,16 +296,6 @@ function QueryToolController() {
 	
 								var sdxDataNode = i2b2.sdx.Master.EncapsulateData('QM',o);
 								po.items.push(sdxDataNode);								
-                                                       } else  if (ckey.startsWith("patient")) {
-                                                                var o = new Object;
-
- 								//o.titleCRC = ckey.substring(8);
-								o.titleCRC = (i2+1) + ") " + i2b2.h.getXNodeVal(pi[i2],'item_name');
-                                                                o.PRS_id = ckey.substring(19);
-                                                                o.result_instance_id = o.PRS_id ;
-								 o.id = ckey;
-                                                                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('PRS',o);
-                                                                po.items.push(sdxDataNode);
 							} else if (ckey.startsWith("patient_set_coll_id")) {
 								var o = new Object;
 								o.titleCRC =i2b2.h.getXNodeVal(pi[i2],'item_name');
