@@ -567,9 +567,18 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 				var temp = results.refXML.getElementsByTagName('query_instance')[0];
 				self.QI.id = i2b2.h.XPath(temp, 'descendant-or-self::query_instance_id')[0].firstChild.nodeValue;
 				self.QI.start_date = i2b2.h.XPath(temp, 'descendant-or-self::start_date')[0].firstChild.nodeValue; //Query Report BG
-				self.QI.end_date = i2b2.h.XPath(temp, 'descendant-or-self::end_date')[0].firstChild.nodeValue; //Query Report BG
-				self.QI.status = i2b2.h.XPath(temp, 'descendant-or-self::query_status_type/name')[0].firstChild.nodeValue;
-				self.QI.statusID = i2b2.h.XPath(temp, 'descendant-or-self::query_status_type/status_type_id')[0].firstChild.nodeValue;
+                                var temp = i2b2.h.XPath(temp, 'descendant-or-self::end_date')[0];
+                                if (undefined != temp) {
+                                   self.QI.end_date = i2b2.h.XPath(temp, 'descendant-or-self::end_date')[0].firstChild.nodeValue; //Query Report BG
+                                }
+                                var temp = self.QI.status = i2b2.h.XPath(temp, 'descendant-or-self::query_status_type/name')[0];
+                                if (undefined != temp) {
+                                    self.QI.status = i2b2.h.XPath(temp, 'descendant-or-self::query_status_type/name')[0].firstChild.nodeValue;
+                                }
+                                var temp = self.QI.statusID = i2b2.h.XPath(temp, 'descendant-or-self::query_status_type/status_type_id')[0];
+                                if (undefined != temp) {
+                                    self.QI.statusID = i2b2.h.XPath(temp, 'descendant-or-self::query_status_type/status_type_id')[0].firstChild.nodeValue;
+                                }
 				
 				// we don't need to poll, all Result instances are listed in this message
 				if (false && (self.QI.status == "INCOMPLETE" || self.QI.status == "COMPLETED" || self.QI.status == "ERROR")) {
