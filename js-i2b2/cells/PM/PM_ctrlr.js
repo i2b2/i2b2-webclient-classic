@@ -663,14 +663,14 @@ i2b2.PM._processLaunchFramework = function() {
 			delete i2b2[cellKey];
 		}
 	}
-
+/* Legacy SHRINE code - Removed 6/3/16
 	// see if Shrine was loaded by the server
 	var t = i2b2.hive.cfg.lstCells["SHRINE"];
 	if (!Object.isUndefined(t) && t.serverLoaded) {
 		i2b2.PM.model.shrine_domain = true;
 	}
 	delete t;
-
+*/
 
 	// create a list of valid Cells that are loaded for this session
 	var t = {};
