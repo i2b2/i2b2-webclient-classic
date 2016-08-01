@@ -63,11 +63,15 @@ i2b2.CRC.view.history.showOptions = function(subScreen){
 		this.modalOptions.validate = function(){
 			// now process the form data
 			var tmpValue = parseInt($('HISTMaxQryDisp').value, 10);
-			if (!isNaN(tmpValue) && tmpValue <= 0) {
+			var value = $('HISTMaxQryDisp').value;
+			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10))){
+				$('HISTMaxQryDisp').style.border = "2px inset";
+				return true;
+			} else {
 				alert("The max number of Queries must be a whole number larger then zero.");
+				$('HISTMaxQryDisp').style.border = "2px inset red";
 				return false;
 			}
-			return true;
 		};
 		this.modalOptions.render(document.body);
 	} 
