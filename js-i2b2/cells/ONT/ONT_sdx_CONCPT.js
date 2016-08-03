@@ -338,6 +338,7 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 			var img = node.getContentEl();
 			img = Element.select(img, 'img')[0];
 			img.src = node.data.i2b2_SDX.renderData.icon;
+			node.tree.removeChildren(node); // WEBCLIENT-189
 			return false;
 		}
 		if (modifier) {	
