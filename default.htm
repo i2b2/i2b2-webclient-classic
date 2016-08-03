@@ -1042,7 +1042,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         <input type="checkbox" id="ONTNAVshowShortTooltips" />
         Use Short Tooltips</div>
       <div style="margin-left:50px">
-        <input type="checkbox" id="ONTNAVshowCodeTooltips" />
+        <input type="checkbox" id="ONTNAVshowCodeTooltips" onclick="$('ONTFINDshowCodeTooltips').checked = $('ONTNAVshowCodeTooltips').checked" />
         Show Concept Codes in Tooltips</div>
       <div style="margin-left:50px">
         <input type="checkbox" id="ONTNAVdisableModifiers" />
@@ -1068,7 +1068,7 @@ YAHOO.util.Event.addListener(window, "load", init);
         <input type="checkbox" id="ONTFINDshowShortTooltips" />
         Use Short Tooltips</div>
       <div style="margin-left:50px">
-        <input type="checkbox" checked id="ONTFINDshowCodeTooltips" />
+        <input type="checkbox" id="ONTFINDshowCodeTooltips" onclick="$('ONTNAVshowCodeTooltips').checked = $('ONTFINDshowCodeTooltips').checked"/>
         Show Concept Codes in Tooltips</div>
       <div style="margin-left:50px">
         <input type="checkbox" id="ONTFINDdisableModifiers" />
