@@ -89,6 +89,11 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 	if (Object.isBoolean(options.showchildren)) { 
 		if (!options.showchildren) bCanExp = false;
 	}
+	if(sdxData.origData.hasOwnProperty('parent')){ // WEBCLIENT-190
+		if (sdxData.origData.parent.hasChildren.substring(2,1) === "I" && sdxData.origData.isModifier){
+			sdxData.origData.hasChildren = sdxData.origData.hasChildren.replace("A","I");
+		}
+	}
 	if (sdxData.origData.hasChildren.substring(2,1) === "I")
 	{
 		bCanExp = true;
