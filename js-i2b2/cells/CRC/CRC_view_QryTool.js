@@ -118,6 +118,7 @@ i2b2.CRC.view.QT.ContextMenuPreprocess = function(p_oEvent) {
 					//	if (i2b2.CRC.view.QT.contextRecord.origData.xmlOrig != null) {
 							var cdetails = i2b2.ONT.ajax.GetModifierInfo("CRC:QueryTool", {modifier_applied_path:i2b2.CRC.view.QT.contextRecord.origData.applied_path, modifier_key_value:i2b2.CRC.view.QT.contextRecord.origData.key, ont_synonym_records: true, ont_hidden_records: true} );
 							// this is what comes out of the old AJAX call
+							try { new ActiveXObject ("MSXML2.DOMDocument.6.0"); isActiveXSupported =  true; } catch (e) { isActiveXSupported =  false; }
 							if (isActiveXSupported) {
 								//Internet Explorer
 								xmlDocRet = new ActiveXObject("Microsoft.XMLDOM");
