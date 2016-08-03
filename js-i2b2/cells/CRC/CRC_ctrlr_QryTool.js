@@ -603,18 +603,22 @@ function QueryToolController() {
 			// submit value(s)
 			if(this.submit()) {
 				// run the query
-				var t = $('dialogQryRun');
-				var queryNameInput = t.select('INPUT.inputQueryName')[0];
-				var options = {};
-				var t2 = t.select('INPUT.chkQueryType');
-				for (var i=0;i<t2.length; i++) {
-					if (t2[i].checked == true) {
-						options['chk_'+t2[i].value] = t2[i].checked;
-					}
-				}				
-				$('queryName').innerHTML = queryNameInput.value;
-				i2b2.CRC.model.queryCurrent.name = queryNameInput.value;
-				i2b2.CRC.ctrlr.QT._queryRun(queryNameInput.value, options);
+				if(jQuery("input:checkbox[name=queryType]:checked").length > 0){ // WEBCLIENT-170
+					var t = $('dialogQryRun');
+					var queryNameInput = t.select('INPUT.inputQueryName')[0];
+					var options = {};
+					var t2 = t.select('INPUT.chkQueryType');
+					for (var i=0;i<t2.length; i++) {
+						if (t2[i].checked == true) {
+							options['chk_'+t2[i].value] = t2[i].checked;
+						}
+					}				
+					$('queryName').innerHTML = queryNameInput.value;
+					i2b2.CRC.model.queryCurrent.name = queryNameInput.value;
+					i2b2.CRC.ctrlr.QT._queryRun(queryNameInput.value, options);
+				} else {
+					alert('You must select one query result type to run.');
+				}
 			}
 		}
 		// display the query name input dialog
