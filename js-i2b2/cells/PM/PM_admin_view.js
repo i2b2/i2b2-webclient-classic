@@ -244,12 +244,12 @@ i2b2.PM.model.adminColumnDef["USERS"] = [
 
 
 i2b2.PM.model.adminColumnDef["DBLOOKUP"] = [
-	{key:"db_nicename", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
-	{key:"db_fullschema",sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
-	{key:"db_datasource",sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
-	{key:"db_servertype",sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})},	
-	{key:"owner_id",sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})},
-	{key:"project_path",sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}
+	{key:"db_nicename", label:"Name", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
+	{key:"db_fullschema", label:"DB Schema", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
+	{key:"db_datasource", label:"JNDI Data Source", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
+	{key:"db_servertype", label:"DB Server", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})},	
+	{key:"owner_id", label:"Owner ID", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})},
+	{key:"project_path", label:"Project Path", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}
 ];
 		
 // build the columndef for project-user dynamically

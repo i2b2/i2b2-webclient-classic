@@ -1738,7 +1738,7 @@ i2b2.PM.view.admin.treeClick = function(tvEvent, override) {
 			$('pmMainTitle').innerHTML = "DBLookup List";
 			i2b2.PM.view.admin.showInfoPanel("DBLOOKUP");
 			i2b2.PM.view.admin.configScreenDispay(0);
-			tvEvent.node.tree.removeChildren(tvEvent.node);			
+			//tvEvent.node.tree.removeChildren(tvEvent.node);			
 			$('pmAdmin-DBLookupTable').value = info.i2b2Table; 
 			i2b2.PM.view.admin.showProjectDBLookup();
 			
