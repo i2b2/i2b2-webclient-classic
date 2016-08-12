@@ -65,7 +65,7 @@ i2b2.CRC.view.find.showOptions = function(subScreen){
 			// now process the form data
 			var tmpValue = parseInt($('HISTMaxQryDisp').value, 10);
 			var value = $('HISTMaxQryDisp').value;
-			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10))){
+			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10)) && value >=0){
 				$('HISTMaxQryDisp').style.border = "2px inset";
 				return true;
 			} else {
