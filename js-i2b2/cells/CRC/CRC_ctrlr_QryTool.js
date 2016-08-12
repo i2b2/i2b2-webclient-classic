@@ -603,7 +603,7 @@ function QueryToolController() {
 			// submit value(s)
 			if(this.submit()) {
 				// run the query
-				if(jQuery("input:checkbox[name=queryType]:checked").length > 0){ // WEBCLIENT-170
+				//if(jQuery("input:checkbox[name=queryType]:checked").length > 0){ // WEBCLIENT-170
 					var t = $('dialogQryRun');
 					var queryNameInput = t.select('INPUT.inputQueryName')[0];
 					var options = {};
@@ -616,9 +616,9 @@ function QueryToolController() {
 					$('queryName').innerHTML = queryNameInput.value;
 					i2b2.CRC.model.queryCurrent.name = queryNameInput.value;
 					i2b2.CRC.ctrlr.QT._queryRun(queryNameInput.value, options);
-				} else {
-					alert('You must select one query result type to run.');
-				}
+				//} else {
+				//	alert('You must select one query result type to run.');
+				//}
 			}
 		}
 		// display the query name input dialog
@@ -768,6 +768,10 @@ function QueryToolController() {
 					alert('Please enter a name for this query.');
 					return false;
 				}
+				if(jQuery("input:checkbox[name=queryType]:checked").length == 0){ // WEBCLIENT-170
+					alert('You must select one query result type to run.');
+					return false;
+				}
 				return true;
 			};
 			i2b2.CRC.view.dialogQryRun.render(document.body);
@@ -812,6 +816,10 @@ function QueryToolController() {
 				var queryNameInput = $('inputQueryName');
 				if (!queryNameInput || queryNameInput.value.blank()) {
 					alert('Please enter a name for this query.');
+					return false;
+				}
+				if(jQuery("input:checkbox[name=queryType]:checked").length == 0){ // WEBCLIENT-170
+					alert('You must select one query result type to run.');
 					return false;
 				}
 				return true;
