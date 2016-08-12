@@ -436,6 +436,7 @@ i2b2.CRC.ctrlr.dateConstraint = {
 					delete dm.items[i].dateFrom;
 					delete dm.items[i].dateTo;
 				}
+				alert("Date constraints are not allowed for age related concepts. This panel contains at least one age related concepts, therefore a date constraint can not be set for this panel.");
 			}
 			
 			
@@ -517,6 +518,8 @@ i2b2.CRC.ctrlr.dateConstraint = {
 		
 		if(dm.items[itemIndex].origData.hasOwnProperty('table_name')){ // WEBCLIENT-133: Remove dates from patient_dimension concepts
 			var table_name = dm.items[itemIndex].origData.table_name;
+			alert("Date constraints are not allowed for age related concepts. This panel contains at least one age related concepts, therefore a date constraint can not be set for this panel.");
+
 		} else { // lookup table_name
 			var results = i2b2.ONT.ajax.GetTermInfo("ONT", {ont_max_records:'max="1"', ont_synonym_records:'false', ont_hidden_records: 'false', concept_key_value: dm.items[itemIndex].origData.key}).parse();
 			if(results.model.length > 0){
