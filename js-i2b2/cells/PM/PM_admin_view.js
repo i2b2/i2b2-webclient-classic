@@ -151,7 +151,7 @@ i2b2.PM.model.helpMSGS.DBLOOKUP =  "<form><p>Click on \"DBLookup\" in the naviga
 	'</table></div></form>';
 i2b2.PM.model.helpMSGS.DBLOOKUPREC = 	'<div>'+
 	'<table border="0"><tbody><tr><td valign="middle"><b>Name:</b></td><td><input type="TEXT" id="pmAdmin-DBLookupName" maxlength="50" style="width:250px"/></td></tr>'+
-	'<input type="HIDDEN" id="pmAdmin-DBLookupProjectPath">'+
+	'<tr><td valign="middle"><b>Project Path:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupProjectPath" style="width:250px" readonly/></td></tr>'+
 	'<tr><td valign="middle"><b>DB Schema:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupSchema" style="width:250px"/></td></tr>'+
 	'<tr><td valign="middle"><b>JNDI Data Source:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupDataSource" style="width:250px"/></td></tr>'+
 	'<tr><td valign="middle"><b>Tooltip:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupTooltip" style="width:250px"/></td></tr>'+
