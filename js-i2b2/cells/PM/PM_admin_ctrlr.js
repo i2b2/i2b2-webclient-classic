@@ -1712,7 +1712,7 @@ i2b2.PM.view.admin.treeClick = function(tvEvent, override) {
 				
 				var cell =  tvEvent.node.parent.data.id.toLowerCase();
 				
-				if (cell = "crc")
+				if (cell == "crc")
 				   cell = cell + "/pdo";
 				   
 					var response = i2b2.PM.ajax.getDBLookup("PM:Admin", {sec_cell:cell,sec_url:tvEvent.node.parent.data.url,id_xml:info.i2b2Id});
