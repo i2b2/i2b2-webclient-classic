@@ -24,7 +24,7 @@ i2b2.CRC.ctrlr.QueryStatus._GetTitle = function(resultType, oRecord, oXML) {
 			// create the title using shrine setting
 			if (oRecord.size >= 10) {
 				if (i2b2.PM.model.isObfuscated) {
-					title = t+" - "+oRecord.size+"&plusmn;3 encounters";
+					title = t+" - "+oRecord.size+"&plusmn;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString()+" encounters";
 				} else {
 					title = t; //+" - "+oRecord.size+" encounters";
 				}
@@ -47,7 +47,7 @@ i2b2.CRC.ctrlr.QueryStatus._GetTitle = function(resultType, oRecord, oXML) {
 			// create the title using shrine setting
 			if (oRecord.size >= 10) {
 				if (i2b2.PM.model.isObfuscated) {
-					title = t+" - "+oRecord.size+"&plusmn;3 patients";
+					title = t+" - "+oRecord.size+"&plusmn;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString()+" patients";
 				} else {
 					title = t; //+" - "+oRecord.size+" patients";
 				}
@@ -70,7 +70,7 @@ i2b2.CRC.ctrlr.QueryStatus._GetTitle = function(resultType, oRecord, oXML) {
 			// create the title using shrine setting
 			if (oRecord.size >= 10) {
 				if (i2b2.PM.model.isObfuscated) {
-					title = t+" - "+oRecord.size+"&plusmn;3 patients";
+					title = t+" - "+oRecord.size+"&plusmn;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString()+" patients";
 				} else {
 					title = t+" - "+oRecord.size+" patients";
 				}
@@ -276,13 +276,18 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 						var name = params[i2].getAttribute("name");
 						if (i2b2.PM.model.isObfuscated) {
 							if ( params[i2].firstChild.nodeValue < 4) {
-								var value = "<3";	
+								var value = "<"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString();	
 							} else {
-								var value = params[i2].firstChild.nodeValue + "&plusmn;3" ;
+								var value = params[i2].firstChild.nodeValue + "&plusmn;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString() ;
 							}
 						} else
 						{
 							var value = params[i2].firstChild.nodeValue;							
+						}
+						if(i2b2.UI.cfg.useFloorThreshold){
+							if (params[i2].firstChild.nodeValue < i2b2.UI.cfg.floorThresholdNumber){
+								var value = i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
+							}
 						}
 						// display a line of results in the status box
 						self.dispDIV.innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") + ": <font color=\"#0000dd\">" + value  + "</font></div>";  //Query Report BG
@@ -449,14 +454,19 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 						if (i2b2.PM.model.isObfuscated) {
 							if (i2b2.h.XPath(xml_v, 'descendant::total_time_second/text()/..')[i2].firstChild.nodeValue < 4)
 							{
-							    var value = "<3";
+							    var value = "<"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString();
 							} else {
-								var value = i2b2.h.XPath(xml_v, 'descendant::total_time_second/text()/..')[i2].firstChild.nodeValue + "&plusmn;3";
+								var value = i2b2.h.XPath(xml_v, 'descendant::total_time_second/text()/..')[i2].firstChild.nodeValue + "&plusmn;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString();
 							}
 						} else
 						{
 							var value =  i2b2.h.XPath(xml_v, 'descendant::total_time_second/text()/..')[i2].firstChild.nodeValue;							
-						}					
+						}
+						if(i2b2.UI.cfg.useFloorThreshold){
+							if (i2b2.h.XPath(xml_v, 'descendant::total_time_second/text()/..')[i2].firstChild.nodeValue < i2b2.UI.cfg.floorThresholdNumber){
+								var value = i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
+							}
+						}
 					self.dispDIV.innerHTML += '<div style="margin-left:20px; clear:both; line-height:16px; ">' + i2b2.h.XPath(xml_v, 'descendant::name/text()/..')[i2].firstChild.nodeValue + '<font color="#0000dd">: ' + value + ' secs</font></div>';
 					//snm0
 					//alert('<div style="margin-left:20px; clear:both; line-height:16px; ">' + i2b2.h.XPath(xml_v, 'descendant::name/text()/..')[i2].firstChild.nodeValue + '<font color="#0000dd">: ' + value + ' secs</font></div>');
