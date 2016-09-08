@@ -663,7 +663,9 @@ i2b2.PM.ajax._addFunctionCall("getAllCell","{{{URL}}}getServices", i2b2.PM.cfg.m
 
 // ================================================================================================== //
 i2b2.PM.cfg.msgs.deleteDBLookup = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+
-'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//swc20160902 updated to fix problem with IM (part of JIRA#(WEBCLIENT-199))
+'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/{{{sec_version}}}">\n'+
 '    <message_header>\n'+
 '         <proxy><redirect_url>{{{sec_url}}}deleteDblookup</redirect_url></proxy>\n'+
 '        <i2b2_version_compatible>1.1</i2b2_version_compatible>\n'+
@@ -713,7 +715,9 @@ i2b2.PM.ajax._addFunctionCall("deleteDBLookup","{{{URL}}}getServices", i2b2.PM.c
 
 // ================================================================================================== //
 i2b2.PM.cfg.msgs.getDBLookup = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+
-'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//swc20160902 updated to fix problem with IM (part of JIRA#(WEBCLIENT-199))
+'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/{{{sec_version}}}">\n'+
 '    <message_header>\n'+
 '         <proxy><redirect_url>{{{sec_url}}}getDblookup</redirect_url></proxy>\n'+
 '        <i2b2_version_compatible>1.1</i2b2_version_compatible>\n'+
@@ -790,7 +794,9 @@ i2b2.PM.ajax._addFunctionCall("getDBLookup", "{{{URL}}}getServices", i2b2.PM.cfg
 
 // ================================================================================================== //
 i2b2.PM.cfg.msgs.getAllDBLookup = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+
-'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//swc20160902 updated to fix problem with IM (part of JIRA#(WEBCLIENT-199))
+'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/{{{sec_version}}}">\n'+
 '    <message_header>\n'+
 '        <proxy><redirect_url>{{{sec_url}}}getAllDblookups</redirect_url></proxy>\n'+
 '        <i2b2_version_compatible>1.1</i2b2_version_compatible>\n'+
@@ -863,7 +869,9 @@ i2b2.PM.ajax._addFunctionCall("getAllDBLookup","{{{URL}}}getDBLookups", i2b2.PM.
 
 // ================================================================================================== //
 i2b2.PM.cfg.msgs.setDBLookup = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+
-'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/1.1/">\n'+
+//swc20160902 updated to fix problem with IM (part of JIRA#(WEBCLIENT-199))
+'<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/{{{sec_cell}}}/{{{sec_version}}}">\n'+
 '    <message_header>\n'+
 '        <proxy><redirect_url>{{{sec_url}}}setDblookup</redirect_url></proxy>\n'+
 '        <i2b2_version_compatible>1.1</i2b2_version_compatible>\n'+

@@ -1082,7 +1082,19 @@ i2b2.PM.admin.saveCell = function() {
 i2b2.PM.admin.deleteDBLookup = function() {
 	var project_path = $('pmAdmin-DBLookupProjectPath').value;
 	if (confirm("Are you sure you want to delete this DBLookup?")) {
-		i2b2.PM.ajax.deleteDBLookup("PM:Admin", {cell:$('pmAdmin-DBLookupCell').value, sec_cell:$('pmAdmin-DBLookupCell').value, sec_url:$('pmAdmin-DBLookupURL').value, project_path:project_path}, (function(result) {
+		//i2b2.PM.ajax.deleteDBLookup("PM:Admin", {cell:$('pmAdmin-DBLookupCell').value, sec_cell:$('pmAdmin-DBLookupCell').value, sec_url:$('pmAdmin-DBLookupURL').value, project_path:project_path}, (function(result) {
+		//swc20160908 replaced with following to fix problem with 'crc' & 'im' (JIRA#(WEBCLIENT-199))
+		var url = $('pmAdmin-DBLookupURL').value;
+		var cell = $('pmAdmin-DBLookupCell').value;
+		var secCell = cell;
+		if ("im" == cell) {
+			ver = "";
+		} else {
+			ver = "1.1/"
+			if ("crc" == cell) secCell = "crc/pdo";
+		}
+		i2b2.PM.ajax.deleteDBLookup("PM:Admin", {cell:cell, sec_cell:secCell, sec_version:ver, sec_url:url, project_path:project_path}, (function(result) {
+
 			// restore screen
 			$('pmMainTitle').innerHTML = "DBLookup List";
 			i2b2.PM.view.admin.showInfoPanel("DBLOOKUP");
@@ -1122,6 +1134,16 @@ i2b2.PM.admin.saveDBLookup = function() {
 	userData.comment = $('pmAdmin-DBLookupComment').value;
 	userData.sec_url = $('pmAdmin-DBLookupURL').value;
 	userData.sec_cell = $('pmAdmin-DBLookupCell').value;
+	
+	//swc20160908 added following to fix problem with 'crc' & 'im' (JIRA#(WEBCLIENT-199))
+	var cell = $('pmAdmin-DBLookupCell').value;
+	if ("im" == cell) {
+		userData.sec_version = "";
+	} else {
+		userData.sec_version = "1.1/"
+		if ("crc" == cell) userData.sec_cell = "crc/pdo";
+	}
+
 	
 	userData.owner_id = '@';
 
@@ -1715,7 +1737,16 @@ i2b2.PM.view.admin.treeClick = function(tvEvent, override) {
 				if (cell == "crc")
 				   cell = cell + "/pdo";
 				   
-					var response = i2b2.PM.ajax.getDBLookup("PM:Admin", {sec_cell:cell,sec_url:tvEvent.node.parent.data.url,id_xml:info.i2b2Id});
+					//var response = i2b2.PM.ajax.getDBLookup("PM:Admin", {sec_cell:cell,sec_url:tvEvent.node.parent.data.url,id_xml:info.i2b2Id});
+					//swc20160908 replaced with following to fix problem with 'crc' & 'im' (JIRA#(WEBCLIENT-199))
+					var url = tvEvent.node.parent.data.url;
+					if ("im" == cell) {
+						ver = "";
+					} else {
+						ver = "1.1/"
+					}
+					var response = i2b2.PM.ajax.getDBLookup("PM:Admin", {sec_cell:cell, sec_version:ver, sec_url:url, id_xml:info.i2b2Id});
+
 
 				response.parse();
 				var data = response.model[0];
@@ -1728,6 +1759,7 @@ i2b2.PM.view.admin.treeClick = function(tvEvent, override) {
 				if (data.db_servertype) { $('pmAdmin-DBLookupServer').value = data.db_servertype; }
 
 				 $('pmAdmin-DBLookupURL').value = tvEvent.node.parent.data.url;
+				 $('pmAdmin-DBLookupVer').value = ver; //swc20160908 added (JIRA#(WEBCLIENT-199))
 				 $('pmAdmin-DBLookupCell').value = cell; 
 				//$('pmAdmin-paramId').value = tvEvent.node.parent.data.i2b2Table;
 			} catch (e) {}
@@ -1740,9 +1772,8 @@ i2b2.PM.view.admin.treeClick = function(tvEvent, override) {
 			i2b2.PM.view.admin.configScreenDispay(0);
 			//tvEvent.node.tree.removeChildren(tvEvent.node);			
 			$('pmAdmin-DBLookupTable').value = info.i2b2Table; 
-			i2b2.PM.admin.refreshDBLookupListData(tvEvent.node.data.i2b2Table, tvEvent.node.data.url, tvEvent.node.data.id);
-                
 			//i2b2.PM.view.admin.showProjectDBLookup();
+			i2b2.PM.admin.refreshDBLookupListData(tvEvent.node.data.i2b2Table, tvEvent.node.data.url, tvEvent.node.data.id);
 			
 			//i2b2.PM.view.admin.showUsers();
 			break;
@@ -2028,7 +2059,16 @@ i2b2.PM.admin.refreshParameterListData = function(tablename, param, id) {
 
 
 i2b2.PM.admin.refreshDBLookupListData = function(tablename, url, id) {
-	var projUserList = i2b2.PM.ajax.getAllDBLookup("PM:Admin", {table:tablename, sec_url:url, sec_cell:id.toLowerCase()});
+	//var projUserList = i2b2.PM.ajax.getAllDBLookup("PM:Admin", {table:tablename, sec_url:url, sec_cell:id.toLowerCase()});
+	//swc20160908 updated to fix problems with 'crc' & 'im' cells (JIRA#(WEBCLIENT-199))
+	var ver;
+	if (url.includes("/IMService/")) {
+		ver = "";
+	} else {
+		ver = "1.1/";
+	}
+	var projUserList = i2b2.PM.ajax.getAllDBLookup("PM:Admin", {table:tablename, sec_url:url, sec_version:ver, sec_cell:id.toLowerCase()});
+
 		//i2b2.PM.ajax.getAllParams("PM:Admin", { id: i2b2.PM.view.admin.currentProject.i2b2NodeKey, });
 	projUserList.parse();
 	var tmp = {};
