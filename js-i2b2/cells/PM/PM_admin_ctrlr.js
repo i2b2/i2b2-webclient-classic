@@ -1770,7 +1770,7 @@ i2b2.PM.view.admin.treeClick = function(tvEvent, override) {
 			$('pmMainTitle').innerHTML = "DBLookup List";
 			i2b2.PM.view.admin.showInfoPanel("DBLOOKUP");
 			i2b2.PM.view.admin.configScreenDispay(0);
-			//tvEvent.node.tree.removeChildren(tvEvent.node);			
+			tvEvent.node.tree.removeChildren(tvEvent.node);			
 			$('pmAdmin-DBLookupTable').value = info.i2b2Table; 
 			//i2b2.PM.view.admin.showProjectDBLookup();
 			i2b2.PM.admin.refreshDBLookupListData(tvEvent.node.data.i2b2Table, tvEvent.node.data.url, tvEvent.node.data.id);
@@ -2067,6 +2067,8 @@ i2b2.PM.admin.refreshDBLookupListData = function(tablename, url, id) {
 	} else {
 		ver = "1.1/";
 	}
+	if (id.toLowerCase() == "crc")
+		id = "crc/pdo";
 	var projUserList = i2b2.PM.ajax.getAllDBLookup("PM:Admin", {table:tablename, sec_url:url, sec_version:ver, sec_cell:id.toLowerCase()});
 
 		//i2b2.PM.ajax.getAllParams("PM:Admin", { id: i2b2.PM.view.admin.currentProject.i2b2NodeKey, });
