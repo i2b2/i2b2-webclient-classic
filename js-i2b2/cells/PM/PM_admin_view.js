@@ -137,11 +137,35 @@ i2b2.PM.model.helpMSGS.PROJECTUSERS = "<form><p>Click on \"User\" in the navigat
 	'<table border="0"><tbody><tr><td valign="middle"><b>User Name:</b></td><td><input type="TEXT" id="pmAdmin-userName" maxlength="50" style="width:250px"/></td></tr>'+
 	'<tr><td></td><td align="right"> <input type="BUTTON" value="Add User to Project" onclick="i2b2.PM.admin.addUserProject();"/> <input type="BUTTON" value="Cancel" onclick="i2b2.PM.view.admin.refreshScreen();"/></td></tr>'+
 	'</table></div></form>';
+i2b2.PM.model.helpMSGS.DBLOOKUP =  "<form><p>Click on \"DBLookup\" in the navigation bar to refresh the list of DB Lookup.<br />Please select a DB Lookup on the left to edit it's properties</p>"+
+	'<div id="AddNewDBLookupBtnDIV"><input type="BUTTON" value="Add New DBLookup" onclick="$(\'AddNewDBLookupBtnDIV\').hide(); $(\'pmAdminMainTableview\').hide(); $(\'AddNewDBLookupDIV\').show();"></div>'+
+	'<div id="AddNewDBLookupDIV" style="display:none">'+
+	'<table border="0"><tbody><tr><td valign="middle"><b>Name:</b></td><td><input type="TEXT" id="pmAdmin-DBLookupName" maxlength="50" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>Project Path:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupProjectPath" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>DB Schema:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupSchema" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>JNDI Data Source:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupDataSource" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>Tooltip:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupTooltip" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>Comment:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupComment" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>DB Server:</b></td><td><SELECT style="width:250px" id="pmAdmin-DBLookupServer"><OPTION value="SQLSERVER">Sql Server</option><OPTION value="POSTGRESQL">PostgreSQL</option><OPTION value="ORACLE">Oracle</option></select></td></tr>'+
+	'<tr><td></td><td align="right"><input type="HIDDEN" value="" id="pmAdmin-DBLookupURL"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupVer"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupCell"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupTable"/><input type="BUTTON" value="Delete" onclick="i2b2.PM.admin.deleteDBLookup();"/> <input type="BUTTON" value="Save" onclick="i2b2.PM.admin.saveDBLookup();"/> <input type="BUTTON" value="Cancel" onclick="i2b2.PM.view.admin.refreshScreen();"/></td></tr>'+
+	'</table></div></form>';
+i2b2.PM.model.helpMSGS.DBLOOKUPREC = 	'<div>'+
+	'<table border="0"><tbody><tr><td valign="middle"><b>Name:</b></td><td><input type="TEXT" id="pmAdmin-DBLookupName" maxlength="50" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>Project Path:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupProjectPath" style="width:250px" readonly/></td></tr>'+
+	'<tr><td valign="middle"><b>DB Schema:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupSchema" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>JNDI Data Source:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupDataSource" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>Tooltip:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupTooltip" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>Comment:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupComment" style="width:250px"/></td></tr>'+
+	'<tr><td valign="middle"><b>DB Server:</b></td><td><SELECT style="width:250px" id="pmAdmin-DBLookupServer"><OPTION value="SQLSERVER">Sql Server</option><OPTION value="POSTGRESQL">PostgreSQL</option><OPTION value="ORACLE">Oracle</option></select></td></tr>'+
+	'<tr><td></td><td align="right"><input type="HIDDEN" value="" id="pmAdmin-DBLookupURL"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupVer"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupCell"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupTable"/><input type="BUTTON" value="Delete" onclick="i2b2.PM.admin.deleteDBLookup();"/> <input type="BUTTON" value="Save" onclick="i2b2.PM.admin.saveDBLookup();"/> <input type="BUTTON" value="Cancel" onclick="i2b2.PM.view.admin.refreshScreen();"/></td></tr>'+
+	'</table></div></form>';
+		
 i2b2.PM.model.adminButtonsPrimary = {};
 i2b2.PM.model.adminButtonsPrimary["HIVEDOMAINS"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/></form>";
 i2b2.PM.model.adminButtonsPrimary["HIVECELLS"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/><input type='button' value='Delete' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'DELETE');\"/><input type='button' value='Add New' onclick=\"i2b2.PM.admin.clickActionBtn(1,'NEW');\"/></form>";
 i2b2.PM.model.adminButtonsPrimary["HIVEGLOBALS"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/><input type='button' value='Delete' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'DELETE');\"/><input type='button' value='Add New' onclick=\"i2b2.PM.admin.clickActionBtn(1,'NEW');\"/></form>";
 i2b2.PM.model.adminButtonsPrimary["USERS"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/><input type='button' value='Delete' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'DELETE');\"/><input type='button' value='Add New' onclick=\"i2b2.PM.admin.clickActionBtn(1,'NEW');\"/></form>";
+i2b2.PM.model.adminButtonsPrimary["DBLOOKUP"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/><input type='button' value='Delete' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'DELETE');\"/><input type='button' value='Add New' onclick=\"i2b2.PM.admin.clickActionBtn(1,'NEW');\"/></form>";
 i2b2.PM.model.adminButtonsPrimary["APPROVALS"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/><input type='button' value='Delete' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'DELETE');\"/><input type='button' value='Add New' onclick=\"i2b2.PM.admin.clickActionBtn(1,'NEW');\"/></form>";
 i2b2.PM.model.adminButtonsPrimary["PROJECTREC-PARAMS"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/><input type='button' value='Delete' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'DELETE');\"/><input type='button' value='Add New' onclick=\"i2b2.PM.admin.clickActionBtn(1,'NEW');\"/></form>";
 i2b2.PM.model.adminButtonsPrimary["PROJECTREC-CELLS"] = "<form><input type='button' value='Save Updates' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'UPDATE');\"/><input type='button' value='Delete' onclick=\"i2b2.PM.admin.clickActionBtn(1, 'DELETE');\"/><input type='button' value='Add New' onclick=\"i2b2.PM.admin.clickActionBtn(1,'NEW');\"/></form>";
@@ -218,6 +242,15 @@ i2b2.PM.model.adminColumnDef["USERS"] = [
 	{key:"is_admin",sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}	
 ];
 
+
+i2b2.PM.model.adminColumnDef["DBLOOKUP"] = [
+	{key:"db_nicename", label:"Name", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
+	{key:"db_fullschema", label:"DB Schema", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
+	{key:"db_datasource", label:"JNDI Data Source", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}, 
+	{key:"db_servertype", label:"DB Server", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})},	
+	{key:"owner_id", label:"Owner ID", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})},
+	{key:"project_path", label:"Project Path", sortable:true, resizeable:true, editor: new YAHOO.widget.TextboxCellEditor({disableBtns:true})}
+];
 		
 // build the columndef for project-user dynamically
 var t = i2b2.PM.cfg.config.authRoles;
@@ -689,6 +722,43 @@ i2b2.PM.view.admin.showProjectCells = function() {
 	};
 	// create the grid
 	i2b2.PM.admin.grdPrimaryColumnDefs = i2b2.PM.model.adminColumnDef.HIVECELLS;
+	if (l > 10)
+    var oConfigs = { 
+	                paginator: new YAHOO.widget.Paginator({ 
+	                    rowsPerPage: 10 
+	                }), 
+	                initialRequest: "results=" + l 
+	        }; 	
+	var t = new YAHOO.widget.DataTable("pmAdminMainTableview", i2b2.PM.admin.grdPrimaryColumnDefs, i2b2.PM.admin.dsPrimary, oConfigs);
+	i2b2.PM.view.admin.yuiControls.primaryGrid = t;
+	t.isDirty = false;
+	//t.subscribe("rowMouseoverEvent", t.onEventHighlightCell);
+	//t.subscribe("rowMouseoutEvent", t.onEventUnhighlightCell);
+	//t.subscribe("cellClickEvent", i2b2.PM.view.admin.gridClickHandler);
+	//t.subscribe("editorSaveEvent", i2b2.PM.view.admin.editorSaved);
+};
+
+
+i2b2.PM.view.admin.showProjectDBLookup = function() {
+//	var proj_data = i2b2.PM.view.admin.currentDBLookup;
+//	$('pmMainTitle').innerHTML = 'Project &gt; "'+proj_data.label+'" &gt; Cells';
+	//i2b2.PM.view.admin.showInfoPanel(false);
+	i2b2.PM.view.admin.configScreenDispay(1);
+	// create the filtered DataSource
+	//i2b2.PM.admin.refreshDBLookupListData(); 
+	var tmp = [];
+	for (var idx in i2b2.PM.model.admin.DBLookupList) {
+	//	if (i2b2.PM.model.admin.DBLookupList[idx].project_path == "/"+proj_data.i2b2NodeKey) {
+			tmp.push(i2b2.PM.model.admin.DBLookupList[idx]);
+	//	}
+	}
+	i2b2.PM.admin.dsPrimary = new YAHOO.util.DataSource(tmp);
+	i2b2.PM.admin.dsPrimary.responseType = YAHOO.util.DataSource.TYPE_JSARRAY;
+	i2b2.PM.admin.dsPrimary.responseType.responseSchema = {
+		fields: ["db_nicename","db_datasource","db_fullschema","db_servicetype","owner_id","project_path"]
+	};
+	// create the grid
+	i2b2.PM.admin.grdPrimaryColumnDefs = i2b2.PM.model.adminColumnDef.DBLOOKUP;
 	if (l > 10)
     var oConfigs = { 
 	                paginator: new YAHOO.widget.Paginator({ 

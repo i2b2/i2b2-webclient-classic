@@ -603,18 +603,22 @@ function QueryToolController() {
 			// submit value(s)
 			if(this.submit()) {
 				// run the query
-				var t = $('dialogQryRun');
-				var queryNameInput = t.select('INPUT.inputQueryName')[0];
-				var options = {};
-				var t2 = t.select('INPUT.chkQueryType');
-				for (var i=0;i<t2.length; i++) {
-					if (t2[i].checked == true) {
-						options['chk_'+t2[i].value] = t2[i].checked;
-					}
-				}				
-				$('queryName').innerHTML = queryNameInput.value;
-				i2b2.CRC.model.queryCurrent.name = queryNameInput.value;
-				i2b2.CRC.ctrlr.QT._queryRun(queryNameInput.value, options);
+				//if(jQuery("input:checkbox[name=queryType]:checked").length > 0){ // WEBCLIENT-170
+					var t = $('dialogQryRun');
+					var queryNameInput = t.select('INPUT.inputQueryName')[0];
+					var options = {};
+					var t2 = t.select('INPUT.chkQueryType');
+					for (var i=0;i<t2.length; i++) {
+						if (t2[i].checked == true) {
+							options['chk_'+t2[i].value] = t2[i].checked;
+						}
+					}				
+					$('queryName').innerHTML = queryNameInput.value;
+					i2b2.CRC.model.queryCurrent.name = queryNameInput.value;
+					i2b2.CRC.ctrlr.QT._queryRun(queryNameInput.value, options);
+				//} else {
+				//	alert('You must select one query result type to run.');
+				//}
 			}
 		}
 		// display the query name input dialog
@@ -764,6 +768,10 @@ function QueryToolController() {
 					alert('Please enter a name for this query.');
 					return false;
 				}
+				if(jQuery("input:checkbox[name=queryType]:checked").length == 0){ // WEBCLIENT-170
+					alert('You must select one query result type to run.');
+					return false;
+				}
 				return true;
 			};
 			i2b2.CRC.view.dialogQryRun.render(document.body);
@@ -808,6 +816,10 @@ function QueryToolController() {
 				var queryNameInput = $('inputQueryName');
 				if (!queryNameInput || queryNameInput.value.blank()) {
 					alert('Please enter a name for this query.');
+					return false;
+				}
+				if(jQuery("input:checkbox[name=queryType]:checked").length == 0){ // WEBCLIENT-170
+					alert('You must select one query result type to run.');
 					return false;
 				}
 				return true;
@@ -1426,13 +1438,17 @@ function QueryToolController() {
 						if (i2b2.PM.model.isObfuscated) {
 							if (params[i2].firstChild.nodeValue < 4)
 							{
-							    var value = "<3";
+								var value = "<"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString();
 							} else {
-								var value = params[i2].firstChild.nodeValue + "&plusmn;3";
+								var value = params[i2].firstChild.nodeValue + "&plusmn;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString();
 							}
 						} else {
 							var value = params[i2].firstChild.nodeValue;
-							
+						}
+						if(i2b2.UI.cfg.useFloorThreshold){
+							if (params[i2].firstChild.nodeValue < i2b2.UI.cfg.floorThresholdNumber){
+								var value = i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
+							}
 						}
 					
 						$('infoQueryStatusText').innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + value  +   "</font></div>";
@@ -3105,6 +3121,11 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 					itemValue += i2b2.CRC.view.graphs.sObfuscatedEnding;
 				}
 			}
+			if(i2b2.UI.cfg.useFloorThreshold){
+				if (item.value < i2b2.UI.cfg.floorThresholdNumber){
+					itemValue = i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
+				}
+			}
 			contDiv = new Element('div',{'id':reultsContDivId});
 			var trObj = new Element('tr');
 			var tdObj = new Element('td' , {'class' : 'descResultshead'}).update('Total Patients Matching Query');
@@ -3219,6 +3240,11 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 							itemValue += i2b2.CRC.view.graphs.sObfuscatedEnding;
 						}
 					}
+					if(i2b2.UI.cfg.useFloorThreshold){
+						if (item.value < i2b2.UI.cfg.floorThresholdNumber){
+							itemValue = i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
+						}
+					}
 					contDiv = new Element('div',{'id':reultsContDivId});
 					trObj = new Element('tr');
 					tdNameObj = new Element('td', {'class' : 'descResults' , 'width' : '50%'}).update(item.key);
@@ -3278,6 +3304,11 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 								labels: {
 									format: {
 										y: function (v, id) {
+											if(i2b2.UI.cfg.useFloorThreshold){
+												if (v < i2b2.UI.cfg.floorThresholdNumber){
+													return i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
+												}
+											}
 											if (i2b2.PM.model.isObfuscated) {
 												if(v == 0){
 													return i2b2.CRC.view.graphs.sObfuscatedText;

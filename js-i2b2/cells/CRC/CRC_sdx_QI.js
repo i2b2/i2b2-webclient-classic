@@ -243,9 +243,9 @@ i2b2.sdx.TypeControllers.QI.getChildRecords = function(sdxParentNode, onComplete
 			if (i2b2.h.getXNodeVal(ps[i1],'query_result_type/name') == "PATIENT_COUNT_XML"){ //nw096
 				if(i2b2.PM.model.isObfuscated){
 					if(parseInt(i2b2.h.getXNodeVal(ps[i1],'query_result_instance/set_size')) < 4){
-						o.title += " is <span style='background: #C9F3C9;font-weight:bold;padding: 2px;color: #0C5D0C;'>&lt;3</span>";
+						o.title += " is <span style='background: #C9F3C9;font-weight:bold;padding: 2px;color: #0C5D0C;'>&lt;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString()+"</span>";
 					} else {
-						o.title += " is <span style='background: #C9F3C9;font-weight:bold;padding: 2px;color: #0C5D0C;'>" + i2b2.h.getXNodeVal(ps[i1],'query_result_instance/set_size') + "&plusmn;3</span>";
+						o.title += " is <span style='background: #C9F3C9;font-weight:bold;padding: 2px;color: #0C5D0C;'>" + i2b2.h.getXNodeVal(ps[i1],'query_result_instance/set_size') + "&plusmn;"+i2b2.UI.cfg.obfuscatedDisplayNumber.toString()+"</span>";
 					}
 					
 				} else {

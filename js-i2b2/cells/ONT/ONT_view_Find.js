@@ -24,10 +24,17 @@ i2b2.ONT.view.find.showOptions = function(subScreen) {
 	if (!this.modalOptions) {
 		var handleSubmit = function() {
 			// submit value(s)
-			if(this.submit()) {
-				i2b2.ONT.view['find'].params.max = parseInt($('ONTFINDMaxQryDisp').value,10);
-				i2b2.ONT.view['find'].params.synonyms = $('ONTFINDshowSynonyms').checked;
-				i2b2.ONT.view['find'].params.hiddens = $('ONTFINDshowHiddens').checked;
+			var value = $('ONTFINDMaxQryDisp').value;
+			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10))){
+				if(this.submit()) {
+					$('ONTFINDMaxQryDisp').style.border = "2px inset";
+					i2b2.ONT.view['find'].params.max = parseInt($('ONTFINDMaxQryDisp').value,10);
+					i2b2.ONT.view['find'].params.synonyms = $('ONTFINDshowSynonyms').checked;
+					i2b2.ONT.view['find'].params.hiddens = $('ONTFINDshowHiddens').checked;
+				}
+			} else {
+				alert('Please enter a valid number for Maximum Children to Display.');
+				$('ONTFINDMaxQryDisp').style.border = "2px inset red";
 			}
 		}
 		var handleCancel = function() {

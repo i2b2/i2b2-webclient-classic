@@ -221,6 +221,18 @@ i2b2.WORK.ctrlr.main.Annotate = function(target_node) {
 	}
 	var origAnno = nd.origData.annotation;
 	if (!origAnno) { origAnno = ''; }
+	else {
+		var eachLine = origAnno.split('\n');
+		if(eachLine.length > 1){ // an annotation was found
+			var tempAnno = '';
+			for(var i = 1, l = eachLine.length; i < l; i++) {
+				tempAnno += eachLine[i];
+			}
+			origAnno = tempAnno;
+		} else {
+			origAnno = '';
+		}
+	}
 	var newAnno = prompt('Change this work item\'s annotation to:', origAnno);
 	if (!newAnno || newAnno==origAnno) { return false; }
 
@@ -234,7 +246,8 @@ i2b2.WORK.ctrlr.main.Annotate = function(target_node) {
 			alert("An error occurred while trying to annotate the selected item!");
 		} else {
 			// GUI refresh is not needed
-			this.data.i2b2_SDX.origData.annotation = newAnno;
+			//this.data.i2b2_SDX.origData.annotation = newAnno;
+			i2b2.WORK.view.main.refreshTree();
 		}
 	}
 	var pn = target_node.data.i2b2_SDX;

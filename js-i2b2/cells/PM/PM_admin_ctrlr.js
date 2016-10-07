@@ -424,6 +424,18 @@ i2b2.PM.admin.clickActionBtn = function(btnLevel, btnCommand) {
 							}
 						}
 						break;
+						case "REC-DBLOOKUP":
+						if (btnLevel==1) {
+							// UDATE HIVE CELL
+							if (!Object.isUndefined(updateRow.project_path, updateRow.db_nicename, updateRow.db_fullschema, updateRow.db_datasource)) {
+								i2b2.PM.ajax.setDBLookup("PM:Admin",  {db_nicename:updateRow.db_nicename, project_path:updateRow.project_path, db_fullschema:updateRow.db_fullschema, db_datasource:updateRow.db_datasource, db_tooltip:updateRow.db_tooltip, db_comment:updateRow.db_comment, db_servertype:updateRow.db_servertype}, i2b2.PM.view.admin.refreshScreen);
+							} else {
+								errAlertMissing();
+							}
+							} else {
+								errAlertMissing();
+							}
+						break;						
 					case "HIVEGLOBALS":
 						// UPDATE GLOBALS
 						if (!Object.isUndefined(updateRow.name, updateRow.value)) {
@@ -1067,6 +1079,92 @@ i2b2.PM.admin.saveCell = function() {
 
 
 
+i2b2.PM.admin.deleteDBLookup = function() {
+	var project_path = $('pmAdmin-DBLookupProjectPath').value;
+	if (confirm("Are you sure you want to delete this DBLookup?")) {
+		//i2b2.PM.ajax.deleteDBLookup("PM:Admin", {cell:$('pmAdmin-DBLookupCell').value, sec_cell:$('pmAdmin-DBLookupCell').value, sec_url:$('pmAdmin-DBLookupURL').value, project_path:project_path}, (function(result) {
+		//swc20160908 replaced with following to fix problem with 'crc' & 'im' (JIRA#(WEBCLIENT-199))
+		var url = $('pmAdmin-DBLookupURL').value;
+		var cell = $('pmAdmin-DBLookupCell').value;
+		var secCell = cell;
+		if ("im" == cell) {
+			ver = "";
+		} else {
+			ver = "1.1/"
+			if ("crc" == cell) secCell = "crc/pdo";
+		}
+		i2b2.PM.ajax.deleteDBLookup("PM:Admin", {cell:cell, sec_cell:secCell, sec_version:ver, sec_url:url, project_path:project_path}, (function(result) {
+
+			// restore screen
+			$('pmMainTitle').innerHTML = "DBLookup List";
+			i2b2.PM.view.admin.showInfoPanel("DBLOOKUP");
+			i2b2.PM.view.admin.configScreenDispay(0);
+			// refresh the project listings
+			var evt = {node: i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP};
+			i2b2.PM.view.admin.treeClick(evt, false);
+		}));
+	}
+};
+
+i2b2.PM.admin.saveDBLookup = function() {
+	var userData = {};
+	// verify all required info is presented
+	var errstr = "";
+	var t = $('pmAdmin-DBLookupProjectPath').value; 
+	if (t=="") {
+		errstr = errstr + '\n DBLookup Project Path is a required field';
+	} else {
+		userData.project_path = t;
+	}
+	var t = $('pmAdmin-DBLookupSchema').value;
+	if (t=="") {
+		errstr = errstr + '\n DBLookup Schema is a required field';
+	} else {
+		userData.db_fullschema = t;
+	}
+	var t = $('pmAdmin-DBLookupDataSource').value;
+	if (t=="") {
+		errstr = errstr + '\n DBLookup JNDI is a required field';
+	} else {
+		userData.db_datasource = t;
+	}
+	userData.db_servertype = $('pmAdmin-DBLookupServer').value;
+	userData.db_nicename = $('pmAdmin-DBLookupName').value;
+	userData.db_tooltip = $('pmAdmin-DBLookupTooltip').value;
+	userData.comment = $('pmAdmin-DBLookupComment').value;
+	userData.sec_url = $('pmAdmin-DBLookupURL').value;
+	userData.sec_cell = $('pmAdmin-DBLookupCell').value;
+	
+	//swc20160908 added following to fix problem with 'crc' & 'im' (JIRA#(WEBCLIENT-199))
+	var cell = $('pmAdmin-DBLookupCell').value;
+	if ("im" == cell) {
+		userData.sec_version = "";
+	} else {
+		userData.sec_version = "1.1/"
+		if ("crc" == cell) userData.sec_cell = "crc/pdo";
+	}
+
+	
+	userData.owner_id = '@';
+
+	
+	if (errstr != "") {
+		alert("The following errors have occured:\n"+errstr);
+		return;
+	}
+	// send data
+	i2b2.PM.ajax.setDBLookup("PM:Admin", userData, i2b2.PM.admin.refreshDBLookup);
+	// restore screen
+	$('pmMainTitle').innerHTML = "DBLookup List";
+	i2b2.PM.view.admin.showInfoPanel("DBLOOKUP");
+	i2b2.PM.view.admin.configScreenDispay(0); 
+};
+
+
+
+
+
+
 i2b2.PM.admin.deleteParameter = function() {
 	var id = $('pmAdmin-paramId').value; 
 	if (id =="") {
@@ -1261,7 +1359,18 @@ i2b2.PM.admin.refreshTree = function(tvNode, onCompleteCallback) {
 				i2b2.PM.view.admin.yuiTreeNodePARAMS.data.xmlData = "<project_path>"+d.project_path+"</project_path>";
 				
 				i2b2.PM.view.admin.yuiTreeNodePARAMS.data.i2b2NodeType = "PARAMS";
-				i2b2.PM.view.admin.yuiTreeNodePARAMS.setDynamicLoad(i2b2.PM.admin.refreshParameters);			
+				i2b2.PM.view.admin.yuiTreeNodePARAMS.setDynamicLoad(i2b2.PM.admin.refreshParameters);		
+				
+				i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP = new YAHOO.widget.TextNode({label: "DB-Lookup", expanded: false}, tmpNode);
+				i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP.data.xmlId =  d.id ;
+				i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP.data.id = d.id;
+				i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP.data.i2b2Table = "cell_dblookup";
+				i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP.data.url = d.url;
+				
+				i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP.data.i2b2NodeType = "DBLOOKUP";
+				i2b2.PM.view.admin.yuiTreeNodeDBLOOKUP.setDynamicLoad(i2b2.PM.admin.refreshDBLookup);		
+				
+					
 			}
 			break;
 		case "PROJECTREQUESTS":
@@ -1342,6 +1451,36 @@ i2b2.PM.admin.refreshParameters = function(tvNode, onCompleteCallback) {
 }	
 	if (onCompleteCallback) { onCompleteCallback(); }
 };
+
+// --------------------------------------------------------------------------------------------------------------------
+i2b2.PM.admin.refreshDBLookup = function(tvNode, onCompleteCallback) {
+	i2b2.PM.admin.refreshDBLookupListData(tvNode.data.i2b2Table, tvNode.data.url, tvNode.data.xmlId);
+										   //"<user_name>"+tvNode.parent.data.i2b2NodeUserName+"</user_name>");
+										   
+	i2b2.PM.view.admin.parentDBLookup = tvNode;									   
+	for (var idx in i2b2.PM.model.admin.DBLookupList) {
+		var d = i2b2.PM.model.admin.DBLookupList[idx];
+		var tmpNode = new YAHOO.widget.TextNode({label: d.db_nicename, expanded: false}, tvNode);
+		tmpNode.data.i2b2NodeType = "REC-DBLOOKUP";
+		tmpNode.data.i2b2Name = d.db_nicename;
+		tmpNode.data.i2b2Id = d.project_path;
+		tmpNode.data.i2b2Url = tvNode.data.url;
+
+}	
+
+			if (tvNode.data.url) { 
+					$('pmAdmin-DBLookupURL').value = tvNode.data.url; 
+				}
+			if (tvNode.data.id) { 
+				
+					$('pmAdmin-DBLookupCell').value = tvNode.data.id.toLowerCase(); 
+					if ($('pmAdmin-DBLookupCell').value == "crc")
+						$('pmAdmin-DBLookupCell').value = $('pmAdmin-DBLookupCell').value + "/pdo";
+				}
+
+	if (onCompleteCallback) { onCompleteCallback(); }
+};
+
 
 // treeview click handler & action router
 // --------------------------------------------------------------------------------------------------------------------
@@ -1585,6 +1724,56 @@ i2b2.PM.view.admin.treeClick = function(tvEvent, override) {
 			i2b2.PM.view.admin.configScreenDispay(0);
 			tvEvent.node.tree.removeChildren(tvEvent.node);			
 			$('pmAdmin-paramTable').value = info.i2b2Table; 
+			
+			//i2b2.PM.view.admin.showUsers();
+			break;
+		case "REC-DBLOOKUP":
+			try {
+				$('pmMainTitle').innerHTML = '"' + tvEvent.node.parent.label + '" &gt; "'+info.i2b2Name+'"';
+				i2b2.PM.view.admin.showInfoPanel("DBLOOKUPREC");
+				
+				var cell =  tvEvent.node.parent.data.id.toLowerCase();
+				
+				if (cell == "crc")
+				   cell = cell + "/pdo";
+				   
+					//var response = i2b2.PM.ajax.getDBLookup("PM:Admin", {sec_cell:cell,sec_url:tvEvent.node.parent.data.url,id_xml:info.i2b2Id});
+					//swc20160908 replaced with following to fix problem with 'crc' & 'im' (JIRA#(WEBCLIENT-199))
+					var url = tvEvent.node.parent.data.url;
+					if ("im" == cell) {
+						ver = "";
+					} else {
+						ver = "1.1/"
+					}
+					var response = i2b2.PM.ajax.getDBLookup("PM:Admin", {sec_cell:cell, sec_version:ver, sec_url:url, id_xml:info.i2b2Id});
+
+
+				response.parse();
+				var data = response.model[0];
+				if (data.db_nicename) { $('pmAdmin-DBLookupName').value = data.db_nicename; }
+				if (data.project_path) { $('pmAdmin-DBLookupProjectPath').value = data.project_path; }
+				if (data.db_fullschema) {  $('pmAdmin-DBLookupSchema').value = data.db_fullschema; }
+				if (data.db_datasource) { $('pmAdmin-DBLookupDataSource').value = data.db_datasource; }
+				if (data.db_tooltip) { $('pmAdmin-DBLookupTooltip').value = data.db_tooltip; }
+				if (data.comment) { $('pmAdmin-DBLookupComment').value = data.comment; }
+				if (data.db_servertype) { $('pmAdmin-DBLookupServer').value = data.db_servertype; }
+
+				 $('pmAdmin-DBLookupURL').value = tvEvent.node.parent.data.url;
+				 $('pmAdmin-DBLookupVer').value = ver; //swc20160908 added (JIRA#(WEBCLIENT-199))
+				 $('pmAdmin-DBLookupCell').value = cell; 
+				//$('pmAdmin-paramId').value = tvEvent.node.parent.data.i2b2Table;
+			} catch (e) {}
+			i2b2.PM.view.admin.configScreenDispay(0);
+			break;			
+			
+		case "DBLOOKUP":
+			$('pmMainTitle').innerHTML = "DBLookup List";
+			i2b2.PM.view.admin.showInfoPanel("DBLOOKUP");
+			i2b2.PM.view.admin.configScreenDispay(0);
+			tvEvent.node.tree.removeChildren(tvEvent.node);			
+			$('pmAdmin-DBLookupTable').value = info.i2b2Table; 
+			//i2b2.PM.view.admin.showProjectDBLookup();
+			i2b2.PM.admin.refreshDBLookupListData(tvEvent.node.data.i2b2Table, tvEvent.node.data.url, tvEvent.node.data.id);
 			
 			//i2b2.PM.view.admin.showUsers();
 			break;
@@ -1867,6 +2056,33 @@ i2b2.PM.admin.refreshParameterListData = function(tablename, param, id) {
 	delete projUserList;
 	i2b2.PM.model.admin.ParameterList = tmp;
 };
+
+
+i2b2.PM.admin.refreshDBLookupListData = function(tablename, url, id) {
+	//var projUserList = i2b2.PM.ajax.getAllDBLookup("PM:Admin", {table:tablename, sec_url:url, sec_cell:id.toLowerCase()});
+	//swc20160908 updated to fix problems with 'crc' & 'im' cells (JIRA#(WEBCLIENT-199))
+	var ver;
+	if (url.includes("/IMService/")) {
+		ver = "";
+	} else {
+		ver = "1.1/";
+	}
+	if (id.toLowerCase() == "crc")
+		id = "crc/pdo";
+	var projUserList = i2b2.PM.ajax.getAllDBLookup("PM:Admin", {table:tablename, sec_url:url, sec_version:ver, sec_cell:id.toLowerCase()});
+
+		//i2b2.PM.ajax.getAllParams("PM:Admin", { id: i2b2.PM.view.admin.currentProject.i2b2NodeKey, });
+	projUserList.parse();
+	var tmp = {};
+	var l = projUserList.model.length;
+	for (var i=0; i<l; i++) {
+		tmp[projUserList.model[i].db_nicename] = projUserList.model[i];
+	}
+	delete projUserList;
+	i2b2.PM.model.admin.DBLookupList = tmp;
+	i2b2.PM.view.admin.showProjectDBLookup();
+};
+
 
 console.timeEnd('execute time');
 console.groupEnd();
