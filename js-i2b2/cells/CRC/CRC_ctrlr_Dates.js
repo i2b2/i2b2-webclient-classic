@@ -422,6 +422,24 @@ i2b2.CRC.ctrlr.dateConstraint = {
 				}
 				delete dm.dateTo;
 			}
+			
+			for(var i=0;i<dm.items.length;i++){ // WEBCLIENT-133: Remove dates from patient_dimension concepts
+				if(dm.items[i].origData.hasOwnProperty('table_name')){
+					var table_name = dm.items[i].origData.table_name;
+				} else { // lookup table_name
+					var results = i2b2.ONT.ajax.GetTermInfo("ONT", {ont_max_records:'max="1"', ont_synonym_records:'false', ont_hidden_records: 'false', concept_key_value: dm.items[i].origData.key}).parse();
+					if(results.model.length > 0){
+						var table_name = results.model[0].origData.table_name;
+					}
+				}
+				if(table_name.toLowerCase() == 'patient_dimension'){
+					delete dm.items[i].dateFrom;
+					delete dm.items[i].dateTo;
+					alert("Date constraints are not allowed for age related concepts. This panel contains at least one age related concepts, therefore a date constraint can not be set for this panel.");
+				}
+			}
+			
+			
 			// clear the query name and set the query as having dirty data
 			var QT = i2b2.CRC.ctrlr.QT;
 			QT.doSetQueryName.call(QT,'');
@@ -497,6 +515,22 @@ i2b2.CRC.ctrlr.dateConstraint = {
 			var QT = i2b2.CRC.ctrlr.QT;
 			QT.doSetQueryName.call(QT,'');
 		}
+		
+		if(dm.items[itemIndex].origData.hasOwnProperty('table_name')){ // WEBCLIENT-133: Remove dates from patient_dimension concepts
+			var table_name = dm.items[itemIndex].origData.table_name;
+		} else { // lookup table_name
+			var results = i2b2.ONT.ajax.GetTermInfo("ONT", {ont_max_records:'max="1"', ont_synonym_records:'false', ont_hidden_records: 'false', concept_key_value: dm.items[itemIndex].origData.key}).parse();
+			if(results.model.length > 0){
+				var table_name = results.model[0].origData.table_name;
+			}
+		}
+		if(table_name.toLowerCase() == 'patient_dimension'){
+			delete dm.items[itemIndex].dateFrom;
+			delete dm.items[itemIndex].dateTo;
+			alert("Date constraints are not allowed for age related concepts. This panel contains at least one age related concepts, therefore a date constraint can not be set for this panel.");
+		}
+		
+		
 		// redraw buttons if needed
 		var panelctrlFound = false;
 		var pd = i2b2.CRC.ctrlr.QT;

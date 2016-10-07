@@ -144,7 +144,7 @@ i2b2.CRC.view.status.ResizeHeight = function()
 						$('infoQueryStatusReport').style.height = '146px';
 						ve.top = h-198;
 						$('crcQueryToolBox').show();
-						
+						i2b2.hive.mySplitter.dragged(); // WEBCLIENT-175
 					}
 					
 

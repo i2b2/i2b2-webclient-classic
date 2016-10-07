@@ -23,12 +23,19 @@ i2b2.ONT.view.nav.showOptions = function(subScreen) {
 	if (!this.modalOptions) {
 		var handleSubmit = function() {
 			// submit value(s)
-			if(this.submit()) {
-				i2b2.ONT.view['nav'].params.max = parseInt($('ONTNAVMaxQryDisp').value,10);
-				i2b2.ONT.view['nav'].params.synonyms = $('ONTNAVshowSynonyms').checked;
-				i2b2.ONT.view['nav'].params.hiddens = $('ONTNAVshowHiddens').checked;
-				i2b2.ONT.view['nav'].params.modifiers = $('ONTNAVdisableModifiers').checked;
-				i2b2.ONT.view.nav.doRefreshAll();
+			var value = $('ONTNAVMaxQryDisp').value;
+			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10))){
+				if(this.submit()) {
+					$('ONTNAVMaxQryDisp').style.border = "2px inset";
+					i2b2.ONT.view['nav'].params.max = parseInt($('ONTNAVMaxQryDisp').value,10);
+					i2b2.ONT.view['nav'].params.synonyms = $('ONTNAVshowSynonyms').checked;
+					i2b2.ONT.view['nav'].params.hiddens = $('ONTNAVshowHiddens').checked;
+					i2b2.ONT.view['nav'].params.modifiers = $('ONTNAVdisableModifiers').checked;
+					i2b2.ONT.view.nav.doRefreshAll();
+				}
+			} else {
+				alert('Please enter a valid number for Maximum Children to Display.');
+				$('ONTNAVMaxQryDisp').style.border = "2px inset red";
 			}
 		}
 		var handleCancel = function() {

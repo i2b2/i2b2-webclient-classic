@@ -211,17 +211,17 @@ function i2b2_PanelController(parentCtrlr) {
 	this._redrawDates = function(pd) {
 		if (undefined===pd) { pd = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][this.panelCurrentIndex]; }
 		
-		jQuery('#QPD'+(this.panelCurrentIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]').find('span.itemDateConstraint').remove();
+		jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]').find('span.itemDateConstraint').remove();
 		if(pd.items.length > 0){
 			for(var i=0;i<pd.items.length;i++){
 				if(pd.items[i].dateFrom && pd.items[i].dateTo){
-					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;['+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+' to '+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.panelCurrentIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);
+					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;['+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+' to '+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);
 				}
 				if(pd.items[i].dateFrom && !pd.items[i].dateTo){
-					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&ge;'+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+']</span>').appendTo(jQuery('#QPD'+(this.panelCurrentIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);					
+					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&ge;'+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);					
 				}
 				if(!pd.items[i].dateFrom && pd.items[i].dateTo){
-					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&le;'+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.panelCurrentIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);										
+					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&le;'+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);										
 				}
 			}
 		}
@@ -231,10 +231,10 @@ function i2b2_PanelController(parentCtrlr) {
 	this._redrawExclude = function(pd) {
 		if (undefined===pd) { pd = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][this.panelCurrentIndex]; }
 		
-		jQuery('#QPD'+(this.panelCurrentIndex+1)+' [class^="sdxDefault"]').find('span.itemExclude').remove();
+		jQuery('#QPD'+(this.actualPanelIndex+1)+' [class^="sdxDefault"]').find('span.itemExclude').remove();
 		if(pd.exclude){
 			for(var i=0;i<pd.items.length;i++){
-				jQuery('<span title="This item is being excluded" class="itemExclude">&nbsp;NOT&nbsp;</span>').prependTo(jQuery('#QPD'+(this.panelCurrentIndex+1)+' [class^="sdxDefault"]')[i]);
+				jQuery('<span title="This item is being excluded" class="itemExclude">&nbsp;NOT&nbsp;</span>').prependTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' [class^="sdxDefault"]')[i]);
 			}
 		}
 	}
