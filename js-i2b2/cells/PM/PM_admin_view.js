@@ -147,7 +147,7 @@ i2b2.PM.model.helpMSGS.DBLOOKUP =  "<form><p>Click on \"DBLookup\" in the naviga
 	'<tr><td valign="middle"><b>Tooltip:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupTooltip" style="width:250px"/></td></tr>'+
 	'<tr><td valign="middle"><b>Comment:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupComment" style="width:250px"/></td></tr>'+
 	'<tr><td valign="middle"><b>DB Server:</b></td><td><SELECT style="width:250px" id="pmAdmin-DBLookupServer"><OPTION value="SQLSERVER">Sql Server</option><OPTION value="POSTGRESQL">PostgreSQL</option><OPTION value="ORACLE">Oracle</option></select></td></tr>'+
-	'<tr><td></td><td align="right"><input type="HIDDEN" value="" id="pmAdmin-DBLookupURL"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupCell"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupTable"/><input type="BUTTON" value="Delete" onclick="i2b2.PM.admin.deleteDBLookup();"/> <input type="BUTTON" value="Save" onclick="i2b2.PM.admin.saveDBLookup();"/> <input type="BUTTON" value="Cancel" onclick="i2b2.PM.view.admin.refreshScreen();"/></td></tr>'+
+	'<tr><td></td><td align="right"><input type="HIDDEN" value="" id="pmAdmin-DBLookupURL"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupVer"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupCell"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupTable"/><input type="BUTTON" value="Delete" onclick="i2b2.PM.admin.deleteDBLookup();"/> <input type="BUTTON" value="Save" onclick="i2b2.PM.admin.saveDBLookup();"/> <input type="BUTTON" value="Cancel" onclick="i2b2.PM.view.admin.refreshScreen();"/></td></tr>'+
 	'</table></div></form>';
 i2b2.PM.model.helpMSGS.DBLOOKUPREC = 	'<div>'+
 	'<table border="0"><tbody><tr><td valign="middle"><b>Name:</b></td><td><input type="TEXT" id="pmAdmin-DBLookupName" maxlength="50" style="width:250px"/></td></tr>'+
@@ -157,7 +157,7 @@ i2b2.PM.model.helpMSGS.DBLOOKUPREC = 	'<div>'+
 	'<tr><td valign="middle"><b>Tooltip:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupTooltip" style="width:250px"/></td></tr>'+
 	'<tr><td valign="middle"><b>Comment:</b></td><td><input type="TEXT" maxlength="255" id="pmAdmin-DBLookupComment" style="width:250px"/></td></tr>'+
 	'<tr><td valign="middle"><b>DB Server:</b></td><td><SELECT style="width:250px" id="pmAdmin-DBLookupServer"><OPTION value="SQLSERVER">Sql Server</option><OPTION value="POSTGRESQL">PostgreSQL</option><OPTION value="ORACLE">Oracle</option></select></td></tr>'+
-	'<tr><td></td><td align="right"><input type="HIDDEN" value="" id="pmAdmin-DBLookupURL"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupCell"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupTable"/><input type="BUTTON" value="Delete" onclick="i2b2.PM.admin.deleteDBLookup();"/> <input type="BUTTON" value="Save" onclick="i2b2.PM.admin.saveDBLookup();"/> <input type="BUTTON" value="Cancel" onclick="i2b2.PM.view.admin.refreshScreen();"/></td></tr>'+
+	'<tr><td></td><td align="right"><input type="HIDDEN" value="" id="pmAdmin-DBLookupURL"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupVer"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupCell"/><input type="HIDDEN" value="" id="pmAdmin-DBLookupTable"/><input type="BUTTON" value="Delete" onclick="i2b2.PM.admin.deleteDBLookup();"/> <input type="BUTTON" value="Save" onclick="i2b2.PM.admin.saveDBLookup();"/> <input type="BUTTON" value="Cancel" onclick="i2b2.PM.view.admin.refreshScreen();"/></td></tr>'+
 	'</table></div></form>';
 		
 i2b2.PM.model.adminButtonsPrimary = {};
