@@ -435,7 +435,7 @@ i2b2.CRC.ctrlr.dateConstraint = {
 				if(table_name.toLowerCase() == 'patient_dimension'){
 					delete dm.items[i].dateFrom;
 					delete dm.items[i].dateTo;
-					alert("Date constraints are not allowed for age related concepts. This panel contains at least one age related concepts, therefore a date constraint can not be set for this panel.");
+					alert("Date constraints are not allowed on patient dimension concepts and will not be set.");
 				}
 			}
 			
@@ -527,7 +527,7 @@ i2b2.CRC.ctrlr.dateConstraint = {
 		if(table_name.toLowerCase() == 'patient_dimension'){
 			delete dm.items[itemIndex].dateFrom;
 			delete dm.items[itemIndex].dateTo;
-			alert("Date constraints are not allowed for age related concepts. This panel contains at least one age related concepts, therefore a date constraint can not be set for this panel.");
+			alert("Date constraints are not allowed on patient dimension concepts and will not be set.");
 		}
 		
 		
