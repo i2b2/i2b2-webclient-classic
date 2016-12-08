@@ -12,7 +12,7 @@ Additional information about the i2b2 Web Client can be found on the [i2b2 Commu
 ## Development / Maintenance
 The code for the i2b2 Web Client is maintained by the i2b2 team.
 
-Plugins developed by the i2b2 Community can be found in the *i2b2/community-plugins/webclient* folder.
+Plugins developed by the i2b2 Community can be found in the [i2b2plugins Github organization](https://github.com/i2b2plugins).
 
 
 ## Reporting Issues
