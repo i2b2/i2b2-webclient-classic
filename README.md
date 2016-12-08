@@ -8,6 +8,8 @@ The i2b2 Web Client Repository contains the source code for the i2b2 Web Client.
 ### Documentation
 Additional information about the i2b2 Web Client can be found on the [i2b2 Community Wiki](http://community.i2b2.org/wiki/dashboard.action "i2b2 Community Wiki") within the [i2b2 Sponsored Project - i2b2 Web Client](http://community.i2b2.org/wiki/display/webclient/Web+Client+Home) space.
 
+### Installation
+Installation instructions can be found in the [INSTALL-README.md](/INSTALL-README.md) file.
 
 ## Development / Maintenance
 The code for the i2b2 Web Client is maintained by the i2b2 team.
