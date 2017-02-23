@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<body>
+		<div style="margin: 0px 5% 12px; text-align: center;" id="valueContraintText">Searches by Lab values can be constrained by the value itself or by the high/low flag set for the value (where applicable).</div>
+		<div class="mlvBody">
+			<div class="mlvtop">
+				<div class="mlvModesGroup">
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeNONE" value="NO_VALUE" type="radio" checked="checked" />
+						No value</div>
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeFLAG" value="BY_FLAG" type="radio" />
+						By flag</div>
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeVALUE" value="BY_VALUE" type="radio" />
+						By value</div>
+				</div>
+				<div class="mlvInputGroup">
+					<div id="mlvfrmFLAG" style="display:none"> Please select a range:<br />
+						<select id='mlvfrmFlagValue'>
+							<option value="">Loading...</option>
+						</select>
+					</div>
+					<div id="mlvfrmVALUE" style="display:none">
+						<p id="mlvfrmEnterEnum">Please select a value:<br />
+							<select id="mlvfrmEnumValue" class="enumInput" multiple="multiple" size="5" style="overflow: scroll; width: 562px;">
+								<option value="">Loading...</option>
+							</select>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

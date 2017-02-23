@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<body>
+		<div style="margin: 0px 5% 12px; text-align: center;" id="valueContraintText">Searches by Lab values can be constrained by the value itself or by the high/low flag set for the value (where applicable).</div>
+		<div class="mlvBody">
+			<div class="mlvtop">
+				<div class="mlvModesGroup">
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeNONE" value="NO_VALUE" type="radio" checked="checked" />
+						No value</div>
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeFLAG" value="BY_FLAG" type="radio" />
+						By flag</div>
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeVALUE" value="BY_VALUE" type="radio" />
+						By value</div>
+				</div>
+				<div class="mlvInputGroup">
+					<div id="mlvfrmFLAG" style="display:none"> Please select a range:<br />
+						<select id='mlvfrmFlagValue'>
+							<option value="">Loading...</option>
+						</select>
+					</div>
+					<div id="mlvfrmVALUE" style="display:none">
+						<p id="mlvfrmEnterOperator"> Please select operator:<br />
+							<select id='mlvfrmOperator'>
+								<option value="LT">LESS THAN (&lt;)</option>
+								<option value="LE">LESS THAN OR EQUAL TO (&lt;=)</option>
+								<option value="EQ">EQUAL (=)</option>
+								<option value="BETWEEN">BETWEEN</option>
+								<option value="GT">GREATER THAN (&gt;)</option>
+								<option value="GE">GREATER THAN OR EQUAL (&gt;=)</option>
+							</select>
+						</p>
+						<p id="mlvfrmEnterVal"> Please enter a value:<br />
+							<input type="text" id="mlvfrmNumericValue" class="numInput" />
+						</p>
+						<p id="mlvfrmEnterVals" style="display:none">Please enter values:<br />
+							<input id="mlvfrmNumericValueLow" class="numInput" />
+							&nbsp;-&nbsp;
+							<input id="mlvfrmNumericValueHigh" class="numInput" />
+						</p>
+						
+					</div>
+				</div>
+				<div style="clear:both;height:1px;overflow:hidden;"></div>
+				<!-- Lab value bars display section -->
+				<div id="mlvfrmBarContainer" style="margin: 10px; padding: 10px; text-align: center; border: 1px solid #000080; height: auto; display:none"> 
+					<div style="height: 55px"> 
+						<!-- top text -->
+						<div>Click on a bar segment to help specify a value or range:</div>
+						<div>Range in <span id="mlvfrmLblUnits" style="font-decoration:italic bold">mm/Hg</span></div>
+						<!-- bars are drawn -->
+						<div id="barToxL" style="float:left; background: none repeat scroll 0% 0% rgb(0, 0, 0); height: 15px; width: 72px;"> <a href="#lblToxL" onclick="i2b2.CRC.view.NUMBER.updateValue(event)" title="Toxic low value" class="barlink">&nbsp;</a></div>
+						<div id="barLofL" style="float:left; background: none repeat scroll 0% 0% rgb(255, 0, 0); height: 15px; width: 72px;"> <a href="#lblLofL" onclick="i2b2.CRC.view.NUMBER.updateValue(event)" title="Abnormal low value" class="barlink">&nbsp;</a></div>
+						<div id="barHofL" style="float:left; background: none repeat scroll 0% 0% rgb(255, 255, 0); height: 15px; width: 72px;"> <a href="#lblHofL" onclick="i2b2.CRC.view.NUMBER.updateValue(event)" title="Indeterminant low value" class="barlink">&nbsp;</a></div>
+						<div id="barNorm" style="float:left; background: none repeat scroll 0% 0% rgb(0, 255, 0); height: 15px; width: 72px;"> <a href="#" onclick="i2b2.CRC.view.NUMBER.updateValue(event)"  title="Normal" class="barlink">&nbsp;</a></div>
+						<div id="barLofH" style="float:left; background: none repeat scroll 0% 0% rgb(255, 255, 0); height: 15px; width: 72px;"> <a href="#lblLofH" onclick="i2b2.CRC.view.NUMBER.updateValue(event)" title="Indeterminant high value" class="barlink">&nbsp;</a></div>
+						<div id="barHofH" style="float:left; background: none repeat scroll 0% 0% rgb(255, 0, 0); height: 15px; width: 72px;"> <a href="#lblHofH" onclick="i2b2.CRC.view.NUMBER.updateValue(event)" title="Abnormal high value" class="barlink">&nbsp;</a></div>
+						<div id="barToxH" style="float:left; background: none repeat scroll 0% 0% rgb(0, 0, 0); height: 15px; width: 72px;"> <a href="#lblToxH" onclick="i2b2.CRC.view.NUMBER.updateValue(event)" title="Toxic high value" class="barlink">&nbsp;</a></div>
+						<!-- labels are drawn -->
+						<div id="lblToxL" style="float: left; text-align: right; width: 72px;">&nbsp;</div>
+						<div id="lblLofL" style="float: left; text-align: right; width: 72px;">&nbsp;</div>
+						<div id="lblHofL" style="float: left; text-align: right; width: 72px;">&nbsp;</div>
+						<div id="lblNorm" style="float: left; text-align: left; width: 72px;">&nbsp;</div>
+						<div id="lblLofH" style="float: left; text-align: left; width: 72px;">&nbsp;</div>
+						<div id="lblHofH" style="float: left; text-align: left; width: 72px;">&nbsp;</div>
+						<div id="lblToxH" style="float: left; text-align: left; width: 72px;">&nbsp;</div>
+					</div>
+				</div>
+				<!-- Units display section -->
+				<div id="mlvfrmUnitsContainer" style="margin: 10px 0px 0px 15px; display:none">
+					<div style="float:left; text-align:left; bottom: 0">Units = &nbsp;</div>
+					<span>
+						<select id='mlvfrmUnits' class="units" style="width: 500px; float:left;">
+							<option value="0">Loading...</option>
+						</select>
+					</span> 
+					<span id="mlvUnitExcluded" style="color:#900; margin-left: 20px">A value cannot be specified for these units.</span> 
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

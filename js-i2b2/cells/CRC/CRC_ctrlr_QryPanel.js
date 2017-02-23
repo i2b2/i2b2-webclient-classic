@@ -246,12 +246,14 @@ function i2b2_PanelController(parentCtrlr) {
 	
 // ================================================================================================== //
 	this.showLabValues = function(key, extData) {
-		i2b2.CRC.view.modalLabValues.show(this.panelCurrentIndex, this, key, extData, false);
+		// i2b2.CRC.view.modalLabValues.show(this.panelCurrentIndex, this, key, extData, false);
+		i2b2.CRC.view.modLabvaluesCtlr.selectValueBox(this.panelCurrentIndex, this, key, extData, false,null);
 	}
 
 // ================================================================================================== //
 	this.showModValues = function(key, extData) {
-		i2b2.CRC.view.modalLabValues.show(this.panelCurrentIndex, this, key, extData, true);
+		// i2b2.CRC.view.modalLabValues.show(this.panelCurrentIndex, this, key, extData, true);
+		i2b2.CRC.view.modLabvaluesCtlr.selectValueBox(this.panelCurrentIndex, this, key, extData, true,null);
 	}
 	
 	
@@ -614,73 +616,16 @@ function i2b2_PanelController(parentCtrlr) {
 		var tvTree = tvParent.tree;
 		if (sdxConcept.sdxInfo.sdxType == "CONCPT") { 
 		    var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',sdxConcept.origData);
-			
-			
-				var title = "";
-			
-				if (sdxConcept.origData.isModifier) {
-					var values = sdxConcept.ModValues;
-				} else  {
-					var values = sdxConcept.LabValues;				
-				}
-				if (values != null) {
-					switch(values.MatchBy) {
-								case "FLAG":
-								//mm ??not sure tvChildren[i].html = ' = '+i2b2.h.Escape(values.ValueFlag) + "</div></div>";
-									title = ' = '+i2b2.h.Escape(values.ValueFlag);
-									break;
-								case "VALUE":
-                                    if ((values.GeneralValueType== "LARGESTRING") || (values.GeneralValueType=="TEXT")) {
-                                        title = ' = ("' + values.ValueString +'")';
-                                    } else if (values.GeneralValueType=="ENUM") { 
-										try {
-											var sEnum = [];
-											for (var i2=0;i2<values.ValueEnum.length;i2++) {
-												sEnum.push(i2b2.h.Escape(values.ValueEnum[i2]));
-											}
-											sEnum = sEnum.join("\", \"");
-											sEnum = ' =  ("'+sEnum+'")';
-											//tvChildren[i].html =  sEnum + "</div></div>"
-											title = sEnum;
-										} catch (e) {
-											
-										}
-									} else {
-										if (values.NumericOp == 'BETWEEN') {
-											title =  ' '+i2b2.h.Escape(values.ValueLow)+' - '+i2b2.h.Escape(values.ValueHigh);
-										} else {
-											switch(values.NumericOp) {
-											case "LT":
-												var numericOp = " < ";
-												break;
-											case "LE":
-												var numericOp = " <= ";
-												break;
-											case "EQ":
-												var numericOp = " = ";
-												break;
-											case "GT":
-												var numericOp = " > ";
-												break;
-											case "GE":
-												var numericOp = " >= ";
-												break;
-												
-											case "":
-												break;	
-											}
-											title =   numericOp +i2b2.h.Escape(values.Value);
-											if (!Object.isUndefined(values.UnitsCtrl))
-											{
-												title += " " + values.UnitsCtrl;				
-											}
-										}
-									}
-									break;
-								case "":
-									break;
-							}
-				}
+			var title = "";
+		
+			if (sdxConcept.origData.isModifier) {
+				var values = sdxConcept.ModValues;
+			} else  {
+				var values = sdxConcept.LabValues;				
+			}
+			if (values != null) {
+				title = i2b2.CRC.view.modLabvaluesCtlr.getTitleForValues(values,sdxConcept);
+			}
 			
 			if (sdxConcept.origData.isModifier) {
 
@@ -719,9 +664,6 @@ function i2b2_PanelController(parentCtrlr) {
 						break;
 					}
 				}
-				
-				
-				
 				
 				var hasContainer = false;
 				var data = sdxConcept.origData;
@@ -900,6 +842,80 @@ function i2b2_PanelController(parentCtrlr) {
 		this._redrawExclude(pd);
 	}
 
+// ================================================================================================== //
+	this._renameConceptByValueChooser = function(key, isModifier, pd) {
+		$('infoQueryStatusText').innerHTML = "";
+		$('infoQueryStatusChart').innerHTML = "";
+		$('infoQueryStatusReport').innerHTML = "";		
+
+		// remove the concept from panel
+		for (var i=0; i< pd.items.length; i++) {
+			if ((pd.items[i].origData.key == key)
+						  || (pd.items[i].itemNumber == key)) {
+				// found the concept to remove
+				var rto = pd.items[i];
+				break;
+			}
+		}
+		if (undefined===rto) { return; }
+		// rename the node in the treeview
+		var tvChildren = pd.tvRootNode.children
+		for (var i=0; i< tvChildren.length; i++) {
+			if (tvChildren[i].data.i2b2_SDX.itemNumber==key) {	
+				var tt = tvChildren[i].getContentHtml();
+				var tt2 = tt.substring(0, tt.lastIndexOf("gif\"/>")+6);
+				var tt3 = "";
+				if (isModifier) {
+					var values = rto.ModValues;
+
+					var modParent = rto.origData.parent;
+					while  (modParent != null)
+					{
+						if (modParent.isModifier)
+						{
+							modParent = modParent.parent;
+						} else {
+							break;
+						}
+					}
+
+					tt2 +=  modParent.name + " ["+ rto.origData.name;
+					tt3 =  "]";
+					rto.origData.newName =  modParent.name + " ["+ rto.origData.name;
+				} 
+				else  {
+					var values = rto.LabValues;				
+					tt2 +=  rto.origData.name;
+					rto.origData.newName =rto.origData.name;
+				}
+				tvChildren[i].html = tt2  + tt3 + "</div></div>"
+				rto.origData.newName +=  tt3 ;
+				
+				if (undefined  != values) {
+				    switch(values.MatchBy) {
+						case "FLAG":
+							var formattedText = values.formattedLabValues;
+							tvChildren[i].html = tt2 + ' = '+ formattedText + "</div></div>";
+							rto.origData.newName += ' = '+ formattedText;
+							break;
+						case "VALUE":
+							var formattedText = values.formattedLabValues;
+							tvChildren[i].html = tt2 + formattedText + tt3 + "</div></div>";
+							rto.origData.newName += formattedText + tt3;
+						case "":
+							break;
+					}
+				}
+				pd.tvRootNode.tree.draw();
+				break;
+			}
+		}
+		// remove this panel if it's empty
+		if (pd.items.length == 0) { this.doDelete(); }
+		// clear the query name if it was set
+		this.QTController.doSetQueryName.call(this,'');
+	}
+	
 // ================================================================================================== //
 	this._renameConcept = function(key, isModifier, pd) {
 		$('infoQueryStatusText').innerHTML = "";

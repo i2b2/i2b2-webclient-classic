@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<body>
+		<div style="margin: 0px 5% 12px; text-align: center;" id="valueContraintText">Use the rs identifier box to specify the variant for which to search.  When you begin typing in the search box below, a selection list will appear after you type the first three numbers.</div>
+		<div class="mlvBody">
+			<div class="mlvtop">
+				<div class="mlvInputGroup">
+					<div id="frmEnterRSID" style="width:570px;height:25px;">
+						<table><tr>
+						<td width="118px"><div style="width:100%;float:left; text-align:left; bottom: 0" id="frmEnterRSIDText"><b>rs identifier*:</b>  &nbsp;</div></td>
+						<td width="283px"><input id="frmEnterRSIDValue" style="width: 283px;height:22px;" class="strInput" value='rs' /></td>
+						<td width="208px"><div id="searchRSID" style="display:none"><img width="20px" src="assets/images/spin.gif"></div></td>
+						</tr></table>
+					</div>
+					<div id="frmEnterGeneName"><br />
+						<table><tr>
+						<td width="126px"><div style="width:100%;float:left; text-align:left; bottom: 0" id="frmEnterGeneNameText"><b>Gene Name*:</b>  &nbsp;</div></td>
+						<td width="283px"><input id="frmEnterGeneNameValue" style="width: 283px;height:22px;" class="strInput" value='rs' /></td>
+						<td width="205px"><div id="searchGeneName" style="display:none"><img width="20px" src="assets/images/spin.gif"></div></td>
+						</tr></table>
+					</div>
+					<div id="zygosityRSIDSpecificText" style="padding-top: 25px;">
+						Please note the zygosity options in the dropdown box. See the <a href="Javascript:void(0)" onclick="window.open('https://biobankportal.partners.org/mediawiki/index.php?title=Genotype_Data_Search#Query_for_patients_who_do_not_have_a_variant','infoPrintWindow','width=800,height=750,menubar=yes,resizable=yes,scrollbars=yes');return false;"><span style="font-size:12px;">wiki</span></a> on how to query for patients <i>without</i> a particular variant (homozygous for the reference/reference allele). The rs identifier that appears in the box after you start typing indicates the change from the reference (nucleotide on the left) to the alternate (nucleotide on the right) allele.
+					</div>
+					<div id="zygosityGeneSpecificText" style="padding-top: 25px;">
+						Please note the zygosity options in the dropdown box. See the <a href="Javascript:void(0)" onclick="window.open('https://biobankportal.partners.org/mediawiki/index.php?title=Genotype_Data_Search#Query_for_patients_who_do_not_have_a_variant','infoPrintWindow','width=800,height=750,menubar=yes,resizable=yes,scrollbars=yes');return false;"><span style="font-size:12px;">wiki</span></a> on how to query for patients <i>without</i> a particular variant (homozygous for the reference/reference allele).
+					</div>
+					<div id="ZygosityContainer" class="genomicsOptionsContainer">
+						<div id="zygosityText" style="width:112px;float:left; text-align:left; bottom: 0;"><b>Zygosity*:</b>  &nbsp;</div>
+						<div style="float:left;width:77%;">
+							<select id='zygosityTypes' multiple='multiple'  class="units" style="width: 285px;z-index: 3999; float:left;">
+								<option value="Heterozygous">Heterozygous (reference/alternate allele)</option>
+								<option value="Homozygous">Homozygous (reference/alternate allele)</option>
+								<option value="missing_zygosity">Missing (failed genotype clustering)</option>
+								<option value=""  class="disabled">Homozygous (reference/reference allele)</option>
+							</select>
+						</div>
+					</div>
+					<div id="consequenceContainer" style="display:none;" class="genomicsOptionsContainer">
+						<div style="width:112px;float:left; text-align:left; bottom: 0"><b>Consequence:</b>  &nbsp;</div>
+						<div style="float:left;width:77%;">
+						<select id='consequenceTypes' multiple='multiple' class="units" style="width: 285px;z-index: 3999; float:left;">
+						  <optgroup label="All protein-altering">
+							  <option value="Frameshift" class="consequenceOpt">Frameshift</option>
+							  <option value="missense" class="consequenceOpt">Missense</option>
+							  <option value="nonsense" class="consequenceOpt">Nonsense</option>
+							  <option value="start_loss" class="consequenceOpt">Start loss</option>
+							  <option value="stop_loss" class="consequenceOpt">Stop loss</option>
+						  </optgroup>
+						  <optgroup label="All others">
+							  <!-- <option value="">Select Protein Altering</option> -->
+							  <option value="3'UTR" class="consequenceOpt">3'UTR</option>
+							  <option value="5'UTR" class="consequenceOpt">5'UTR</option>
+							  <option value="downstream" class="consequenceOpt">Downstream (500 bases)</option>
+							  <option value="exon" class="consequenceOpt">Exon (Non-Coding)</option>
+							  <option value="In_frame" class="consequenceOpt">In-frame</option>
+							  <option value="intron" class="consequenceOpt">Intron</option>
+							  <option value="synonymous" class="consequenceOpt">Synonymous</option>
+							  <option value="upstream" class="consequenceOpt">Upstream (2 kilobases)</option>
+							  <option value="missing_consequence" class="consequenceOpt">Missing</option>
+						  </optgroup>
+						</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -215,12 +215,16 @@ i2b2.hive.communicatorFactory = function(cellCode){
 					  /* failure handler code */},
 		};
 		
-		var transaction = YAHOO.util.Connect.asyncRequest(
-				  'POST', sProxy_Url, myCallback, commOptions.postBody);
+		//BG commenting out next command as it makes extra web service call in wrong place
+		// var transaction = YAHOO.util.Connect.asyncRequest(
+				  // 'POST', sProxy_Url, myCallback, commOptions.postBody);
 		
 		if (commOptions.asynchronous) {
 			// perform an ASYNC query 
-		//	new Ajax.Request(sProxy_Url, commOptions);
+			//	new Ajax.Request(sProxy_Url, commOptions);
+			//BG adding next command as it makes required web service call in right place
+			var transaction = YAHOO.util.Connect.asyncRequest(
+				  'POST', sProxy_Url, myCallback, commOptions.postBody);
 			return true;
 		} else { 
 			// perform a SYNC query 
@@ -256,12 +260,13 @@ i2b2.hive.communicatorFactory = function(cellCode){
 				}
 			}
 
+			//BG commenting out next if block as it adds extra log entry in the xml debug window
 			// send the result message to the callback function
-			if (i2b2.PM.login_debugging === undefined || (i2b2.PM.login_debugging && !i2b2.PM.login_debugging_suspend)){
-				// broadcast a debug message to any sniffers/tools
-				var sniffPackage = i2b2.h.BuildSniffPack(execBubble.cellName, execBubble.funcName, cbMsg, execBubble.reqOrigin);
-				execBubble.self._SniffMsg.fire(sniffPackage);
-			}
+			// if (i2b2.PM.login_debugging === undefined || (i2b2.PM.login_debugging && !i2b2.PM.login_debugging_suspend)){
+				// // broadcast a debug message to any sniffers/tools
+				// var sniffPackage = i2b2.h.BuildSniffPack(execBubble.cellName, execBubble.funcName, cbMsg, execBubble.reqOrigin);
+				// execBubble.self._SniffMsg.fire(sniffPackage);
+			// }
 
 			// attach the parse() function
 			if (cbMsg.error || !execBubble.self._commData[execBubble.funcName]) {
