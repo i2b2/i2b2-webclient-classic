@@ -3566,7 +3566,14 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
         return true;
     }
 	
-	this.PrintQueryTemplate = "";
+	this.PrintQueryTemplate = "<head>"+
+			"<title>Query Report</title>"+
+			//"<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'  type='text/css'>"+
+			"<link rel='stylesheet' TYPE='text/css' href='js-i2b2/cells/CRC/assets/print_query.css'>"+
+			"<link href='js-ext/c3code/c3.css' rel='stylesheet' type='text/css'>"+
+			"</head>"+
+			"<body>"+
+			"</body>";
 			
 	this.PrintQueryBody = 
 			"<div id=\"QueryReportLoading\"><img src=\"js-i2b2/cells/CRC/assets/loading.gif\" alt=\"Loading\"/></div>"+
