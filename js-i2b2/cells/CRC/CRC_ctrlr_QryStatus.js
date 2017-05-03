@@ -497,13 +497,15 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 		if (private_singleton_isRunning) {
 			try {
 				var self = i2b2.CRC.ctrlr.currentQueryStatus;
-				i2b2.CRC.ctrlr.history.queryDeleteNoPrompt(self.QM.id);
-					clearInterval(private_refreshInterrupt);
-					private_refreshInterrupt = false;
-					private_singleton_isRunning = false;
-					$('runBoxText').innerHTML = "Run Query";
-					self.dispDIV.innerHTML += '<div style="clear:both; height:16px; line-height:16px; text-align:center; color:r#ff0000;">QUERY CANCELLED</div>';
-					i2b2.CRC.ctrlr.currentQueryStatus = false; 
+				if(self.QM.id !== false){ // WEBCLIENT-211
+					i2b2.CRC.ctrlr.history.queryDeleteNoPrompt(self.QM.id);
+				}
+				clearInterval(private_refreshInterrupt);
+				private_refreshInterrupt = false;
+				private_singleton_isRunning = false;
+				$('runBoxText').innerHTML = "Run Query";
+				self.dispDIV.innerHTML += '<div style="clear:both; height:16px; line-height:16px; text-align:center; color:r#ff0000;">QUERY CANCELLED</div>';
+				i2b2.CRC.ctrlr.currentQueryStatus = false; 
 			} catch (e) {}	
 		}
 	}
@@ -513,6 +515,7 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 		if (private_singleton_isRunning) { return false; }
 		private_singleton_isRunning = true;
 		self.dispDIV.innerHTML = '<b>Processing Query: "'+this.name+'"</b>';
+		self.QM.id = false; // WEBCLIENT-211
 		self.QM.name = this.name; 
 		self.QRS = {};
 		 self.QI = {};
@@ -623,7 +626,9 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 						private_singleton_isRunning = false;
 					} else {
 						// another poll is required
-						setTimeout("i2b2.CRC.ctrlr.currentQueryStatus.pollStatus()", this.polling_interval);
+						if(i2b2.CRC.ctrlr.currentQueryStatus !== false){ // WEBCLIENT-211
+							setTimeout("i2b2.CRC.ctrlr.currentQueryStatus.pollStatus()", this.polling_interval);
+						}
 					}				
 				}
 			} catch(e){
