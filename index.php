@@ -7,7 +7,9 @@
 (does not use SimpleXML library)
 
 	Author: Nick Benik
-	Last Revised: 01-27-16
+	Contributors: Nich Wattanasin
+				  Mike Mendis
+	Last Revised: 05-03-17
 
 *****************************************************************
 
@@ -21,6 +23,9 @@ New Feature: 01-27-16 (nw096):
 
 	** If there are other cells/URLs that you connect to that is not where your PM Cell lives, you will need
 	   to add that server's hostname to the $WHITELIST array below.
+	   
+Update: 05-03-17 (nw096):
+	- the automatic detection of $WHITELIST URLs from i2b2_config_data.js now supports ports (bug fix)
 
 */
 
@@ -60,7 +65,7 @@ if($config_file){
 foreach($matches as $match){
   $match = preg_replace('/\s+/', '', $match); // remove all whitespace
   $match = rtrim($match, ','); // remove trailing comma, if any
-  $regex = "/(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,5}\/?/";
+  $regex = "/(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,5}(\:[0-9]{2,5})*\/?/";
   if(preg_match($regex, $match, $url)) { // match hostname
     array_push($WHITELIST, $url[0]);
   }
