@@ -471,6 +471,7 @@ function QueryToolController() {
 	this.doQueryRun = function() {
 		// function to build and run query 
 		if (i2b2.CRC.ctrlr.currentQueryStatus != false && i2b2.CRC.ctrlr.currentQueryStatus.isQueryRunning()) { 
+			i2b2.CRC.ctrlr.deleteCurrentQuery.cancelled = true;
 			i2b2.CRC.ctrlr.currentQueryStatus.cancelQuery();
 			i2b2.CRC.ctrlr.currentQueryStatus = false;
 			//alert('A query is already running.\n Please wait until the currently running query has finished.');
