@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<body>
+		<div style="margin: 0px 5% 12px; text-align: center;" id="valueContraintText">Select a Positive Predictive Value (PPV) for this algorithm.  Higher PPVs will include fewer false positives but will include fewer patients.  For example, a PPV of 0.90 will include approximately 10% false positives. Click here for more information about PPVs.</div>
+		<div class="mlvBody">
+			<div class="mlvtop">
+				<div class="mlvModesGroup" style="display:none;">
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeNONE" value="NO_VALUE" type="radio" checked="checked" />
+						No value</div>
+					<div class="mlvMode">
+						<input name="mlvfrmType" id="mlvfrmTypeVALUE" value="BY_VALUE" type="radio" />
+						By value</div>
+				</div>
+				<div class="mlvInputGroup">
+					<div id="mlvfrmEnterPPV" style="display:inline-block">Please select a value:<br />
+						<select id="mlvfrmPPVValue" class="PPVInput" size="5" style="width: 300px;">
+							<option value="">Loading...</option>
+						</select>
+					</div>
+					<div style="text-align:center;float:right;margin-left:25px;margin-top:-15px;">
+						<div style="width:202px;font-weight: bold;font-size: 14px;font-family: 'Open Sans', sans-serif;">Selected PPV: <span id="ppvSelected" style="color:#2987a2;font-size: 22px"></span></div>
+						<div style="width:202px;">
+							<div style="border-left: 1px solid #80b5c5;border-top: 1px solid #80b5c5;font-size: 13px;color: #226a80;background: #ecfbff;width:120px;line-height:25px;float:left">Specificity</div>
+							<div style="border-right: 1px solid #80b5c5;border-top: 1px solid #80b5c5;font-size: 13px;color: #226a80;background: #ecfbff;width:80px;line-height:25px;float:right"><span id="ppvSpecificity"></span></div>
+						</div>
+						<div style="width:202px;">
+							<div style="border-left: 1px solid #80b5c5;font-size: 13px;color: #226a80;background: #fff;width:120px;line-height:25px;float:left">Sensitivity</div>
+							<div style="border-right: 1px solid #80b5c5;font-size: 13px;color: #226a80;background: #fff;width:80px;line-height:25px;float:right"><span id="ppvSensitivity"></span></div>
+						</div>
+						<div style="width:202px;">
+							<div style="border-left: 1px solid #80b5c5;border-bottom: 1px solid #80b5c5;font-size: 13px;color: #226a80;background: #ecfbff;width:120px;line-height:25px;float:left"># of Patients</div>
+							<div style="border-right: 1px solid #80b5c5;border-bottom: 1px solid #80b5c5;font-size: 13px;color: #226a80;background: #ecfbff;width:80px;line-height:25px;float:right"><span id="ppvPatients"></span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

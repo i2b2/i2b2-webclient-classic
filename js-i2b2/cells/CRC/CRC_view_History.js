@@ -20,26 +20,38 @@ i2b2.CRC.view.history.showOptions = function(subScreen){
 	if (!this.modalOptions) {
 		var handleSubmit = function(){
 			// submit value(s)
-			if (this.submit()) {
-				if ($('HISTsortOrderASC').checked) {
-					tmpValue = 'ASC';
+			var value = $('HISTMaxQryDisp').value;
+			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10))){
+				if(parseInt(value, 10) > 0){
+					if (this.submit()) {
+						if ($('HISTsortOrderASC').checked) {
+							tmpValue = 'ASC';
+						}
+						else {
+							tmpValue = 'DESC';
+						}
+						i2b2.CRC.view['history'].params.sortOrder = tmpValue;
+						if ($('HISTsortByNAME').checked) {
+							tmpValue = 'NAME';
+						}
+						else {
+							tmpValue = 'DATE';
+						}
+						i2b2.CRC.view['history'].params.sortBy = tmpValue;
+						tmpValue = parseInt($('HISTMaxQryDisp').value, 10);
+						i2b2.CRC.view['history'].params.maxQueriesDisp = tmpValue;
+						// requery the history list
+						i2b2.CRC.ctrlr.history.Refresh();
+					}
+				} else {
+					alert('Please enter number greater than 0 for Maximum Children to Display.');
+					$('HISTMaxQryDisp').style.border = "2px inset red";
 				}
-				else {
-					tmpValue = 'DESC';
-				}
-				i2b2.CRC.view['history'].params.sortOrder = tmpValue;
-				if ($('HISTsortByNAME').checked) {
-					tmpValue = 'NAME';
-				}
-				else {
-					tmpValue = 'DATE';
-				}
-				i2b2.CRC.view['history'].params.sortBy = tmpValue;
-				tmpValue = parseInt($('HISTMaxQryDisp').value, 10);
-				i2b2.CRC.view['history'].params.maxQueriesDisp = tmpValue;
-				// requery the history list
-				i2b2.CRC.ctrlr.history.Refresh();
+			} else {
+				alert('Please enter a valid number for Maximum Queries to Display.');
+				$('HISTMaxQryDisp').style.border = "2px inset red";
 			}
+			
 		}
 		var handleCancel = function(){
 			this.cancel();
