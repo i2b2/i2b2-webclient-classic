@@ -24,7 +24,16 @@
 		"CRC_view_Status.js",
 		"CRC_view_QueryReport.js",
 		"CRC_view_modLabRange.js",
-		"i2b2_msgs.js"
+		"i2b2_msgs.js",
+		"ModLabValues/CRC_ModLabValues_config_data.js",
+		"ModLabValues/CRC_view_ModLabValues_ctrlr.js",
+		"ModLabValues/CRC_view_GENOTYPE.js",
+		"ModLabValues/CRC_view_NUMBER.js",
+		"ModLabValues/CRC_view_STR.js",
+		"ModLabValues/CRC_view_LRGSTR.js",
+		"ModLabValues/CRC_view_ENUM.js",
+		"ModLabValues/CRC_view_NODATATYPE.js",
+		"ModLabValues/CRC_view_PPV.js"
 	],
 	files_updated: [
 		{origName: "i2b2_msgs.js", newName: "i2b2_msgs-Ver1_3.js", versionLevel: 1.3},
