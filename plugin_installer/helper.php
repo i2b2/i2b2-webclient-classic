@@ -81,10 +81,12 @@ function checkAuth($r, $d, $u, $k, $v, $dbg) {
 }
 
 function get_isAdmin($xml) {
-# note that the response to this 'getUserAuth using the sessionKey' somehow always states '<is_admin>false</is_admin>' for un-associated (with any proj) 'admin'
-# however, associated common users will always have '<role>' elements even though they also have '<is_admin>false</is_admin>' in response,
-# whereas un-associated common users cannot log into either admin or webclient, and therefore cannot launch this installer
-# furthermore, if this invocation using mis-appropriated user name & session key would result in 'Session invalid'
+
+	// note that the response to this 'getUserAuth using the sessionKey' somehow always states '<is_admin>false</is_admin>' for un-associated (with any proj) 'admin'
+	// however, associated common users will always have '<role>' elements even though they also have '<is_admin>false</is_admin>' in response,
+	// whereas un-associated common users cannot log into either admin or webclient, and therefore cannot launch this installer
+	// furthermore, if this invocation using mis-appropriated user name & session key would result in 'Session invalid'
+
     if (false === stripos($xml, '<is_admin>true</is_admin>')) {
         if (false === stripos($xml, '<status type="ERROR">Session invalid</status>')  &&
             false === stripos($xml, '<user_name>demo</user_name>') && #in case of hijacked, un-removed & un-assoxiated built-in 'demo' user
