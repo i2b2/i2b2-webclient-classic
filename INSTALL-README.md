@@ -13,13 +13,14 @@ The i2b2 Admin Module is used by administrators to setup and maintain the i2b2 e
         adminOnly: true,
 
 
-2. i2b2\_loader.js - Comment out the following lines in the list of cells to load.
-
+2. i2b2\_loader.js - Comment out each of the following lines in the list of cells to load. 
 
         { "code: "ONT" },
         { "code: "CRC" },
         { "code: "WORK" },
 
 <br />
+To comment out the above lines out you need to add '//' in front of each line. You cannot do a multi-line comment tag.
+<br/>
 
 [Chapter 6. i2b2 Administration Module Install](http://community.i2b2.org/wiki/display/getstarted/Chapter+6.+i2b2+Administration+Module+Install) and [Chapter 14. Initial Setup of i2b2 in Admin](http://community.i2b2.org/wiki/display/getstarted/Chapter+6.+i2b2+Administration+Module+Install) of the i2b2 Installation Guide contain additional information on setting up the Admin module in your environment.
