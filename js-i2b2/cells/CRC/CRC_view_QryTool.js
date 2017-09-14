@@ -56,7 +56,7 @@ i2b2.CRC.view.QT.showOptions = function(subScreen) {
 //				alert(msgError);
 //				return false;
 //			}
-			//swc20170914 fixed bugs that let NaN & fractional number slip thru, and typo in error msg
+			//swc20170914 fixed bugs that let NaN & fractional number slip thru, and typo in error msg 
 			var tmpVal = Number($('QryTimeout').value);
 			var intVal = parseInt($('QryTimeout').value);
 			//alert("your specified query timeout period is " + tmpVal + "\nits integer value is " + intVal); //for debug only
