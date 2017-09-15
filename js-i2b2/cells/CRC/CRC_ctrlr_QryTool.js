@@ -105,7 +105,7 @@ function QueryToolController() {
 				dObj.name = i2b2.h.getXNodeVal(results.refXML,'name');
 				this.doSetQueryName(dObj.name); // BUG FIX - WEBCLIENT-102
 				dObj.timing = i2b2.h.XPath(qd[0],'descendant-or-self::query_timing/text()');
-				dObj.timing = dObj.timing[0].nodeValue;
+//				dObj.timing = dObj.timing[0].nodeValue; //will cause a null-pointer or undefined obj exception when dObj.timing has no length!
 				if($("crcQueryToolBox.bodyBox")){
 					var userId = i2b2.h.getXNodeVal(results.refXML,'user_id');
 					var existingUserIdElemList = $$("#userIdElem");
@@ -119,7 +119,8 @@ function QueryToolController() {
 				}
 
 				//i2b2.CRC.view.QT.queryTimingButtonset("label", dObj.timing);
-				i2b2.CRC.view.QT.setQueryTiming(dObj.timing);
+//				i2b2.CRC.view.QT.setQueryTiming(dObj.timing); //must check to prevent null-pointer or undefined obj exception that'll result in hang
+				if (dObj.timing && 0 < dObj.timing.length) i2b2.CRC.view.QT.setQueryTiming(dObj.timing[0].nodeValue);//to prevent null-ptr or undefined exception   
 				dObj.specificity = i2b2.h.getXNodeVal(qd[0],'specificity_scale');
 				//dObj.panels = new Array(new Array());
 	
