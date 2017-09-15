@@ -547,7 +547,8 @@ function QueryToolController() {
 	this._queryRun = function(inQueryName, options) {
 		// make sure name is not blank
 		if (inQueryName.blank()) { 
-			alert('Cannot run query with without providing a name!');
+			//alert('Cannot run query with without providing a name!');
+			alert('Please enter a name for this query.');
 			return;
 		}
 	//	if(!options.chk_PRS && !options.chk_PRC  && !options.chk_ENS) {
