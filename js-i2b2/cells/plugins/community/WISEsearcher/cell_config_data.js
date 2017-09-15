@@ -23,6 +23,7 @@
  * 20110812 S. Wayne Chan 	Developed initial version.  
  + 20111028 S. Wayne Chan   Added “copyright” & “license/disclaimer” sections in header following UMMS legal signoff.
  + 20151208 S. Wayne Chan   Added "Workplace" & "WISE" categories, changed "standard" to "custom" category, for webclient v.1.7.0.7 conformance.
+ + 20170912 S. Wayne Chan   Added icons
  *===============================================================================================================================================================================================
  */
 
@@ -36,6 +37,7 @@
 		short_name: "WISE Searcher",
 		name: "Workplace Items Sharing Enhancement - Searcher",
 		description: "This plugin facilitates searching for similar Workplace items (folder, query, patient set, etc.) within the web client framework.",
+		icons: {size32x32: "WISE_icon_32x32.png", size16x16: "WISE_icon_16x16.png"},
 		category: ["celless", "plugin", "custom", "Workplace", "WISE"],
 		plugin: {
 			isolateHtml: false,  
