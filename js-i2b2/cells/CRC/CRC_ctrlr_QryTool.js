@@ -3187,7 +3187,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 						var chart = c3.generate({
 							size: { 
 								width: 800,
-								height: 250
+//								height: 250
+								height: 260 //swc20171027 updated to prevent x-axis label clipping
 							},
 							data: {
 								x: 'x',
@@ -3226,9 +3227,12 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 								x: {
 									type: 'category',
 									tick: {
-										rotate: 25
+//										rotate: 25
+										rotate: -45,//swc20171027 updated to improve readability
+										multiline: false //swc20171027 added to improve readability (prevents random wrapping of labels)
 									},
-									height: 45
+//									height: 45
+									height: 55 //swc20171027 updated to prevent x-axis label clipping
 								},
 								y: {
 									label: {
@@ -3433,7 +3437,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 							bindto: '#AllGraphs #' + sDivName,
 							size: { 
 								width: 700,
-								height: 250
+//								height: 250
+								height: 260 //swc20171027 updated to prevent x-axis label clipping
 							},
 							data: {
 								x: 'x',
@@ -3453,9 +3458,12 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 								x: {
 									type: 'category',
 									tick: {
-										rotate: 25
+//										rotate: 25
+										rotate: -45,//swc20171027 updated to improve readability
+										multiline: false //swc20171027 added to improve readability (prevents random wrapping of labels)
 									},
-									height: 45
+//									height: 45
+									height: 55 //swc20171027 updated to prevent x-axis label clipping
 								},
 								y: {
 									label: {
