@@ -105,7 +105,7 @@ function QueryToolController() {
 				dObj.name = i2b2.h.getXNodeVal(results.refXML,'name');
 				this.doSetQueryName(dObj.name); // BUG FIX - WEBCLIENT-102
 				dObj.timing = i2b2.h.XPath(qd[0],'descendant-or-self::query_timing/text()');
-				dObj.timing = dObj.timing[0].nodeValue;
+//				dObj.timing = dObj.timing[0].nodeValue; //will cause a null-pointer or undefined obj exception when dObj.timing has no length!
 				if($("crcQueryToolBox.bodyBox")){
 					var userId = i2b2.h.getXNodeVal(results.refXML,'user_id');
 					var existingUserIdElemList = $$("#userIdElem");
@@ -119,7 +119,8 @@ function QueryToolController() {
 				}
 
 				//i2b2.CRC.view.QT.queryTimingButtonset("label", dObj.timing);
-				i2b2.CRC.view.QT.setQueryTiming(dObj.timing);
+//				i2b2.CRC.view.QT.setQueryTiming(dObj.timing); //must check to prevent null-pointer or undefined obj exception that'll result in hang
+				if (dObj.timing && 0 < dObj.timing.length) i2b2.CRC.view.QT.setQueryTiming(dObj.timing[0].nodeValue);//to prevent null-ptr or undefined exception   
 				dObj.specificity = i2b2.h.getXNodeVal(qd[0],'specificity_scale');
 				//dObj.panels = new Array(new Array());
 	
@@ -547,7 +548,8 @@ function QueryToolController() {
 	this._queryRun = function(inQueryName, options) {
 		// make sure name is not blank
 		if (inQueryName.blank()) { 
-			alert('Cannot run query with without providing a name!');
+			//alert('Cannot run query with without providing a name!');
+			alert('Please enter a name for this query.');
 			return;
 		}
 	//	if(!options.chk_PRS && !options.chk_PRC  && !options.chk_ENS) {
@@ -3185,7 +3187,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 						var chart = c3.generate({
 							size: { 
 								width: 800,
-								height: 250
+//								height: 250
+								height: 260 //swc20171027 updated to prevent x-axis label clipping
 							},
 							data: {
 								x: 'x',
@@ -3224,9 +3227,12 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 								x: {
 									type: 'category',
 									tick: {
-										rotate: 25
+//										rotate: 25
+										rotate: -45,//swc20171027 updated to improve readability
+										multiline: false //swc20171027 added to improve readability (prevents random wrapping of labels)
 									},
-									height: 45
+//									height: 45
+									height: 55 //swc20171027 updated to prevent x-axis label clipping
 								},
 								y: {
 									label: {
@@ -3431,7 +3437,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 							bindto: '#AllGraphs #' + sDivName,
 							size: { 
 								width: 700,
-								height: 250
+//								height: 250
+								height: 260 //swc20171027 updated to prevent x-axis label clipping
 							},
 							data: {
 								x: 'x',
@@ -3451,9 +3458,12 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 								x: {
 									type: 'category',
 									tick: {
-										rotate: 25
+//										rotate: 25
+										rotate: -45,//swc20171027 updated to improve readability
+										multiline: false //swc20171027 added to improve readability (prevents random wrapping of labels)
 									},
-									height: 45
+//									height: 45
+									height: 55 //swc20171027 updated to prevent x-axis label clipping
 								},
 								y: {
 									label: {

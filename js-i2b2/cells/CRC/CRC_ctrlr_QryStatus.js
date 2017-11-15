@@ -497,7 +497,8 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 		if (private_singleton_isRunning) {
 			try {
 				var self = i2b2.CRC.ctrlr.currentQueryStatus;
-				if(i2b2.CRC.ctrlr.deleteCurrentQuery.QM !== false){ // WEBCLIENT-211
+				//if(i2b2.CRC.ctrlr.deleteCurrentQuery.QM !== false){ // WEBCLIENT-211
+				if (i2b2.CRC.ctrlr.deleteCurrentQuery && i2b2.CRC.ctrlr.deleteCurrentQuery.QM !== false) { // BD2K/BD2K-79 & I2B2/WEBCLIENT-211
 					i2b2.CRC.ctrlr.history.queryDeleteNoPrompt(i2b2.CRC.ctrlr.deleteCurrentQuery.QM);
 				}
 				clearInterval(private_refreshInterrupt);

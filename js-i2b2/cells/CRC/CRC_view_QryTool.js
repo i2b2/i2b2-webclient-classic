@@ -48,11 +48,20 @@ i2b2.CRC.view.QT.showOptions = function(subScreen) {
 	//		if (!isNaN(tmpValue) && tmpValue <= 0) {
 	//			msgError += "The max number of Children to display must be a whole number larger then zero.\n";
 	//		}
-			var tmpValue = parseInt($('QryTimeout').value,10);
-			if (!isNaN(tmpValue) && tmpValue <= 0) {
-				msgError += "The the query timeout period must be a whole number larger then zero.\n";
-			}
-			if (msgError) {
+//			var tmpValue = parseInt($('QryTimeout').value,10);
+//			if (!isNaN(tmpValue) && tmpValue <= 0) {
+//				msgError += "The the query timeout period must be a whole number larger then zero.\n";
+//			}
+//			if (msgError) {
+//				alert(msgError);
+//				return false;
+//			}
+			//swc20170914 fixed bugs that let NaN & fractional number slip thru, and typo in error msg 
+			var tmpVal = Number($('QryTimeout').value);
+			var intVal = parseInt($('QryTimeout').value);
+			//alert("your specified query timeout period is " + tmpVal + "\nits integer value is " + intVal); //for debug only
+			if (isNaN(tmpVal) || tmpVal != intVal || tmpVal < 1) {
+				msgError += "Please note that the query timeout period must be a plain positive whole number (in seconds).\n";
 				alert(msgError);
 				return false;
 			}
