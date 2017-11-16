@@ -1,0 +1,19 @@
+{
+	"id" : "ExampComm",
+	"short_name" : "Dev Example #4 - Communicator",
+	"name" : "Development Example #4 - Communicator Plugin",
+	"description" : "An example plugin that demonstrates how to develop a plugin that communicates with the i2b2 Web Client",
+	"group" : "examples",
+	"plugin_version" : "1.4",
+	"changes" : "Fixed issue with the plugin&#39;s manifest.",
+	"i2b2_version" : "1.7.07",
+	"roles" : "[ 'DATA_OBFSC', 'DATA_AGG', 'DATA_LDS', 'DATA_DEID', 'DATA_PROT' ]", 
+	"authors" : "[ 'Nick Benik', 'Griffin Weber, MD, Ph.D' ]",
+	"institutions" : "[ 'Beth Isreal Deaconess Medical Center' ]",
+	"keywords" : "[ 'example', 'communicator', 'webclient' ]",
+	"package" : "https://github.com/i2b2plugins/wc-devExamp4-comm/archive/v1.4.zip",
+	"userManual" : "",
+	"installGuide" : "",
+	"configuration" : "None",
+	"wikiSite" : ""
+}
