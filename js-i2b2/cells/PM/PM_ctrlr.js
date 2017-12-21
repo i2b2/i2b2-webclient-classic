@@ -229,7 +229,7 @@ i2b2.PM._processUserConfig = function (data) {
 			alert("Requires ADMIN role, please contact your system administrator");
 		try { i2b2.PM.view.modal.login.show(); } catch(e) {}
 		return true;
-	} else if (i2b2.PM.model.admin_only) {	
+	} else if ((i2b2.PM.model.admin_only)  || (i2b2.PM.model.isAdmin && projs.length == 0)) {	
 		// default to the first project
 		$('crcQueryToolBox').hide(); 
 		i2b2.PM.model.login_project = ""; //i2b2.h.XPath(projs[0], 'attribute::id')[0].nodeValue;
@@ -256,7 +256,7 @@ i2b2.PM._processUserConfig = function (data) {
 		}
 		try { i2b2.PM.view.modal.login.show(); } catch(e) {}
 		return true;
-	} else if (projs.length == 1) {
+	} else if ((projs.length == 1)  && (!i2b2.PM.model.isAdmin)) {
 		// default to the only project the user has access to
 		i2b2.PM.model.login_project = i2b2.h.XPath(projs[0], 'attribute::id')[0].nodeValue;
 		i2b2.PM.model.login_projectname = i2b2.h.getXNodeVal(projs[0], "name");
@@ -405,6 +405,15 @@ i2b2.PM.view.modal.projectDialog = {
 			pno.appendChild(pnt);
 			pli.appendChild(pno);			
 		}
+
+		// Add admin project
+		if (i2b2.PM.model.isAdmin) {
+                        pno = document.createElement('OPTION');
+                        pno.setAttribute('value', 'admin_HY!5Axu&');
+                        var pnt = document.createTextNode('Administrator');
+                        pno.appendChild(pnt);
+                        pli.appendChild(pno);
+		}
 		// select first project
 		$('loginProjs').selectedIndex = 0;
 
@@ -421,6 +430,7 @@ i2b2.PM.view.modal.projectDialog = {
 		var projectCode = p.options[p.selectedIndex].value;
 		
 		// show details
+		if (projectCode != 'admin_HY!5Axu&')
 		for (var i in i2b2.PM.model.projects[projectCode].details) {
 			// ignore "announcement" param
 			if (i != "announcement") {
@@ -451,9 +461,16 @@ i2b2.PM.view.modal.projectDialog = {
 			ProjId = p.options[p.selectedIndex].value;
 			ProjName = p.options[p.selectedIndex].text;
 		}
+
+ i2b2.PM.view.modal.projectDialog.yuiDialog.destroy();
+		//If admin project goto admin 
+		if (ProjId == 'admin_HY!5Axu&') {
+			$('crcQueryToolBox').hide(); 
+			i2b2.PM.model.login_project = ""; //i2b2.h.XPath(projs[0], 'attribute::id')[0].nodeValue;
+			i2b2.PM.model.admin_only = true;
+		} else {
 		i2b2.PM.model.login_project = ProjId;
 		i2b2.PM.model.login_projectname = ProjName;
-		i2b2.PM.view.modal.projectDialog.yuiDialog.destroy();
 		try {
 			var announcement = i2b2.PM.model.projects[ProjId].details.announcement;
 			if (announcement) {
@@ -461,6 +478,7 @@ i2b2.PM.view.modal.projectDialog = {
 				return;
 			}
 		} catch(e) {}
+		}
 		i2b2.PM._processLaunchFramework();
 	}
 }
