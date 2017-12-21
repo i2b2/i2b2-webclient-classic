@@ -232,6 +232,7 @@ i2b2.PM._processUserConfig = function (data) {
 	} else if ((i2b2.PM.model.admin_only)  || (i2b2.PM.model.isAdmin && projs.length == 0)) {	
 		// default to the first project
 		$('crcQueryToolBox').hide(); 
+		i2b2.PM.model.admin_only = true;
 		i2b2.PM.model.login_project = ""; //i2b2.h.XPath(projs[0], 'attribute::id')[0].nodeValue;
 		i2b2.PM._processLaunchFramework();
 	} else 	if (projs.length == 0) {
