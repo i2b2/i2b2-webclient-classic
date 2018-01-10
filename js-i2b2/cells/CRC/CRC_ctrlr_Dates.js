@@ -5,7 +5,7 @@
  * @author		Nick Benik, Griffin Weber MD PhD
  * @version 	1.3
  * ----------------------------------------------------------------------------------------
- * updated 9-15-08: RC4 launch [Nick Benik] 
+ * updated 01-10-18 by Mauro Bucalo
  */
 console.group('Load & Execute component file: CRC > ctrlr > Dates');
 console.time('execute time');
@@ -290,7 +290,8 @@ i2b2.CRC.ctrlr.dateConstraint = {
 			$("item_constraintDateEnd").select();
 			var sDateValue = $('item_constraintDateEnd').value;
 		}
-		var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+		//var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+		var rxDate = /((((0[13578]|1[02])\/(0[1-9]|1[0-9]|2[0-9]|3[01]))|((0[469]|11)\/(0[1-9]|1[0-9]|2[0-9]|3[0]))|((02)(\/(0[1-9]|1[0-9]|2[0-8]))))\/(19([6-9][0-9])|20([0-9][0-9])))|((02)\/(29)\/(19(6[048]|7[26]|8[048]|9[26])|20(0[048]|1[26]|2[048])))/
 		if (rxDate.test(sDateValue)) {
 			var aDate = sDateValue.split(/\//);
 			this.ItemDateConstrainCal.setMonth(aDate[0]-1);
@@ -363,7 +364,8 @@ i2b2.CRC.ctrlr.dateConstraint = {
 		// push the dates into the data model
 		var sDate = new String;
 		var sDateError = false;
-		var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+		//var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+		var rxDate = /((((0[13578]|1[02])\/(0[1-9]|1[0-9]|2[0-9]|3[01]))|((0[469]|11)\/(0[1-9]|1[0-9]|2[0-9]|3[0]))|((02)(\/(0[1-9]|1[0-9]|2[0-8]))))\/(19([6-9][0-9])|20([0-9][0-9])))|((02)\/(29)\/(19(6[048]|7[26]|8[048]|9[26])|20(0[048]|1[26]|2[048])))/
 		var DateRecord = {};
 		var dm = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex];
 		this.currentPanelIndex = panelIndex;
@@ -463,7 +465,8 @@ i2b2.CRC.ctrlr.dateConstraint = {
 		// push the date into the data model
 		var sDate = new String;
 		var sDateError = false;
-		var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+		//var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+		var rxDate = /((((0[13578]|1[02])\/(0[1-9]|1[0-9]|2[0-9]|3[01]))|((0[469]|11)\/(0[1-9]|1[0-9]|2[0-9]|3[0]))|((02)(\/(0[1-9]|1[0-9]|2[0-8]))))\/(19([6-9][0-9])|20([0-9][0-9])))|((02)\/(29)\/(19(6[048]|7[26]|8[048]|9[26])|20(0[048]|1[26]|2[048])))/
 		var DateRecord = {};
 		var dm = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex];
 		this.currentPanelIndex = panelIndex;
