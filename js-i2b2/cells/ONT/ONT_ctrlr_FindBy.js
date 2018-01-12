@@ -5,7 +5,7 @@
  * @author		Nick Benik, Griffin Weber MD PhD
  * @version 	1.3
  * ----------------------------------------------------------------------------------------
- * updated 9-15-08: RC4 launch [Nick Benik] 
+ * updated 01-12-18: Mauro Bucalo
  */
 console.group('Load & Execute component file: ONT > ctrlr > FindBy');
 console.time('execute time');
@@ -173,6 +173,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				o.operator = i2b2.h.getXNodeVal(c[i2],'operator');
 				o.dim_code = i2b2.h.getXNodeVal(c[i2],'dimcode');
 				o.basecode = i2b2.h.getXNodeVal(c[i2],'basecode');
+				o.total_num = i2b2.h.getXNodeVal(c[i2],'totalnum');
 				// append the data node
 				var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
 				var renderOptions = {
