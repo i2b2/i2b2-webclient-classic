@@ -179,7 +179,7 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 	retHtml += sImgEvents;
 	retHtml += '>';
 	retHtml += '<IMG src="'+render.icon+'"/>'; 
-	if ($('ONTNAVshowPatientCounts').checked && sdxData.origData.total_num == 0)
+	if (($('ONTNAVshowPatientCounts').checked || $('ONTFINDshowPatientCounts').checked) && sdxData.origData.total_num == 0)
 	{
 		retHtml += "[";
 	}
@@ -191,7 +191,7 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 		console.warn('[SDX RenderHTML] no title was given in the creation options for an ONT>CONCPT node!');
 		retHtml += ' CONCPT '+id;
 	}
-	if ($('ONTNAVshowPatientCounts').checked)
+	if (($('ONTNAVshowPatientCounts').checked || $('ONTFINDshowPatientCounts').checked))
 	{
 		if (!Object.isUndefined(sdxData.origData.total_num)) {
 			retHtml += " - " + sdxData.origData.total_num;
