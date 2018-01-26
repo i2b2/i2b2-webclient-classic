@@ -39,7 +39,8 @@ i2b2.CRC.view.queryReport.showDisplay = function() {
 	$('infoQueryStatusReport').show();
 	// if($('infoQueryStatusReport').innerHTML=="")
 	$('infoQueryStatusReport').innerHTML=="";
-	i2b2.CRC.ctrlr.QT.queryReport(false,"",false);
+	//i2b2.CRC.ctrlr.QT.queryReport(false,"",false);
+	i2b2.CRC.ctrlr.QT.doPrintQueryNew(false,"",false);
 }
 // ================================================================================================== //
 
