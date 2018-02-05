@@ -432,8 +432,8 @@ i2b2.CRC.ctrlr.dateConstraint = {
 						var table_name = results.model[0].origData.table_name;
 					}
 				}
-				if(table_name.toLowerCase() == 'patient_dimension'){
-					delete dm.items[i].dateFrom;
+				 if(typeof(table_name) != "undefined" && table_name.toLowerCase() == 'patient_dimension'){
+ 					delete dm.items[i].dateFrom;
 					delete dm.items[i].dateTo;
 					alert("Date constraints are not allowed on patient dimension concepts and will not be set.");
 				}
