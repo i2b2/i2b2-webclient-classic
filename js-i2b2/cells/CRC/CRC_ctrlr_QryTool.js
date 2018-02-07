@@ -71,7 +71,486 @@ function QueryToolController() {
 		this.queryTiming = 'ANY';
 		this.doAddTemporal();
 		this.sCompiledResultsTest = "";  // snm0 - this is the text for the graph display
+        
+        // tdw9: 1707c - adding changes to clear to handle simple temporal query UI 
+        jQuery("#temporalUIToggleDiv").hide();                    //  hide temporal query mode toggle when clear is pressed.
+        jQuery("#toggleTemporalQueryModeSpan").html("Switch to Advanced Temporal Query"); // reset toggle button text
+        i2b2.CRC.view.QT.isShowingTemporalQueryUI        = false; //  tdw9: 1707c:show reset state, which is not temporal query
+        i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI = false; 
+        // hide new temporal sequence UI
+        jQuery("#outerTemporalSequenceUI").hide();
+        jQuery("#populationLabel").hide();
+        // show classic UI
+        jQuery("#queryBalloonBox").show(); // show baloons
+        var length = i2b2.CRC.ctrlr.QT.panelControllers.length;
+        for (var i = 0; i < length; i++)
+            i2b2.CRC.ctrlr.QT.panelControllers[i].refTiming.set('disabled', false);
+        jQuery(".qryPanel").show(); // make sure panels are visible
+        jQuery("#crc\\.innerQueryPanel").css('height', 'auto');   // set "crc.innerQueryPanel" height to be auto
+        
+        // re-initialize SIMPLE temporal query
+        i2b2.CRC.view.QT.deleteAllEvents();
+        i2b2.CRC.view.QT.resetTemporalQueryUI();
+
+        i2b2.CRC.view.QT.splitterDragged();    // tdw9: 1707c: resize query-timing button
+        // tdw9 1707c: end changes to handle SIMPLE temporal query UI
 	}
+
+
+
+	// ================================================================================================== //
+    // tdw9 1707c: clear only the temporal component of the ADVANCED query model
+    this.doClearTemporalComponent= function( ) 
+    {
+        // save the population component of the temporal query
+        var populationComponent = i2b2.CRC.model.queryCurrent.panels[0]
+		// function to clear query from memory
+		delete i2b2.CRC.model.queryCurrent;
+		i2b2.CRC.model.queryCurrent = {};
+		i2b2.CRC.ctrlr.QT.temporalGroup = 0; 
+		var dm = i2b2.CRC.model.queryCurrent;
+		dm.panels = [];
+		dm.panels[0] = populationComponent;
+		dm.panels[1] = new Array();
+		dm.panels[2] = new Array();
+		this.doSetQueryName.call(this,'');
+		this.doShowFrom(0);
+		this._redrawPanelCount();
+		this.queryNamePrompt = false;
+		this.queryIsDirty = true;
+		this.hasModifier = false;
+		$('infoQueryStatusText').innerHTML = "";
+		$('infoQueryStatusChart').innerHTML = "";
+		$('crc.temoralBuilder').hide();		
+		$('crc.innerQueryPanel').show();
+		this.panelControllers[0].refTitle.innerHTML =  'Group 1';
+		$("defineTemporal-button").innerHTML = "Population in which events occur";
+
+        // taken from the function i2b2.CRC.view.QT.clearTemportal
+        var t = defineTemporalButton.getMenu().getItems();
+	    if (t.length > 4) 
+        {
+		    defineTemporalButton.getMenu().clearContent();
+		    defineTemporalButton.getMenu().addItems([{ text: "Population in which events occur" , value: "0" }]);		 
+		    defineTemporalButton.getMenu().addItems([{ text: "Event 1" , value: "1" }]);	
+		    defineTemporalButton.getMenu().addItems([{ text: "Event 2" , value: "2" }]);	 
+		    defineTemporalButton.getMenu().addItems([{ text: "Define order of events" , value: "BUILDER" }]);	
+		    defineTemporalButton.getMenu().render();			
+	    }
+
+	    i2b2.CRC.view.QT.ResizeHeight();
+		$('temporalbuilders').innerHTML = "";
+		this.tenporalBuilders = -1;
+		this.queryTiming = 'ANY';
+		this.doAddTemporal();
+		this.sCompiledResultsTest = "";  // snm0 - this is the text for the graph display
+	}
+
+
+// ================================================================================================== //
+    // tdw9 1707: checks if an Event contains number constraints. 
+    this.eventContainsNumberConstraint =  function(qd)
+    {
+        for (var i=1; i<qd.length; i++) // qd[0] is the population. No need to check it.
+        {
+		    var panels = i2b2.h.XPath(qd[i], 'descendant::panel');
+            for (var j=0; j<panels.length; j++) 
+                if (parseInt(i2b2.h.getXNodeVal(panels[j],'total_item_occurrences')) > 1)
+                    return true;
+        }
+        return false;
+    };
+
+    this.eventContainsNonConceptItems =  function(qd)
+    {
+        for (var i=1; i<qd.length; i++) // qd[0] is the population. No need to check it.
+        {
+		    var panels = i2b2.h.XPath(qd[i], 'descendant::panel');
+            for (var j=0; j<panels.length; j++)
+            {
+                var items = i2b2.h.XPath(panels[j], 'descendant::item');
+                for ( var k = 0; k < items.length; k++ )
+                {
+                    var key = i2b2.h.getXNodeVal(items[k],'item_key');
+                    if (key.startsWith("query_master_id") || 
+                        key.startsWith("masterid") ||
+                        key.startsWith("patient_set_coll_id") ||
+                        key.startsWith("patient_set_enc_id"))
+                        return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    this.eventContainsNonModifierItemsInNonFirstPanels =  function(qd)
+    {
+        for (var i=1; i<qd.length; i++) // qd[0] is the population. Don't check it.
+        {
+		    var panels = i2b2.h.XPath(qd[i], 'descendant::panel');
+            for (var j=1; j<panels.length; j++) // skip the 1st panel, which can be a normal concept
+            {
+                var items = i2b2.h.XPath(panels[j], 'descendant::item');
+                for ( var k = 0; k < items.length; k++ ) 
+                {
+                    if (i2b2.h.XPath(items[k], 'constrain_by_modifier').length == 0)
+                        return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    // check to see if a non-first panel has timing other than "SAMEINSTANCENUM" (We currently do not allow Independent or Same Encounter because we only allow modifiers in these non-first panels)
+    this.eventContainsNonSameInstanceTimingInNonFirstPanels =  function(qd)
+    {
+        for (var i=1; i<qd.length; i++) // qd[0] is the population. Don't check it.
+        {
+		    var panels = i2b2.h.XPath(qd[i], 'descendant::panel');
+            for (var j=1; j<panels.length; j++) // skip the 1st panel
+            {
+                if (i2b2.h.getXNodeVal(panels[j], 'panel_timing') != "SAMEINSTANCENUM" ) 
+                        return true;
+           }
+        }
+        return false;
+    };
+
+
+    // parses the sequence and return the eventGraph is if it's valid. False otherwise
+    this.queryContainsValidSequence = function(refXML)
+    {
+        var parser = new TQueryEventGraphParser(refXML);
+        var graph = parser.parse();
+        if (typeof graph != "object") 
+            return false;
+        this.eventGraph = graph; // save graph to local
+        return graph;
+    };
+
+    this.doLoadSimpleTemporalQuery = function( qd, dObj, qm_id )
+    {
+        // show SIMPLE query UI
+        if (!i2b2.CRC.view.QT.isShowingTemporalQueryUI)         i2b2.CRC.view.QT.toggleTemporalQueryUI();
+        if (i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI)   
+        {
+            i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI = !i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI;
+            i2b2.CRC.view.QT.showNewTemporalUI();
+        }
+        i2b2.CRC.view.QT.loadPreviousQueryIntoNewTQ( qd, this.eventGraph, false, dObj, qm_id );
+
+        i2b2.CRC.view.QT.isTemporalQueryUIInResetState = false; // previous query is loaded, simple temporal query is no longer in the reset state
+        i2b2.CRC.view.QT.tutorialState = 0;                     // reset tutorial state
+        i2b2.CRC.view.QT.isTutorial = true;
+        i2b2.CRC.view.QT.toggleTutorial();                      // turn tutorial off
+    };
+
+    // tdw9: parses value constraint in Value Constraints and Modifier Constraints
+    this.parseValueConstraint = function( lvd )
+    {
+        lvd = lvd[0];
+        // pull the LabValue definition for concept
+        // extract & translate
+        var t = i2b2.h.getXNodeVal(lvd, "value_constraint");
+        var values = {};
+        values.NumericOp = i2b2.h.getXNodeVal(lvd, "value_operator");
+        values.GeneralValueType = i2b2.h.getXNodeVal(lvd, "value_type");
+        switch (values.GeneralValueType) 
+        {
+            case "NUMBER":
+                values.MatchBy = "VALUE";
+                if (t.indexOf(' and ') != -1) 
+                {
+                    // extract high and low values
+                    t = t.split(' and ');
+                    values.ValueLow = t[0];
+                    values.ValueHigh = t[1];
+                } 
+                else 
+                {
+                    values.Value = t;
+                }
+                values.UnitsCtrl = i2b2.h.getXNodeVal(lvd, "value_unit_of_measure");
+
+                break;
+            case "STRING":
+                values.MatchBy = "VALUE";
+                values.ValueString = t;
+                break;
+            case "LARGETEXT":
+                values.MatchBy = "VALUE";
+                values.GeneralValueType = "LARGESTRING";
+                values.DbOp = (i2b2.h.getXNodeVal(lvd, "value_operator") == "CONTAINS[database]" ? true : false);
+                values.ValueString = t;
+                break;
+            case "TEXT":	// this means Enum?
+                values.MatchBy = "VALUE";
+                try 
+                {
+                    values.ValueEnum = eval("(Array" + t + ")");
+                    values.GeneralValueType = "ENUM";
+                } 
+                catch (e) 
+                {
+                    //is a string
+                    values.StringOp = i2b2.h.getXNodeVal(lvd, "value_operator");
+                    values.ValueString = t;
+                    values.GeneralValueType = "STRING"; // tdw9: this line is missing for modifiers in current code. Does it make a different to have it here? Also, "TEXT" is changed from "STRING" to make sure TEXT works in modifiers
+                }
+                break;
+            case "FLAG":
+                values.MatchBy = "FLAG";
+                values.ValueFlag = t
+                break;
+            default:
+                values.Value = t;
+        }
+        return values;
+    };
+
+    // po: panel object. qp: array of query panels. i1: index of query panels
+    this.loadItemsIntoPanel = function( po, qp, i1 )
+    {
+        var allDateFromsAreSame = true;
+        var allDateTosAreSame = true;
+        var allDateFroms = {};
+        var allDateTos = {};
+
+        po.items = [];
+        var pi = i2b2.h.XPath(qp[i1], 'descendant::item[item_key]');
+        for (i2 = 0; i2 < pi.length; i2++) 
+        {
+            var itm = {};
+            // BUG FIX: WEBCLIENT-136
+            if (po.dateFrom == false)
+                itm.dateFrom = i2b2.CRC.view.QT.parseDateString(i2b2.h.getXNodeVal(pi[i2], 'constrain_by_date/date_from'));
+            else // WEBCLIENT-162: Backwards compatible <panel_date_to> support
+                itm.dateFrom = po.dateFrom;
+            if (po.dateTo == false)
+                itm.dateTo = i2b2.CRC.view.QT.parseDateString(i2b2.h.getXNodeVal(pi[i2], 'constrain_by_date/date_to'));
+            else // WEBCLIENT-162: Backwards compatible <panel_date_to> support
+                itm.dateTo = po.dateTo;
+
+            if ((pi.length == 1) && (i2 == 0)) {
+                if (typeof i2b2.h.getXNodeVal(pi[i2], 'constrain_by_date/date_from' === "undefined"))
+                    allDateFromsAreSame = false;
+                if (typeof i2b2.h.getXNodeVal(pi[i2], 'constrain_by_date/date_to' === "undefined"))
+                    allDateTosAreSame = false;
+            }
+            // Set panel date by looking at item dates
+            if ((pi.length > 1) && (i2 < pi.length - 1) && allDateFromsAreSame && allDateTosAreSame) {
+                if (i2b2.h.getXNodeVal(pi[i2], 'constrain_by_date/date_from') != i2b2.h.getXNodeVal(pi[i2 + 1], 'constrain_by_date/date_from')) {
+                    allDateFromsAreSame = false;
+                } else {
+                    allDateFroms = itm.dateFrom;
+                }
+                if (i2b2.h.getXNodeVal(pi[i2], 'constrain_by_date/date_to') != i2b2.h.getXNodeVal(pi[i2 + 1], 'constrain_by_date/date_to')) {
+                    allDateTosAreSame = false;
+                } else {
+                    allDateTos = itm.dateTo;
+                }
+            }
+
+            var item = {};
+            // get the item's details from the ONT Cell
+            var ckey = i2b2.h.getXNodeVal(pi[i2], 'item_key');
+
+            // Determine what item this is
+            if (ckey.startsWith("query_master_id")) {
+                var o = new Object;
+                o.name = i2b2.h.getXNodeVal(pi[i2], 'item_name');
+                o.id = ckey.substring(16);
+                o.result_instance_id = o.PRS_id;
+
+                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('QM', o);
+                po.items.push(sdxDataNode);
+            } else if (ckey.startsWith("masterid")) {
+                var o = new Object;
+                o.name = i2b2.h.getXNodeVal(pi[i2], 'item_name');
+                o.id = ckey;
+                o.result_instance_id = o.PRS_id;
+
+                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('QM', o);
+                po.items.push(sdxDataNode);
+            } else if (ckey.startsWith("patient_set_coll_id")) {
+                var o = new Object;
+                o.titleCRC = i2b2.h.getXNodeVal(pi[i2], 'item_name');
+                o.PRS_id = ckey.substring(20);
+                o.result_instance_id = o.PRS_id;
+
+                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('PRS', o);
+                po.items.push(sdxDataNode);
+            } else if (ckey.startsWith("patient_set_enc_id")) {
+                var o = new Object;
+                o.titleCRC = i2b2.h.getXNodeVal(pi[i2], 'item_name');
+                o.PRS_id = ckey.substring(19);
+                o.result_instance_id = o.PRS_id;
+
+                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('ENS', o);
+                po.items.push(sdxDataNode);
+
+            }
+            else 
+            {
+                // WE MUST QUERY THE ONT CELL TO BE ABLE TO DISPLAY THE TREE STRUCTURE CORRECTLY
+                var o = new Object;
+                o.level = i2b2.h.getXNodeVal(pi[i2], 'hlevel');
+                o.name = i2b2.h.getXNodeVal(pi[i2], 'item_name');
+                o.tooltip = i2b2.h.getXNodeVal(pi[i2], 'tooltip');
+
+                // nw096 - If string starts with path \\, lookup path in Ontology cell
+                if (o.name.slice(0, 2) == '\\\\') {
+                    var results = i2b2.ONT.ajax.GetTermInfo("ONT", { ont_max_records: 'max="1"', ont_synonym_records: 'false', ont_hidden_records: 'false', concept_key_value: o.name }).parse();
+                    if (results.model.length > 0) {
+                        o.name = results.model[0].origData.name;
+                        o.tooltip = results.model[0].origData.tooltip;
+                    }
+                }
+
+                o.key = i2b2.h.getXNodeVal(pi[i2], 'item_key');
+                o.synonym_cd = i2b2.h.getXNodeVal(pi[i2], 'item_is_synonym');
+                if (o.synonym_cd == "false") // tdw9 bug fix for non-synonym terms showing blue text: HTML rendering checks to see if synonym is "N," not "false"
+					o.synonym_cd = "N";
+
+                o.hasChildren = i2b2.h.getXNodeVal(pi[i2], 'item_icon');
+
+                // Lab Values processing
+                var lvd = i2b2.h.XPath(pi[i2], 'descendant::constrain_by_value');                
+                if ((lvd.length > 0) && (i2b2.h.XPath(pi[i2], 'descendant::constrain_by_modifier').length == 0)) 
+                    o.LabValues = this.parseValueConstraint( lvd );
+
+                // sdx encapsulate
+                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT', o);
+                if (o.LabValues)
+                    sdxDataNode.LabValues = o.LabValues;
+
+                // set item date
+                if (itm.dateFrom)
+                    sdxDataNode.dateFrom = itm.dateFrom;
+                if (itm.dateTo)
+                    sdxDataNode.dateTo = itm.dateTo;
+
+                // parse for modifier
+                if (i2b2.h.XPath(pi[i2], 'descendant::constrain_by_modifier').length > 0) 
+                {
+                    sdxDataNode.origData.parent = {};
+                    sdxDataNode.origData.parent.key = o.key;
+                    //sdxDataNode.origData.parent.LabValues = o.LabValues;
+                    sdxDataNode.origData.parent.hasChildren = o.hasChildren;
+                    sdxDataNode.origData.parent.level = o.level;
+                    sdxDataNode.origData.parent.name = o.name;
+                    sdxDataNode.origData.key = i2b2.h.getXNodeVal(pi[i2], 'constrain_by_modifier/modifier_key');
+                    sdxDataNode.origData.applied_path = i2b2.h.getXNodeVal(pi[i2], 'constrain_by_modifier/applied_path');
+                    sdxDataNode.origData.name = i2b2.h.getXNodeVal(pi[i2], 'constrain_by_modifier/modifier_name');
+                    sdxDataNode.origData.isModifier = true;
+                    this.hasModifier = true;
+
+                    // Mod Values processing
+                    var lvd = i2b2.h.XPath(pi[i2], 'descendant::constrain_by_modifier/constrain_by_value');
+                    if (lvd.length > 0) 
+                        o.ModValues = this.parseValueConstraint( lvd );
+
+                    if (o.ModValues) 
+                        sdxDataNode.ModValues = o.ModValues;
+                }
+                po.items.push(sdxDataNode); // write to po.items
+            }
+        }
+
+        // Set panel date by looking at item dates
+        if (allDateFromsAreSame && allDateTosAreSame) 
+        {
+            if (typeof allDateTos !== "undefined") 
+                po.dateTo = allDateTos;
+            if (typeof allDateFroms !== "undefined") 
+                po.dateFrom = allDateFroms;
+        }
+    };
+
+    this.doLoadPopulationQuery = function( qd, dObj, qm_id )
+    {
+        for (var j = 0; j < 1; j++) 
+        {
+            dObj.panels = [];
+            if (j == 0)
+                var qp = i2b2.h.XPath(qd[j], 'panel');
+            else
+                var qp = i2b2.h.XPath(qd[j], 'descendant::panel');
+
+            var total_panels = qp.length;
+            for (var i1 = 0; i1 < total_panels; i1++) 
+            {
+                i2b2.CRC.ctrlr.QT.temporalGroup = j;
+                i2b2.CRC.ctrlr.QT._redrawAllPanels();
+
+                // extract the data for each panel
+                var po = {};
+                po.panel_num = i2b2.h.getXNodeVal(qp[i1], 'panel_number');
+                var t = i2b2.h.getXNodeVal(qp[i1], 'invert');
+                po.exclude = (t == "1");
+                //po.timing = i2b2.h.getXNodeVal(qp[i1],'panel_timing');				
+                // 1.4 queries don't have panel_timing, and undefined doesn't work
+                // so default to ANY
+                po.timing = i2b2.h.getXNodeVal(qp[i1], 'panel_timing') || 'ANY';
+                i2b2.CRC.view.QT.setPanelTiming(po.panel_num, po.timing);
+                var t = i2b2.h.getXNodeVal(qp[i1], 'total_item_occurrences');
+                po.occurs = (1 * t) - 1;
+                var t = i2b2.h.getXNodeVal(qp[i1], 'panel_accuracy_scale');
+                po.relevance = t;
+
+                // check, parse, and set "panel dates" for panelObj
+                po.dateFrom = i2b2.CRC.view.QT.parseDateString(i2b2.h.getXNodeVal(qp[i1], 'panel_date_from'));
+                po.dateTo = i2b2.CRC.view.QT.parseDateString(i2b2.h.getXNodeVal(qp[i1], 'panel_date_to'));
+
+                // tdw9: load items into panel
+                this.loadItemsIntoPanel(po, qp, i1);
+                dObj.panels[po.panel_num] = po;
+            }
+            // reindex the panels index (panel [1,3,5] should be [0,1,2])
+            dObj.panels = dObj.panels.compact();
+            i2b2.CRC.model.queryCurrent.panels[j] = dObj.panels;
+        }
+        // populate the panels yuiTrees
+        try {
+            var qpc = i2b2.CRC.ctrlr.QT.panelControllers[0];
+            var dm = i2b2.CRC.model.queryCurrent;
+            for (var k = 0; k < dm.panels.length; k++) {
+                for (var pi = 0; pi < dm.panels[k].length; pi++) {
+                    // create a treeview root node and connect it to the treeview controller
+                    dm.panels[k][pi].tvRootNode = new YAHOO.widget.RootNode(qpc.yuiTree);
+                    qpc.yuiTree.root = dm.panels[k][pi].tvRootNode;
+                    dm.panels[k][pi].tvRootNode.tree = qpc.yuiTree;
+                    qpc.yuiTree.setDynamicLoad(i2b2.CRC.ctrlr.QT._loadTreeDataForNode, 1);
+                    // load the treeview with the data
+                    var tvRoot = qpc.yuiTree.getRoot();
+                    for (var pii = 0; pii < dm.panels[k][pi].items.length; pii++) {
+                        var withRenderData = qpc._addConceptVisuals(dm.panels[k][pi].items[pii], tvRoot, false);
+                        if (dm.panels[k][pi].items[pii].ModValues) {
+                            withRenderData.ModValues = dm.panels[k][pi].items[pii].ModValues;
+                        }
+                        if (dm.panels[k][pi].items[pii].LabValues) {
+                            withRenderData.LabValues = dm.panels[k][pi].items[pii].LabValues;
+                        }
+                        if (dm.panels[k][pi].items[pii].dateFrom) {
+                            withRenderData.dateFrom = dm.panels[k][pi].items[pii].dateFrom;
+                        }
+                        if (dm.panels[k][pi].items[pii].dateTo) {
+                            withRenderData.dateTo = dm.panels[k][pi].items[pii].dateTo;
+                        }
+                        dm.panels[k][pi].items[pii] = withRenderData;
+                    }
+                }
+            }
+        } catch (e) { }
+
+        i2b2.CRC.ctrlr.QT.temporalGroup = 0;
+        i2b2.CRC.ctrlr.QT._redrawAllPanels();
+        i2b2.CRC.ctrlr.QT._redrawPanelCount(); // tdw9 1707c: update panel count
+        i2b2.CRC.view.QT.ResizeHeight();
+        //Load the query status
+        i2b2.CRC.ctrlr.QT.laodQueryStatus(qm_id, dObj.name);
+    };
+	
 
 // ================================================================================================== //
 	this.doQueryLoad = function(qm_id) {  // function to load query from history
@@ -125,7 +604,35 @@ function QueryToolController() {
 				//dObj.panels = new Array(new Array());
 	
 				var sqc = i2b2.h.XPath(qd[0], 'subquery_constraint');
-			
+
+                // tdw9 1707c: add decision maker for Temporal Query and if so, whether we use SIMPLE vs ADVANCED
+                if (sqc.length > 0)  
+                {      
+                    i2b2.CRC.view.QT.setQueryTiming("TEMPORAL");
+                    if ( !this.eventContainsNumberConstraint(qd) &&
+                         !this.eventContainsNonConceptItems(qd) &&
+                         !this.eventContainsNonModifierItemsInNonFirstPanels(qd) &&
+                         !this.eventContainsNonSameInstanceTimingInNonFirstPanels(qd) &&
+                          this.queryContainsValidSequence(results.refXML)) 
+                    {   
+                        // tdw9 1707c: showing dialog to load query
+                        i2b2.CRC.view.QT.showDialog("Loading Your Query...", "","", "=none=", {}, true, true);
+
+                        // load temporal query into SIMPLE mode
+                        this.doLoadSimpleTemporalQuery(qd, dObj, cl_queryMasterId);
+                        jQuery("#toggleTemporalQueryModeSpan").html("Switch to Advanced Temporal Query"); // tdw9: fix JIRA bug 4 (https://biobankportaldev.partners.org/jira/browse/BPTEMPQUER-4)
+                        return;
+                    }
+                    else
+                    {
+                        jQuery("#temporalUIToggleDiv").show();
+                        //i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI = true; // make sure we show the classic UI 
+                        if (!i2b2.CRC.view.QT.isShowingTemporalQueryUI)
+                            i2b2.CRC.view.QT.toggleTemporalQueryUI();
+                        if (!i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI )
+                            i2b2.CRC.view.QT.doToggleTemporalQueryMode(); // call the version that does not delay to prevent asynchronous changes to data model (i2b2.CRC.model.queryCUrrent)
+                    }
+                }			
 				 for (var j=3; j < qd.length; j++)
 					i2b2.CRC.view.QT.addNewTemporalGroup();
 
@@ -468,6 +975,47 @@ function QueryToolController() {
 
 	}
 
+    // tdw9: check to see if there are at least two Events before running a temporal query
+    this.validateTemporalQuery = function()
+    {
+        if (i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI) // check ADVANCED UI model to see if Events used are non-empty
+        {
+            // Check to see if the first two Events are not empty. 
+            // We do this check because if Event1 and Event3 are filled but not Event 2, The query is immediately cancelled when run.
+            var count = 0;
+            if (i2b2.CRC.model.queryCurrent.panels[1].length == 0 ||
+                i2b2.CRC.model.queryCurrent.panels[1][0] == undefined ||
+                i2b2.CRC.model.queryCurrent.panels[1][0].items.length < 1 ||
+                i2b2.CRC.model.queryCurrent.panels[2].length == 0 ||
+                i2b2.CRC.model.queryCurrent.panels[2][0] == undefined ||
+                i2b2.CRC.model.queryCurrent.panels[2][0].items.length < 1 )
+            { 
+                return { isValidated: false,
+                         errorMainMsg: "You cannot run a temporal query without defining the first two Events.",
+                         errorSubMsg:  ""};              
+            }
+        }
+        else // check SIMPLE model to see if there are two non-empty Events (empty Events are auto-removed when run)
+        {
+            var events = jQuery(".temporalEvent");
+            var count = 0;
+            for (var i = 0; i < events.length; i++ )
+            {
+                if (jQuery(jQuery(".temporalEvent")[i]).data("event").panels[0].items.length > 0 )  
+                    count++;
+                if (count > 1)                                                                      
+                    break;
+            }
+            if (count < 2)
+            {
+                return { isValidated: false,
+                         errorMainMsg: "You cannot run a temporal query with only one Obsevation defined.",
+                         errorSubMsg:  ""};
+            }
+        }
+        return { isValidated: true };
+    };
+
 // ================================================================================================== //
 	this.doQueryRun = function() {
 		// function to build and run query 
@@ -478,12 +1026,26 @@ function QueryToolController() {
 			//alert('A query is already running.\n Please wait until the currently running query has finished.');
 			return void(0);
 		}
-		
-		if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup].length < 1) {
+
+        // tdw9 1707c: allow panels to be empty if submitting from new temporal query UI 
+		if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup].length < 1 && // check to see if current set of classic UI panels is empty 
+            !(i2b2.CRC.view.QT.isShowingTemporalQueryUI && !i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI))
+        {
 			alert('You must enter at least one concept to run a query.');
 			return void(0);
 		}
-		
+
+        // tdw9 1707c: validate temporal query if we are in temporal mode
+        if (i2b2.CRC.view.QT.isShowingTemporalQueryUI)
+        {
+            var validationResult = this.validateTemporalQuery();
+            if ( !validationResult.isValidated )
+            {
+                i2b2.CRC.view.QT.showDialog("Cannot Run Query", validationResult.errorMainMsg, validationResult.errorSubMsg);
+                return void(0);
+            }
+        }
+
 		// make sure a shrine topic has been selected
 		if (i2b2.PM.model.shrine_domain) {
 			var topicSELECT = $('queryTopicSelect');
@@ -731,16 +1293,280 @@ function QueryToolController() {
 		i2b2.CRC.view.dialogQmName.show();
 	}
 
+    // tdw9 1707c: method to copy simple temporal query model to the classic one and load it to UI
+    this.copySimpleQueryToClassic = function()
+    {
+        // load simple model to the classic UI. Parse in-UI content and put equivalent data into the classic model
+        i2b2.CRC.view.QT.deleteEmptyEvents(); // delete any empty events
+	    var events = jQuery(".temporalEvent");
+        var classicUIEventCount = i2b2.CRC.model.queryCurrent.panels.length - 1; // the first one ([0]) is Population
+        
+        // create a mapping of Event names
+        var eventNameMapping = {};
+        var eventCounter     = 1;
+        // tell each event to put its content into the classic model and perform rendering
+        for ( var i = 0; i < events.length; i++ )
+        {
+            var targetIndex = i+1;
+            var tqEvent = jQuery(events[i]).data(i2b2.CRC.view.QT.TQryEvent.eventKey);
+            tqEvent.copyToClassicUI(classicUIEventCount, targetIndex);
+            eventNameMapping[tqEvent.name] = "Event " + eventCounter;
+            eventCounter++;
+        }
+
+        // populate temporal relationships into the classic model
+	    for ( var i = 0; i < i2b2.CRC.view.QT.temporalRelationships.length; i++ )
+            i2b2.CRC.view.QT.temporalRelationships[i].populateClassicUI(i, eventNameMapping);
+
+        // redraw panel count
+        i2b2.CRC.ctrlr.QT._redrawPanelCount();
+        // scroll to show the first panel
+        i2b2.CRC.ctrlr.QT.doScrollFirst();
+    }
+
+    // refactoring: considers the main query panels as a subquery, as well as each 'event' of the temporal query.
+    // the main query panels are all in i2b2.CRC.mode.queryCurrent.panels[0]
+    this.getSubqueryXML = function( isTemporal, subQueryIndex, auto_query_name_len )
+    {
+        var s = "";
+        var ip = subQueryIndex;
+        //for (var ip = 0; ip < i2b2.CRC.model.queryCurrent.panels.length; ip++) 
+        //{
+        panel_list = i2b2.CRC.model.queryCurrent.panels[ip]; //i2b2.CRC.ctrlr.QT.temporalGroup];
+        panel_cnt = panel_list.length;
+
+        var auto_query_name = '';
+        if (isTemporal && ip > 0) 
+        {
+            //if equal to one than add subquery_contraint
+            if (ip == 1) 
+            {
+                for (var tb = 0; tb <= this.tenporalBuilders; tb++) 
+                {
+                    s += '\t<subquery_constraint>\n';
+                    s += '\t\t<first_query>\n';
+                    s += '\t\t\t<query_id>' + $('instancevent1[' + tb + ']').options[$('instancevent1[' + tb + ']').selectedIndex].value + '</query_id>\n';
+                    s += '\t\t\t<join_column>' + $('preloc1[' + tb + ']').options[$('preloc1[' + tb + ']').selectedIndex].value + '</join_column>\n';
+                    s += '\t\t\t<aggregate_operator>' + $('instanceopf1[' + tb + ']').options[$('instanceopf1[' + tb + ']').selectedIndex].value + '</aggregate_operator>\n';
+                    s += '\t\t</first_query>\n';
+                    s += '\t\t<operator>' + $('postloc[' + tb + ']').options[$('postloc[' + tb + ']').selectedIndex].value + '</operator>\n';
+                    s += '\t\t<second_query>\n';
+                    s += '\t\t\t<query_id>' + $('instancevent2[' + tb + ']').options[$('instancevent2[' + tb + ']').selectedIndex].value + '</query_id>\n';
+                    s += '\t\t\t<join_column>' + $('preloc2[' + tb + ']').options[$('preloc2[' + tb + ']').selectedIndex].value + '</join_column>\n';
+                    s += '\t\t\t<aggregate_operator>' + $('instanceopf2[' + tb + ']').options[$('instanceopf2[' + tb + ']').selectedIndex].value + '</aggregate_operator>\n';
+                    s += '\t\t</second_query>\n';
+
+                    if ($('bytime1[' + tb + ']').checked) 
+                    {
+                        s += '\t\t<span>\n';
+                        s += '\t\t\t<operator>' + $('byspan1[' + tb + ']').options[$('byspan1[' + tb + ']').selectedIndex].value + '</operator>\n';
+                        s += '\t\t\t<span_value>' + $('bytimevalue1[' + tb + ']').value + '</span_value>\n';
+                        s += '\t\t\t<units>' + $('bytimeunit1[' + tb + ']').options[$('bytimeunit1[' + tb + ']').selectedIndex].value + '</units>\n';
+                        s += '\t\t</span>\n';
+                    }
+                    if ($('bytime2[' + tb + ']').checked) 
+                    {
+                        s += '\t\t<span>\n';
+                        s += '\t\t\t<operator>' + $('byspan2[' + tb + ']').options[$('byspan2[' + tb + ']').selectedIndex].value + '</operator>\n';
+                        s += '\t\t\t<span_value>' + $('bytimevalue2[' + tb + ']').value + '</span_value>\n';
+                        s += '\t\t\t<units>' + $('bytimeunit2[' + tb + ']').options[$('bytimeunit2[' + tb + ']').selectedIndex].value + '</units>\n';
+                        s += '\t\t</span>\n';
+                    }
+                    s += '\t</subquery_constraint>\n';
+                }
+            }
+            if (panel_list[0].items.length == 0)
+                return s;
+            s += '<subquery>\n ';
+            s += '<query_id>Event ' + ip + '</query_id>\n';
+            s += '<query_type>EVENT</query_type>\n';
+            s += '<query_name>Event ' + ip + '</query_name>\n';
+            s += '<query_timing>SAMEINSTANCENUM</query_timing>\n';
+            s += '<specificity_scale>0</specificity_scale>\n';
+        }
+
+        for (var p = 0; p < panel_cnt; p++) 
+        {
+            s += '\t<panel>\n';
+            s += '\t\t<panel_number>' + (p + 1) + '</panel_number>\n';
+            // date range constraints
+            //if (panel_list[p].dateFrom) {
+            //	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
+            //}
+            //if (panel_list[p].dateTo) {
+            //	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
+            //}
+            s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
+            // Exclude constraint (invert flag)
+            if (panel_list[p].exclude) {
+                s += '\t\t<invert>1</invert>\n';
+            } else {
+                s += '\t\t<invert>0</invert>\n';
+            }
+            // Panel Timing
+            s += '\t\t<panel_timing>' + panel_list[p].timing + '</panel_timing>\n';
+            // Occurs constraint
+            s += '\t\t<total_item_occurrences>' + ((panel_list[p].occurs * 1) + 1) + '</total_item_occurrences>\n';
+            // Concepts
+            for (i = 0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
+                var sdxData = panel_list[p].items[i];
+                s += '\t\t<item>\n';
+                if (panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo) { // BUG FIX: WEBCLIENT-136
+                    s += '\t\t\t<constrain_by_date>\n';
+                    if (panel_list[p].items[i].dateFrom) {
+                        s += '\t\t\t\t<date_from>' + panel_list[p].items[i].dateFrom.Year + '-' + padNumber(panel_list[p].items[i].dateFrom.Month, 2) + '-' + padNumber(panel_list[p].items[i].dateFrom.Day, 2) + 'T00:00:00.000-05:00</date_from>\n';
+
+                    }
+                    if (panel_list[p].items[i].dateTo) {
+                        s += '\t\t\t\t<date_to>' + panel_list[p].items[i].dateTo.Year + '-' + padNumber(panel_list[p].items[i].dateTo.Month, 2) + '-' + padNumber(panel_list[p].items[i].dateTo.Day, 2) + 'T00:00:00.000-05:00</date_to>\n';
+                    }
+                    s += '\t\t\t</constrain_by_date>\n';
+                }
+                switch (sdxData.sdxInfo.sdxType) {
+                    case "QM":
+                        if (sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
+                            s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
+                        else
+                            s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
+                        s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
+                        s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
+                        s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+                        s += '\t\t\t<hlevel>0</hlevel>\n';
+                        break;
+                    case "PRS":
+                        s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+                        s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+                        s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+                        s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+                        s += '\t\t\t<hlevel>0</hlevel>\n';
+                        break;
+                    case "ENS":
+                        s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+                        s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+                        s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+                        s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+                        s += '\t\t\t<hlevel>0</hlevel>\n';
+                        break;
+                    default:
+                        if (sdxData.origData.isModifier) {
+
+                            var modParent = sdxData.origData.parent;
+                            var level = sdxData.origData.level;
+                            var key = sdxData.origData.parent.key;
+                            var name = (sdxData.origData.parent.name != null ? i2b2.h.Escape(sdxData.origData.parent.name) : i2b2.h.Escape(sdxData.origData.name));
+                            var tooltip = sdxData.origData.tooltip;
+                            var itemicon = sdxData.origData.hasChildren;
+                            while (modParent != null) {
+                                if (modParent.isModifier) {
+                                    modParent = modParent.parent;
+                                } else {
+                                    level = modParent.level;
+                                    key = modParent.key;
+                                    name = modParent.name;
+                                    tooltip = modParent.tooltip;
+                                    itemicon = modParent.hasChildren;
+                                    break;
+                                }
+                            }
+
+                            s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
+                            s += '\t\t\t<item_key>' + key + '</item_key>\n';
+                            s += '\t\t\t<item_name>' + i2b2.h.Escape(name) + '</item_name>\n';
+                            // (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
+                            s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
+                            s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
+                            s += '\t\t\t<class>ENC</class>\n';
+
+                            s += '\t\t\t\t<constrain_by_modifier>\n';
+                            s += '\t\t\t\t\t<modifier_name>' + sdxData.origData.name + '</modifier_name>\n';
+                            s += '\t\t\t\t\t<applied_path>' + sdxData.origData.applied_path + '</applied_path>\n';
+                            s += '\t\t\t\t\t<modifier_key>' + sdxData.origData.key + '</modifier_key>\n';
+                            if (sdxData.ModValues) {
+                                s += this.getValues(sdxData.ModValues);
+                            }
+
+                            s += '\t\t\t\t</constrain_by_modifier>\n';
+                        } else {
+                            sdxData.origData.key = (sdxData.origData.key).replace(/</g, "&lt;");
+                            sdxData.origData.name = (sdxData.origData.name).replace(/</g, "&lt;");
+                            if (undefined != sdxData.origData.tooltip)
+                                sdxData.origData.tooltip = (sdxData.origData.tooltip).replace(/</g, "&lt;");
+                            s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
+                            //s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
+                            s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
+                            s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
+                            s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
+                            s += '\t\t\t<class>ENC</class>\n';
+                            s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';
+                        }
+                        try {
+                            var t = i2b2.h.XPath(sdxData.origData.xmlOrig, 'descendant::synonym_cd/text()');
+                            t = (t[0].nodeValue == "Y");
+                        } catch (e) {
+                            var t = "false";
+                        }
+                        s += '\t\t\t<item_is_synonym>' + t + '</item_is_synonym>\n';
+
+                        if (sdxData.LabValues) {
+                            //s += '\t\t\t<constrain_by_value>\n';
+                            s += this.getValues(sdxData.LabValues);
+                        }
+
+                        break;
+                }
+                //TODO add contraint to the item in the future
+                /*
+                        s += '\t\t\t<constrain_by_date>\n';
+                        if (panel_list[p].dateFrom) {
+                            s += '\t\t\t\t<date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'Z</date_from>\n';
+                        }
+                        if (panel_list[p].dateTo) {
+                            s += '\t\t\t\t<date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'Z</date_to>\n';
+                        }
+                        s += '\t\t\t</constrain_by_date>\n';	
+                */
+                s += '\t\t</item>\n';
+                if (i == 0) {
+                    if (undefined != sdxData.origData.name) {
+                        auto_query_name += sdxData.origData.name.substring(0, auto_query_name_len);
+                    } else if (undefined != sdxData.origData.title) {
+                        auto_query_name += sdxData.origData.title.substring(0, auto_query_name_len);
+                    } else {
+                        auto_query_name += "new query";
+                    }
+
+                    if (p < panel_cnt - 1) { auto_query_name += '-'; }
+                }
+            }
+            s += '\t</panel>\n';
+        }
+        if (isTemporal && ip > 0)
+            s += '</subquery>\n ';
+        return s;
+    };
+
+
 // ================================================================================================== //
-	this._getQueryXML = function(queryName) {
-		var i;
-		var isTemporal = false;
-		var el;
-		var concept;
-		var panel_list = i2b2.CRC.model.queryCurrent.panels[0]; //i2b2.CRC.ctrlr.QT.temporalGroup];
+// CREATING XML for the query users have built. ======================================================//
+// ================================================================================================== //
+
+// Main entry to generating query XML. Decides which XML-generation subroutine to run based on UI states //
+	this._getQueryXML = function(queryName) 
+	{
+	    if (i2b2.CRC.view.QT.isShowingTemporalQueryUI && !i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI)
+            return this._getSimpleTemporalQueryXML( queryName );
+        else 
+            return this._getOtherQueryXML( queryName );
+	}
+	
+    // tdw9 1707c: method to create XML from SIMPLE temporal query UI
+	this.makeQueryXMLFromTemporalQueryUI = function( queryName )
+    {
+        var xml = "";
+        // add population XML
+        var panel_list = i2b2.CRC.model.queryCurrent.panels[0]; //i2b2.CRC.ctrlr.QT.temporalGroup];
 		var panel_cnt = panel_list.length;
 		var auto_query_name_len = 15;
-		var auto_query_name = '';
 		
 		if (this.queryTiming == "TEMPORAL") {
 			isTemporal = true;	
@@ -749,315 +1575,411 @@ function QueryToolController() {
 			auto_query_name_len = Math.floor(15/panel_cnt);
 			if (auto_query_name_len < 1) {auto_query_name_len = 1;}
 		}
-		// build Query XML
-		var s = '<query_definition>\n';
-		if (isTemporal)
+
+        xml += this.getSubqueryXML(true, 0, auto_query_name_len); // build the population part of the query
+        
+        // add temporal XML
+	    var events = jQuery(".temporalEvent");
+	    for ( var i = 0; i < i2b2.CRC.view.QT.temporalRelationships.length; i++ )
+	        xml = xml + i2b2.CRC.view.QT.temporalRelationships[i].makeXML();
+        for ( var i = 0; i < events.length; i++ )
+            xml = xml + jQuery(events[i]).data("event").makeXML();
+        return xml;
+    };
+
+    // go through each event and grab the first concept's name, cutDown to size, and concatanate
+    this.makeAutoQueryNameForTemporalQueryUI = function()
+    {
+        var autoQueryName = "";
+        var auto_query_name_len = 15;
+        var events = jQuery(".temporalEvent");
+        var populationPanels = i2b2.CRC.model.queryCurrent.panels[0];
+        var nameParts = Math.max(1,populationPanels.length);
+        
+        auto_query_name_len = Math.floor(15/nameParts);
+		if (auto_query_name_len < 1) {auto_query_name_len = 1;}
+
+        // build the population portion of the query name
+        for (var i = 0; i < populationPanels.length; i++ )
+        {
+            var sdxData = populationPanels[i].items[0];
+            if (undefined != sdxData.origData.name)
+				autoQueryName += sdxData.origData.name.substring(0,auto_query_name_len);
+			else if (undefined != sdxData.origData.title)
+				autoQueryName += sdxData.origData.title.substring(0,auto_query_name_len);					
+			else
+				autoQueryName += "new query";
+            if ( i < populationPanels.length-1)
+                autoQueryName += "-";
+        }
+
+        // build the temporal event portion of the query name
+        for ( var i = 0; i < events.length; i++ )
+        {
+            var sdxData = jQuery(events[i]).data("event").panels[0].items[0];
+            if (undefined != sdxData.origData.name)
+				autoQueryName += sdxData.origData.name.substring(0,auto_query_name_len);
+			else if (undefined != sdxData.origData.title)
+				autoQueryName += sdxData.origData.title.substring(0,auto_query_name_len);					
+			else
+				autoQueryName += "new query";
+        }
+        return autoQueryName;
+	};
+	
+// SIMPLE TEMPORAL QUERY //    
+// tdw9 1707c: 1. clear UI of empty events and 2.invoke method to create XML based on new temporal query UI
+this._getSimpleTemporalQueryXML = function(queryName)
+{
+	i2b2.CRC.view.QT.deleteEmptyEvents();
+	var xml = "<query_definition>\n" + 
+				"\t<query_name>(t) " + queryName + "</query_name>\n" +
+				"\t<query_timing>ANY</query_timing>\n" +
+				"\t<specificity_scale>0</specificity_scale>\n";
+	if (i2b2.PM.model.shrine_domain) 
+		xml += '\t<use_shrine>1</use_shrine>\n'; 
+	xml += this.makeQueryXMLFromTemporalQueryUI( queryName );
+	xml += "</query_definition>\n";
+
+	this.queryMsg = {};
+	this.queryMsg.queryAutoName = this.makeAutoQueryNameForTemporalQueryUI();    
+	if (undefined === queryName)
+		this.queryMsg.queryName = this.queryNameDefault;
+	else
+		this.queryMsg.queryName = queryName;     
+	this.queryMsg.queryXML = xml;
+	return (this.queryMsg);
+};
+
+// tdw9 1707c: ALL OTHER QUERIES //
+this._getOtherQueryXML = function(queryName)
+{
+	//var returnError = {};
+	var i;
+	var isTemporal = false;
+	var el;
+	var concept;
+	var panel_list = i2b2.CRC.model.queryCurrent.panels[0]; //i2b2.CRC.ctrlr.QT.temporalGroup];
+	var panel_cnt = panel_list.length;
+	var auto_query_name_len = 15;
+	var auto_query_name = '';
+	
+	if (this.queryTiming == "TEMPORAL") {
+		isTemporal = true;	
+	}
+	if (panel_cnt > 0) {
+		auto_query_name_len = Math.floor(15/panel_cnt);
+		if (auto_query_name_len < 1) {auto_query_name_len = 1;}
+	}
+	// build Query XML
+	var s = '<query_definition>\n';
+	if (isTemporal)
+	{
+		queryName = '(t) ' + queryName;	
+	}
+	s += '\t<query_name>' + i2b2.h.Escape(queryName) + '</query_name>\n';
+	if (this.queryTiming == "SAMEVISIT")
+	{
+		s += '\t<query_timing>SAMEVISIT</query_timing>\n';			
+	} else if (this.queryTiming == "ANY") {
+		s += '\t<query_timing>ANY</query_timing>\n';						
+	} else if (this.queryTiming == "TEMPORAL") {
+		s += '\t<query_timing>ANY</query_timing>\n';						
+	} else {
+		s += '\t<query_timing>SAMEINSTANCENUM</query_timing>\n';
+	}
+	s += '\t<specificity_scale>0</specificity_scale>\n';
+	if (i2b2.PM.model.shrine_domain) { s += '\t<use_shrine>1</use_shrine>\n'; }
+	
+	for (var ip = 0; ip < i2b2.CRC.model.queryCurrent.panels.length; ip++)
+	{
+		panel_list = i2b2.CRC.model.queryCurrent.panels[ip]; //i2b2.CRC.ctrlr.QT.temporalGroup];
+		panel_cnt = panel_list.length;
+		if (isTemporal && ip > 0)
 		{
-			queryName = '(t) ' + queryName;	
-		}
-		s += '\t<query_name>' + i2b2.h.Escape(queryName) + '</query_name>\n';
-		if (this.queryTiming == "SAMEVISIT")
-		{
-			s += '\t<query_timing>SAMEVISIT</query_timing>\n';			
-		} else if (this.queryTiming == "ANY") {
-			s += '\t<query_timing>ANY</query_timing>\n';						
-		} else if (this.queryTiming == "TEMPORAL") {
-			s += '\t<query_timing>ANY</query_timing>\n';						
-		} else {
-			s += '\t<query_timing>SAMEINSTANCENUM</query_timing>\n';
-		}
-		s += '\t<specificity_scale>0</specificity_scale>\n';
-		if (i2b2.PM.model.shrine_domain) { s += '\t<use_shrine>1</use_shrine>\n'; }
-		
-		
-		for (var ip = 0; ip < i2b2.CRC.model.queryCurrent.panels.length; ip++)
-		{
-			panel_list = i2b2.CRC.model.queryCurrent.panels[ip]; //i2b2.CRC.ctrlr.QT.temporalGroup];
-			panel_cnt = panel_list.length;
-			if (isTemporal && ip > 0)
+			//if equal to one then add subquery_contraint
+			if (ip == 1)
 			{
-				//if equal to one than add subquery_contraint
-				if (ip == 1)
-				{
-				   for (var tb=0; tb <= this.tenporalBuilders; tb++) {
-						s += '\t<subquery_constraint>\n';
-						s += '\t\t<first_query>\n';
-						s +=  '\t\t\t<query_id>' + $('instancevent1[' + tb + ']').options[$('instancevent1[' + tb + ']').selectedIndex].value + '</query_id>\n';
-						s +=  '\t\t\t<join_column>' + $('preloc1[' + tb + ']').options[$('preloc1[' + tb + ']').selectedIndex].value + '</join_column>\n';
-						s +=  '\t\t\t<aggregate_operator>' + $('instanceopf1[' + tb + ']').options[$('instanceopf1[' + tb + ']').selectedIndex].value + '</aggregate_operator>\n';
-						s += '\t\t</first_query>\n';
-						s +=  '\t\t<operator>' + $('postloc[' + tb + ']').options[$('postloc[' + tb + ']').selectedIndex].value + '</operator>\n';
-						s += '\t\t<second_query>\n';
-						s +=  '\t\t\t<query_id>' + $('instancevent2[' + tb + ']').options[$('instancevent2[' + tb + ']').selectedIndex].value + '</query_id>\n';
-						s +=  '\t\t\t<join_column>' + $('preloc2[' + tb + ']').options[$('preloc2[' + tb + ']').selectedIndex].value + '</join_column>\n';
-						s +=  '\t\t\t<aggregate_operator>' + $('instanceopf2[' + tb + ']').options[$('instanceopf2[' + tb + ']').selectedIndex].value + '</aggregate_operator>\n';
-						s += '\t\t</second_query>\n';
-	
-						if ( $('bytime1[' + tb + ']').checked)
-						{
-								s += '\t\t<span>\n';
-	                  			s += '\t\t\t<operator>' + $('byspan1[' + tb + ']').options[$('byspan1[' + tb + ']').selectedIndex].value + '</operator>\n';
-	                 			s += '\t\t\t<span_value>' + $('bytimevalue1[' + tb + ']').value + '</span_value>\n';
-	                  			s += '\t\t\t<units>' + $('bytimeunit1[' + tb + ']').options[$('bytimeunit1[' + tb + ']').selectedIndex].value + '</units>\n';
-								s += '\t\t</span>\n';
-						}
-						if ( $('bytime2[' + tb + ']').checked)
-						{
-								s += '\t\t<span>\n';
-	                  			s += '\t\t\t<operator>' + $('byspan2[' + tb + ']').options[$('byspan2[' + tb + ']').selectedIndex].value + '</operator>\n';
-	                 			s += '\t\t\t<span_value>' + $('bytimevalue2[' + tb + ']').value + '</span_value>\n';
-	                  			s += '\t\t\t<units>' + $('bytimeunit2[' + tb + ']').options[$('bytimeunit2[' + tb + ']').selectedIndex].value + '</units>\n';
-								s += '\t\t</span>\n';
-						}
-	
-		
-						s += '\t</subquery_constraint>\n';
+			   for (var tb=0; tb <= this.tenporalBuilders; tb++) {
+					s += '\t<subquery_constraint>\n';
+					s += '\t\t<first_query>\n';
+					s +=  '\t\t\t<query_id>' + $('instancevent1[' + tb + ']').options[$('instancevent1[' + tb + ']').selectedIndex].text + '</query_id>\n';
+					s +=  '\t\t\t<join_column>' + $('preloc1[' + tb + ']').options[$('preloc1[' + tb + ']').selectedIndex].value + '</join_column>\n';
+					s +=  '\t\t\t<aggregate_operator>' + $('instanceopf1[' + tb + ']').options[$('instanceopf1[' + tb + ']').selectedIndex].value + '</aggregate_operator>\n';
+					s += '\t\t</first_query>\n';
+					s +=  '\t\t<operator>' + $('postloc[' + tb + ']').options[$('postloc[' + tb + ']').selectedIndex].value + '</operator>\n';
+					s += '\t\t<second_query>\n';
+					s +=  '\t\t\t<query_id>' + $('instancevent2[' + tb + ']').options[$('instancevent2[' + tb + ']').selectedIndex].text + '</query_id>\n';
+					s +=  '\t\t\t<join_column>' + $('preloc2[' + tb + ']').options[$('preloc2[' + tb + ']').selectedIndex].value + '</join_column>\n';
+					s +=  '\t\t\t<aggregate_operator>' + $('instanceopf2[' + tb + ']').options[$('instanceopf2[' + tb + ']').selectedIndex].value + '</aggregate_operator>\n';
+					s += '\t\t</second_query>\n';
+					if ( $('bytime1[' + tb + ']').checked)
+					{
+							s += '\t\t<span>\n';
+							  s += '\t\t\t<operator>' + $('byspan1[' + tb + ']').options[$('byspan1[' + tb + ']').selectedIndex].value + '</operator>\n';
+							 s += '\t\t\t<span_value>' + $('bytimevalue1[' + tb + ']').value + '</span_value>\n';
+							  s += '\t\t\t<units>' + $('bytimeunit1[' + tb + ']').options[$('bytimeunit1[' + tb + ']').selectedIndex].value + '</units>\n';
+							s += '\t\t</span>\n';
 					}
-					
-		
-				} 
-				
-				if (panel_list[0].items.length == 0)
-					break;
-
-				s += '<subquery>\n ';	
-				
-				s += '<query_id>Event '+ ip +'</query_id>\n';
-               s += '<query_type>EVENT</query_type>\n';
-               s += '<query_name>Event '+ ip +'</query_name>\n';
-               s += '<query_timing>SAMEINSTANCENUM</query_timing>\n';
-               s += '<specificity_scale>0</specificity_scale>\n';
-			}
-
-
-			for (var p = 0; p < panel_cnt; p++) {
-				s += '\t<panel>\n';
-				s += '\t\t<panel_number>' + (p+1) + '</panel_number>\n';
-				// date range constraints
-				//if (panel_list[p].dateFrom) {
-				//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
-				//}
-				//if (panel_list[p].dateTo) {
-				//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
-				//}
-				s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
-				// Exclude constraint (invert flag)
-				if (panel_list[p].exclude) {
-					s += '\t\t<invert>1</invert>\n';
-				} else {
-					s += '\t\t<invert>0</invert>\n';
+					if ( $('bytime2[' + tb + ']').checked)
+					{
+							s += '\t\t<span>\n';
+							  s += '\t\t\t<operator>' + $('byspan2[' + tb + ']').options[$('byspan2[' + tb + ']').selectedIndex].value + '</operator>\n';
+							 s += '\t\t\t<span_value>' + $('bytimevalue2[' + tb + ']').value + '</span_value>\n';
+							  s += '\t\t\t<units>' + $('bytimeunit2[' + tb + ']').options[$('bytimeunit2[' + tb + ']').selectedIndex].value + '</units>\n';
+							s += '\t\t</span>\n';
+					}
+					s += '\t</subquery_constraint>\n';
 				}
-				// Panel Timing
-				s += '\t\t<panel_timing>' + panel_list[p].timing + '</panel_timing>\n';
-				// Occurs constraint
-				s += '\t\t<total_item_occurrences>'+((panel_list[p].occurs*1)+1)+'</total_item_occurrences>\n';
-				// Concepts
-				for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
-					var sdxData = panel_list[p].items[i];
-					s += '\t\t<item>\n';
-						if(panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo){ // BUG FIX: WEBCLIENT-136
-							s += '\t\t\t<constrain_by_date>\n';
-							if (panel_list[p].items[i].dateFrom) {
-								s += '\t\t\t\t<date_from>'+panel_list[p].items[i].dateFrom.Year+'-'+padNumber(panel_list[p].items[i].dateFrom.Month,2)+'-'+padNumber(panel_list[p].items[i].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
-								
-							}
-							if (panel_list[p].items[i].dateTo) {
-								s += '\t\t\t\t<date_to>'+panel_list[p].items[i].dateTo.Year+'-'+padNumber(panel_list[p].items[i].dateTo.Month,2)+'-'+padNumber(panel_list[p].items[i].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
-							}
-							s += '\t\t\t</constrain_by_date>\n';
+			}
+			if (panel_list[0].items.length == 0)
+				break;
+			s += '<subquery>\n ';	
+			
+			s += '<query_id>Event '+ ip +'</query_id>\n';
+			s += '<query_type>EVENT</query_type>\n';
+			s += '<query_name>Event '+ ip +'</query_name>\n';
+			s += '<query_timing>SAMEINSTANCENUM</query_timing>\n';
+			s += '<specificity_scale>0</specificity_scale>\n';
+		}
+
+
+		for (var p = 0; p < panel_cnt; p++) {
+			s += '\t<panel>\n';
+			s += '\t\t<panel_number>' + (p+1) + '</panel_number>\n';
+			// date range constraints
+			//if (panel_list[p].dateFrom) {
+			//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
+			//}
+			//if (panel_list[p].dateTo) {
+			//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
+			//}
+			s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
+			// Exclude constraint (invert flag)
+			if (panel_list[p].exclude) {
+				s += '\t\t<invert>1</invert>\n';
+			} else {
+				s += '\t\t<invert>0</invert>\n';
+			}
+			// Panel Timing
+			s += '\t\t<panel_timing>' + panel_list[p].timing + '</panel_timing>\n';
+			// Occurs constraint
+			s += '\t\t<total_item_occurrences>'+((panel_list[p].occurs*1)+1)+'</total_item_occurrences>\n';
+			// Concepts
+			for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
+				var sdxData = panel_list[p].items[i];
+				s += '\t\t<item>\n';
+					if(panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo){ // BUG FIX: WEBCLIENT-136
+						s += '\t\t\t<constrain_by_date>\n';
+						if (panel_list[p].items[i].dateFrom) {
+							s += '\t\t\t\t<date_from>'+panel_list[p].items[i].dateFrom.Year+'-'+padNumber(panel_list[p].items[i].dateFrom.Month,2)+'-'+padNumber(panel_list[p].items[i].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
+							
 						}
-						switch(sdxData.sdxInfo.sdxType) {
-						case "QM":
-							if(sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
-									s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
-							else
-							s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
-							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
-							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-							s += '\t\t\t<hlevel>0</hlevel>\n';
-						break;
-						case "PRS":	
-							s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
-							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-							s += '\t\t\t<hlevel>0</hlevel>\n';
-						break;
-						case "ENS":	
-							s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
-							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-							s += '\t\t\t<hlevel>0</hlevel>\n';
-						break;
-						default:
-							if (sdxData.origData.isModifier) {
-								
-								var modParent = sdxData.origData.parent;
-								var level = sdxData.origData.level;
-								var key = sdxData.origData.parent.key;
-								var name = (sdxData.origData.parent.name != null ? i2b2.h.Escape(sdxData.origData.parent.name) : i2b2.h.Escape(sdxData.origData.name)) ;
-								var tooltip = sdxData.origData.tooltip;
-								var itemicon = sdxData.origData.hasChildren;
-								while  (modParent != null)
+						if (panel_list[p].items[i].dateTo) {
+							s += '\t\t\t\t<date_to>'+panel_list[p].items[i].dateTo.Year+'-'+padNumber(panel_list[p].items[i].dateTo.Month,2)+'-'+padNumber(panel_list[p].items[i].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
+						}
+						s += '\t\t\t</constrain_by_date>\n';
+					}
+					switch(sdxData.sdxInfo.sdxType) {
+					case "QM":
+						if(sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
+								s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
+						else
+						s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
+						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
+						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
+						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+						s += '\t\t\t<hlevel>0</hlevel>\n';
+					break;
+					case "PRS":	
+						s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+						s += '\t\t\t<hlevel>0</hlevel>\n';
+					break;
+					case "ENS":	
+						s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+						s += '\t\t\t<hlevel>0</hlevel>\n';
+					break;
+					default:
+						if (sdxData.origData.isModifier) {
+							
+							var modParent = sdxData.origData.parent;
+							var level = sdxData.origData.level;
+							var key = sdxData.origData.parent.key;
+							var name = (sdxData.origData.parent.name != null ? i2b2.h.Escape(sdxData.origData.parent.name) : i2b2.h.Escape(sdxData.origData.name)) ;
+							var tooltip = sdxData.origData.tooltip;
+							var itemicon = sdxData.origData.hasChildren;
+							while  (modParent != null)
+							{
+								if (modParent.isModifier)
 								{
-									if (modParent.isModifier)
-									{
-										modParent = modParent.parent;
-									} else {
-										level = modParent.level;
-										key = modParent.key;
-										name = modParent.name;
-										tooltip = modParent.tooltip;
-										itemicon = modParent.hasChildren;
-										break;
-									}
-								}							
-								
-								s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
-								s += '\t\t\t<item_key>' + key + '</item_key>\n';
-								s += '\t\t\t<item_name>' +  i2b2.h.Escape(name) + '</item_name>\n';
-								// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
-								s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
-								s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
-								s += '\t\t\t<class>ENC</class>\n';
-	
-								s += '\t\t\t\t<constrain_by_modifier>\n';
-								s += '\t\t\t\t\t<modifier_name>' + sdxData.origData.name + '</modifier_name>\n';
-								s += '\t\t\t\t\t<applied_path>' + sdxData.origData.applied_path + '</applied_path>\n';
-								s += '\t\t\t\t\t<modifier_key>' + sdxData.origData.key + '</modifier_key>\n';
-								if (sdxData.ModValues)
-								{
-									s += i2b2.CRC.view.modLabvaluesCtlr.getModLabValuesForXML( sdxData.ModValues);
+									modParent = modParent.parent;
+								} else {
+									level = modParent.level;
+									key = modParent.key;
+									name = modParent.name;
+									tooltip = modParent.tooltip;
+									itemicon = modParent.hasChildren;
+									break;
 								}
-								
-								s += '\t\t\t\t</constrain_by_modifier>\n';					
-							} else {
-								sdxData.origData.key = (sdxData.origData.key).replace(/</g,"&lt;");
-								sdxData.origData.name = (sdxData.origData.name).replace(/</g,"&lt;");
-								if (undefined != sdxData.origData.tooltip)                        
-									sdxData.origData.tooltip = (sdxData.origData.tooltip).replace(/</g,"&lt;");
-								s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
-								//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
-								s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
-								s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
-								s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
-								s += '\t\t\t<class>ENC</class>\n';
-								s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';	
-							}
-								try {
-									var t = i2b2.h.XPath(sdxData.origData.xmlOrig,'descendant::synonym_cd/text()');
-									t = (t[0].nodeValue=="Y");
-								} catch(e) {
-									var t = "false";
-								}
-								s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
-								
-							if (sdxData.LabValues && !jQuery.isEmptyObject(sdxData.LabValues)) {
-								s += i2b2.CRC.view.modLabvaluesCtlr.getModLabValuesForXML( sdxData.LabValues);
+							}							
+							
+							s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
+							s += '\t\t\t<item_key>' + key + '</item_key>\n';
+							s += '\t\t\t<item_name>' +  i2b2.h.Escape(name) + '</item_name>\n';
+							// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
+							s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
+							s += '\t\t\t<class>ENC</class>\n';
+
+							s += '\t\t\t\t<constrain_by_modifier>\n';
+							s += '\t\t\t\t\t<modifier_name>' + sdxData.origData.name + '</modifier_name>\n';
+							s += '\t\t\t\t\t<applied_path>' + sdxData.origData.applied_path + '</applied_path>\n';
+							s += '\t\t\t\t\t<modifier_key>' + sdxData.origData.key + '</modifier_key>\n';
+							if (sdxData.ModValues)
+							{
+								s += this.getValues( sdxData.ModValues);
 							}
 							
-						break;
-					}
-					//TODO add contraint to the item in the future
-					/*
-							s += '\t\t\t<constrain_by_date>\n';
-							if (panel_list[p].dateFrom) {
-								s += '\t\t\t\t<date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'Z</date_from>\n';
-							}
-							if (panel_list[p].dateTo) {
-								s += '\t\t\t\t<date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'Z</date_to>\n';
-							}
-							s += '\t\t\t</constrain_by_date>\n';	
-					*/
-					s += '\t\t</item>\n';
-					if (i==0) {
-						if (undefined != sdxData.origData.name) {
-							auto_query_name += sdxData.origData.name.substring(0,auto_query_name_len);
-						} else if (undefined != sdxData.origData.title) {
-							auto_query_name += sdxData.origData.title.substring(0,auto_query_name_len);					
+							s += '\t\t\t\t</constrain_by_modifier>\n';					
 						} else {
-							auto_query_name += "new query";
+							sdxData.origData.key = (sdxData.origData.key).replace(/</g,"&lt;");
+							sdxData.origData.name = (sdxData.origData.name).replace(/</g,"&lt;");
+							if (undefined != sdxData.origData.tooltip)                        
+								sdxData.origData.tooltip = (sdxData.origData.tooltip).replace(/</g,"&lt;");
+							s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
+							//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
+							s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
+							s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
+							s += '\t\t\t<class>ENC</class>\n';
+							s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';	
+						}
+							try {
+								var t = i2b2.h.XPath(sdxData.origData.xmlOrig,'descendant::synonym_cd/text()');
+								t = (t[0].nodeValue=="Y");
+							} catch(e) {
+								var t = "false";
+							}
+							s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
+							
+						if (sdxData.LabValues) {
+							//s += '\t\t\t<constrain_by_value>\n';
+							s += this.getValues( sdxData.LabValues);
 						}
 						
-						if (p < panel_cnt-1) {auto_query_name += '-';}
-					}
+					break;
 				}
-				s += '\t</panel>\n';
+				//TODO add contraint to the item in the future
+				/*
+						s += '\t\t\t<constrain_by_date>\n';
+						if (panel_list[p].dateFrom) {
+							s += '\t\t\t\t<date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'Z</date_from>\n';
+						}
+						if (panel_list[p].dateTo) {
+							s += '\t\t\t\t<date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'Z</date_to>\n';
+						}
+						s += '\t\t\t</constrain_by_date>\n';	
+				*/
+				s += '\t\t</item>\n';
+				if (i==0) {
+					if (undefined != sdxData.origData.name) {
+						auto_query_name += sdxData.origData.name.substring(0,auto_query_name_len);
+					} else if (undefined != sdxData.origData.title) {
+						auto_query_name += sdxData.origData.title.substring(0,auto_query_name_len);					
+					} else {
+						auto_query_name += "new query";
+					}
+					
+					if (p < panel_cnt-1) {auto_query_name += '-';}
+				}
 			}
-			if (isTemporal && ip > 0)
-			{
-				s += '</subquery>\n ';	
-			}	
-			if (isTemporal == false)
-			{
-				break;
-			}
+			s += '\t</panel>\n';
 		}
-		s += '</query_definition>\n';
-		this.queryMsg = {};
-		this.queryMsg.queryAutoName = auto_query_name;
-		if (undefined===queryName) {
-			this.queryMsg.queryName = this.queryNameDefault;
-		} else {
-			this.queryMsg.queryName = queryName;				
+		if (isTemporal && ip > 0)
+		{
+			s += '</subquery>\n ';	
+		}	
+		if (isTemporal == false)
+		{
+			break;
 		}
-		this.queryMsg.queryXML = s;
-		return(this.queryMsg);
 	}
+	s += '</query_definition>\n';
+	this.queryMsg = {};
+	this.queryMsg.queryAutoName = auto_query_name;
+	if (undefined===queryName) {
+		this.queryMsg.queryName = this.queryNameDefault;
+	} else {
+		this.queryMsg.queryName = queryName;				
+	}
+	this.queryMsg.queryXML = s;
+	return(this.queryMsg);
+};
 
-	this.getValues = function(lvd) {
-							var s = '\t\t\t<constrain_by_value>\n';
-							//var lvd = sdxData.LabValues;
-							switch(lvd.MatchBy) {
-								case "FLAG":
-									s += '\t\t\t\t<value_type>FLAG</value_type>\n';
-									s += '\t\t\t\t<value_operator>EQ</value_operator>\n';
-									s += '\t\t\t\t<value_constraint>'+i2b2.h.Escape(lvd.ValueFlag)+'</value_constraint>\n';
-									break;
-								case "VALUE":
-									if (lvd.GeneralValueType=="ENUM") {
-										var sEnum = [];
-										for (var i2=0;i2<lvd.ValueEnum.length;i2++) {
-											sEnum.push(i2b2.h.Escape(lvd.ValueEnum[i2]));
-										}
-										//sEnum = sEnum.join("\", \"");
-										sEnum = sEnum.join("\',\'");
-										sEnum = '(\''+sEnum+'\')';
-										s += '\t\t\t\t<value_type>TEXT</value_type>\n';
-										s += '\t\t\t\t<value_constraint>'+sEnum+'</value_constraint>\n';
-										s += '\t\t\t\t<value_operator>IN</value_operator>\n';								
-									 } else if ((lvd.GeneralValueType=="STRING") || (lvd.GeneralValueType=="TEXT")){
-										s += '\t\t\t\t<value_type>TEXT</value_type>\n';
-										s += '\t\t\t\t<value_operator>'+lvd.StringOp+'</value_operator>\n';
-										s += '\t\t\t\t<value_constraint><![CDATA['+i2b2.h.Escape(lvd.ValueString)+']]></value_constraint>\n';
-									} else if (lvd.GeneralValueType=="LARGESTRING") {
-										if (lvd.DbOp) {
-											s += '\t\t\t\t<value_operator>CONTAINS[database]</value_operator>\n';
-										} else {
-											s += '\t\t\t\t<value_operator>CONTAINS</value_operator>\n';											
-										}
-										s += '\t\t\t\t<value_type>LARGETEXT</value_type>\n';
-										s += '\t\t\t\t<value_constraint><![CDATA['+lvd.ValueString+']]></value_constraint>\n';
-									} else {
-										s += '\t\t\t\t<value_type>'+lvd.GeneralValueType+'</value_type>\n';
-										s += '\t\t\t\t<value_unit_of_measure>'+lvd.UnitsCtrl+'</value_unit_of_measure>\n';
-										s += '\t\t\t\t<value_operator>'+lvd.NumericOp+'</value_operator>\n';
-										if (lvd.NumericOp == 'BETWEEN') {
-											s += '\t\t\t\t<value_constraint>'+i2b2.h.Escape(lvd.ValueLow)+' and '+i2b2.h.Escape(lvd.ValueHigh)+'</value_constraint>\n';
-										} else {
-											s += '\t\t\t\t<value_constraint>'+i2b2.h.Escape(lvd.Value)+'</value_constraint>\n';
-										}
-									}
-									break;
-								case "":
-									break;
-							}
-							s += '\t\t\t</constrain_by_value>\n';
-		return s;
+
+// ================================================================================================== //
+// END routines for generating query XML ============================================================ //
+// ================================================================================================== //
+
+this.getValues = function(lvd) {
+	var s = '\t\t\t<constrain_by_value>\n';
+	//var lvd = sdxData.LabValues;
+	switch(lvd.MatchBy) {
+		case "FLAG":
+			s += '\t\t\t\t<value_type>FLAG</value_type>\n';
+			s += '\t\t\t\t<value_operator>EQ</value_operator>\n';
+			s += '\t\t\t\t<value_constraint>'+i2b2.h.Escape(lvd.ValueFlag)+'</value_constraint>\n';
+			break;
+		case "VALUE":
+			if (lvd.GeneralValueType=="ENUM") {
+				var sEnum = [];
+				for (var i2=0;i2<lvd.ValueEnum.length;i2++) {
+					sEnum.push(i2b2.h.Escape(lvd.ValueEnum[i2]));
+				}
+				//sEnum = sEnum.join("\", \"");
+				sEnum = sEnum.join("\',\'");
+				sEnum = '(\''+sEnum+'\')';
+				s += '\t\t\t\t<value_type>TEXT</value_type>\n';
+				s += '\t\t\t\t<value_constraint>'+sEnum+'</value_constraint>\n';
+				s += '\t\t\t\t<value_operator>IN</value_operator>\n';								
+			 } else if ((lvd.GeneralValueType=="STRING") || (lvd.GeneralValueType=="TEXT")){
+				s += '\t\t\t\t<value_type>TEXT</value_type>\n';
+				s += '\t\t\t\t<value_operator>'+lvd.StringOp+'</value_operator>\n';
+				s += '\t\t\t\t<value_constraint><![CDATA['+i2b2.h.Escape(lvd.ValueString)+']]></value_constraint>\n';
+			} else if (lvd.GeneralValueType=="LARGESTRING") {
+				if (lvd.DbOp) {
+					s += '\t\t\t\t<value_operator>CONTAINS[database]</value_operator>\n';
+				} else {
+					s += '\t\t\t\t<value_operator>CONTAINS</value_operator>\n';											
+				}
+				s += '\t\t\t\t<value_type>LARGETEXT</value_type>\n';
+				s += '\t\t\t\t<value_constraint><![CDATA['+lvd.ValueString+']]></value_constraint>\n';
+			} else {
+				s += '\t\t\t\t<value_type>'+lvd.GeneralValueType+'</value_type>\n';
+				s += '\t\t\t\t<value_unit_of_measure>'+lvd.UnitsCtrl+'</value_unit_of_measure>\n';
+				s += '\t\t\t\t<value_operator>'+lvd.NumericOp+'</value_operator>\n';
+				if (lvd.NumericOp == 'BETWEEN') {
+					s += '\t\t\t\t<value_constraint>'+i2b2.h.Escape(lvd.ValueLow)+' and '+i2b2.h.Escape(lvd.ValueHigh)+'</value_constraint>\n';
+				} else {
+					s += '\t\t\t\t<value_constraint>'+i2b2.h.Escape(lvd.Value)+'</value_constraint>\n';
+				}
+			}
+			break;
+		case "":
+			break;
 	}
-	
+	s += '\t\t\t</constrain_by_value>\n';
+return s;
+}
+
+
+
 
 // ================================================================================================== //
 	this.panelAdd = function(yuiTree) {
@@ -1994,7 +2916,7 @@ function QueryToolController() {
 * Query Report BG 
 **********************/	
 
-this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
+	this.doPrintQueryNew = function(fromPrintButton,queryNameInput,previewQueryOnly)
 	{
 		//This request is to populate the query report pane in the query results section
 		if(!fromPrintButton){
@@ -2031,8 +2953,25 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 		if(userIdElm)
 			this.query_user_id = userIdElm.value;
 		
+		// tdw9: if SIMPLE temporal query mode, write data to ADVANCED mode data model and then generate content to print
+		if (i2b2.CRC.view.QT.isShowingTemporalQueryUI && !i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI )
+		{
+			// cache existing chart and status text. Put them back after the following block.
+			var statusText  = $('infoQueryStatusText').innerHTML;
+			var chartText   = $('infoQueryStatusChart').innerHTML;
+			i2b2.CRC.ctrlr.QT.doClearTemporalComponent(); // clear temporal component of the classic query without clearing query results (flag = false)
+			i2b2.CRC.ctrlr.QT.copySimpleQueryToClassic(); // perform the copying then do query printing
+			i2b2.CRC.ctrlr.QT.queryTiming = "TEMPORAL";   // make sure we are in temporal mode            
+			i2b2.CRC.ctrlr.QT.temporalGroup = 0;          // reset current temporalGroup to the population
+			i2b2.CRC.ctrlr.QT._redrawAllPanels();         // redraw all panels to show population's content
+			$('infoQueryStatusText').innerHTML  = statusText;
+			$('infoQueryStatusChart').innerHTML = chartText;
+		}
+		// end tdw9
+		
 		var v_cnt_panels = i2b2.CRC.model.queryCurrent.panels[0].length;
-		if(v_cnt_panels > 0){
+		if(v_cnt_panels > 0 || i2b2.CRC.view.QT.isShowingTemporalQueryUI) // tdw9
+		{
 			this.queryPanelObjForPrinting.timing = i2b2.CRC.ctrlr.QT.queryTiming;
 			
 			var isTemporal = false;
@@ -2052,8 +2991,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 				var panels = [];
 				for(x =0; x < v_cnt_panels; x++){
 					var po = {};
-					//po.dateTo = i2b2.CRC.model.queryCurrent.panels[ip][x].dateTo;
-					//po.dateFrom = i2b2.CRC.model.queryCurrent.panels[ip][x].dateFrom;
+					po.dateTo = i2b2.CRC.model.queryCurrent.panels[ip][x].dateTo;
+					po.dateFrom = i2b2.CRC.model.queryCurrent.panels[ip][x].dateFrom;
 					po.exclude = i2b2.CRC.model.queryCurrent.panels[ip][x].exclude;
 					po.occurs = i2b2.CRC.model.queryCurrent.panels[ip][x].occurs;
 					po.relevance = i2b2.CRC.model.queryCurrent.panels[ip][x].relevance;
@@ -2066,46 +3005,42 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 					
 					var v_items = i2b2.CRC.model.queryCurrent.panels[ip][x].items;
 										
-					
+					var v_strDateTo = null;
+					var v_strDateFrom = null;
+					//Handle JS Dates
+					if((po.dateTo == null) ||
+					(po.dateTo == undefined)  ||
+					(po.dateTo == false)
+					){
+					v_strDateTo = "none";				   
+					}
+					else{
+					v_strDateTo = 
+						po.dateTo.Month +"/"+
+						po.dateTo.Day  +"/" +
+						po.dateTo.Year;
+					}
+					po.dateFrom = v_strDateTo
+
+					//Handle JS Dates
+					if((po.dateFrom == null) ||
+					(po.dateFrom == undefined)  ||
+					(po.dateFrom == false)
+					){
+					po.strDateFrom = "none";				   
+					}
+					else{
+					v_strDateFrom =
+						po.dateFrom.Month +"/"+
+						po.dateFrom.Day  +"/" +
+						po.dateFrom.Year;
+					}
+					po.dateFrom = v_strDateFrom;
 														
 					po.items = [];
 					
 					for(n = 0; n < v_items.length; n++){
-						
 						var itemObj = {};
-						var v_strDateTo = null;
-						var v_strDateFrom = null;
-						//Handle JS Dates
-						if((v_items[n].dateTo == null) ||
-						   (v_items[n].dateTo == undefined)  ||
-						   (v_items[n].dateTo == false)
-						){
-						  v_strDateTo = "none";				   
-						}
-						else{
-						  v_strDateTo = 
-							v_items[n].dateTo.Month +"/"+
-							v_items[n].dateTo.Day  +"/" +
-							v_items[n].dateTo.Year;
-						}
-						itemObj.dateTo = v_strDateTo
-
-						//Handle JS Dates
-						if((v_items[n].dateFrom == null) ||
-						   (v_items[n].dateFrom == undefined)  ||
-						   (v_items[n].dateFrom == false)
-						){
-						  v_strDateFrom = "none";				   
-						}
-						else{
-						  v_strDateFrom =
-							v_items[n].dateFrom.Month +"/"+
-							v_items[n].dateFrom.Day  +"/" +
-							v_items[n].dateFrom.Year;
-						}
-						itemObj.dateFrom = v_strDateFrom;
-						
-						
 						itemObj.tooltip = v_items[n].origData.tooltip? v_items[n].origData.tooltip:"";
 						itemObj.name = 	v_items[n].origData.result_instance_id ? 
 										(v_items[n].origData.title ? v_items[n].origData.title : 
@@ -2113,6 +3048,10 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 										:(v_items[n].origData.newName ? v_items[n].origData.newName 
 										: (v_items[n].origData.name?v_items[n].origData.name:""));
 						itemObj.hasChildren = v_items[n].origData.hasChildren;
+						//Handle date constraints at items level
+						itemObj.dateFrom = (v_items[n].dateFrom)?v_items[n].dateFrom:false;
+						itemObj.dateTo = (v_items[n].dateTo)?v_items[n].dateTo:false;
+						//End handle date constraints at items level
 						po.items.push(itemObj);
 						//itemObj.level = 	
 					}
@@ -2268,15 +3207,13 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 					}
 				});
 			}
-			text = text.replace(/\xB1/g, "&plusmn;");
-			text = text.replace(/\&lt;/g, "<");
-			this.createHTMLForPrinting(text,fromPrintButton,previewQueryOnly);
+			this.createHTMLForPrinting(text,fromPrintButton,previewQueryOnly,isTemporal);
 		}
 		else{
-		  	alert("Currently no query is available for printing. \nPlease generate a query before clicking on [Print Query] button.");
+			alert("Currently no query is available for printing. \nPlease generate a query before clicking on [Print Query] button.");
 		}
 	}
-	
+
 	this.ClearVariablesForPrinting = function()
 	{
 		this.queryPanelObjForPrinting = {};
@@ -2290,7 +3227,7 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 		queryReportWin = null;
 	};
 	
-	this.createHTMLForPrinting = function(resultText,printFromId,previewQueryOnly)
+	this.createHTMLForPrinting = function(resultText,printFromId,previewQueryOnly,isTemporal)
 	{
 		var QueryReportWin = null;
 		var QueryReportDiv = null;
@@ -2303,7 +3240,8 @@ this.queryReport = function(fromPrintButton,queryNameInput,previewQueryOnly)
 			browserIsIE = true;
 		var savedHTML = null;
 		
-		if(this.queryPanelObjForPrinting.mainQryStructure.length > 0){
+		if(this.queryPanelObjForPrinting.mainQryStructure.length > 0 || isTemporal)
+		{
 			if(printFromId || previewQueryOnly){
 				if(browserIsIE){
 					i2b2.CRC.ctrlr.QT.queryReportViewer.yuiPanel = null;
