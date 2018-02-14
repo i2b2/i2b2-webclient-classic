@@ -243,7 +243,13 @@ i2b2.PM._processUserConfig = function (data) {
 		if (s.length > 0) {
 			// we have a proper error msg
 			try {
+				if (s[0].firstChild.nodeValue == "Password Expired.")
+				{
+					i2b2.PM.changePassword.show();
+				} else
+				{
 					alert("ERROR: "+s[0].firstChild.nodeValue);				
+				}
 			} catch (e) {
 				alert("An unknown error has occured during your login attempt!");
 			}
