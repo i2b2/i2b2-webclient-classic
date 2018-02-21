@@ -348,7 +348,17 @@ i2b2.PM.changePassword = {
 					
 					// check for errors
 					if (results.error) {
-						alert('Current password is incorrect');
+						
+ 						var s = i2b2.h.XPath(results.refXML, 'descendant::result_status/status[@type="ERROR"]');
+						if (s.length > 0) {
+							// we have a proper error msg
+							 try {
+								alert(s[0].firstChild.nodeValue);
+							} catch(e) { alert("Error in PM Response");}    
+						}
+
+						
+						
 						console.error("Bad Results from Cell Communicator: ",results);
 						return false;
 					}
