@@ -894,12 +894,13 @@ function QueryToolController() {
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
-                                                case "PR":
-                                                        s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-                                                        s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-                                                        s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
-                                                        s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-                                                        s += '\t\t\t<hlevel>0</hlevel>\n';
+                        case "PR":
+                            s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+                            s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
+                            s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+                            s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+                            s += '\t\t\t<hlevel>0</hlevel>\n';
+                        break;                            
 						case "ENS":	
 							s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
 							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
