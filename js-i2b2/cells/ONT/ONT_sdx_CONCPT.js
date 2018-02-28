@@ -470,6 +470,9 @@ i2b2.sdx.TypeControllers.CONCPT.MakeObject = function(c, modifier, cl_options, o
 			if (objectType != undefined && objectType == "QM") {
 				o.id = i2b2.h.getXNodeVal(c,'query_master_id');
 				o.title = "(PrevQuery)" + o.name;
+                        } else if (objectType != undefined && objectType == "PR") {
+                                o.title = "PATIENT:HIVE:" + origData.patient_id;
+                                o.patient_id = origData.patient_id;
 			} else 			if (objectType != undefined && (objectType == "PRS" || objectType == "ENS")) {
 				o.result_instance_id = i2b2.h.getXNodeVal(c,'result_instance_id');
 				o.title = i2b2.h.getXNodeVal(c,'description');
@@ -497,7 +500,7 @@ i2b2.sdx.TypeControllers.CONCPT.MakeObject = function(c, modifier, cl_options, o
 				o.tooltip  += "(" + o.basecode + ")";
 			}
 			// append the data node
-			if (objectType != undefined && (objectType == "QM" || objectType == "PRS" || objectType == "ENS")) {
+			if (objectType != undefined && (objectType == "PR" || objectType == "QM" || objectType == "PRS" || objectType == "ENS")) {
 				return (i2b2.sdx.Master.EncapsulateData(objectType,o));				
 			} else {
 				return (i2b2.sdx.Master.EncapsulateData('CONCPT',o));

@@ -563,8 +563,11 @@ function i2b2_PanelController(parentCtrlr) {
 	
 		//Clone it
 		//var sdxConcept  = this.clone(sdxConceptOrig);
-		
-		var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData.parent, sdxConceptOrig.sdxInfo.sdxType);
+	
+		if (sdxConceptOrig.sdxInfo.sdxType == "PR")
+                        var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData, sdxConceptOrig.sdxInfo.sdxType);
+                else	
+			var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData.parent, sdxConceptOrig.sdxInfo.sdxType);
 		
 		// insert concept into our panel's items array;
 		var dm = i2b2.CRC.model.queryCurrent;
@@ -765,6 +768,17 @@ function i2b2_PanelController(parentCtrlr) {
 				title: title,
 				icon: "sdx_CRC_PRS.jpg"
 			};		
+                } else if (sdxConcept.sdxInfo.sdxType == "PR") {
+                        var sdxDataNode = i2b2.sdx.Master.EncapsulateData('PR',sdxConcept.origData);
+                        var title = sdxConcept.origData.titleCRC;
+                        if (title == undefined)
+                        {
+                                title = sdxConcept.origData.title;
+                        }
+                        var renderOptions = {
+                                title: title,
+                                icon: "sdx_CRC_PR.jpg"
+                        };
 		} else if (sdxConcept.sdxInfo.sdxType == "QM") {
 			var iconSrc = "sdx_CRC_QM.gif";
 			var sdxDataNode = i2b2.sdx.Master.EncapsulateData('QM',sdxConcept.origData);
