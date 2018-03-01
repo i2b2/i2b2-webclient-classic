@@ -17,6 +17,7 @@
 		"CRC_sdx_PR.js",
 		"CRC_sdx_QDEF.js",
 		"CRC_sdx_QGDEF.js",
+		"CRC_sdx_WRKF.js",
 		"CRC_view_History.js",
 		"CRC_view_Find.js",
 		"CRC_view_QryTool.js",

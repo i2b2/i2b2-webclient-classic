@@ -307,6 +307,16 @@ function QueryToolController() {
                                                                 o.id = ckey;
                                                                 var sdxDataNode = i2b2.sdx.Master.EncapsulateData('PRS',o);
                                                                 po.items.push(sdxDataNode);
+                                                       } else  if (ckey.startsWith("folder")) {
+                                                                var o = new Object;
+
+                                                                //o.titleCRC = ckey.substring(8);
+                                                                o.titleCRC = (i2+1) + ") " + i2b2.h.getXNodeVal(pi[i2],'item_name');
+                                                                o.PRS_id = ckey.substring(19);
+                                                                o.result_instance_id = o.PRS_id ;
+                                                                o.id = ckey;
+                                                                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('PRS',o);
+                                                                po.items.push(sdxDataNode);
 							} else if (ckey.startsWith("patient_set_coll_id")) {
 								var o = new Object;
 								o.titleCRC =i2b2.h.getXNodeVal(pi[i2],'item_name');
@@ -894,13 +904,119 @@ function QueryToolController() {
 							s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 							s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
-                        case "PR":
-                            s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-                            s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-                            s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
-                            s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-                            s += '\t\t\t<hlevel>0</hlevel>\n';
-                        break;                            
+                                                case "PR":
+                                                        s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+                                                        s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
+                                                        s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+                                                        s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+                                                        s += '\t\t\t<hlevel>0</hlevel>\n';
+						break;
+                                                case "WRKF":
+
+/*
+    var scopedCallback = new i2b2_scopedCallback();
+    scopedCallback.scope = i2b2.WORK;
+    scopedCallback.callback = function(results){
+                i2b2.WORK.view.main.queryResponse = results.msgResponse;
+                i2b2.WORK.view.main.queryRequest = results.msgRequest;
+        var nlst = i2b2.h.XPath(results.refXML, "//folder[name and work_xml and share_id and index and visual_attributes]");
+        for (var i = 0; i < nlst.length; i++) {
+                var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::concept/..");
+               if (i != 0)
+                {
+                   s += '\t\t</item>\n';
+                   if (i != nlst.length)
+                        s += '\t\t<item>\n';
+                }
+
+               if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'CONCEPT') {
+
+                        for (var j=0; j < work_xml.length; j++) {
+                           if (i2b2.h.getXNodeVal(work_xml[j], "level") != "undefined") {
+                              s += '\t\t\t<hlevel>' + i2b2.h.getXNodeVal(work_xml[j], "level") + '</hlevel>\n';
+                              s += '\t\t\t<item_name>' + i2b2.h.getXNodeVal(work_xml[j], "name")  + '</item_name>\n';
+                              s += '\t\t\t<item_key>' + i2b2.h.getXNodeVal(work_xml[j], "key") + '</item_key>\n';
+                              s += '\t\t\t<tooltip>' + i2b2.h.getXNodeVal(work_xml[j], "tooltip")  + '</tooltip>\n';
+                              s += '\t\t\t<class>ENC</class>\n';
+                              s += '\t\t\t<item_icon>' + i2b2.h.getXNodeVal(work_xml[j], "visualattributes") + '</item_icon>\n';
+                              try {
+                                  var t = i2b2.h.XPath(work_xml[j],'descendant::synonym_cd/text()');
+                                  t = (t[0].nodeValue=="Y");
+                              } catch(e) {
+                                  var t = "false";
+                              }
+                              s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
+                        }
+                        }
+
+
+
+
+                }
+        }
+
+    };
+	*/
+    var varInput = {
+        parent_key_value: sdxData.sdxInfo.sdxKeyValue,
+                result_wait_time: 180
+    };
+    var results = i2b2.WORK.ajax.getChildren("WORK:Workplace", varInput );
+
+ var nlst = i2b2.h.XPath(results.refXML, "//folder[name and work_xml and share_id and index and visual_attributes]");
+        for (var i = 0; i < nlst.length; i++) {
+               if (i != 0)
+                {
+                   s += '\t\t</item>\n';
+                   if (i != nlst.length)
+                        s += '\t\t<item>\n';
+                }
+
+               if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'CONCEPT') {
+		   var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::concept/..");
+                        for (var j=0; j < work_xml.length; j++) {
+                           if (i2b2.h.getXNodeVal(work_xml[j], "level") != "undefined") {
+                              s += '\t\t\t<hlevel>' + i2b2.h.getXNodeVal(work_xml[j], "level") + '</hlevel>\n';
+                              s += '\t\t\t<item_name>' + i2b2.h.getXNodeVal(work_xml[j], "name")  + '</item_name>\n';
+                              s += '\t\t\t<item_key>' + i2b2.h.getXNodeVal(work_xml[j], "key") + '</item_key>\n';
+                              s += '\t\t\t<tooltip>' + i2b2.h.getXNodeVal(work_xml[j], "tooltip")  + '</tooltip>\n';
+                              s += '\t\t\t<class>ENC</class>\n';
+                              s += '\t\t\t<item_icon>' + i2b2.h.getXNodeVal(work_xml[j], "visualattributes") + '</item_icon>\n';
+                              try {
+                                  var t = i2b2.h.XPath(work_xml[j],'descendant::synonym_cd/text()');
+                                  t = (t[0].nodeValue=="Y");
+                              } catch(e) {
+                                  var t = "false";
+                              }
+                              s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
+                        }
+                        }
+                } else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'PATIENT') {
+		   var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::patient/..");
+			for (var j=0; j < work_xml.length; j++) {
+                           if (i2b2.h.getXNodeVal(work_xml[j], "patient_id") != "undefined") {
+                                                        s += '\t\t\t<item_key>PATIENT:HIVE:' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</item_key>\n';
+                                                        s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</item_name>\n';
+                                                        s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</tooltip>\n';
+                                                        s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+                                                        s += '\t\t\t<hlevel>0</hlevel>\n';
+			}
+			}
+		}
+	}
+
+ 
+ 
+
+
+						//	s += this.getWorkplaceFolder(sdxData.sdxInfo.sdxKeyValue);
+                                              //          s += '\t\t\t<item_key>WORKPLACE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+                                              //          s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
+                                              //          s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+                                              //          s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+                                              //          s += '\t\t\t<hlevel>0</hlevel>\n';
+							
+                                                break;
 						case "ENS":	
 							s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
 							s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
@@ -1075,6 +1191,76 @@ function QueryToolController() {
 		return s;
 	}
 	
+        this.getWorkplaceFolder = function(folder_id) {
+		var s = '';
+    var scopedCallback = new i2b2_scopedCallback();
+    scopedCallback.scope = i2b2.WORK;
+    scopedCallback.callback = function(results){
+                i2b2.WORK.view.main.queryResponse = results.msgResponse;
+                i2b2.WORK.view.main.queryRequest = results.msgRequest;
+       // var cl_yuiCallback = onCompleteCallback;
+        var nlst = i2b2.h.XPath(results.refXML, "//folder[name and work_xml and share_id and index and visual_attributes]");
+        for (var i = 0; i < nlst.length; i++) {
+		var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::concept/..");//[0].childNodes;
+		if (i != 0)
+		{
+		   s += '\t\t</item>\n';
+		   if (i != nlst.length)
+			s += '\t\t<item>\n';
+		}
+	
+               if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'CONCEPT') {
+
+			for (var j=0; j < work_xml.length; j++) {
+			   if (i2b2.h.getXNodeVal(work_xml[j], "level") != "undefined") {
+                              s += '\t\t\t<hlevel>' + i2b2.h.getXNodeVal(work_xml[j], "level") + '</hlevel>\n';
+                              s += '\t\t\t<item_name>' + i2b2.h.getXNodeVal(work_xml[j], "name")  + '</item_name>\n';
+                              s += '\t\t\t<item_key>' + i2b2.h.getXNodeVal(work_xml[j], "key") + '</item_key>\n';
+                              s += '\t\t\t<tooltip>' + i2b2.h.getXNodeVal(work_xml[j], "tooltip")  + '</tooltip>\n'; 
+                              s += '\t\t\t<class>ENC</class>\n';
+                              s += '\t\t\t<item_icon>' + i2b2.h.getXNodeVal(work_xml[j], "visualattributes") + '</item_icon>\n';
+                              try {
+                                  var t = i2b2.h.XPath(work_xml[j],'descendant::synonym_cd/text()');
+                                  t = (t[0].nodeValue=="Y");
+                              } catch(e) {
+                                  var t = "false";
+                              }
+                              s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
+			}
+			}
+ 
+
+
+
+		}
+/*
+            var s = nlst[i];
+            var nodeData = {};
+            nodeData.xmlOrig = s;
+            nodeData.index = i2b2.h.getXNodeVal(s, "index");
+            nodeData.key = nodeData.index;
+            nodeData.name = i2b2.h.getXNodeVal(s, "folder/name");
+            nodeData.annotation = i2b2.h.getXNodeVal(s, "tooltip");
+            nodeData.share_id = i2b2.h.getXNodeVal(s, "share_id");
+            nodeData.visual = String(i2b2.h.getXNodeVal(s, "visual_attributes")).strip();
+            nodeData.encapType = i2b2.h.getXNodeVal(s, "work_xml_i2b2_type");
+            nodeData.isRoot = false;
+*/
+        //    var tmpNode = i2b2.WORK.view.main._generateTvNode(nodeData.name, nodeData, cl_tvParentNode);
+        }
+
+	return s;
+    };
+    var varInput = {
+        parent_key_value: folder_id,
+                result_wait_time: 180
+    };
+    i2b2.WORK.ajax.getChildren("WORK:Workplace", varInput, scopedCallback);
+
+		//return s;
+      }
+
+
 
 // ================================================================================================== //
 	this.panelAdd = function(yuiTree) {

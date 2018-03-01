@@ -149,6 +149,22 @@ i2b2.sdx.TypeControllers.WRK.RenderHTML= function(sdxData, options, targetDiv) {
 			newOptions.showchildren = false;
 			newOptions.title = o.title;
 			break;
+                case "FOLDER":
+                        // this is an Folder object
+                        sdxCode = "FOLDER";
+                        // XPath query exploits faults in XML message namespace declarations to avoid creation of namespace resolver kluges that perform no resolving
+                        //var x = i2b2.h.XPath(sdxData.origData.xmlOrig, "work_xml/descendant::patient/..")[0];
+                        var o = {};
+                        //o.xmlOrig = x;
+                        o.result_type = "FOLDER";
+                        o.folder_id = i2b2.h.XPath(x, "descendant::index/text()")[0].nodeValue;
+                       // o.PRS_id = i2b2.h.XPath(x, "@patient_set_id")[0].nodeValue;
+                       // o.PRS_name = i2b2.h.XPath(x, "@patient_set_name")[0].nodeValue;
+                        o.title = sdxData.origData.name;
+                        newOptions.icon = "sdx_CRC_PR.jpg";
+                        newOptions.showchildren = false;
+                        newOptions.title = o.title;
+                        break;
 		case "CONCEPT":
 			sdxCode = "CONCPT";
 			var x = i2b2.h.XPath(sdxData.origData.xmlOrig, "work_xml/descendant-or-self::concept")[0];

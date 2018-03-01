@@ -564,9 +564,11 @@ function i2b2_PanelController(parentCtrlr) {
 		//Clone it
 		//var sdxConcept  = this.clone(sdxConceptOrig);
 	
-		if (sdxConceptOrig.sdxInfo.sdxType == "PR")
+		if (sdxConceptOrig.sdxInfo.sdxType == "PR" )
                         var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData, sdxConceptOrig.sdxInfo.sdxType);
-                else	
+                else if  ( sdxConceptOrig.sdxInfo.sdxType == "WRK")
+			var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData, sdxConceptOrig.sdxInfo.sdxType + 'F');
+		else	
 			var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData.parent, sdxConceptOrig.sdxInfo.sdxType);
 		
 		// insert concept into our panel's items array;
@@ -778,6 +780,17 @@ function i2b2_PanelController(parentCtrlr) {
                         var renderOptions = {
                                 title: title,
                                 icon: "sdx_CRC_PR.jpg"
+                        };
+                } else if (sdxConcept.sdxInfo.sdxType == "WRKF") {
+                        var sdxDataNode = i2b2.sdx.Master.EncapsulateData('WRKF',sdxConcept.origData);
+                        var title = sdxConcept.origData.name;
+                        if (title == undefined)
+                        {
+                                title = sdxConcept.origData.title;
+                        }
+                        var renderOptions = {
+                                title: title,
+                                icon: "sdx_CRC_WRKF.gif"
                         };
 		} else if (sdxConcept.sdxInfo.sdxType == "QM") {
 			var iconSrc = "sdx_CRC_QM.gif";
