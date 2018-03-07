@@ -1,5 +1,5 @@
 .yui-skin-sam .qryTemporalConstraint .yuimenu .bd {
-	width:300px;
+	width:430px;
 }
 
 DIV#crcQueryToolBox {
@@ -129,6 +129,14 @@ DIV#crcQueryToolBox DIV.qryPanelTiming   {width:166px;text-align:left;}
 
 DIV#crcQueryToolBox DIV.qryPanelTiming .yuimenuitemlabel {width:120px;} 
 
+
+/* tdw9:minor layout adjustment */
+DIV#temporalConstraintLabel
+{   margin-top:2px;    }
+DIV#temporalConstraintDiv
+{   margin-top:1px;     }
+/* tdw9: end minor layout adjustment */
+
 DIV#crcQueryToolBox DIV.qryPanelTiming Button {
 line-height:1;
 float:left;
@@ -187,6 +195,1460 @@ DIV#crcQueryToolBox DIV.temporalControl a {
 DIV#crcQueryToolBox DIV.temporalControl a:hover{
 	background-color:#7687bf;
 }
+
+div#temporalConstraintDiv span
+{
+    float:left;
+}
+
+div.tqDropBoxClass
+{
+    width: 95%;
+    height: 100px;
+    border-radius: 15px;
+    border-color: #6677AA;
+    border-width: 3px;
+    border-style: dashed;
+    display: block;
+    margin: auto;
+    margin-top:8px;
+    /* debugging below */
+    /*display: none;*/
+}
+
+div#QTDialog
+{
+    display:none; /* dialog is initially hidden*/
+}
+
+/* tutorial CSS */
+div#tutorialDiv
+{
+    background:#6677AA;
+    display:block;
+    color:white;
+    height:30px;
+    width:100%;
+}
+
+span.tutorialTitleClass
+{
+    font-size: large;
+}
+span#tutorialText
+{
+    padding-left:5px;
+    padding-right:5px;
+    font-size: inherit;
+}
+
+DIV#tutorialDiv a 
+{
+    padding-left: 5px;
+    padding-right: 6px;
+	color:#FFF;
+    border: 1px solid white;
+	text-decoration:none;    
+}
+
+DIV#tutorialDiv a:hover {
+	background-color:#7687bf;
+}
+
+a#tutorialShowMeLink
+{
+    display:none; /* initially hidden */
+}
+
+div#simpleTemporalQueryPointyArrow
+{
+    display:none; /* initially hidden */
+    position: absolute;
+    top:533px;
+}
+
+div#startDropDiv
+{
+    width:100px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    z-index:9999;
+}
+DIV#startDropBox
+{
+    display: none; /* initially hidden. Only show if tutorial is turned on */
+    position:relative;
+	background:#6677AA;
+	border:1px solid #667788;
+	font-weight:bold;
+	font-family:arial,helvetica;
+	font-size:11px;
+	height:16px;
+	line-height:16px;
+	text-align:center;
+	color:#FFF;
+	cursor:pointer;
+    margin: auto;
+	width:100px;
+	overflow:hidden; 
+    margin-top:8px;
+    margin-bottom:10px;
+    float:left;
+}
+
+DIV#startDropBox a 
+{
+	color:#FFF;
+	display:block;
+	text-decoration:none;
+}
+
+DIV#startDropBox a:hover {
+	background-color:#7687bf;
+}
+
+div#startDrop
+{
+    width:162px;
+    position:fixed;
+    z-index:999;
+    display: none; /* initially invisible */
+}
+
+div#tutorMainDialog
+{
+    display:none; /* initially invisible */
+}
+
+div#highlightRegion
+{
+    position:absolute;
+    left: 80px;
+    top: 120px;
+    height: 20px;
+    width: 120px;
+    border: 2px solid red;
+    display:none;
+    z-index: 999;
+}
+
+div#highlightArrow
+{   
+    position:absolute; 
+    left: 200px;
+    top: 120px;
+    height: 20px;
+    width: 200px;
+    display:none;
+    z-index: 999;
+    font-weight: bold;
+    font-size:x-large;
+    color: red;
+}
+
+/* tdw9: CSS for jQuery Dialogs*/
+
+/*! jQuery UI - v1.12.1 - 2016-12-15
+* http://jqueryui.com
+* Includes: draggable.css, core.css, resizable.css, button.css, controlgroup.css, checkboxradio.css, dialog.css, theme.css
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?scope=&folderName=base&cornerRadiusShadow=8px&offsetLeftShadow=0px&offsetTopShadow=0px&thicknessShadow=5px&opacityShadow=30&bgImgOpacityShadow=0&bgTextureShadow=flat&bgColorShadow=666666&opacityOverlay=30&bgImgOpacityOverlay=0&bgTextureOverlay=flat&bgColorOverlay=aaaaaa&iconColorError=cc0000&fcError=5f3f3f&borderColorError=f1a899&bgTextureError=flat&bgColorError=fddfdf&iconColorHighlight=777620&fcHighlight=777620&borderColorHighlight=dad55e&bgTextureHighlight=flat&bgColorHighlight=fffa90&iconColorActive=ffffff&fcActive=ffffff&borderColorActive=003eff&bgTextureActive=flat&bgColorActive=007fff&iconColorHover=555555&fcHover=2b2b2b&borderColorHover=cccccc&bgTextureHover=flat&bgColorHover=ededed&iconColorDefault=777777&fcDefault=454545&borderColorDefault=c5c5c5&bgTextureDefault=flat&bgColorDefault=f6f6f6&iconColorContent=444444&fcContent=333333&borderColorContent=dddddd&bgTextureContent=flat&bgColorContent=ffffff&iconColorHeader=444444&fcHeader=333333&borderColorHeader=dddddd&bgTextureHeader=flat&bgColorHeader=e9e9e9&cornerRadius=3px&fwDefault=normal&fsDefault=1em&ffDefault=Arial%2CHelvetica%2Csans-serif
+* Copyright jQuery Foundation and other contributors; Licensed MIT */
+
+.ui-draggable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+/* Layout helpers
+----------------------------------*/
+.ui-helper-hidden {
+	display: none;
+}
+.ui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+.ui-helper-reset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	line-height: 1.3;
+	text-decoration: none;
+	font-size: 100%;
+	list-style: none;
+}
+.ui-helper-clearfix:before,
+.ui-helper-clearfix:after {
+	content: "";
+	display: table;
+	border-collapse: collapse;
+}
+.ui-helper-clearfix:after {
+	clear: both;
+}
+.ui-helper-zfix {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
+	opacity: 0;
+	filter:Alpha(Opacity=0); /* support: IE8 */
+}
+
+.ui-front {
+	z-index: 100;
+}
+
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-disabled {
+	cursor: default !important;
+	pointer-events: none;
+}
+
+
+/* Icons
+----------------------------------*/
+.ui-icon {
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: -.25em;
+	position: relative;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+}
+
+.ui-widget-icon-block {
+	left: 50%;
+	margin-left: -8px;
+	display: block;
+}
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+.ui-widget-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.ui-resizable {
+	position: relative;
+}
+.ui-resizable-handle {
+	position: absolute;
+	font-size: 0.1px;
+	display: block;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.ui-resizable-disabled .ui-resizable-handle,
+.ui-resizable-autohide .ui-resizable-handle {
+	display: none;
+}
+.ui-resizable-n {
+	cursor: n-resize;
+	height: 7px;
+	width: 100%;
+	top: -5px;
+	left: 0;
+}
+.ui-resizable-s {
+	cursor: s-resize;
+	height: 7px;
+	width: 100%;
+	bottom: -5px;
+	left: 0;
+}
+.ui-resizable-e {
+	cursor: e-resize;
+	width: 7px;
+	right: -5px;
+	top: 0;
+	height: 100%;
+}
+.ui-resizable-w {
+	cursor: w-resize;
+	width: 7px;
+	left: -5px;
+	top: 0;
+	height: 100%;
+}
+.ui-resizable-se {
+	cursor: se-resize;
+	width: 12px;
+	height: 12px;
+	right: 1px;
+	bottom: 1px;
+}
+.ui-resizable-sw {
+	cursor: sw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	bottom: -5px;
+}
+.ui-resizable-nw {
+	cursor: nw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	top: -5px;
+}
+.ui-resizable-ne {
+	cursor: ne-resize;
+	width: 9px;
+	height: 9px;
+	right: -5px;
+	top: -5px;
+}
+.ui-button {
+	padding: .4em 1em;
+	display: inline-block;
+	position: relative;
+	line-height: normal;
+	margin-right: .1em;
+	cursor: pointer;
+	vertical-align: middle;
+	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	/* Support: IE <= 11 */
+	overflow: visible;
+}
+
+.ui-button,
+.ui-button:link,
+.ui-button:visited,
+.ui-button:hover,
+.ui-button:active {
+	text-decoration: none;
+}
+
+/* to make room for the icon, a width needs to be set here */
+.ui-button-icon-only {
+	width: 2em;
+	box-sizing: border-box;
+	text-indent: -9999px;
+	white-space: nowrap;
+}
+
+/* no icon support for input elements */
+input.ui-button.ui-button-icon-only {
+	text-indent: 0;
+}
+
+/* button icon element(s) */
+.ui-button-icon-only .ui-icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -8px;
+	margin-left: -8px;
+}
+
+.ui-button.ui-icon-notext .ui-icon {
+	padding: 0;
+	width: 2.1em;
+	height: 2.1em;
+	text-indent: -9999px;
+	white-space: nowrap;
+
+}
+
+input.ui-button.ui-icon-notext .ui-icon {
+	width: auto;
+	height: auto;
+	text-indent: 0;
+	white-space: normal;
+	padding: .4em 1em;
+}
+
+/* workarounds */
+/* Support: Firefox 5 - 40 */
+input.ui-button::-moz-focus-inner,
+button.ui-button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+.ui-controlgroup {
+	vertical-align: middle;
+	display: inline-block;
+}
+.ui-controlgroup > .ui-controlgroup-item {
+	float: left;
+	margin-left: 0;
+	margin-right: 0;
+}
+.ui-controlgroup > .ui-controlgroup-item:focus,
+.ui-controlgroup > .ui-controlgroup-item.ui-visual-focus {
+	z-index: 9999;
+}
+.ui-controlgroup-vertical > .ui-controlgroup-item {
+	display: block;
+	float: none;
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: 0;
+	text-align: left;
+}
+.ui-controlgroup-vertical .ui-controlgroup-item {
+	box-sizing: border-box;
+}
+.ui-controlgroup .ui-controlgroup-label {
+	padding: .4em 1em;
+}
+.ui-controlgroup .ui-controlgroup-label span {
+	font-size: 80%;
+}
+.ui-controlgroup-horizontal .ui-controlgroup-label + .ui-controlgroup-item {
+	border-left: none;
+}
+.ui-controlgroup-vertical .ui-controlgroup-label + .ui-controlgroup-item {
+	border-top: none;
+}
+.ui-controlgroup-horizontal .ui-controlgroup-label.ui-widget-content {
+	border-right: none;
+}
+.ui-controlgroup-vertical .ui-controlgroup-label.ui-widget-content {
+	border-bottom: none;
+}
+
+/* Spinner specific style fixes */
+.ui-controlgroup-vertical .ui-spinner-input {
+
+	/* Support: IE8 only, Android < 4.4 only */
+	width: 75%;
+	width: calc( 100% - 2.4em );
+}
+.ui-controlgroup-vertical .ui-spinner .ui-spinner-up {
+	border-top-style: solid;
+}
+
+.ui-checkboxradio-label .ui-icon-background {
+	box-shadow: inset 1px 1px 1px #ccc;
+	border-radius: .12em;
+	border: none;
+}
+.ui-checkboxradio-radio-label .ui-icon-background {
+	width: 16px;
+	height: 16px;
+	border-radius: 1em;
+	overflow: visible;
+	border: none;
+}
+.ui-checkboxradio-radio-label.ui-checkboxradio-checked .ui-icon,
+.ui-checkboxradio-radio-label.ui-checkboxradio-checked:hover .ui-icon {
+	background-image: none;
+	width: 8px;
+	height: 8px;
+	border-width: 4px;
+	border-style: solid;
+}
+.ui-checkboxradio-disabled {
+	pointer-events: none;
+}
+.ui-dialog {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: .2em;
+	outline: 0;
+}
+.ui-dialog .ui-dialog-titlebar {
+	padding: .4em 1em;
+	position: relative;
+}
+.ui-dialog .ui-dialog-title {
+	float: left;
+	margin: .1em 0;
+	white-space: nowrap;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+	position: absolute;
+	right: .3em;
+	top: 50%;
+	width: 20px;
+	margin: -10px 0 0 0;
+	padding: 1px;
+	height: 20px;
+}
+.ui-dialog .ui-dialog-content {
+	position: relative;
+	border: 0;
+	padding: .5em 1em;
+	background: none;
+	overflow: auto;
+}
+.ui-dialog .ui-dialog-buttonpane {
+	text-align: left;
+	border-width: 1px 0 0 0;
+	background-image: none;
+	margin-top: .5em;
+	padding: .3em 1em .5em .4em;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+	float: right;
+}
+.ui-dialog .ui-dialog-buttonpane button {
+	margin: .5em .4em .5em 0;
+	cursor: pointer;
+}
+.ui-dialog .ui-resizable-n {
+	height: 2px;
+	top: 0;
+}
+.ui-dialog .ui-resizable-e {
+	width: 2px;
+	right: 0;
+}
+.ui-dialog .ui-resizable-s {
+	height: 2px;
+	bottom: 0;
+}
+.ui-dialog .ui-resizable-w {
+	width: 2px;
+	left: 0;
+}
+.ui-dialog .ui-resizable-se,
+.ui-dialog .ui-resizable-sw,
+.ui-dialog .ui-resizable-ne,
+.ui-dialog .ui-resizable-nw {
+	width: 7px;
+	height: 7px;
+}
+.ui-dialog .ui-resizable-se {
+	right: 0;
+	bottom: 0;
+}
+.ui-dialog .ui-resizable-sw {
+	left: 0;
+	bottom: 0;
+}
+.ui-dialog .ui-resizable-ne {
+	right: 0;
+	top: 0;
+}
+.ui-dialog .ui-resizable-nw {
+	left: 0;
+	top: 0;
+}
+.ui-draggable .ui-dialog-titlebar {
+	cursor: move;
+}
+
+/* Component containers
+----------------------------------*/
+.ui-widget {
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 1em;
+}
+.ui-widget .ui-widget {
+	font-size: 1em;
+}
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 1em;
+}
+.ui-widget.ui-widget-content {
+	border: 1px solid #c5c5c5;
+}
+.ui-widget-content {
+	border: 1px solid #dddddd;
+	background: #ffffff;
+	color: #333333;
+}
+.ui-widget-content a {
+	color: #333333;
+}
+.ui-widget-header {
+	border: 1px solid #dddddd;
+	background: #e9e9e9;
+	color: #333333;
+	font-weight: bold;
+}
+.ui-widget-header a {
+	color: #333333;
+}
+
+/* Interaction states
+----------------------------------*/
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default,
+.ui-button,
+
+/* We use html here because we need a greater specificity to make sure disabled
+works properly when clicked or hovered */
+html .ui-button.ui-state-disabled:hover,
+html .ui-button.ui-state-disabled:active {
+	border: 1px solid #c5c5c5;
+	background: #f6f6f6;
+	font-weight: normal;
+	color: #454545;
+}
+.ui-state-default a,
+.ui-state-default a:link,
+.ui-state-default a:visited,
+a.ui-button,
+a:link.ui-button,
+a:visited.ui-button,
+.ui-button {
+	color: #454545;
+	text-decoration: none;
+}
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-button:hover,
+.ui-button:focus {
+	border: 1px solid #cccccc;
+	background: #ededed;
+	font-weight: normal;
+	color: #2b2b2b;
+}
+.ui-state-hover a,
+.ui-state-hover a:hover,
+.ui-state-hover a:link,
+.ui-state-hover a:visited,
+.ui-state-focus a,
+.ui-state-focus a:hover,
+.ui-state-focus a:link,
+.ui-state-focus a:visited,
+a.ui-button:hover,
+a.ui-button:focus {
+	color: #2b2b2b;
+	text-decoration: none;
+}
+
+.ui-visual-focus {
+	box-shadow: 0 0 3px 1px rgb(94, 158, 214);
+}
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+	border: 1px solid #003eff;
+	background: #007fff;
+	font-weight: normal;
+	color: #ffffff;
+}
+.ui-icon-background,
+.ui-state-active .ui-icon-background {
+	border: #003eff;
+	background-color: #ffffff;
+}
+.ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+	border: 1px solid #dad55e;
+	background: #fffa90;
+	color: #777620;
+}
+.ui-state-checked {
+	border: 1px solid #dad55e;
+	background: #fffa90;
+}
+.ui-state-highlight a,
+.ui-widget-content .ui-state-highlight a,
+.ui-widget-header .ui-state-highlight a {
+	color: #777620;
+}
+.ui-state-error,
+.ui-widget-content .ui-state-error,
+.ui-widget-header .ui-state-error {
+	border: 1px solid #f1a899;
+	background: #fddfdf;
+	color: #5f3f3f;
+}
+.ui-state-error a,
+.ui-widget-content .ui-state-error a,
+.ui-widget-header .ui-state-error a {
+	color: #5f3f3f;
+}
+.ui-state-error-text,
+.ui-widget-content .ui-state-error-text,
+.ui-widget-header .ui-state-error-text {
+	color: #5f3f3f;
+}
+.ui-priority-primary,
+.ui-widget-content .ui-priority-primary,
+.ui-widget-header .ui-priority-primary {
+	font-weight: bold;
+}
+.ui-priority-secondary,
+.ui-widget-content .ui-priority-secondary,
+.ui-widget-header .ui-priority-secondary {
+	opacity: .7;
+	filter:Alpha(Opacity=70); /* support: IE8 */
+	font-weight: normal;
+}
+.ui-state-disabled,
+.ui-widget-content .ui-state-disabled,
+.ui-widget-header .ui-state-disabled {
+	opacity: .35;
+	filter:Alpha(Opacity=35); /* support: IE8 */
+	background-image: none;
+}
+.ui-state-disabled .ui-icon {
+	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
+}
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.ui-icon {
+	width: 16px;
+	height: 16px;
+}
+.ui-icon,
+.ui-widget-content .ui-icon {
+	background-image: url("images/ui-icons_444444_256x240.png");
+}
+.ui-widget-header .ui-icon {
+	background-image: url("images/ui-icons_444444_256x240.png");
+}
+.ui-state-hover .ui-icon,
+.ui-state-focus .ui-icon,
+.ui-button:hover .ui-icon,
+.ui-button:focus .ui-icon {
+	background-image: url("images/ui-icons_555555_256x240.png");
+}
+.ui-state-active .ui-icon,
+.ui-button:active .ui-icon {
+	background-image: url("images/ui-icons_ffffff_256x240.png");
+}
+.ui-state-highlight .ui-icon,
+.ui-button .ui-state-highlight.ui-icon {
+	background-image: url("images/ui-icons_777620_256x240.png");
+}
+.ui-state-error .ui-icon,
+.ui-state-error-text .ui-icon {
+	background-image: url("images/ui-icons_cc0000_256x240.png");
+}
+.ui-button .ui-icon {
+	background-image: url("images/ui-icons_777777_256x240.png");
+}
+
+/* positioning */
+.ui-icon-blank { background-position: 16px 16px; }
+.ui-icon-caret-1-n { background-position: 0 0; }
+.ui-icon-caret-1-ne { background-position: -16px 0; }
+.ui-icon-caret-1-e { background-position: -32px 0; }
+.ui-icon-caret-1-se { background-position: -48px 0; }
+.ui-icon-caret-1-s { background-position: -65px 0; }
+.ui-icon-caret-1-sw { background-position: -80px 0; }
+.ui-icon-caret-1-w { background-position: -96px 0; }
+.ui-icon-caret-1-nw { background-position: -112px 0; }
+.ui-icon-caret-2-n-s { background-position: -128px 0; }
+.ui-icon-caret-2-e-w { background-position: -144px 0; }
+.ui-icon-triangle-1-n { background-position: 0 -16px; }
+.ui-icon-triangle-1-ne { background-position: -16px -16px; }
+.ui-icon-triangle-1-e { background-position: -32px -16px; }
+.ui-icon-triangle-1-se { background-position: -48px -16px; }
+.ui-icon-triangle-1-s { background-position: -65px -16px; }
+.ui-icon-triangle-1-sw { background-position: -80px -16px; }
+.ui-icon-triangle-1-w { background-position: -96px -16px; }
+.ui-icon-triangle-1-nw { background-position: -112px -16px; }
+.ui-icon-triangle-2-n-s { background-position: -128px -16px; }
+.ui-icon-triangle-2-e-w { background-position: -144px -16px; }
+.ui-icon-arrow-1-n { background-position: 0 -32px; }
+.ui-icon-arrow-1-ne { background-position: -16px -32px; }
+.ui-icon-arrow-1-e { background-position: -32px -32px; }
+.ui-icon-arrow-1-se { background-position: -48px -32px; }
+.ui-icon-arrow-1-s { background-position: -65px -32px; }
+.ui-icon-arrow-1-sw { background-position: -80px -32px; }
+.ui-icon-arrow-1-w { background-position: -96px -32px; }
+.ui-icon-arrow-1-nw { background-position: -112px -32px; }
+.ui-icon-arrow-2-n-s { background-position: -128px -32px; }
+.ui-icon-arrow-2-ne-sw { background-position: -144px -32px; }
+.ui-icon-arrow-2-e-w { background-position: -160px -32px; }
+.ui-icon-arrow-2-se-nw { background-position: -176px -32px; }
+.ui-icon-arrowstop-1-n { background-position: -192px -32px; }
+.ui-icon-arrowstop-1-e { background-position: -208px -32px; }
+.ui-icon-arrowstop-1-s { background-position: -224px -32px; }
+.ui-icon-arrowstop-1-w { background-position: -240px -32px; }
+.ui-icon-arrowthick-1-n { background-position: 1px -48px; }
+.ui-icon-arrowthick-1-ne { background-position: -16px -48px; }
+.ui-icon-arrowthick-1-e { background-position: -32px -48px; }
+.ui-icon-arrowthick-1-se { background-position: -48px -48px; }
+.ui-icon-arrowthick-1-s { background-position: -64px -48px; }
+.ui-icon-arrowthick-1-sw { background-position: -80px -48px; }
+.ui-icon-arrowthick-1-w { background-position: -96px -48px; }
+.ui-icon-arrowthick-1-nw { background-position: -112px -48px; }
+.ui-icon-arrowthick-2-n-s { background-position: -128px -48px; }
+.ui-icon-arrowthick-2-ne-sw { background-position: -144px -48px; }
+.ui-icon-arrowthick-2-e-w { background-position: -160px -48px; }
+.ui-icon-arrowthick-2-se-nw { background-position: -176px -48px; }
+.ui-icon-arrowthickstop-1-n { background-position: -192px -48px; }
+.ui-icon-arrowthickstop-1-e { background-position: -208px -48px; }
+.ui-icon-arrowthickstop-1-s { background-position: -224px -48px; }
+.ui-icon-arrowthickstop-1-w { background-position: -240px -48px; }
+.ui-icon-arrowreturnthick-1-w { background-position: 0 -64px; }
+.ui-icon-arrowreturnthick-1-n { background-position: -16px -64px; }
+.ui-icon-arrowreturnthick-1-e { background-position: -32px -64px; }
+.ui-icon-arrowreturnthick-1-s { background-position: -48px -64px; }
+.ui-icon-arrowreturn-1-w { background-position: -64px -64px; }
+.ui-icon-arrowreturn-1-n { background-position: -80px -64px; }
+.ui-icon-arrowreturn-1-e { background-position: -96px -64px; }
+.ui-icon-arrowreturn-1-s { background-position: -112px -64px; }
+.ui-icon-arrowrefresh-1-w { background-position: -128px -64px; }
+.ui-icon-arrowrefresh-1-n { background-position: -144px -64px; }
+.ui-icon-arrowrefresh-1-e { background-position: -160px -64px; }
+.ui-icon-arrowrefresh-1-s { background-position: -176px -64px; }
+.ui-icon-arrow-4 { background-position: 0 -80px; }
+.ui-icon-arrow-4-diag { background-position: -16px -80px; }
+.ui-icon-extlink { background-position: -32px -80px; }
+.ui-icon-newwin { background-position: -48px -80px; }
+.ui-icon-refresh { background-position: -64px -80px; }
+.ui-icon-shuffle { background-position: -80px -80px; }
+.ui-icon-transfer-e-w { background-position: -96px -80px; }
+.ui-icon-transferthick-e-w { background-position: -112px -80px; }
+.ui-icon-folder-collapsed { background-position: 0 -96px; }
+.ui-icon-folder-open { background-position: -16px -96px; }
+.ui-icon-document { background-position: -32px -96px; }
+.ui-icon-document-b { background-position: -48px -96px; }
+.ui-icon-note { background-position: -64px -96px; }
+.ui-icon-mail-closed { background-position: -80px -96px; }
+.ui-icon-mail-open { background-position: -96px -96px; }
+.ui-icon-suitcase { background-position: -112px -96px; }
+.ui-icon-comment { background-position: -128px -96px; }
+.ui-icon-person { background-position: -144px -96px; }
+.ui-icon-print { background-position: -160px -96px; }
+.ui-icon-trash { background-position: -176px -96px; }
+.ui-icon-locked { background-position: -192px -96px; }
+.ui-icon-unlocked { background-position: -208px -96px; }
+.ui-icon-bookmark { background-position: -224px -96px; }
+.ui-icon-tag { background-position: -240px -96px; }
+.ui-icon-home { background-position: 0 -112px; }
+.ui-icon-flag { background-position: -16px -112px; }
+.ui-icon-calendar { background-position: -32px -112px; }
+.ui-icon-cart { background-position: -48px -112px; }
+.ui-icon-pencil { background-position: -64px -112px; }
+.ui-icon-clock { background-position: -80px -112px; }
+.ui-icon-disk { background-position: -96px -112px; }
+.ui-icon-calculator { background-position: -112px -112px; }
+.ui-icon-zoomin { background-position: -128px -112px; }
+.ui-icon-zoomout { background-position: -144px -112px; }
+.ui-icon-search { background-position: -160px -112px; }
+.ui-icon-wrench { background-position: -176px -112px; }
+.ui-icon-gear { background-position: -192px -112px; }
+.ui-icon-heart { background-position: -208px -112px; }
+.ui-icon-star { background-position: -224px -112px; }
+.ui-icon-link { background-position: -240px -112px; }
+.ui-icon-cancel { background-position: 0 -128px; }
+.ui-icon-plus { background-position: -16px -128px; }
+.ui-icon-plusthick { background-position: -32px -128px; }
+.ui-icon-minus { background-position: -48px -128px; }
+.ui-icon-minusthick { background-position: -64px -128px; }
+.ui-icon-close { background-position: -80px -128px; }
+.ui-icon-closethick { background-position: -96px -128px; }
+.ui-icon-key { background-position: -112px -128px; }
+.ui-icon-lightbulb { background-position: -128px -128px; }
+.ui-icon-scissors { background-position: -144px -128px; }
+.ui-icon-clipboard { background-position: -160px -128px; }
+.ui-icon-copy { background-position: -176px -128px; }
+.ui-icon-contact { background-position: -192px -128px; }
+.ui-icon-image { background-position: -208px -128px; }
+.ui-icon-video { background-position: -224px -128px; }
+.ui-icon-script { background-position: -240px -128px; }
+.ui-icon-alert { background-position: 0 -144px; }
+.ui-icon-info { background-position: -16px -144px; }
+.ui-icon-notice { background-position: -32px -144px; }
+.ui-icon-help { background-position: -48px -144px; }
+.ui-icon-check { background-position: -64px -144px; }
+.ui-icon-bullet { background-position: -80px -144px; }
+.ui-icon-radio-on { background-position: -96px -144px; }
+.ui-icon-radio-off { background-position: -112px -144px; }
+.ui-icon-pin-w { background-position: -128px -144px; }
+.ui-icon-pin-s { background-position: -144px -144px; }
+.ui-icon-play { background-position: 0 -160px; }
+.ui-icon-pause { background-position: -16px -160px; }
+.ui-icon-seek-next { background-position: -32px -160px; }
+.ui-icon-seek-prev { background-position: -48px -160px; }
+.ui-icon-seek-end { background-position: -64px -160px; }
+.ui-icon-seek-start { background-position: -80px -160px; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+.ui-icon-seek-first { background-position: -80px -160px; }
+.ui-icon-stop { background-position: -96px -160px; }
+.ui-icon-eject { background-position: -112px -160px; }
+.ui-icon-volume-off { background-position: -128px -160px; }
+.ui-icon-volume-on { background-position: -144px -160px; }
+.ui-icon-power { background-position: 0 -176px; }
+.ui-icon-signal-diag { background-position: -16px -176px; }
+.ui-icon-signal { background-position: -32px -176px; }
+.ui-icon-battery-0 { background-position: -48px -176px; }
+.ui-icon-battery-1 { background-position: -64px -176px; }
+.ui-icon-battery-2 { background-position: -80px -176px; }
+.ui-icon-battery-3 { background-position: -96px -176px; }
+.ui-icon-circle-plus { background-position: 0 -192px; }
+.ui-icon-circle-minus { background-position: -16px -192px; }
+.ui-icon-circle-close { background-position: -32px -192px; }
+.ui-icon-circle-triangle-e { background-position: -48px -192px; }
+.ui-icon-circle-triangle-s { background-position: -64px -192px; }
+.ui-icon-circle-triangle-w { background-position: -80px -192px; }
+.ui-icon-circle-triangle-n { background-position: -96px -192px; }
+.ui-icon-circle-arrow-e { background-position: -112px -192px; }
+.ui-icon-circle-arrow-s { background-position: -128px -192px; }
+.ui-icon-circle-arrow-w { background-position: -144px -192px; }
+.ui-icon-circle-arrow-n { background-position: -160px -192px; }
+.ui-icon-circle-zoomin { background-position: -176px -192px; }
+.ui-icon-circle-zoomout { background-position: -192px -192px; }
+.ui-icon-circle-check { background-position: -208px -192px; }
+.ui-icon-circlesmall-plus { background-position: 0 -208px; }
+.ui-icon-circlesmall-minus { background-position: -16px -208px; }
+.ui-icon-circlesmall-close { background-position: -32px -208px; }
+.ui-icon-squaresmall-plus { background-position: -48px -208px; }
+.ui-icon-squaresmall-minus { background-position: -64px -208px; }
+.ui-icon-squaresmall-close { background-position: -80px -208px; }
+.ui-icon-grip-dotted-vertical { background-position: 0 -224px; }
+.ui-icon-grip-dotted-horizontal { background-position: -16px -224px; }
+.ui-icon-grip-solid-vertical { background-position: -32px -224px; }
+.ui-icon-grip-solid-horizontal { background-position: -48px -224px; }
+.ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
+.ui-icon-grip-diagonal-se { background-position: -80px -224px; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-left,
+.ui-corner-tl {
+	border-top-left-radius: 3px;
+}
+.ui-corner-all,
+.ui-corner-top,
+.ui-corner-right,
+.ui-corner-tr {
+	border-top-right-radius: 3px;
+}
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+	border-bottom-left-radius: 3px;
+}
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+	border-bottom-right-radius: 3px;
+}
+
+/* Overlays */
+.ui-widget-overlay {
+	background: #aaaaaa;
+	opacity: .3;
+	filter: Alpha(Opacity=30); /* support: IE8 */
+}
+.ui-widget-shadow {
+	-webkit-box-shadow: 0px 0px 5px #666666;
+	box-shadow: 0px 0px 5px #666666;
+}
+/* End CSS for JQuery Dialog*/
+
+
+/* Launch Tutorial Box */
+DIV#tutorLaunchDiv
+{
+    /* border: 1px green solid; */
+    width:300px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 40px;
+}
+
+DIV#tutorialLaunchBox
+{
+	position:relative;
+	background:#6677AA;
+	border:1px solid #667788;
+	color:#FFFFFF;
+	font-weight:bold;
+	font-family:arial,helvetica;
+	font-size:11px;
+	height:16px;
+	line-height:16px;
+	text-align:center;
+	color:#FFF;
+	cursor:pointer;
+    margin: auto;
+	width:300px;
+	overflow:hidden;
+}
+
+DIV#tutorialLaunchBox a 
+{
+	color:#FFF;
+	display:block;
+	text-decoration:none;
+}
+
+DIV#tutorialLaunchBox a:hover {
+	background-color:#7687bf;
+}
+
+
+div#tutorialBox
+{
+    border: red 1px solid;
+    display:none;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right:auto;
+    margin-bottom:0px;
+}
+
+div#tutorPage1
+{
+    /* debugging only */
+    display: none;
+}
+
+div#tutorPage2
+{
+    /* debugging only */
+    display: none;
+}
+
+
+p#tutorPage1HeaderMessage
+{
+    display:block;
+}
+
+div#tutorDropBox
+{
+    width: 60%;
+    display:block;
+}
+
+div#tutorMIDrop
+{
+    width:162px;
+    position:relative;
+    display: none; /* initially invisible */
+}
+
+div#tutorPage2TemporalSequenceUI
+{
+    margin-top:20px;
+    height: 270px;
+}
+
+div.tutortemporalEvent
+{
+    border-left: 1px #667788 solid;
+    border-right: 1px #667788 solid;
+    border-bottom: 1px #667788 solid;
+    background: white;
+    float:left;
+    cursor:move;
+    width:242px;
+    height:200px;
+}
+
+.tutorImmovable { color:#6677aa; }
+
+/* tutorial navigator */
+DIV#tutorNavigationBox
+{
+    /* border: 1px green solid; */
+    width:200px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 40px;
+    display:none; /* initially invisible */
+}
+
+DIV#tutorNextBox
+{
+	position:relative;
+	background:#6677AA;
+	border:1px solid #667788;
+	color:#FFFFFF;
+	font-weight:bold;
+	font-family:arial,helvetica;
+	font-size:11px;
+	height:16px;
+	line-height:16px;
+	text-align:center;
+	color:#FFF;
+	cursor:pointer;
+	/* float: left; */
+	/*margin:0px 5px 0px 0px;*/
+    margin: auto;
+	width:72px;
+	overflow:hidden;
+}
+
+DIV#tutorNextBox a 
+{
+	color:#FFF;
+	display:block;
+	text-decoration:none;
+}
+
+DIV#tutorNextBox a:hover {
+	background-color:#7687bf;
+}
+
+/* tdw9: CSS for new temporalUITOggle elements */
+div#temporalUIToggleDiv
+{
+    float: right;
+    overflow:hidden;
+    margin-right: 3px;
+    margin-top: -3px;
+    margin-bottom:-1px;
+    padding-right: 5px;
+    padding-top:3px;
+    background:#6677AA;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    height:18px;
+    display:none;
+}
+div#temporalUIToggleDiv a
+{
+    color: #FFF;
+    display:block;
+    text-decoration: none;
+}
+div#temporalUIToggleDiv a:hover 
+{
+	background-color:#7687bf;
+}
+span#toggleTemporalQueryModeSpan
+{
+    margin-left: 4px;
+}
+
+/*label for population*/
+div#populationLabel
+{
+    display:none;
+    overflow:hidden;
+    font-size:12px;
+    text-align: center;
+    font-weight:bold;
+    background:#6677AA;
+    color:white;
+    margin-top: 2px;
+    margin-right: 5px;
+    margin-left: 1px;
+    padding-bottom:2px;
+}
+
+div#populationLabel a
+{
+	color:#FFF;
+	display:block;
+	text-decoration:none;
+}
+
+div#populationLabel a:hover {
+	background-color:#7687bf;
+}
+
+div#outerTemporalSequenceUI
+{
+    background-color:#dbe8ff;
+    border: 1px solid #667788;
+    width:100px;
+    height:100px;
+    overflow-x:scroll;
+    overflow-y:scroll;
+}
+p.temporalSequenceMsgHeader
+{
+    text-align: center;
+    overflow:hidden;
+    font-weight:bold;
+    color:#667788;
+    font-size:large;
+    margin-bottom: 0px;
+    /* debugging below */
+    /*display: none; */
+}
+p.temporalSequenceMsg
+{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    white-space:normal;
+    word-wrap:break-word;
+    margin-bottom: 10px;
+}
+div#innerTemporalSequenceUI
+{
+    width:2000px;
+    height:202px;
+    margin-top:30px;
+    margin-left:20px;
+    display: none;
+}
+div.temporalEvent
+{
+    border-left: 1px #667788 solid;
+    border-right: 1px #667788 solid;
+    border-bottom: 1px #667788 solid;
+    background: white;
+    float:left;
+    cursor:move;
+    width:242px;
+    height:200px;
+}
+div.highlighted
+{
+    border-top:     2px #FED478 solid;
+    border-left:    2px #FED478 solid;
+    border-right:   2px #FED478 solid;
+    border-bottom:  2px #FED478 solid;
+}
+
+div.shadowClass
+{
+    box-shadow: 0px 15px 55px 8px gray;
+}
+div.temporalEventHeader
+{
+    width: 100%;
+    height: 12px;
+    background-color:#6677aa;
+    color: white;
+    font-size:11px;
+    font-weight:bold;
+    text-align:center;
+    line-height:12px;
+}
+
+div.temporalEventDeleteDiv
+{
+    float:right;
+	margin-left:1px;
+    margin-top:1px;
+    margin-right:1px;
+}
+
+div.temporalPanelConstraintsDiv
+{
+    position:relative; /* allow absolute positioning of children, see temporalPanelDatesDiv and temporalPanelExcludeDiv*/
+}
+div.temporalPanel
+{
+    float:left;
+    width:130px;
+    height:188px;
+    border-left:   1px gray solid;
+    border-right:  1px gray solid;
+    border-bottom: 1px gray solid;
+    margin-left: -1px;
+    background-color: white;
+    position: relative; /* allows temporalPanelAddDiv to stick to bottom right */
+}
+
+div.temporalPanel_dark
+{
+    background-color: beige;
+}
+
+div.temporalPanelButton:hover
+{
+    cursor:pointer;
+    opacity: .9;
+    background-color:#cbd8ef;
+}
+div.temporalPanelButtonActive
+{
+    text-decoration:underline;
+}
+
+div.temporalPanelDatesDiv
+{
+    position: absolute;
+    border-top: 1px #6677aa solid;
+    border-bottom: 1px #6677aa solid;
+    left: 0%;
+    right: 60%;
+    text-align: center;
+    height: 14px;
+    line-height:14px;
+}
+div.temporalPanelExcludeDiv
+{
+    position: absolute;
+    border-top: 1px #6677aa solid;
+    border-bottom: 1px #6677aa solid;
+    border-left: 1px #6677aa solid;
+    left: 40%;
+    right:10%;
+    text-align: center;
+    height: 14px;
+    line-height:14px;
+}
+
+div.temporalPanelContentDiv
+{
+    position:relative;
+    top: 16px;
+    height:172px;
+    overflow:auto;
+}
+    
+div.temporalPanelDeleteDiv
+{
+    position: absolute;
+    border-top: 1px #6677aa solid;
+    border-bottom: 1px #6677aa solid;
+    border-left: 1px #6677aa solid;
+    left: 90%;
+    right:0%;
+    text-align: center;
+    height: 14px;
+    line-height:14px;
+    float: right;
+    height: 14px;
+    /*border: 1px #6677aa solid;*/
+}
+div.temporalPanelDeleteDiv:hover
+{
+    cursor: pointer;
+    opacity: .9;
+    background-color:salmon;
+}
+
+div.temporalPanelDeleteButton
+{
+    display:block;
+    margin:auto;
+}
+div.temporalPanelAddDiv
+{
+    visibility:hidden;
+    display:none;      /*  hidden for biobankportal because there are no modifiers. also see CRC_ctrlr_TQryEvent.redraw() to remove statements specifically designed for biobankportal */
+    position: absolute;
+    right:0px;
+    bottom:0px;
+    border: 1px #6677aa solid;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    background-color:white;
+}
+div.temporalPanelAddDiv:hover
+{
+    cursor: pointer;
+    opacity: .9;
+    background-color:#cbd8ef;
+}
+
+div.modifierDropReminder
+{
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    top: 60%;
+    font-weight: bolder;
+    font-size: small;
+    color: #63758c;
+}
+
+div.arrow
+{
+    float:left;
+    width:120px;
+    height:200px;
+}
+div.arrowImage
+{
+    margin-top:-23px;
+}
+div.arrowText
+{
+    text-align: center;  /* center-justified */
+    white-space: normal; /* allows text wrapping */
+    font-weight:bold;
+    width: 110px;
+    margin: auto;       /* center the div */
+}
+div.inactiveArrowText
+{
+    margin-left: 5px;
+    text-align: center;    /* left-justified */
+    white-space: normal;   /* allows text wrapping */
+    font-weight:bold;
+}
+a.orderingText
+{
+    color:#6677aa;
+}
+
+div.arrow_inactive
+{
+    /*border: 1px gray solid;*/
+    float:left;
+    width:120px;
+    height:200px;
+}
+
+.immovable { color:#6677aa; }
+
+li { background-color:whitesmoke; padding:2px; margin:2px; }
+
+span.eventName
+{
+    font-weight:bold;
+    color:#47476d;
+}
+
+.temporalQueryContextMenuItem /* set preferred width for contextmenu items so the texts do not exceed menu width */
+{
+    width:150px;
+}
+/* tdw9: end CSS for new temporal query UI elements */
+
 
 DIV#crcQueryToolBox DIV#newBox,
 DIV#crcQueryToolBox DIV#printQueryBox,

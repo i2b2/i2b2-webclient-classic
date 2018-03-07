@@ -193,7 +193,8 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 	}
 	if ($('ONTNAVshowPatientCounts').checked)
 	{
-		if (!Object.isUndefined(sdxData.origData.total_num)) {
+		if (!Object.isUndefined(sdxData.origData.total_num) && (sdxData.origData.total_num != 'undefined')) // tdw9: 1710: fixing 'undefined' showing up after concept drop
+		{
 			retHtml += " - " + sdxData.origData.total_num;
 		}
 		if (sdxData.origData.total_num == 0)

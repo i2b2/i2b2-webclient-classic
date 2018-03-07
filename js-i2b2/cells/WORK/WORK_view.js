@@ -290,7 +290,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
         case "FA":
             render.cssClass = "wrkFolder";
             render.canExpand = true;
-            render.iconType = "WRKOLDER";
+            render.iconType = "WRKFOLDER";
             render.icon = i2b2.hive.cfg.urlFramework + 'cells/WORK/assets/WORK_folder.gif';
             render.iconExp = i2b2.hive.cfg.urlFramework + 'cells/WORK/assets/WORK_folder_exp.gif';
             var renderObj = funcAddWrkNode(render);

@@ -688,16 +688,19 @@ YAHOO.util.Event.addListener(window, "load", init);
         <div id="queryName"></div>
       </div>
       <div class="queryNameBar" id="temporalConstraintBar" style="width:512px;">
-        <div class="queryLabel" id="temporalConstraintLabel" style="width:120px">Temporal Constraint:&nbsp;</div>
+        <div class="queryLabel" id="temporalConstraintLabel" style="width:80px">Query Timing:&nbsp;</div> <!-- tdw9 (1707c): Changed label to refelct that this is a query timing selection. Changed label size from 120px to 80px-->
         <div class="qryTemporalConstraint" id="temporalConstraintDiv" style="float:left;overflow:hidden">
           <input type="submit" id="queryTiming" name="queryTiming" value="Treat all groups independently">
           <select id="menubutton1select" name="menubutton1select">
-            <option value="ANY">Treat all groups independently</option>
-            <option value="SAMEVISIT">Selected groups occur in the same financial encounter</option>
-            <option value="TEMPORAL">Define sequence of Events</option>
+            <option value="ANY">Non-Temporal Query: Treat all groups independently</option>
+            <option value="SAMEVISIT">Non-Temporal Query: Selected groups occur in the same financial encounter</option>
+            <option value="TEMPORAL">Temporal Query: Define sequence of Events</option>
             <!--   <option value="ENCOUNTER">Selected groups occur in financial encounters in the specified order</option>
                             <option value="SAMEINSTANCENUM">Items Instance will be the same</option>  -->
           </select>
+        </div>
+        <div id="temporalUIToggleDiv">
+            <a href="#" id="temporalUIToggleLink" onclick=i2b2.CRC.view.QT.toggleTemporalQueryMode(); return false;"> <span id="toggleTemporalQueryModeSpan"> Swtich to Advanced Temporal Query </span> </a>
         </div>
       </div>
       <div class="queryNameBar" id="defineTemporalBar" style="width:512px;display:none;">
@@ -716,56 +719,222 @@ YAHOO.util.Event.addListener(window, "load", init);
         </div>
       </div>
       <div id="crcQryToolPanels" style="width:512px;overflow:hidden;">
-        <div id = "crc.innerQueryPanel" style="width:550px;">
-          <div class="qryPanel">
+          <div id="crc.innerQueryPanel" style="width:550px;">
+              <div id="outerTemporalSequenceUI" style="display:none">
+                  <div id="tutorialDiv" class="tutorialClass"> 
+                      <a href="#" onclick="i2b2.CRC.view.QT.toggleTutorial(); return false;"> <span id="tutorialOnOffSpan"> Turn on Tutorial </span> </a> <span id="tutorialText" class="tutorialComponent"></span> <a href="#" id="tutorialShowMeLink" class="tutorialComponent"  onclick="i2b2.CRC.view.QT.runTutorialAtState(); return false;"> <span id="tutorShowMeText"> Show Me </span> </a>
+                  </div>
+                  <p id="temporalSequenceHeaderMessage" class="temporalSequenceMsgHeader">Drop a Concept into the Box to Start Bulding a Temporal Sequence</p>
+                  <!--<p id="temporalSequenceMessage" class="temporalSequenceMsg"><a href="#" onclick="i2b2.CRC.view.QT.runTutorial(1); return false;">(Show me)</a></p> -->
+                  <div id="tqDropBox" class="tqDropBoxClass"></div>
+                  <div id="startDrop" class="tqDrop">
+                      <img src="js-i2b2/cells/CRC/assets/tutorial/1.01.move-MI.gif" border="0">
+                  </div>
+                  <div id="tutorMainDialog" title="Tutorial"><span id="dialogText"></span></div>
+
+                  <div id="highlightRegion"><hr></div>
+                  <div id="highlightArrow">&#x2192;</div>
+            <!--
+            <div id="tutorLaunchDiv">
+                <div id="tutorialLaunchBox">
+                    <a href="#" onclick="JavaScript:i2b2.CRC.view.QT.startTutorial(); return false;"> <span id="tutorialSpan"> Launch Tutorial </span> </a>
+                </div>
+            </div>
+            -->
+            <!-- Old Tutorial -->
+            <!--
+            <div id="tutorialBox">
+                <div id="tutorPage1">
+                    <p id="tutorPage1HeaderMessage" class="temporalSequenceMsgHeader">1. Getting Started</p>
+                    <p id="tutorPage1Message" class="temporalSequenceMsg">We begin building a sequence of observations by dragging and dropping a concept into the box. <a href="#" onclick="i2b2.CRC.view.QT.runTutorial(1); return false;">(Show me)</a></p>
+                    <div id="tutorDropBox" class="tqDropBoxClass"></div>
+                    <div id="tutorMIDrop" class="tqDrop">
+                        <img src="js-i2b2/cells/CRC/assets/tutorial/1.01.move-MI.gif" border="0">
+                    </div>
+                </div>
+                <div id="tutorPage2">
+                    <p id="tutorPage2HeaderMessage" class="temporalSequenceMsgHeader">2. Building a Sequence</p>
+                    <p id="tutorPage2Message" class="temporalSequenceMsg">The dropped concept automatically becomes the starting observation in a temporal sequence. Observations to the right occurs after observations to the left. Drop concepts into the second to complete the sequence. <a href="#" onclick="i2b2.CRC.view.QT.runTutorial(2); return false;">(Show me)</a></p>
+
+                    <div id="tutorPage2TemporalSequenceUI">
+                        <div id="tutorTemporalSequence" class="temporalSequence">
+                            <div id="tp2Event_0" class="tutorTemporalEvent">
+                                <div class="temporalEventHeader">
+                                    <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
+                                    Observation A
+                                </div>
+                                <div id="tp2Event_0_P0" class="temporalPanel">
+                                    <div class="temporalPanelConstraintsDiv">
+                                        <div class="temporalPanelDatesDiv temporalPanelButton">Dates</div>
+                                        <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
+                                        <div class="temporalPanelDeleteDiv">
+                                            <div class="temporalPanelDeleteButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
+                                        </div>
+                                    </div>
+                                    <div id="tp2Event_0_P0_content" class="temporalPanelContentDiv">
+                                        <div class="sdxDefaultCONCPT"><img src="js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_branch.gif">Acute myocardial infarction</div>
+                                    </div>
+                                    <div class="temporalPanelAddDiv">
+                                        <div class="addPanelButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="arrow tutorImmovable">
+                                <div class="arrowImage">
+                                    <img src="js-i2b2/cells/CRC/assets/temporalQueryUIArrow.gif" alt="->" />
+                                </div>
+                                <div class="arrowText">
+                                    <a class="orderingText" href="#" onclick="return false;">Start of first ever Observation A occurs before start of first ever Observation B</a>
+                                </div>
+                            </div>
+                            <div id="tp2Event_1" class="tutorTemporalEvent">
+                                <div class="temporalEventHeader">
+                                    <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
+                                    Observation B
+                                </div>
+                                <div id="tp2Event_1_P0" class="temporalPanel">
+                                    <div class="temporalPanelConstraintsDiv">
+                                        <div class="temporalPanelDatesDiv temporalPanelButton">Dates</div>
+                                        <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
+                                        <div class="temporalPanelDeleteDiv">
+                                            <div class="temporalPanelDeleteButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
+                                        </div>
+                                    </div>
+                                    <div id="tp2Event_1_P0_content" class="temporalPanelContentDiv">                                          </div>
+                                    <div class="temporalPanelAddDiv">
+                                        <div class="addPanelButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="arrow_inactive tutorImmovable">
+                                <div class="arrowImage">
+                                    <img src="js-i2b2/cells/CRC/assets/temporalQueryUIAddEvent.gif" alt="->" />
+                                </div>
+                                <div class="inactiveArrowText">
+                                    <a class="orderingText" href="javascript:void(0);">Add a new Observation</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tutorNavigationBox">
+                    <div id="tutorNextBox">
+                        <a href="#" onclick="JavaScript:i2b2.CRC.view.QT.transitionTutorialTo(2); return false;"> <span id="tutorNext"> Next </span> </a>
+                    </div>
+                </div>
+            </div>
+            -->
+            <div id="innerTemporalSequenceUI">
+                <div id="temporalSequence_0" class="temporalSequence">
+                    <div id="temporalEvent_0" class="temporalEvent">
+                        <div class="temporalEventHeader">
+                            <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="i2b2.CRC.view.QT.deleteEventPressed(this); return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
+                            Observation A
+                        </div>
+                        <div id="temporalEvent_0_P0" class="temporalPanel">
+                            <div class="temporalPanelConstraintsDiv">
+                                <div class="temporalPanelDatesDiv temporalPanelButton">Dates</div>
+                                <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
+                                <div class="temporalPanelDeleteDiv">
+                                    <div class="temporalPanelDeleteButton"><a href="#" onclick="i2b2.CRC.view.QT.deletePanelPressed(this); return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
+                                </div>
+                            </div>
+                            <div id="temporalEvent_0_P0_content" class="temporalPanelContentDiv"></div>
+                            <div class="temporalPanelAddDiv">
+                                <div class="addPanelButton"><a href="#" onclick="i2b2.CRC.view.QT.addPanelPressed(this); return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arrow immovable">
+                        <div class="arrowImage">
+                            <img src="js-i2b2/cells/CRC/assets/temporalQueryUIArrow.gif" alt="->" />
+                        </div>
+                        <div class="arrowText">
+                            <a class="orderingText" href="#" onclick="i2b2.CRC.view.QT.relationshipLinkPressed(this);">Start of first ever Observation A occurs before start of first ever Observation B</a>
+                        </div>
+                    </div>
+                    <div id="temporalEvent_1" class="temporalEvent">
+                        <div class="temporalEventHeader">
+                            <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="i2b2.CRC.view.QT.deleteEventPressed(this); return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
+                            Observation B
+                        </div>
+                        <div id="temporalEvent_1_P0" class="temporalPanel">
+                            <div class="temporalPanelConstraintsDiv">
+                                <div class="temporalPanelDatesDiv temporalPanelButton">Dates</div>
+                                <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
+                                <div class="temporalPanelDeleteDiv">
+                                    <div class="temporalPanelDeleteButton"><a href="#" onclick="i2b2.CRC.view.QT.deletePanelPressed(this); return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
+                                </div>
+                            </div>
+                            <div id="temporalEvent_1_P0_content" class="temporalPanelContentDiv"></div>
+                            <div class="temporalPanelAddDiv">
+                                <div class="addPanelButton"><a href="#" onclick="i2b2.CRC.view.QT.addPanelPressed(this); return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arrow_inactive immovable">
+                        <div class="arrowImage">
+                            <img src="js-i2b2/cells/CRC/assets/temporalQueryUIAddEvent.gif" alt="->" />
+                        </div>
+                        <div class="inactiveArrowText">
+                            <a class="orderingText" href="javascript:void(0);">Add a new Observation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="populationLabel"><a href="javascript:i2b2.CRC.view.QT.togglePopulationPanels()"><span>&#x25B2; Click here to define a constraining Population</span></a></div>
+        <!-- Query Panels-->
+        <div class="qryPanel">
             <div class="qryPanelTitle">
-              <div class="qryPanelClear" style="float:right"><a href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].doDelete();"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Clear" /></a></div>
-              <div id="queryPanelTitle1">Group 1</div>
+                <div class="qryPanelClear" style="float:right"><a href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].doDelete();"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Clear" /></a></div>
+                <div id="queryPanelTitle1">Group 1</div>
             </div>
             <div class="qryPanelButtonBar">
-              <div class="qryButtonDate" style="float:left"><a id="queryPanelDatesB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.dateConstraint.showDates(0)" title="Select the date range for this group's criterion to have occured within...">Dates</a></div>
-              <div class="qryButtonOccurs" style="float:left"><a id="queryPanelOccursB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].showOccurs()" title="Select the minimum number of times this group's criterion has occured...">Occurs &gt; <span id="QP1Occurs">0</span>x</a></div>
-              <div class="qryButtonExclude" style="float:left"><a id="queryPanelExcludeB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].doExclude()" title="Exclude records matching this group's criteria...">Exclude</a></div>
+                <div class="qryButtonDate" style="float:left"><a id="queryPanelDatesB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.dateConstraint.showDates(0)" title="Select the date range for this group's criterion to have occured within...">Dates</a></div>
+                <div class="qryButtonOccurs" style="float:left"><a id="queryPanelOccursB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].showOccurs()" title="Select the minimum number of times this group's criterion has occured...">Occurs &gt; <span id="QP1Occurs">0</span>x</a></div>
+                <div class="qryButtonExclude" style="float:left"><a id="queryPanelExcludeB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].doExclude()" title="Exclude records matching this group's criteria...">Exclude</a></div>
             </div>
             <div class="qryPanelTiming">
-              <div id="queryPanelTimingText"  style="float:left">
-                <input type="submit" id="queryPanelTimingB1" name="queryPanelTiming" value="Treat Independently">
-                <select id="menubutton1select" name="menubutton1select">
-                  <option value="ANY">Treat Independently</option>
-                  <option value="SAMEVISIT">Occurs in Same Encounter</option>
-                </select>
-              </div>
-              <div class="qryButtonLimitB1" id="qryButtonLimitB1" style="display:none; float:right;"><a id="queryPanelLimitB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].showLimit()" title="Select the minimum number of times this group's criterion has occured...">Limit</a></div>
-              
-              <!--	<div class="qryPanelButtonBar2">
-                    	<div class="qryPanelTiming" id="queryPanelTimingB1" style="float:left"></div> --> 
-              
+                <div id="queryPanelTimingText" style="float:left">
+                    <input type="submit" id="queryPanelTimingB1" name="queryPanelTiming" value="Treat Independently">
+                    <select id="menubutton1select" name="menubutton1select">
+                        <option value="ANY">Treat Independently</option>
+                        <option value="SAMEVISIT">Occurs in Same Encounter</option>
+                    </select>
+                </div>
+                <div class="qryButtonLimitB1" id="qryButtonLimitB1" style="display:none; float:right;"><a id="queryPanelLimitB1" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[0].showLimit()" title="Select the minimum number of times this group's criterion has occured...">Limit</a></div>
+
+                <!--	<div class="qryPanelButtonBar2">
+                          <div class="qryPanelTiming" id="queryPanelTimingB1" style="float:left"></div> -->
+
             </div>
             <div id="QPD1" style="clear:both" oncontextmenu="return false" class="queryPanel"></div>
-          </div>
-          <div class="qryPanel" style="margin-left:2px;">
+        </div>
+        <div class="qryPanel" style="margin-left:2px;">
             <div class="qryPanelTitle">
-              <div class="qryPanelClear" style="float:right"><a href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[1].doDelete();"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Clear" /></a></div>
-              <div id="queryPanelTitle2">Group 2</div>
+                <div class="qryPanelClear" style="float:right"><a href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[1].doDelete();"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Clear" /></a></div>
+                <div id="queryPanelTitle2">Group 2</div>
             </div>
             <div class="qryPanelButtonBar">
-              <div class="qryButtonDate" style="float:left"><a id="queryPanelDatesB2" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.dateConstraint.showDates(1)" title="Select the date range for this group's criterion to have occured within...">Dates</a></div>
-              <div class="qryButtonOccurs" style="float:left"><a id="queryPanelOccursB2" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[1].showOccurs()" title="Select the minimum number of times this group's criterion has occured...">Occurs &gt; <span id="QP2Occurs">0</span>x</a></div>
-              <div class="qryButtonExclude" style="float:left"><a id="queryPanelExcludeB2" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[1].doExclude()" title="Exclude records matching this group's criteria...">Exclude</a></div>
+                <div class="qryButtonDate" style="float:left"><a id="queryPanelDatesB2" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.dateConstraint.showDates(1)" title="Select the date range for this group's criterion to have occured within...">Dates</a></div>
+                <div class="qryButtonOccurs" style="float:left"><a id="queryPanelOccursB2" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[1].showOccurs()" title="Select the minimum number of times this group's criterion has occured...">Occurs &gt; <span id="QP2Occurs">0</span>x</a></div>
+                <div class="qryButtonExclude" style="float:left"><a id="queryPanelExcludeB2" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[1].doExclude()" title="Exclude records matching this group's criteria...">Exclude</a></div>
             </div>
             <div class="qryPanelTiming" style="float:left">
-              <input type="submit" id="queryPanelTimingB2" name="queryPanelTiming" value="Treat Independently">
-              <select id="menubutton1select" name="menubutton1select">
-                <option value="ANY">Treat Independently</option>
-                <option value="SAMEVISIT">Occurs in Same Encounter</option>
-              </select>
+                <input type="submit" id="queryPanelTimingB2" name="queryPanelTiming" value="Treat Independently">
+                <select id="menubutton1select" name="menubutton1select">
+                    <option value="ANY">Treat Independently</option>
+                    <option value="SAMEVISIT">Occurs in Same Encounter</option>
+                </select>
             </div>
             <div id="QPD2" style="clear:both" oncontextmenu="return false" class="queryPanel"></div>
-          </div>
-          <div class="qryPanel" style="margin-left:2px;">
+        </div>
+        <div class="qryPanel" style="margin-left:2px;">
             <div class="qryPanelTitle">
-              <div class="qryPanelClear" style="float:right"><a href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[2].doDelete();"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Clear" /></a></div>
-              <div id="queryPanelTitle3">Group 3</div>
+                <div class="qryPanelClear" style="float:right"><a href="JavaScript:i2b2.CRC.ctrlr.QT.panelControllers[2].doDelete();"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Clear" /></a></div>
+                <div id="queryPanelTitle3">Group 3</div>
             </div>
             <div class="qryPanelButtonBar">
               <div class="qryButtonDate" style="float:left"><a id="queryPanelDatesB3" class="queryPanelButton" href="JavaScript:i2b2.CRC.ctrlr.dateConstraint.showDates(2)" title="Select the date range for this group's criterion to have occured within...">Dates</a></div>
@@ -796,6 +965,17 @@ YAHOO.util.Event.addListener(window, "load", init);
               on here</div>
           </div>
         </div>
+    <!-- a dialog for query tool -->
+    <div id="QTDialog" title="Download complete">
+        <p>
+            <span id="QTDialogImage" class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+            <span id="QTDialogMainMsg"></span>
+        </p>
+        <p>
+            <span id="QTDialogSubMsg"></span>
+        </p>
+        <div id="QTDialogProgressBar"></div>
+    </div>
         <div id = "crc.temoralBuilder" style="width:550px;display:none;">
           <div  id="temporalbuilders" style="overflow:auto;">
             <div class="relationshipAmongEvents" id="temporalbuilder_0">
@@ -891,6 +1071,11 @@ YAHOO.util.Event.addListener(window, "load", init);
         	<a href="JavaScript:i2b2.CRC.ctrlr.QT.doScrollLast();"><img id="panelScrollLast" src="js-i2b2/cells/CRC/assets/QryTool_b_last_hide.gif" border="0" alt="Go Last" /></a> 
         </div>
       </div>
+    </div>
+
+    <!-- tdw9: 1.707c pointy arrow for tutorial -->
+    <div id="simpleTemporalQueryPointyArrow">
+        <img id="pointyArrow" src="js-i2b2/cells/CRC/assets/tutorial/pointyArrow.png" border="0" alt="Here!" />
     </div>
   </div>
   
@@ -1164,6 +1349,50 @@ YAHOO.util.Event.addListener(window, "load", init);
       <br />
     </div>
   </div>
+
+    <div id="tqCalendarDiv" style="z-index:1520; display:none;"></div>
+    <!-- DO NOT MOVE calendarDivMask IE 5/6/7 has major z-index bug -->
+    <div id="tqCalendarDivMask" style="display:none; z-index:1510; position:absolute;" onclick="i2b2.CRC.ctrlr.dateConstraint.tqHideCalendar()"></div>
+    <div id="tqConstraintDates" style="display:none;">
+        <div class="hd" style="background:#6677AA;">Constrain Panel by Date Range</div>
+        <div class="bd">
+            <br />
+            <center>
+                <table style="font-size:12px">
+                    <tr>
+                        <td>From:</td>
+                        <td></td>
+                        <td>To:</td>
+                    </tr>
+                    <tr>
+                        <td class="dateBorder">
+                            <table>
+                                <tr>
+                                    <td valign="middle"><input id="tqCheckboxDateStart" type="checkbox" onchange="i2b2.CRC.ctrlr.dateConstraint.tqToggleDate()" /></td>
+                                    <td valign="middle"><input id="tqConstraintDateStart" value="01/31/2008" style="width:75px;" disabled="disabled" /></td>
+                                    <td valign="middle"><a href="Javascript:i2b2.CRC.ctrlr.dateConstraint.tqDoShowCalendar('S')"><img id="tqDropDateStart" style="position:relative; top:1px; border:none;" class="calendarDropdown" src="assets/images/b_dropdown.gif" alt="" /></a>&nbsp;</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td class="dateBorder">
+                            <table>
+                                <tr>
+                                    <td valign="middle"><input id="tqCheckboxDateEnd" type="checkbox" onchange="i2b2.CRC.ctrlr.dateConstraint.tqToggleDate()" /></td>
+                                    <td valign="middle"><input id="tqConstraintDateEnd" value="12/31/2008" style="width:75px;" disabled="disabled" /></td>
+                                    <td valign="middle"><a href="Javascript:i2b2.CRC.ctrlr.dateConstraint.tqDoShowCalendar('E');"><img id="tqDropDateEnd" style="position:relative; top:1px" class="calendarDropdown" border="0" src="assets/images/b_dropdown.gif" alt="" /></a>&nbsp;</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <span><br />Setting this will apply the date constraint to the entire panel.<br /><br />Any item-level date constraints will be overwritten.</span>
+            </center>
+            <br />
+            <br />
+        </div>
+    </div>
+
   <div id="constraintOccurs" style="display:none;">
     <div class="hd" style="background:#6677AA;">Constrain Group by Number of Occurrences</div>
     <div class="bd"> <br />
@@ -1442,6 +1671,76 @@ YAHOO.util.Event.addListener(window, "load", init);
   <!-- ############### </Timeout Dialog> ############### --> 
   <!-- ############### <Draggable Splitter> ############### -->
   <div id="main.splitter" class="vertical_splitter" style="top:33px"></div>
+
+  <!-- ############### tdw9 1707c: <Popup Editor for Temporal Relationships (for temporal query UI)> ############### -->
+    <div id="temporalRelationshipEditor" style="display:none;">
+        <div class="hd" style="background:#6677AA;">Edit Temporal Relationship</div>
+        <div id="relationshipEditorDiv" style="overflow:auto;">
+            <div class="relationshipAmongEvents" id="temporalbuilder_0">
+                <select id="refDate1" name="refDate1" style="width:100px;">
+                    <option value="STARTDATE">Start of</option>
+                    <option value="ENDDATE">End of</option>
+                </select>
+                <select id="aggregationOp1" name="aggregationOp1" style="width:150px;">
+                    <option value="FIRST">the First Ever</option>
+                    <option value="LAST">the Last Ever</option>
+                    <option value="ANY">any</option>
+                </select>
+                <span id="leadingEventNameSpan" class="eventName">Event 1</span>
+                <br />
+                <select id="operator" name="operator" style="width:150px;">
+                    <option value="LESS">Occurs Before</option>
+                    <option value="LESSEQUAL">Occurs On or Before</option>
+                    <option value="EQUAL">Occurs Simultaneously With</option>
+                </select>
+                <br />
+                <select id="refDate2" name="refDate2" style="width:100px;">
+                    <option value="STARTDATE">Start of</option>
+                    <option value="ENDDATE">End of</option>
+                </select>
+                <select id="aggregationOp2" name="aggregationOp2" style="width:150px;">
+                    <option value="FIRST">the First Ever</option>
+                    <option value="LAST">the Last Ever</option>
+                    <option value="ANY">any</option>
+                </select>
+                <span id="trailingEventNameSpan" class="eventName">Event 2</span>
+                <br />
+                <input id="spanCheck1" name="spanCheck1" type="checkbox">
+                By
+                <select id="spanOp1" name="spanOp1" style="width:50px;">
+                    <option value="GREATER">&gt;</option>
+                    <option value="GREATEREQUAL" selected>&ge;</option>
+                    <option value="EQUAL">=</option>
+                    <option value="LESSEQUAL">&le;</option>
+                    <option value="LESS">&lt;</option>
+                </select>
+                <input id="spanValue1" name="spanValue1" style="width:50px;" type="text" value="1">
+                <select id="spanUnits1" name="spanUnits1" style="width:100px;">
+                    <option value="HOUR">hour(s)</option>
+                    <option value="DAY" selected>day(s)</option>
+                    <option value="MONTH">month(s)</option>
+                    <option value="YEAR">year(s)</option>
+                </select>
+                <br />
+                <input id="spanCheck2" name="spanCheck2" type="checkbox">
+                And
+                <select id="spanOp2" name="spanOp2" style="width:50px;">
+                    <option value="GREATER">&gt;</option>
+                    <option value="GREATEREQUAL">&ge;</option>
+                    <option value="EQUAL">=</option>
+                    <option value="LESSEQUAL" selected>&le;</option>
+                    <option value="LESS">&lt;</option>
+                </select>
+                <input id="spanValue2" name="spanValue2" style="width:50px;" type="text" value="1">
+                <select id="spanUnits2" name="spanUnits2" style="width:100px;">
+                    <option value="HOUR">hour(s)</option>
+                    <option value="DAY" selected>day(s)</option>
+                    <option value="MONTH">month(s)</option>
+                    <option value="YEAR">year(s)</option>
+                </select>
+            </div>
+        </div>
+    </div>
   <!-- Overwriting the default top position --> 
   <!-- Debug output --> 
   <!-- <div id="main.debug" style="position: absolute; top: 300px; left: 300px; color: red"> <p></p><br> </div> --> 

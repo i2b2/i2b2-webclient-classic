@@ -617,7 +617,8 @@ function i2b2_PanelController(parentCtrlr) {
 	}
 
 // ================================================================================================== //
-	this._addConceptVisuals = function (sdxConcept, tvParent, isDragged) {
+// tdw9 1707c: added another (optional) argument ('tQuryPanel') to properly invoke modlab dialog for temporal query panels
+	this._addConceptVisuals = function (sdxConcept, tvParent, isDragged, tQueryPanel) {
 		var tvTree = tvParent.tree;
 		if (sdxConcept.sdxInfo.sdxType == "CONCPT") { 
 		    var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',sdxConcept.origData);
@@ -812,33 +813,103 @@ function i2b2_PanelController(parentCtrlr) {
 		
 		if (!sdxDataNode) { return false; }
 
-		var sdxRenderData = i2b2.sdx.Master.RenderHTML(tvTree.id, sdxDataNode, renderOptions);
+		var sdxData = i2b2.sdx.Master.RenderHTML(tvTree.id, sdxDataNode, renderOptions);
 	
 		if (sdxConcept.itemNumber)
-			sdxRenderData.itemNumber = sdxConcept.itemNumber;
+			sdxData.itemNumber = sdxConcept.itemNumber;
 		else 
-			sdxRenderData.itemNumber = this.itemNumber++;
-	
-		if (!sdxConcept.origData.isModifier) {
-			//check if lab has value if so than auto popup
-			var lvMetaDatas2 = i2b2.h.XPath(sdxConcept.origData.xmlOrig, 'metadataxml/ValueMetadata[string-length(Version)>0]');
-			if (lvMetaDatas2.length > 0) {
-				//bring up popup
-				this.showLabValues(sdxConcept.origData.key, sdxRenderData);
-			}
-		} else {
-			//check if the mod has a value, if so than auto popup
-			var lvMetaDatas1 = i2b2.h.XPath(sdxConcept.origData.xmlOrig, 'metadataxml/ValueMetadata[string-length(Version)>0]');
-			if (lvMetaDatas1.length > 0) {
-				//bring up popup
-				this.showModValues(sdxConcept.origData.key, sdxRenderData);			
-			}
-		}
+        {
+            if (tQueryPanel)
+            {
+                sdxData.sdxConcept = sdxConcept;                 // link to original data so we can use the original data's itemNumber, which is dynamically pudated (without this, deletion of concepts do no work in temporal query UI)
+                sdxData.itemNumber = tQueryPanel.items.length+1; // tdw9 1707c: temporal query panel assigns itemNumber differently (If this is not taken care off, Mod/Lab in temporal query panel will not work)
+            }
+            else
+			    sdxData.itemNumber = this.itemNumber++;
+        }
+        
+        if (sdxConcept.sdxInfo.sdxType == "CONCPT" && isDragged) // only pop up dialog if it's dragged and it's a modifier or lab value
+        {	
+		    if (!sdxConcept.origData.isModifier) // check for existence of Lab values
+            {
+			    //check if lab has value if so than auto popup
+			    var lvMetaDatas2 = i2b2.h.XPath(sdxConcept.origData.xmlOrig, 'metadataxml/ValueMetadata[string-length(Version)>0]');
+			    if (lvMetaDatas2.length > 0) {
+				    //bring up popup
+			        this.showLabValues(sdxConcept.origData.key, sdxData);
+			    }
+		    } 
+            else // check for Mod values
+            {
+			    //check if the mod has a value, if so than auto popup
+			    var lvMetaDatas1 = i2b2.h.XPath(sdxConcept.origData.xmlOrig, 'metadataxml/ValueMetadata[string-length(Version)>0]');
+			    if (lvMetaDatas1.length > 0) {
+				    //bring up popup
+			        this.showModValues(sdxConcept.origData.key, sdxData);
+			    }
+		    }
+        }
 
-		
-		i2b2.sdx.Master.AppendTreeNode(tvTree, tvParent, sdxRenderData);
-		return sdxRenderData;
+		// tdw9 1.703: add Lab/Mod Values if they exist -- this makes sure that when modlab dialog pops up, Lab/Mod values are read correctly if the concept had been switched in from SIMPLE temporal query.
+		if (sdxConcept.LabValues) sdxData.LabValues = sdxConcept.LabValues;
+		if (sdxConcept.ModValues) sdxData.ModValues = sdxConcept.Modalues;
+
+				
+		i2b2.sdx.Master.AppendTreeNode(tvTree, tvParent, sdxData);
+		return sdxData;
 	}	
+
+// ================================================================================================== //
+	this.copyIntoSelf = function( tqPanel, panelIndex )
+    {
+        // we always copy into a new panel, so reset itemNumber to 1:
+        this.itemNumber = 1;
+        // insert concept into our panel's items array;
+		var dm = i2b2.CRC.model.queryCurrent;
+		//var targetPanelIndex = this.panelCurrentIndex;
+		if (Object.isUndefined(dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex])) 
+			this.QTController.panelAdd(this.yuiTree);
+
+        dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex].exclude    = tqPanel.exclude;
+        dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex].datFrom    = tqPanel.dateFrom;
+        dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex].dateTo     = tqPanel.dateTo;
+        dm.panels[i2b2.CRC.ctrlr.QT.temporalGroup][panelIndex].timing     = "SAMEINSTANCENUM";
+
+        for ( var i = 0; i < tqPanel.items.length; i++ )
+        {
+            var sdxConceptOrig = tqPanel.items[i];
+            var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData.parent, sdxConceptOrig.sdxInfo.sdxType);
+
+            if (sdxConceptOrig.ModValues)
+                sdxConcept.ModValues = sdxConceptOrig.ModValues;
+            if (sdxConceptOrig.LabValues)
+                sdxConcept.LabValues = sdxConceptOrig.LabValues;
+
+		    sdxConcept.itemNumber = this.itemNumber++;
+
+            // set date ranges
+            if (tqPanel.items[i].dateFrom)  sdxConcept.dateFrom = tqPanel.items[i].dateFrom;
+            if (tqPanel.items[i].dateTo)    sdxConcept.dateTo = tqPanel.items[i].dateTo;
+
+
+            if (sdxConceptOrig.origData.isModifier) // fix modifier's origData       
+            {
+                sdxConcept.origData.applied_path    = sdxConceptOrig.origData.applied_path;
+                sdxConcept.origData.key             = sdxConceptOrig.origData.key;
+                sdxConcept.origData.name            = sdxConceptOrig.origData.name;
+                sdxConcept.origData.newName         = sdxConceptOrig.origData.newName;
+                sdxConcept.origData.parent.tooltip  = sdxConceptOrig.origData.parent.name;
+            }
+
+		    // save data
+            this.panelCurrentIndex = panelIndex; // set panelCurrentIndex to ensure concepts are added to the right panel
+		    this._addConcept(sdxConcept,this.yuiTree.root, false); // false: not a drag-drop action
+        }
+		// reset the query name to be blank and flag as having dirty data
+		i2b2.CRC.ctrlr.QT.doSetQueryName('');
+		//this.QTController._redrawAllPanels(); // do not draw because this will overwrite Population 
+       
+    };
 
 // ================================================================================================== //
 	this._deleteConcept = function(htmlID) {
