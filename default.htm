@@ -6,9 +6,9 @@
 <!--
  *  *************************
  *       i2b2 Web Client
- *           v1.7.09c
+ *           v1.7.10
  *  ************************* 
- *  @modified: 11/16/17
+ *  @modified: 03/07/18
  *  Contributors:
  *     Nick Benik
  *     Griffin Weber, MD, PhD
@@ -22,7 +22,7 @@
  */-->
 
 <script type="text/javascript">
-	var i2b2build = "1.7.09c   [11/16/17 2:00 PM] ";
+	var i2b2build = "1.7.10   [03/07/18 2:00 PM] ";
 </script>
 
 <!-- LOAD YUI FROM Yahoo's CDN
@@ -734,97 +734,7 @@ YAHOO.util.Event.addListener(window, "load", init);
 
                   <div id="highlightRegion"><hr></div>
                   <div id="highlightArrow">&#x2192;</div>
-            <!--
-            <div id="tutorLaunchDiv">
-                <div id="tutorialLaunchBox">
-                    <a href="#" onclick="JavaScript:i2b2.CRC.view.QT.startTutorial(); return false;"> <span id="tutorialSpan"> Launch Tutorial </span> </a>
-                </div>
-            </div>
-            -->
-            <!-- Old Tutorial -->
-            <!--
-            <div id="tutorialBox">
-                <div id="tutorPage1">
-                    <p id="tutorPage1HeaderMessage" class="temporalSequenceMsgHeader">1. Getting Started</p>
-                    <p id="tutorPage1Message" class="temporalSequenceMsg">We begin building a sequence of observations by dragging and dropping a concept into the box. <a href="#" onclick="i2b2.CRC.view.QT.runTutorial(1); return false;">(Show me)</a></p>
-                    <div id="tutorDropBox" class="tqDropBoxClass"></div>
-                    <div id="tutorMIDrop" class="tqDrop">
-                        <img src="js-i2b2/cells/CRC/assets/tutorial/1.01.move-MI.gif" border="0">
-                    </div>
-                </div>
-                <div id="tutorPage2">
-                    <p id="tutorPage2HeaderMessage" class="temporalSequenceMsgHeader">2. Building a Sequence</p>
-                    <p id="tutorPage2Message" class="temporalSequenceMsg">The dropped concept automatically becomes the starting observation in a temporal sequence. Observations to the right occurs after observations to the left. Drop concepts into the second to complete the sequence. <a href="#" onclick="i2b2.CRC.view.QT.runTutorial(2); return false;">(Show me)</a></p>
 
-                    <div id="tutorPage2TemporalSequenceUI">
-                        <div id="tutorTemporalSequence" class="temporalSequence">
-                            <div id="tp2Event_0" class="tutorTemporalEvent">
-                                <div class="temporalEventHeader">
-                                    <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
-                                    Observation A
-                                </div>
-                                <div id="tp2Event_0_P0" class="temporalPanel">
-                                    <div class="temporalPanelConstraintsDiv">
-                                        <div class="temporalPanelDatesDiv temporalPanelButton">Dates</div>
-                                        <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
-                                        <div class="temporalPanelDeleteDiv">
-                                            <div class="temporalPanelDeleteButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
-                                        </div>
-                                    </div>
-                                    <div id="tp2Event_0_P0_content" class="temporalPanelContentDiv">
-                                        <div class="sdxDefaultCONCPT"><img src="js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_branch.gif">Acute myocardial infarction</div>
-                                    </div>
-                                    <div class="temporalPanelAddDiv">
-                                        <div class="addPanelButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="arrow tutorImmovable">
-                                <div class="arrowImage">
-                                    <img src="js-i2b2/cells/CRC/assets/temporalQueryUIArrow.gif" alt="->" />
-                                </div>
-                                <div class="arrowText">
-                                    <a class="orderingText" href="#" onclick="return false;">Start of first ever Observation A occurs before start of first ever Observation B</a>
-                                </div>
-                            </div>
-                            <div id="tp2Event_1" class="tutorTemporalEvent">
-                                <div class="temporalEventHeader">
-                                    <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
-                                    Observation B
-                                </div>
-                                <div id="tp2Event_1_P0" class="temporalPanel">
-                                    <div class="temporalPanelConstraintsDiv">
-                                        <div class="temporalPanelDatesDiv temporalPanelButton">Dates</div>
-                                        <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
-                                        <div class="temporalPanelDeleteDiv">
-                                            <div class="temporalPanelDeleteButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
-                                        </div>
-                                    </div>
-                                    <div id="tp2Event_1_P0_content" class="temporalPanelContentDiv">                                          </div>
-                                    <div class="temporalPanelAddDiv">
-                                        <div class="addPanelButton"><a href="#" onclick="return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="arrow_inactive tutorImmovable">
-                                <div class="arrowImage">
-                                    <img src="js-i2b2/cells/CRC/assets/temporalQueryUIAddEvent.gif" alt="->" />
-                                </div>
-                                <div class="inactiveArrowText">
-                                    <a class="orderingText" href="javascript:void(0);">Add a new Observation</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tutorNavigationBox">
-                    <div id="tutorNextBox">
-                        <a href="#" onclick="JavaScript:i2b2.CRC.view.QT.transitionTutorialTo(2); return false;"> <span id="tutorNext"> Next </span> </a>
-                    </div>
-                </div>
-            </div>
-            -->
             <div id="innerTemporalSequenceUI">
                 <div id="temporalSequence_0" class="temporalSequence">
                     <div id="temporalEvent_0" class="temporalEvent">
