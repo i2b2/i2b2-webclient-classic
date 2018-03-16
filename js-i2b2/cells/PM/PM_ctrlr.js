@@ -333,7 +333,7 @@ i2b2.PM.changePassword = {
 			var retypepass = $('retypepass').value;
 			
 			if (newpass != retypepass) {
-				alert("New password and Retype Password dont match");
+				alert("Password doesn't match the confirm password");
 			} else { 
 				
 				// callback processor
@@ -357,7 +357,7 @@ i2b2.PM.changePassword = {
 							// we have a proper error msg
 							 try {
  								if (s[0].firstChild.nodeValue == "Password Validation Failed")
-                                                                        alert("Password Requirements\n• Be at least 8 characters\n\n• Must contain\n\to upper case letters (a-z)\n\to lower case letters (A-Z)\n\to numbers (0-9)\n\to special character (,.!@()}{#$%^&+=)\n\n• Must NOT contain\n\to spaces\n\to 2 consecutive identical characters");
+                                                                        alert("Password Requirements\n- Be at least 8 characters\n\n- Must contain\n\to upper case letters (a-z)\n\to lower case letters (A-Z)\n\to numbers (0-9)\n\to special character (,.!@()}{#$%^&+=)\n\n- Must NOT contain\n\to spaces\n\to start with a special characters");
                                                                 else				 
 									alert(s[0].firstChild.nodeValue);
 							} catch(e) { alert("Error in PM Response");}    
