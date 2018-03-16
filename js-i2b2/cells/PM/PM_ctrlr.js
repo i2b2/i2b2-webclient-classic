@@ -319,6 +319,9 @@ i2b2.PM.changePassword = {
 	},
 	hide: function() {
 		try {
+                        $('curpass').value = "";                
+                        $('newpass').value = "";
+                        $('retypepass').value = "";			
 			i2b2.PM.changePassword.yuiPanel.hide();
 			//$("changepassword-viewer-panel").hide();
 		} catch (e) {}
@@ -353,7 +356,10 @@ i2b2.PM.changePassword = {
 						if (s.length > 0) {
 							// we have a proper error msg
 							 try {
-								alert(s[0].firstChild.nodeValue);
+ 								if (s[0].firstChild.nodeValue == "Password Validation Failed")
+                                                                        alert("Password Validation Failed:\n(1) a digit must occur at least once\n(2) a lower case letter must occur at least once\n(3) an upper case letter must occur at least once\n(4) a special character must occur at least once )(;:}{,.!@#$%^&+=\n(5) no whitespace allowed in the entire string\n(6) at least 8 characters");
+                                                                else				 
+									alert(s[0].firstChild.nodeValue);
 							} catch(e) { alert("Error in PM Response");}    
 						}
 
