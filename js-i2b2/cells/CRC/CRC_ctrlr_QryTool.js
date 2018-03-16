@@ -1910,7 +1910,7 @@ this._getOtherQueryXML = function(queryName)
 							}							
 							
 							s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
-							s += '\t\t\t<item_key>' + key + '</item_key>\n';
+							s += '\t\t\t<item_key>' + i2b2.h.Escape(key) + '</item_key>\n';
 							s += '\t\t\t<item_name>' +  i2b2.h.Escape(name) + '</item_name>\n';
 							// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
 							s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
@@ -1928,14 +1928,10 @@ this._getOtherQueryXML = function(queryName)
 							
 							s += '\t\t\t\t</constrain_by_modifier>\n';					
 						} else {
-							sdxData.origData.key = (sdxData.origData.key).replace(/</g,"&lt;");
-							sdxData.origData.name = (sdxData.origData.name).replace(/</g,"&lt;");
-							if (undefined != sdxData.origData.tooltip)                        
-								sdxData.origData.tooltip = (sdxData.origData.tooltip).replace(/</g,"&lt;");
 							s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
 							//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
 							s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
-							s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
+							s += '\t\t\t<item_key>' + i2b2.h.Escape(sdxData.origData.key) + '</item_key>\n'; // BUG FIX: WEBCLIENT-227
 							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
 							s += '\t\t\t<class>ENC</class>\n';
 							s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';	
