@@ -2402,7 +2402,7 @@ return s;
 						}
 					
 						$('infoQueryStatusText').innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + value  +   "</font></div>";
-						i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column") + " : " + value + "\n"; //snm0						
+						i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + value + "\n"; //snm0						
 					//$('infoQueryStatusText').innerHTML += "</div>";						//i2b2.h.XPath(newxml, 'descendant-or-self::result/data')[0].firstChild.nodeValue;
 
 					}
