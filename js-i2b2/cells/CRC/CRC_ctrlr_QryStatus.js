@@ -291,7 +291,7 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 						}
 						// display a line of results in the status box
 						self.dispDIV.innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") + ": <font color=\"#0000dd\">" + value  + "</font></div>";  //Query Report BG
-						sCompiledResultsTest += params[i2].getAttribute("column") + " : " + value + "\n"; //snm0
+						sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + value + "\n"; //snm0
 					}
 					var ri_id = i2b2.h.XPath(temp, 'descendant-or-self::result_instance_id')[0].firstChild.nodeValue;
 				}
