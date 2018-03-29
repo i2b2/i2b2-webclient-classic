@@ -357,7 +357,7 @@ i2b2.PM.changePassword = {
 							// we have a proper error msg
 							 try {
  								if (s[0].firstChild.nodeValue == "Password Validation Failed")
-                                                                        alert("Password Requirements\n- Be at least 8 characters\n\n- Must contain\n\to upper case letters (a-z)\n\to lower case letters (A-Z)\n\to numbers (0-9)\n\to special character (,.!@()}{#$%^&+=)\n\n- Must NOT contain\n\to spaces\n\to start with a special characters");
+                                                                        alert("Password Requirements\n\t- Be at least 8 characters\n\n- Must contain\n\t- upper case letters (A-Z)\n\t- lower case letters (a-z)\n\t- numbers (0-9)\n\t- special character (,.!@()}{#$%^&+=)\n\n- Must NOT contain\n\t- spaces\n\t- start or end with a special characters");
                                                                 else				 
 									alert(s[0].firstChild.nodeValue);
 							} catch(e) { alert("Error in PM Response");}    
