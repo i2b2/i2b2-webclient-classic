@@ -2130,15 +2130,23 @@ i2b2.CRC.view.QT.resetTutorialAtState = function()
             jQuery('#populationLabel').delay(1500).fadeOut(250).fadeIn(250).fadeOut(250).fadeIn(600, function()
             {
                 jQuery("#simpleTemporalQueryPointyArrow").fadeOut();
-                jQuery("#populationLabel ").css("height", "12px");
-                jQuery("#populationLabel ").addClass("highlighted");
-                jQuery('#tutorialShowMeLink').fadeIn();
+                jQuery("#populationLabel").css("height", "12px");
+                if (i2b2.CRC.view.QT.isTutorial) // if user turned off tutorial, do not do these
+                {
+                    jQuery("#populationLabel").addClass("highlighted");
+                    jQuery('#tutorialShowMeLink').fadeIn();
+                }
+                else
+                {
+                    jQuery("#populationLabel").hide();
+                    jQuery('#tutorialShowMeLink').hide();
+                }
             });
             break;
         case 8:
             jQuery("#simpleTemporalQueryPointyArrow").hide();
-            jQuery("#populationLabel ").css("height", "");
-            jQuery("#populationLabel ").removeClass("highlighted");            
+            jQuery("#populationLabel").css("height", "");
+            jQuery("#populationLabel").removeClass("highlighted");            
             i2b2.CRC.view.QT.updateTutorialText("9. A population is optional. By leaving it empty, the temporal search applies to every patient in the databse.");
             break;
         case 9:
@@ -2339,7 +2347,7 @@ i2b2.CRC.view.QT.showDialog = function(title, mainMsgHTML, subMsgHTML, userIconN
 
     // set icon via changing classnames
     jQuery("#QTDialogImage").removeClass();
-    var iconName = "ui-icon-notice";
+    var iconName = "ui-icon-alert";
     if (userIconName ) 
         iconName = userIconName;
     if (iconName === "=none=")

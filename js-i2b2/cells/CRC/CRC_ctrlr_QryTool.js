@@ -76,7 +76,17 @@ function QueryToolController() {
         jQuery("#temporalUIToggleDiv").hide();                    //  hide temporal query mode toggle when clear is pressed.
         jQuery("#toggleTemporalQueryModeSpan").html("Switch to Advanced Temporal Query"); // reset toggle button text
         i2b2.CRC.view.QT.isShowingTemporalQueryUI        = false; //  tdw9: 1707c:show reset state, which is not temporal query
-        i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI = false; 
+		i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI = false; 
+		// reset tutorial
+		jQuery(".highlighted").removeClass("highlighted"); // remove all highlighteds if they are not already removed
+		jQuery("#simpleTemporalQueryPointyArrow").hide();
+		jQuery('#tutorialShowMeLink').hide();
+		jQuery("#populationLabel").hide();	
+		if (i2b2.CRC.view.QT.isTutorial)
+			i2b2.CRC.view.QT.toggleTutorial();
+		i2b2.CRC.view.QT.deleteAllEvents();		
+		i2b2.CRC.view.QT.resetTemporalQueryUI();
+		i2b2.CRC.view.QT.tutorialState = 0; // reset tutorial state
         // hide new temporal sequence UI
         jQuery("#outerTemporalSequenceUI").hide();
         jQuery("#populationLabel").hide();
