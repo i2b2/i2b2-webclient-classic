@@ -369,6 +369,9 @@ i2b2.PM.changePassword = {
 						return false;
 					}
 					alert("Password successfully changed");	
+                      			$('curpass').value = "";                
+                        		$('newpass').value = "";
+                        		$('retypepass').value = "";								
 					i2b2.PM.changePassword.yuiPanel.hide();
 
 
