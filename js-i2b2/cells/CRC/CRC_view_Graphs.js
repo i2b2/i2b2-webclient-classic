@@ -201,8 +201,8 @@ try {
 		var asInputSentences = sInputString.split("\n");
 		var iFragmentArrayCounter = 0;
 		for(var i = 0; i < asInputSentences.length; i++) {
-			if (asInputSentences[i].indexOf("for") > 0) { 
-				asTempArray = asInputSentences[i].split("for");
+			if (asInputSentences[i].indexOf('for "') > 0) { 
+				asTempArray = asInputSentences[i].split('for "');
 				sLatestTitle = asTempArray[0];
 				sLatestQueryName = asTempArray[1];
 				sLatestSite = ".";
@@ -239,8 +239,8 @@ try {
 		var asInputSentences = sInputString.split("\n");
 		var iFragmentArrayCounter = 0;
 		for (var i = 0; i < asInputSentences.length; i++) {
-			if (asInputSentences[i].indexOf("for") > 0) { 
-				asTempArray = asInputSentences[i].split("for");
+			if (asInputSentences[i].indexOf('for "') > 0) { 
+				asTempArray = asInputSentences[i].split('for "');
 				sLatestTitle = asTempArray[0];
 				if (asTempArray[1].indexOf("=") > 0) {
 					asTemp2Array = asTempArray[1].split("=");
