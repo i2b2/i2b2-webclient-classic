@@ -4144,7 +4144,7 @@ return s;
 			dataArray.each(function(data){
 				if(data[1].trim() == key)
 				{
-					var subKey = data[3].trim();
+					var subKey = data[3].trim().substring(0,20);
 					var val = data[4].trim();
 					item.set(subKey,val);
 				}
