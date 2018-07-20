@@ -14,13 +14,17 @@ console.time('execute time');
 // create and save the screen objects
 i2b2.CRC.view.history = new i2b2Base_cellViewController(i2b2.CRC, 'history');
 i2b2.CRC.view.history.visible = false;
+
+i2b2.CRC.view.history.autorefresh = '';
 // define the option functions
 // ================================================================================================== //
 i2b2.CRC.view.history.showOptions = function(subScreen){
 	if (!this.modalOptions) {
+		setTimeout("i2b2.CRC.ctrlr.history._loadUsersInOptions();",300);
 		var handleSubmit = function(){
 			// submit value(s)
 			var value = $('HISTMaxQryDisp').value;
+			var userValue = $('HISTUser').value;
 			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10))){
 				if(parseInt(value, 10) > 0){
 					if (this.submit()) {
@@ -40,8 +44,18 @@ i2b2.CRC.view.history.showOptions = function(subScreen){
 						i2b2.CRC.view['history'].params.sortBy = tmpValue;
 						tmpValue = parseInt($('HISTMaxQryDisp').value, 10);
 						i2b2.CRC.view['history'].params.maxQueriesDisp = tmpValue;
+						i2b2.CRC.view['history'].params.userBy = userValue;
 						// requery the history list
 						i2b2.CRC.ctrlr.history.Refresh();
+						
+						var refreshValue = parseInt($('HISTAuto').value, 10);
+						if(refreshValue > 0){
+							clearInterval(i2b2.CRC.view.history.autorefresh);
+							i2b2.CRC.view.history.autorefresh = setInterval(function(){ i2b2.CRC.ctrlr.history.Refresh(); }, refreshValue*1000);
+						} else {
+							clearInterval(i2b2.CRC.view.history.autorefresh);
+						}
+						
 					}
 				} else {
 					alert('Please enter number greater than 0 for Maximum Children to Display.');
@@ -147,9 +161,9 @@ i2b2.CRC.view.history.Resize = function(e) {
 				if (i2b2.WORK && i2b2.WORK.isLoaded) {
 					// make room for the workspace window
 					ve.width = Math.max(initBrowserViewPortDim.width-rightSideWidth, 0);
-					ve.top = h-196+44;
-					$('crcHistoryData').style.height = '100px';
-					$('crcSearchNamesResults').style.height = '72px';
+					ve.top = h-196+44-48;
+					$('crcHistoryData').style.height = '125px';
+					$('crcSearchNamesResults').style.height = '120px';
 				} else {
 					ve.width = w-578;
 					ve.top = h-196;
@@ -162,13 +176,13 @@ i2b2.CRC.view.history.Resize = function(e) {
 					// make room for the workspace window
 					w = parseInt(w/3)-10;
 					ve.width = w;
-					ve.top = h-196+44;
-					$('crcHistoryData').style.height = '100px';
-					$('crcSearchNamesResults').style.height = '72px';					
+					ve.top = h-196+44-48;
+					$('crcHistoryData').style.height = '125px';
+					$('crcSearchNamesResults').style.height = '120px';					
 				} else {
 					w = parseInt(w/3)-10;
 					ve.width = w;
-					ve.top = h-196;
+					ve.top = h-196-48;
 					$('crcHistoryData').style.height = '144px';
 					$('crcSearchNamesResults').style.height = '116px';
 				}
@@ -176,7 +190,7 @@ i2b2.CRC.view.history.Resize = function(e) {
 		}
 		if (viewObj.isZoomed) {
 			ve.top = '';
-			$('crcHistoryData').style.height = h-97; 
+			$('crcHistoryData').style.height = h-97-25; 
 			$('crcSearchNamesResults').style.height = h-125;			
 		}
 		$$('DIV#crcHistoryBox DIV#crcHistoryData')[0].style.width = (parseInt(ve.width)-24) + 'px';
@@ -216,9 +230,9 @@ i2b2.CRC.view.history.ResizeHeight = function() {
 			case "Patients":
 				if (i2b2.WORK && i2b2.WORK.isLoaded) {
 					// make room for the workspace window
-					ve.top = h-196+44;
-					$('crcHistoryData').style.height = '100px';
-					$('crcSearchNamesResults').style.height = '72px';
+					ve.top = h-196+44-48;
+					$('crcHistoryData').style.height = '125px';
+					$('crcSearchNamesResults').style.height = '120px';
 				} else {
 					ve.top = h-196;
 					$('crcHistoryData').style.height = '144px';
@@ -228,9 +242,9 @@ i2b2.CRC.view.history.ResizeHeight = function() {
 			case "Analysis":
 				if (i2b2.WORK && i2b2.WORK.isLoaded) {
 					// make room for the workspace window
-					ve.top = h-196+44;
-					$('crcHistoryData').style.height = '100px';
-					$('crcSearchNamesResults').style.height = '72px';
+					ve.top = h-196+44-48;
+					$('crcHistoryData').style.height = '125px';
+					$('crcSearchNamesResults').style.height = '120px';
 				} else {
 					ve.top = h-196;
 					$('crcHistoryData').style.height = '144px';
@@ -240,7 +254,7 @@ i2b2.CRC.view.history.ResizeHeight = function() {
 		}
 		if (viewObj.isZoomed) {
 			ve.top = '';
-			$('crcHistoryData').style.height = h-97; 
+			$('crcHistoryData').style.height = h-97-25; 
 			$('crcSearchNamesResults').style.height = h-125; 
 		}
 	} else {
@@ -421,7 +435,7 @@ i2b2.events.afterCellInit.subscribe(
 
 			}			
 			// we need to make sure everything is loaded
-			setTimeout("i2b2.CRC.ctrlr.history.Refresh();",300);			
+			setTimeout("i2b2.CRC.ctrlr.history.Refresh();",300);
 			
 // -------------------------------------------------------
 			i2b2.CRC.ctrlr.history.events.onDataUpdate.subscribe(
@@ -555,8 +569,8 @@ i2b2.events.initView.subscribe((function(eventTypeName, newMode) {
 // -------------------------------------------------------
 	this.visible = true;
 	if (i2b2.WORK && i2b2.WORK.isLoaded) {
-		$('crcHistoryData').style.height = '100px';
-		$('crcSearchNamesResults').style.height = '72px';
+		$('crcHistoryData').style.height = '125px';
+		$('crcSearchNamesResults').style.height = '120px';
 	} else {
 		$('crcHistoryData').style.height = '144px';
 		$('crcSearchNamesResults').style.height = '116px';
@@ -578,8 +592,8 @@ i2b2.events.changedViewMode.subscribe((function(eventTypeName, newMode) {
 				if (wlst.indexOf("ONT")!=-1 || wlst.indexOf("WORK")!=-1) { return; }
 				this.visible = true;
 				if (i2b2.WORK && i2b2.WORK.isLoaded) {
-					$('crcHistoryData').style.height = '100px';
-					$('crcSearchNamesResults').style.height = '72px';
+					$('crcHistoryData').style.height = '125px';
+					$('crcSearchNamesResults').style.height = '120px';
 				} else {
 					$('crcHistoryData').style.height = '144px';
 					$('crcSearchNamesResults').style.height = '116px';

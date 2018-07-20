@@ -8,7 +8,7 @@
  *       i2b2 Web Client
  *           v1.7.10
  *  ************************* 
- *  @modified: 03/07/18
+ *  @modified: 07/12/18
  *  Contributors:
  *     Nick Benik
  *     Griffin Weber, MD, PhD
@@ -639,6 +639,15 @@ YAHOO.util.Event.addListener(window, "load", init);
     <div class="bodyBox">
       <div id="crcNavDisp">
         <div id="crcHistoryData" oncontextmenu="return false"></div>
+		<div>
+			<table border="0" cellspacing="0" cellpadding="0" style="width:100%;margin-top:5px;">
+				<tr>
+					<td>Begin: <input id="crcHistoryBegins" name="crcHistoryBegins" type="text" maxlength="100" style="border:1px solid #7c9cba;width:90%;font-size:11px;" /></td>
+					<td style="width:115px;"><div class="crcFindButton"><a href="JavaScript:i2b2.CRC.ctrlr.history.begins('BEFORE');">&lt;</a></div> <div class="crcFindButton"><a href="JavaScript:i2b2.CRC.ctrlr.history.begins('AFTER');">&gt;</a></div></td>
+				</tr>
+			</table>
+		</div>
+		
       </div>
       <div id="crcFindDisp" style="display:none">
         <div id="crcFindFrameName" class="findSubFrame">
@@ -1099,14 +1108,13 @@ YAHOO.util.Event.addListener(window, "load", init);
     <div class="bd">
       <center>
         <br />
-        <table style="font-size:12px">
+        <table style="font-size:12px;width:90%;">
           <tr>
-            <td>Maximum Number of Queries to Display:</td>
+            <td>Number of queries to display: </td>
             <td><input id="HISTMaxQryDisp" style="width:35px" /></td>
           </tr>
           <tr>
-            <td colspan="2"><br />
-              Sort Queries</td>
+            <td colspan="2">Sort Queries:</td>
           </tr>
           <tr>
             <td colspan="2" class="dateBorder" align="center"><table id="HISToptSortBox" style="font-size:12px; text-align:left;">
@@ -1127,7 +1135,15 @@ YAHOO.util.Event.addListener(window, "load", init);
                   <td><input type="radio" name="HISTsortOrder" id="HISTsortOrderDESC" value="DESC" />
                     Descending</td>
                 </tr>
-              </table></td>
+              </table><br/> </td>
+          </tr>
+          <tr>
+            <td><span id="HISTUserLabel">Get previous queries for: </a></td>
+            <td><select id="HISTUser" style="font-size:11px;"><option value="@">All Users</option></select></td>
+          </tr>
+          <tr>
+            <td>Auto refresh previous queries: </td>
+            <td><select id="HISTAuto"><option value="0" selected="selected">Off</option><option value="10">10 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option></select></td>
           </tr>
         </table>
       </center>

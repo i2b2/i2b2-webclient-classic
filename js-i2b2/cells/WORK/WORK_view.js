@@ -60,7 +60,7 @@ i2b2.WORK.view.main.Resize = function(e){
 			var hz = parseInt((h - 321) / 2);
 			t.style.top = hz + 108;
 //			$('wrkTreeview').style.height = hz + 8;
-			$('wrkTreeview').style.height = hz + 10; //swc20170918 further center this panel against the ones above & below it 
+			$('wrkTreeview').style.height = hz + 10 - 48; //swc20170918 further center this panel against the ones above & below it 
         }
         t.show();
 	} else {
@@ -96,7 +96,7 @@ i2b2.WORK.view.main.ResizeHeight = function(){
 			var hz = parseInt((h - 321) / 2);
 			t.style.top = hz + 108;
 //			$('wrkTreeview').style.height = hz + 8;
-			$('wrkTreeview').style.height = hz + 10; //swc20170918 further center this panel against the ones above & below it 
+			$('wrkTreeview').style.height = hz + 10 - 48; //swc20170918 further center this panel against the ones above & below it 
         }
         t.show();
 	} else {
