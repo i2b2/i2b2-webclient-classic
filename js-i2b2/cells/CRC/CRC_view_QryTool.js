@@ -2475,17 +2475,18 @@ i2b2.events.afterCellInit.subscribe(
 			i2b2.sdx.Master.AttachType('QPD3', 'QM', op_trgt);
 			i2b2.sdx.Master.AttachType('queryName', 'QM', op_trgt);
 			i2b2.sdx.Master.AttachType('outerTemporalSequenceUI', 'CONCPT', op_trgt); // tdw9 1707c: let outerTemporalSequenceUI accept drops
-/*
+
 			i2b2.sdx.Master.AttachType('QPD1', 'PR', op_trgt);
                         i2b2.sdx.Master.AttachType('QPD2', 'PR', op_trgt);
                         i2b2.sdx.Master.AttachType('QPD3', 'PR', op_trgt);
+                        /*
                         i2b2.sdx.Master.AttachType('QPD1', 'WRK', op_trgt);
                         i2b2.sdx.Master.AttachType('QPD2', 'WRK', op_trgt);
                         i2b2.sdx.Master.AttachType('QPD3', 'WRK', op_trgt);		
                         i2b2.sdx.Master.AttachType('QPD1', 'WRKF', op_trgt);
                         i2b2.sdx.Master.AttachType('QPD2', 'WRKF', op_trgt);
                         i2b2.sdx.Master.AttachType('QPD3', 'WRKF', op_trgt);
-*/	
+*/
 			//======================= <Define Hover Handlers> =======================
 			var funcHovOverQM = function(e, id, ddProxy) {
 				var el = $(id);
@@ -2549,14 +2550,14 @@ i2b2.events.afterCellInit.subscribe(
 			i2b2.sdx.Master.setHandlerCustom('QPD3', 'PRS', 'onHoverOver', funcHovOverCONCPT);			
 
 			i2b2.CRC.view.QT.attachDropListenerToOuterTemporalSequenceUI(); //tdw9 1707c: attach mouse over/out listenrs to outerTemporalSequenceUI
-/*
+
 			i2b2.sdx.Master.setHandlerCustom('QPD1', 'PR', 'onHoverOut', funcHovOutCONCPT);
                         i2b2.sdx.Master.setHandlerCustom('QPD2', 'PR', 'onHoverOut', funcHovOutCONCPT);
                         i2b2.sdx.Master.setHandlerCustom('QPD3', 'PR', 'onHoverOut', funcHovOutCONCPT);
                         i2b2.sdx.Master.setHandlerCustom('QPD1', 'PR', 'onHoverOver', funcHovOverCONCPT);
                         i2b2.sdx.Master.setHandlerCustom('QPD2', 'PR', 'onHoverOver', funcHovOverCONCPT);
                         i2b2.sdx.Master.setHandlerCustom('QPD3', 'PR', 'onHoverOver', funcHovOverCONCPT);
-
+/*
                         i2b2.sdx.Master.setHandlerCustom('QPD1', 'WRK', 'onHoverOut', funcHovOutCONCPT);
                         i2b2.sdx.Master.setHandlerCustom('QPD2', 'WRK', 'onHoverOut', funcHovOutCONCPT);
                         i2b2.sdx.Master.setHandlerCustom('QPD3', 'WRK', 'onHoverOut', funcHovOutCONCPT);
@@ -2615,7 +2616,7 @@ i2b2.events.afterCellInit.subscribe(
 				var t = i2b2.CRC.ctrlr.QT.panelControllers[2];
 				if (t.isActive=="Y") { t.doDrop(sdxData); }
 			}));
-/*
+
                         i2b2.sdx.Master.setHandlerCustom('QPD1', 'PR', 'DropHandler', (function(sdxData) {
                                 sdxData = sdxData[0];   // only interested in first record
                                 var t = i2b2.CRC.ctrlr.QT.panelControllers[0];
@@ -2631,7 +2632,8 @@ i2b2.events.afterCellInit.subscribe(
                                 var t = i2b2.CRC.ctrlr.QT.panelControllers[2];
                                 if (t.isActive=="Y") { t.doDrop(sdxData); }
                         }));
-                        i2b2.sdx.Master.setHandlerCustom('QPD1', 'WRK', 'DropHandler', (function(sdxData) {
+                       
+                        /*.Master.setHandlerCustom('QPD1', 'WRK', 'DropHandler', (function(sdxData) {
                                 sdxData = sdxData[0];   // only interested in first record
                                 var t = i2b2.CRC.ctrlr.QT.panelControllers[0];
                                 if (t.isActive=="Y") { t.doDrop(sdxData); }
@@ -2645,8 +2647,8 @@ i2b2.events.afterCellInit.subscribe(
                                 sdxData = sdxData[0];   // only interested in first record
                                 var t = i2b2.CRC.ctrlr.QT.panelControllers[2];
                                 if (t.isActive=="Y") { t.doDrop(sdxData); }
-                        }));	
-*/			
+                        }));	*/
+		
 			i2b2.sdx.Master.setHandlerCustom('QPD1', 'QM', 'DropHandler', (function(sdxData) { 
 				sdxData = sdxData[0];	// only interested in first record
 				var t = i2b2.CRC.ctrlr.QT.panelControllers[0];
@@ -2703,11 +2705,11 @@ i2b2.events.afterCellInit.subscribe(
 			i2b2.sdx.Master.setHandlerCustom('QPD1', 'PRS', 'AppendTreeNode', funcATN);
 			i2b2.sdx.Master.setHandlerCustom('QPD2', 'PRS', 'AppendTreeNode', funcATN);
 			i2b2.sdx.Master.setHandlerCustom('QPD3', 'PRS', 'AppendTreeNode', funcATN);
-/*
+
                         i2b2.sdx.Master.setHandlerCustom('QPD1', 'PR', 'AppendTreeNode', funcATN);
                         i2b2.sdx.Master.setHandlerCustom('QPD2', 'PR', 'AppendTreeNode', funcATN);
                         i2b2.sdx.Master.setHandlerCustom('QPD3', 'PR', 'AppendTreeNode', funcATN);
-
+/*
                         i2b2.sdx.Master.setHandlerCustom('QPD1', 'WRK', 'AppendTreeNode', funcATN);
                         i2b2.sdx.Master.setHandlerCustom('QPD2', 'WRK', 'AppendTreeNode', funcATN);
                         i2b2.sdx.Master.setHandlerCustom('QPD3', 'WRK', 'AppendTreeNode', funcATN);
