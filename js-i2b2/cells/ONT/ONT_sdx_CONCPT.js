@@ -13,18 +13,18 @@ console.time('execute time');
 
 i2b2.sdx.TypeControllers.CONCPT = {};
 i2b2.sdx.TypeControllers.CONCPT.model = {};
-// *********************************************************************************
-//	ENCAPSULATE DATA
-// *********************************************************************************
+//*********************************************************************************
+//ENCAPSULATE DATA
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.getEncapsulateInfo = function() {
 	// this function returns the encapsulation head information
 	return {sdxType: 'CONCPT', sdxKeyName: 'key', sdxControlCell:'ONT', sdxDisplayNameKey: 'name'};
 }
 
 
-// *********************************************************************************
-//	GENERATE HTML (DEFAULT HANDLER)
-// *********************************************************************************
+//*********************************************************************************
+//GENERATE HTML (DEFAULT HANDLER)
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv) {
 	// OPTIONS:
 	//	title: string
@@ -41,16 +41,16 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 	//	context: string
 	//	click: string 
 	//	dblclick: string
-	
+
 	if (Object.isUndefined(options)) { options = {}; }
 	var render = {html: retHtml, htmlID: id};
 	var conceptId = sdxData.name;
 	var id = "ONT_TID-" + i2b2.GUID();
-	
+
 	// process drag drop controllers
 	if (!Object.isUndefined(options.dragdrop)) {
-// NOTE TO SELF: should attachment of node dragdrop controller be handled by the SDX system as well? 
-// This would ensure removal of the onmouseover call in a cross-browser way
+//		NOTE TO SELF: should attachment of node dragdrop controller be handled by the SDX system as well? 
+//		This would ensure removal of the onmouseover call in a cross-browser way
 		var sDD = '  onmouseover="' + options.dragdrop + '(\''+ targetDiv.id +'\',\'' + id + '\')" ';
 	} else {
 		var sDD = '';
@@ -125,28 +125,28 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 		render.icon = '';
 		render.iconExp = '';
 	}
-	
+
 	// handle the event controllers
 	var sMainEvents = sDD;
 	var sImgEvents = sDD;
 	switch(icon) {
-		case "root":
-			if (options.click) {sMainEvents += ' onclick="'+ options.click +'" '; }
-			if (options.dblclick) {sMainEvents += ' ondblclick="'+ options.dblclick +'" '; }
-			if (options.context) {sMainEvents += ' oncontext="'+ options.context +'" '; } else {retHtml += ' oncontextmenu="return false" '; }
-			break;
-		case "branch":
-			if (options.click) { sMainEvents += ' onclick="'+ options.click +'" '; }
-			if (options.dblclick) { sMainEvents += ' ondblclick="'+ options.dblclick +'" '; }
-			if (options.context) { sMainEvents += ' oncontext="'+ options.context +'" '; } else {retHtml += ' oncontextmenu="return false" '; }
-			break;
-		default:
-			sMainEvents += ' oncontextmenu="return false" ';
+	case "root":
+		if (options.click) {sMainEvents += ' onclick="'+ options.click +'" '; }
+		if (options.dblclick) {sMainEvents += ' ondblclick="'+ options.dblclick +'" '; }
+		if (options.context) {sMainEvents += ' oncontext="'+ options.context +'" '; } else {retHtml += ' oncontextmenu="return false" '; }
+		break;
+	case "branch":
+		if (options.click) { sMainEvents += ' onclick="'+ options.click +'" '; }
+		if (options.dblclick) { sMainEvents += ' ondblclick="'+ options.dblclick +'" '; }
+		if (options.context) { sMainEvents += ' oncontext="'+ options.context +'" '; } else {retHtml += ' oncontextmenu="return false" '; }
+		break;
+	default:
+		sMainEvents += ' oncontextmenu="return false" ';
 	}
 
 	//Added to provide tooltip information for concepts/terms
 	var v_tooltip = '';
-	
+
 	try{
 		if (($('ONTNAVshowShortTooltips').checked) || ($('ONTFINDshowShortTooltips').checked) )
 		{
@@ -155,19 +155,19 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 		{
 			v_tooltip += 'title="'+ sdxData.origData.tooltip;			
 		}
-		
+
 		if ((($('ONTNAVshowCodeTooltips').checked) || ($('ONTFINDshowCodeTooltips').checked) )
- && !Object.isUndefined(sdxData.origData.basecode))
+				&& !Object.isUndefined(sdxData.origData.basecode))
 		{
 			v_tooltip += " - " + sdxData.origData.basecode;
 		}
-		
+
 		v_tooltip += '" ';
 	}
 	catch(e){
 		v_tooltip = '';
 	}
-	
+
 	// **** Render the HTML ***
 	var retHtml = '<DIV id="' + id + '" '+ v_tooltip + sMainEvents + ' style="cursor:pointer;">';
 	retHtml += '<DIV ';
@@ -209,27 +209,27 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 }
 
 
-// *********************************************************************************
-//	HANDLE HOVER OVER TARGET ENTRY (DEFAULT HANDLER)
-// *********************************************************************************
+//*********************************************************************************
+//HANDLE HOVER OVER TARGET ENTRY (DEFAULT HANDLER)
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.onHoverOver = function(e, id, ddProxy) {    
 	var el = $(id);	
 	if (el) { Element.addClassName(el,"ddCONCPTTarget"); }
 }
 
 
-// *********************************************************************************
-//	HANDLE HOVER OVER TARGET EXIT (DEFAULT HANDLER)
-// *********************************************************************************
+//*********************************************************************************
+//HANDLE HOVER OVER TARGET EXIT (DEFAULT HANDLER)
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.onHoverOut = function(e, id, ddProxy) { 
 	var el = $(id);	
 	if (el) { Element.removeClassName(el,"ddCONCPTTarget"); }
 }
 
 
-// *********************************************************************************
-//	ADD DATA TO TREENODE (DEFAULT HANDLER)
-// *********************************************************************************
+//*********************************************************************************
+//ADD DATA TO TREENODE (DEFAULT HANDLER)
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.AppendTreeNode = function(yuiTree, yuiRootNode, sdxDataPack, callbackLoader) {    
 	var myobj = { html: sdxDataPack.renderData.html, nodeid: sdxDataPack.renderData.htmlID}
 	var tmpNode = new YAHOO.widget.HTMLNode(myobj, yuiRootNode, false, true);
@@ -240,32 +240,32 @@ i2b2.sdx.TypeControllers.CONCPT.AppendTreeNode = function(yuiTree, yuiRootNode, 
 	tmpNode.data.i2b2_SDX = sdxDataPack;
 	tmpNode.toggle = function() {
 		if (!this.tree.locked && ( this.hasChildren(true) ) ) {
-				var data = this.data.i2b2_SDX.renderData;
-				var img = this.getContentEl();
-				img = Element.select(img,'img')[0];
-				if (this.expanded) { 
-					img.src = data.icon;
-					this.collapse(); 
-				} else { 
-					img.src = data.iconExp;
-					this.expand(); 
-				}
+			var data = this.data.i2b2_SDX.renderData;
+			var img = this.getContentEl();
+			img = Element.select(img,'img')[0];
+			if (this.expanded) { 
+				img.src = data.icon;
+				this.collapse(); 
+			} else { 
+				img.src = data.iconExp;
+				this.expand(); 
 			}
+		}
 	};
 	if (sdxDataPack.renderData.iconType == 'CONCPT_leaf' || !sdxDataPack.renderData.canExpand) { tmpNode.dynamicLoadComplete = true; }
 	return tmpNode;
 }
 
 
-// *********************************************************************************
-//	GET CHILD RECORDS (DEFAULT HANDELER)
-// *********************************************************************************
+//*********************************************************************************
+//GET CHILD RECORDS (DEFAULT HANDELER)
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.LoadChildrenFromTreeview = function(node, onCompleteCallback) {
-	 if ((node.tree.id == 'ontSearchModifiersResults') || (!$('ONTNAVdisableModifiers').checked && node.tree.id == 'ontNavResults')) {
-			i2b2.sdx.TypeControllers.CONCPT.LoadModifiers(node, onCompleteCallback, true);
-		} else {
-			i2b2.sdx.TypeControllers.CONCPT.LoadConcepts(node, onCompleteCallback, false);
-	 }
+	if ((node.tree.id == 'ontSearchModifiersResults') || (!$('ONTNAVdisableModifiers').checked && node.tree.id == 'ontNavResults')) {
+		i2b2.sdx.TypeControllers.CONCPT.LoadModifiers(node, onCompleteCallback, true);
+	} else {
+		i2b2.sdx.TypeControllers.CONCPT.LoadConcepts(node, onCompleteCallback, false);
+	}
 }
 
 
@@ -285,8 +285,8 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 		//			error: boolean
 		//			errorStatus: string [only with error=true]
 		//			errorMsg: string [only with error=true]
-		
-// TODO: REFACTOR THIS! (Roll into COMM message sniffer?)
+
+//		TODO: REFACTOR THIS! (Roll into COMM message sniffer?)
 		try {
 			i2b2.ONT.view[i2b2.ONT.view.main.currentTab].queryRequest = results.msgRequest;
 			i2b2.ONT.view[i2b2.ONT.view.main.currentTab].queryResponse = results.msgResponse;
@@ -296,20 +296,20 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 		if (results.error) {
 			// process the specific error
 			switch (node.tree.id) {
-				case "ontNavResults":
-					var t = i2b2.ONT.view.nav.params;
-					break;
-				case "ontSearchCodesResults":
-					var t = i2b2.ONT.view.find.params;
-					break;
-				case "ontSearchModifiersResults":
-					var t = i2b2.ONT.view.find.params;
-					break;
-				case "ontSearchNamesResults":
-					var t = i2b2.ONT.view.find.params;
-					break;
-				default:
-					var t = i2b2.ONT.params;
+			case "ontNavResults":
+				var t = i2b2.ONT.view.nav.params;
+				break;
+			case "ontSearchCodesResults":
+				var t = i2b2.ONT.view.find.params;
+				break;
+			case "ontSearchModifiersResults":
+				var t = i2b2.ONT.view.find.params;
+				break;
+			case "ontSearchNamesResults":
+				var t = i2b2.ONT.view.find.params;
+				break;
+			default:
+				var t = i2b2.ONT.params;
 			}
 			var errorCode = results.refXML.getElementsByTagName('status')[0].firstChild.nodeValue;
 			var eaction = false;
@@ -385,33 +385,33 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 			}
 			// append the data node
 			var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
-			*/
+			 */
 			var sdxDataNode = i2b2.sdx.TypeControllers.CONCPT.MakeObject(c[i], modifier, cl_options, this.origData);
 			if (modifier) {				
 				var renderOptions = {
-					title: i2b2.h.getXNodeVal(c[i],'name'),
-					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
-					dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
-					icon: {
-						root: "sdx_ONT_MODIFIER_root.gif",
-						rootExp: "sdx_ONT_MODIFIER_root-exp.gif",
-						branch: "sdx_ONT_MODIFIER_branch.gif",
-						branchExp: "sdx_ONT_MODIFIER_branch-exp.gif",
-						leaf: "sdx_ONT_MODIFIER_leaf.gif"
-					}
+						title: i2b2.h.getXNodeVal(c[i],'name'),
+						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						icon: {
+							root: "sdx_ONT_MODIFIER_root.gif",
+							rootExp: "sdx_ONT_MODIFIER_root-exp.gif",
+							branch: "sdx_ONT_MODIFIER_branch.gif",
+							branchExp: "sdx_ONT_MODIFIER_branch-exp.gif",
+							leaf: "sdx_ONT_MODIFIER_leaf.gif"
+						}
 				};
 			} else {
 				var renderOptions = {
-					title: i2b2.h.getXNodeVal(c[i],'name'),
-					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
-					dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
-					icon: {
-						root: "sdx_ONT_CONCPT_root.gif",
-						rootExp: "sdx_ONT_CONCPT_root-exp.gif",
-						branch: "sdx_ONT_CONCPT_branch.gif",
-						branchExp: "sdx_ONT_CONCPT_branch-exp.gif",
-						leaf: "sdx_ONT_CONCPT_leaf.gif"
-					}
+						title: i2b2.h.getXNodeVal(c[i],'name'),
+						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						icon: {
+							root: "sdx_ONT_CONCPT_root.gif",
+							rootExp: "sdx_ONT_CONCPT_root-exp.gif",
+							branch: "sdx_ONT_CONCPT_branch.gif",
+							branchExp: "sdx_ONT_CONCPT_branch-exp.gif",
+							leaf: "sdx_ONT_CONCPT_leaf.gif"
+						}
 				};				
 			}
 
@@ -425,20 +425,20 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 	// TODO: Implement param routing from node's container
 	var options = {};
 	switch (node.tree.id) {
-		case "ontNavResults":
-			var t = i2b2.ONT.view.nav.params;
-			break;
-		case "ontSearchCodesResults":
-			var t = i2b2.ONT.view.find.params;
-			break;
-		case "ontSearchModifiersResults":
-			var t = i2b2.ONT.view.find.params;
-			break;
-		case "ontSearchNamesResults":
-			var t = i2b2.ONT.view.find.params;
-			break;
-		default:
-			var t = i2b2.ONT.params;
+	case "ontNavResults":
+		var t = i2b2.ONT.view.nav.params;
+		break;
+	case "ontSearchCodesResults":
+		var t = i2b2.ONT.view.find.params;
+		break;
+	case "ontSearchModifiersResults":
+		var t = i2b2.ONT.view.find.params;
+		break;
+	case "ontSearchNamesResults":
+		var t = i2b2.ONT.view.find.params;
+		break;
+	default:
+		var t = i2b2.ONT.params;
 	}
 	options.ont_hidden_records = t.hiddens;
 	options.ont_max_records = "max='"+t.max+"' ";
@@ -454,61 +454,61 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 		options.version = "1.5";	
 	}
 	i2b2.ONT.ajax.GetChildConcepts("ONT:SDX:Concept", options, scopedCallback );		
-	
+
 }
 
 i2b2.sdx.TypeControllers.CONCPT.MakeObject = function(c, modifier, cl_options, origData, objectType) {
-			var o = new Object;
-			o.xmlOrig = c;
-			o.parent = origData;
-			if (modifier) {	
-				o.isModifier = true;
-				o.applied_path = i2b2.h.getXNodeVal(c,'applied_path');
-			} else {
-				o.isModifier = false;				
-			}
-			o.name = i2b2.h.getXNodeVal(c,'name');
-			if (objectType != undefined && objectType == "QM") {
-				o.id = i2b2.h.getXNodeVal(c,'query_master_id');
-				o.title = "(PrevQuery)" + o.name;
-                        } else if (objectType != undefined && objectType == "PR") {
-                                o.title = "PATIENT:HIVE:" + origData.patient_id;
-                                o.patient_id = origData.patient_id;
-			} else if (objectType != undefined && objectType == "WRKF") {
-				o.title = origData.annotation;
-				o.folder_id = origData.key; 
-			} else 			if (objectType != undefined && (objectType == "PRS" || objectType == "ENS")) {
-				o.result_instance_id = i2b2.h.getXNodeVal(c,'result_instance_id');
-				o.title = i2b2.h.getXNodeVal(c,'description');
-			}
-			//o.hasChildren = i2b2.h.getXNodeVal(c[i],'visualattributes').substring(0,2);
-			if (i2b2.h.getXNodeVal(c,'visualattributes') != undefined) {
-				o.hasChildren = YAHOO.lang.trim(i2b2.h.getXNodeVal(c,'visualattributes').substring(0,3)); 
-			} 
-			o.level = i2b2.h.getXNodeVal(c,'level');
-			o.key = i2b2.h.getXNodeVal(c,'key');
-			if (cl_options != undefined && cl_options.ont_short_tooltip) {
-				o.tooltip = o.name;
-			} else {
-				o.tooltip = i2b2.h.getXNodeVal(c,'tooltip');
-			}
-			o.icd9 = '';
-			o.table_name = i2b2.h.getXNodeVal(c,'tablename');
-			o.column_name = i2b2.h.getXNodeVal(c,'columnname');
-			o.operator = i2b2.h.getXNodeVal(c,'operator');
-			o.total_num = i2b2.h.getXNodeVal(c,'totalnum');
-			o.synonym_cd = i2b2.h.getXNodeVal(c,'synonym_cd');
-			o.dim_code = i2b2.h.getXNodeVal(c,'dimcode');
-			o.basecode = i2b2.h.getXNodeVal(c,'basecode');
-			if (cl_options != undefined && cl_options.ont_show_concept_code && o.basecode != undefined) {
-				o.tooltip  += "(" + o.basecode + ")";
-			}
-			// append the data node
-			if (objectType != undefined && (objectType == "PR" || objectType == "QM" || objectType == "PRS" || objectType == "ENS" || objectType == "WRKF")) {
-				return (i2b2.sdx.Master.EncapsulateData(objectType,o));				
-			} else {
-				return (i2b2.sdx.Master.EncapsulateData('CONCPT',o));
-			}
+	var o = new Object;
+	o.xmlOrig = c;
+	o.parent = origData;
+	if (modifier) {	
+		o.isModifier = true;
+		o.applied_path = i2b2.h.getXNodeVal(c,'applied_path');
+	} else {
+		o.isModifier = false;				
+	}
+	o.name = i2b2.h.getXNodeVal(c,'name');
+	if (objectType != undefined && objectType == "QM") {
+		o.id = i2b2.h.getXNodeVal(c,'query_master_id');
+		o.title = "(PrevQuery)" + o.name;
+	} else if (objectType != undefined && objectType == "PR") {
+		o.title = "PATIENT:HIVE:" + origData.patient_id;
+		o.patient_id = origData.patient_id;
+	} else if (objectType != undefined && objectType == "WRKF") {
+		o.title = origData.annotation;
+		o.folder_id = origData.key; 
+	} else 			if (objectType != undefined && (objectType == "PRS" || objectType == "ENS")) {
+		o.result_instance_id = i2b2.h.getXNodeVal(c,'result_instance_id');
+		o.title = i2b2.h.getXNodeVal(c,'description');
+	}
+	//o.hasChildren = i2b2.h.getXNodeVal(c[i],'visualattributes').substring(0,2);
+	if (i2b2.h.getXNodeVal(c,'visualattributes') != undefined) {
+		o.hasChildren = YAHOO.lang.trim(i2b2.h.getXNodeVal(c,'visualattributes').substring(0,3)); 
+	} 
+	o.level = i2b2.h.getXNodeVal(c,'level');
+	o.key = i2b2.h.getXNodeVal(c,'key');
+	if (cl_options != undefined && cl_options.ont_short_tooltip) {
+		o.tooltip = o.name;
+	} else {
+		o.tooltip = i2b2.h.getXNodeVal(c,'tooltip');
+	}
+	o.icd9 = '';
+	o.table_name = i2b2.h.getXNodeVal(c,'tablename');
+	o.column_name = i2b2.h.getXNodeVal(c,'columnname');
+	o.operator = i2b2.h.getXNodeVal(c,'operator');
+	o.total_num = i2b2.h.getXNodeVal(c,'totalnum');
+	o.synonym_cd = i2b2.h.getXNodeVal(c,'synonym_cd');
+	o.dim_code = i2b2.h.getXNodeVal(c,'dimcode');
+	o.basecode = i2b2.h.getXNodeVal(c,'basecode');
+	if (cl_options != undefined && cl_options.ont_show_concept_code && o.basecode != undefined) {
+		o.tooltip  += "(" + o.basecode + ")";
+	}
+	// append the data node
+	if (objectType != undefined && (objectType == "PR" || objectType == "QM" || objectType == "PRS" || objectType == "ENS" || objectType == "WRKF")) {
+		return (i2b2.sdx.Master.EncapsulateData(objectType,o));				
+	} else {
+		return (i2b2.sdx.Master.EncapsulateData('CONCPT',o));
+	}
 }
 
 i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallback, modifier) {
@@ -527,8 +527,8 @@ i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallbac
 		//			error: boolean
 		//			errorStatus: string [only with error=true]
 		//			errorMsg: string [only with error=true]
-		
-// TODO: REFACTOR THIS! (Roll into COMM message sniffer?)
+
+//		TODO: REFACTOR THIS! (Roll into COMM message sniffer?)
 		try {
 			i2b2.ONT.view[i2b2.ONT.view.main.currentTab].queryRequest = results.msgRequest;
 			i2b2.ONT.view[i2b2.ONT.view.main.currentTab].queryResponse = results.msgResponse;
@@ -561,40 +561,40 @@ i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallbac
 			var sdxDataNode = i2b2.sdx.TypeControllers.CONCPT.MakeObject(c[i], modifier, cl_options, this.origData);
 			if (modifier) {				
 				var renderOptions = {
-					title: i2b2.h.getXNodeVal(c[i],'name'),
-					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
-					dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
-					icon: {
-						root: "sdx_ONT_MODIFIER_root.gif",
-						rootExp: "sdx_ONT_MODIFIER_root-exp.gif",
-						branch: "sdx_ONT_MODIFIER_branch.gif",
-						branchExp: "sdx_ONT_MODIFIER_branch-exp.gif",
-						leaf: "sdx_ONT_MODIFIER_leaf.gif"
-					}
+						title: i2b2.h.getXNodeVal(c[i],'name'),
+						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						icon: {
+							root: "sdx_ONT_MODIFIER_root.gif",
+							rootExp: "sdx_ONT_MODIFIER_root-exp.gif",
+							branch: "sdx_ONT_MODIFIER_branch.gif",
+							branchExp: "sdx_ONT_MODIFIER_branch-exp.gif",
+							leaf: "sdx_ONT_MODIFIER_leaf.gif"
+						}
 				};
 			} else {
 				var renderOptions = {
-					title: i2b2.h.getXNodeVal(c[i],'name'),
-					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
-					dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
-					icon: {
-						root: "sdx_ONT_CONCPT_root.gif",
-						rootExp: "sdx_ONT_CONCPT_root-exp.gif",
-						branch: "sdx_ONT_CONCPT_branch.gif",
-						branchExp: "sdx_ONT_CONCPT_branch-exp.gif",
-						leaf: "sdx_ONT_CONCPT_leaf.gif"
-					}
+						title: i2b2.h.getXNodeVal(c[i],'name'),
+						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						icon: {
+							root: "sdx_ONT_CONCPT_root.gif",
+							rootExp: "sdx_ONT_CONCPT_root-exp.gif",
+							branch: "sdx_ONT_CONCPT_branch.gif",
+							branchExp: "sdx_ONT_CONCPT_branch-exp.gif",
+							leaf: "sdx_ONT_CONCPT_leaf.gif"
+						}
 				};				
 			}
 
 			var sdxRenderData = i2b2.sdx.Master.RenderHTML(cl_node.tree.id, sdxDataNode, renderOptions);
-	
+
 			i2b2.sdx.Master.AppendTreeNode(cl_node.tree, cl_node, sdxRenderData);
 		}
 		// handle the YUI treeview	
 		//mm 10-7 cl_onCompleteCB();
 		if ((node.data.i2b2_SDX.origData.hasChildren != "DA") && (node.data.i2b2_SDX.origData.hasChildren != "OAE") &&
-		(node.data.i2b2_SDX.origData.hasChildren != "DAE") && (node.data.i2b2_SDX.origData.hasChildren != "OA") ){
+				(node.data.i2b2_SDX.origData.hasChildren != "DAE") && (node.data.i2b2_SDX.origData.hasChildren != "OA") ){
 			i2b2.sdx.TypeControllers.CONCPT.LoadConcepts(node, onCompleteCallback, false);
 		} else {
 			cl_onCompleteCB();
@@ -604,21 +604,21 @@ i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallbac
 	// TODO: Implement param routing from node's container
 	var options = {};
 	switch (node.tree.id) {
-		case "ontNavResults":
-			var t = i2b2.ONT.view.nav.params;
-			break;
-		case "ontSearchModifiersResults":
-			var t = i2b2.ONT.view.find.params;
-			break;			
-		case "ontSearchCodesResults":
-			var t = i2b2.ONT.view.find.params;
-			break;					
-		case "ontSearchNamesResults": 
+	case "ontNavResults":
+		var t = i2b2.ONT.view.nav.params;
+		break;
+	case "ontSearchModifiersResults":
+		var t = i2b2.ONT.view.find.params;
+		break;			
+	case "ontSearchCodesResults":
+		var t = i2b2.ONT.view.find.params;
+		break;					
+	case "ontSearchNamesResults": 
 //		case "ontSearchCodesResults", "ontSearchNamesResults", "ontSearchModifiersResults":
-			var t = i2b2.ONT.view.find.params;
-			break;
-		default:
-			var t = i2b2.ONT.params;
+		var t = i2b2.ONT.view.find.params;
+		break;
+	default:
+		var t = i2b2.ONT.params;
 	}
 	options.ont_hidden_records = t.hiddens;
 	options.ont_max_records = "max='"+t.max+"' ";
@@ -627,18 +627,18 @@ i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallbac
 	options.ont_short_tooltip = t.shortTooltip;
 	options.ont_show_concept_code = t.showConceptCode;
 	options.concept_key_value = key;
-	
+
 	if ((node.data.i2b2_SDX.origData.hasChildren == "DA") ||
-	(node.data.i2b2_SDX.origData.hasChildren == "DAE") ||
-	(node.data.i2b2_SDX.origData.hasChildren == "OA") ||
-	(node.data.i2b2_SDX.origData.hasChildren == "OAE") 	
+			(node.data.i2b2_SDX.origData.hasChildren == "DAE") ||
+			(node.data.i2b2_SDX.origData.hasChildren == "OA") ||
+			(node.data.i2b2_SDX.origData.hasChildren == "OAE") 	
 	){
 		options.modifier_key_value = node.data.i2b2_SDX.origData.key;
 		options.modifier_applied_path = node.data.i2b2_SDX.origData.applied_path;
-		
+
 		var realdata = node.data.i2b2_SDX.origData;
 		while ((realdata.hasChildren != "FA") && (realdata.hasChildren != "CA")
-		&& (realdata.hasChildren != "FAE") && (realdata.hasChildren != "CAE")
+				&& (realdata.hasChildren != "FAE") && (realdata.hasChildren != "CAE")
 
 		) {
 			realdata  = realdata.parent;	
@@ -651,23 +651,23 @@ i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallbac
 }
 
 
-// *********************************************************************************
-//	ATTACH DRAG TO DATA (DEFAULT HANDLER)
-// *********************************************************************************
+//*********************************************************************************
+//ATTACH DRAG TO DATA (DEFAULT HANDLER)
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data = function(divParentID, divDataID){
 	if (Object.isUndefined($(divDataID))) {	return false; }
-	
+
 	// get the i2b2 data from the yuiTree node
 	var tvTree = YAHOO.widget.TreeView.getTree(divParentID);
 	var tvNode = tvTree.getNodeByProperty('nodeid', divDataID);
 	if (!Object.isUndefined(tvNode.DDProxy)) { return true; }
-	
+
 	// attach DD
 	var t = new i2b2.sdx.TypeControllers.CONCPT.DragDrop(divDataID)
 	t.yuiTree = tvTree;
 	t.yuiTreeNode = tvNode;
 	tvNode.DDProxy = t;
-	
+
 	// clear the mouseover attachment function
 	var tdn = $(divDataID);
 	if (!Object.isUndefined(tdn.onmouseover)) { 
@@ -695,9 +695,9 @@ i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data = function(divParentID, divDataI
 
 
 
-// *********************************************************************************
-//	DRAG DROP PROXY CONTROLLER
-// *********************************************************************************
+//*********************************************************************************
+//DRAG DROP PROXY CONTROLLER
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.DragDrop = function(id, config) {
 	if (id) {
 		this.init(id, 'CONCPT',{isTarget:false});
@@ -745,7 +745,7 @@ i2b2.sdx.TypeControllers.CONCPT.DragDrop.prototype.alignElWithMouse = function(e
 		var posY = (oCoord.y + this.deltaSetXY[1]);
 		//var scrSize = document.viewport.getDimensions();
 		var w =  window.innerWidth || (window.document.documentElement.clientWidth || window.document.body.clientWidth);
-	    var h =  window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight);
+		var h =  window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight);
 
 		var maxX = parseInt(w-25-160);
 		var maxY = parseInt(h-25);
@@ -777,11 +777,11 @@ i2b2.sdx.TypeControllers.CONCPT.DragDrop.prototype.onDragDrop = function(e, id) 
 };
 
 
-// *********************************************************************************
-//	<BLANK> DROP HANDLER 
-//	!!!! DO NOT EDIT - ATTACH YOUR OWN CUSTOM ROUTINE USING
-//	!!!! THE i2b2.sdx.Master.setHandlerCustom FUNCTION
-// *********************************************************************************
+//*********************************************************************************
+//<BLANK> DROP HANDLER 
+//!!!! DO NOT EDIT - ATTACH YOUR OWN CUSTOM ROUTINE USING
+//!!!! THE i2b2.sdx.Master.setHandlerCustom FUNCTION
+//*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.DropHandler = function(sdxData) {
 	alert('[Concept DROPPED] You need to create your own custom drop event handler.');
 }

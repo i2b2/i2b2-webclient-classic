@@ -253,6 +253,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.AttachType(id, "QGDEF", optDD);
 			i2b2.sdx.Master.AttachType(id, "XML", optDD);
 			i2b2.sdx.Master.AttachType(id, "WRK", optDD);
+			i2b2.sdx.Master.AttachType(id, "WRKF", optDD);
             
 			i2b2.sdx.Master.setHandlerCustom(id, "QM", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			i2b2.sdx.Master.setHandlerCustom(id, "PRC", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
@@ -264,6 +265,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.setHandlerCustom(id, "QGDEF", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			i2b2.sdx.Master.setHandlerCustom(id, "XML", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			i2b2.sdx.Master.setHandlerCustom(id, "WRK", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
+			i2b2.sdx.Master.setHandlerCustom(id, "WRKF", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			
 			i2b2.sdx.Master.setHandlerCustom(id, "QM", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			i2b2.sdx.Master.setHandlerCustom(id, "PRC", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
@@ -275,6 +277,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.setHandlerCustom(id, "QGDEF", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			i2b2.sdx.Master.setHandlerCustom(id, "XML", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			i2b2.sdx.Master.setHandlerCustom(id, "WRK", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
+			i2b2.sdx.Master.setHandlerCustom(id, "WRKF", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			
 			i2b2.sdx.Master.setHandlerCustom(id, "QM", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
 			i2b2.sdx.Master.setHandlerCustom(id, "PRC", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
@@ -286,6 +289,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.setHandlerCustom(id, "QGDEF", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
 			i2b2.sdx.Master.setHandlerCustom(id, "XML", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
 			i2b2.sdx.Master.setHandlerCustom(id, "WRK", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
+			i2b2.sdx.Master.setHandlerCustom(id, "WRKF", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
             break;
         case "FA":
             render.cssClass = "wrkFolder";
@@ -297,10 +301,36 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
             
             var id = renderObj.data.nodeid;
             var ddProxy = i2b2.sdx.Master.Attach2Data(id, "WRK", id);
+            ddProxy.addToGroup("WRKF");
             ddProxy.yuiTreeNode = renderObj;
             var optDD = {
                 dropTarget: true
             };
+            
+            /*
+            var o = nodeData;
+            o.index = nodeData.key;
+            try {
+                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('WRK', o);
+                var sdxRenderData = i2b2.sdx.Master.RenderHTML(parentNode.tree.id, sdxDataNode, {
+                    'title': title,
+					'tooltip': 	nodeData.annotation.replace("\n","\nAnnotation: ") // PARTIAL BUG-FIX: WEBCLIENT-98
+                });
+				if (!sdxRenderData) { break; }
+                var renderObj = i2b2.sdx.Master.AppendTreeNode(parentNode.tree, parentNode, sdxRenderData);
+                renderObj.data.i2b2_SDX = sdxDataNode;
+                var id = renderObj.data.nodeid;
+                var ddProxy = i2b2.sdx.Master.Attach2Data(id, "WRK", id);
+                // attach encapsulated data type as well
+                ddProxy.addToGroup(sdxDataNode.sdxUnderlyingPackage.sdxInfo.sdxType);
+                ddProxy.yuiTreeNode = renderObj;
+                ddProxy.config.isTarget = false;
+                ddProxy.isTarget = false;
+            } 
+            catch (e) {
+            }
+            */
+            
 			i2b2.sdx.Master.AttachType(id, "QM", optDD);
 			i2b2.sdx.Master.AttachType(id, "PRC", optDD);
 			i2b2.sdx.Master.AttachType(id, "PRS", optDD);
@@ -311,6 +341,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.AttachType(id, "QGDEF", optDD);
 			i2b2.sdx.Master.AttachType(id, "XML", optDD);
 			i2b2.sdx.Master.AttachType(id, "WRK", optDD);
+			i2b2.sdx.Master.AttachType(id, "WRKF", optDD);
 			
 			i2b2.sdx.Master.setHandlerCustom(id, "QM", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			i2b2.sdx.Master.setHandlerCustom(id, "PRC", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
@@ -322,6 +353,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.setHandlerCustom(id, "QGDEF", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			i2b2.sdx.Master.setHandlerCustom(id, "XML", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			i2b2.sdx.Master.setHandlerCustom(id, "WRK", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
+			i2b2.sdx.Master.setHandlerCustom(id, "WRKF", "DropHandler", i2b2.WORK.ctrlr.main.HandleDrop);
 			
 			i2b2.sdx.Master.setHandlerCustom(id, "QM", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			i2b2.sdx.Master.setHandlerCustom(id, "PRC", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
@@ -333,6 +365,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.setHandlerCustom(id, "QGDEF", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			i2b2.sdx.Master.setHandlerCustom(id, "XML", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			i2b2.sdx.Master.setHandlerCustom(id, "WRK", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
+			i2b2.sdx.Master.setHandlerCustom(id, "WRKF", "onHoverOver", i2b2.WORK.view.main.ddHoverOver);
 			
 			i2b2.sdx.Master.setHandlerCustom(id, "QM", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
 			i2b2.sdx.Master.setHandlerCustom(id, "PRC", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
@@ -344,6 +377,7 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
 			i2b2.sdx.Master.setHandlerCustom(id, "QGDEF", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
 			i2b2.sdx.Master.setHandlerCustom(id, "XML", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
 			i2b2.sdx.Master.setHandlerCustom(id, "WRK", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
+			i2b2.sdx.Master.setHandlerCustom(id, "WRKF", "onHoverOut", i2b2.WORK.view.main.ddHoverOut);
             break;
         case "ZA":
             // create a new WORK SDX object
@@ -540,6 +574,7 @@ i2b2.WORK.view.main.refreshTree = function() {
         i2b2.sdx.Master.AttachType("wrkTreeview", "QDEF", optDD);
         i2b2.sdx.Master.AttachType("wrkTreeview", "QGDEF", optDD);
         i2b2.sdx.Master.AttachType("wrkTreeview", "XML", optDD);
+        i2b2.sdx.Master.AttachType("wrkTreeview", "WRKF", optDD);
         i2b2.sdx.Master.AttachType("wrkTreeview", "WRK");
         
         var funcNull = function(){
@@ -550,12 +585,13 @@ i2b2.WORK.view.main.refreshTree = function() {
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "PRS", "LoadChildrenFromTreeview", funcNull);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "ENS", "LoadChildrenFromTreeview", funcNull);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "PR", "LoadChildrenFromTreeview", funcNull);
-        i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "CONCPT", "LoadChildrenFromTreeview", funcNull)
-;
+        i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "CONCPT", "LoadChildrenFromTreeview", funcNull);
+
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "QDEF", "LoadChildrenFromTreeview", funcNull);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "QGDEF", "LoadChildrenFromTreeview", funcNull);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "XML", "LoadChildrenFromTreeview", funcNull);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRK", "LoadChildrenFromTreeview", funcNull);
+        i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRKF", "LoadChildrenFromTreeview", funcNull);
         
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "QM", "DropHandler", i2b2.WORK.view.main.DropHandler);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "PRC", "DropHandler", i2b2.WORK.view.main.DropHandler);
@@ -567,6 +603,7 @@ i2b2.WORK.view.main.refreshTree = function() {
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "QGDEF", "DropHandler", i2b2.WORK.view.main.DropHandler);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "XML", "DropHandler", i2b2.WORK.view.main.DropHandler);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRK", "DropHandler", i2b2.WORK.view.main.DropHandler);
+        i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRKF", "DropHandler", i2b2.WORK.view.main.DropHandler);
         
         // create initial loader display routine
         var scopedCallback = new i2b2_scopedCallback();
@@ -659,6 +696,7 @@ i2b2.events.afterLogin.subscribe((function(en, co){
         i2b2.sdx.Master.AttachType("wrkTreeview", "QDEF", optDD);
         i2b2.sdx.Master.AttachType("wrkTreeview", "QGDEF", optDD);
         i2b2.sdx.Master.AttachType("wrkTreeview", "XML", optDD);
+        i2b2.sdx.Master.AttachType("wrkTreeview", "WRKF", optDD);
         i2b2.sdx.Master.AttachType("wrkTreeview", "WRK");
         
         var funcNull = function(){
@@ -674,6 +712,7 @@ i2b2.events.afterLogin.subscribe((function(en, co){
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "QGDEF", "LoadChildrenFromTreeview", funcNull);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "XML", "LoadChildrenFromTreeview", funcNull);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRK", "LoadChildrenFromTreeview", funcNull);
+        i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRKF", "LoadChildrenFromTreeview", funcNull);
         
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "QM", "DropHandler", i2b2.WORK.view.main.DropHandler);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "PRC", "DropHandler", i2b2.WORK.view.main.DropHandler);
@@ -685,6 +724,7 @@ i2b2.events.afterLogin.subscribe((function(en, co){
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "QGDEF", "DropHandler", i2b2.WORK.view.main.DropHandler);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "XML", "DropHandler", i2b2.WORK.view.main.DropHandler);
         i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRK", "DropHandler", i2b2.WORK.view.main.DropHandler);
+        i2b2.sdx.Master.setHandlerCustom("wrkTreeview", "WRKF", "DropHandler", i2b2.WORK.view.main.DropHandler);
         
         // create initial loader display routine
         var scopedCallback = new i2b2_scopedCallback();

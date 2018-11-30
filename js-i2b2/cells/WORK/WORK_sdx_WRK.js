@@ -532,6 +532,9 @@ i2b2.sdx.TypeControllers.WRK.DragDrop.prototype.onDragDrop = function(e, id) {
 	} catch(e) {
 		if (draggedData.sdxUnderlyingPackage) {
 			i2b2.sdx.Master.ProcessDrop(draggedData.sdxUnderlyingPackage, id);
+		} else if (draggedData.sdxInfo.sdxType == 'WRK') {
+			draggedData.sdxInfo.sdxType = 'WRKF'; 
+			i2b2.sdx.Master.ProcessDrop(draggedData, id);
 		} else {
 			i2b2.sdx.Master.ProcessDrop(draggedData, id);
 		}
