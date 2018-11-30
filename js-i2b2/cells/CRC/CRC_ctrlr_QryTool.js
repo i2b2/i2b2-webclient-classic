@@ -818,7 +818,7 @@ function QueryToolController() {
 								var o = new Object;
 
 								//o.titleCRC = ckey.substring(8);
-								o.titleCRC = (i2+1) + ") " + i2b2.h.getXNodeVal(pi[i2],'item_name');
+								o.titleCRC = i2b2.h.getXNodeVal(pi[i2],'item_key');
 								o.PRS_id = ckey.substring(19);
 								o.result_instance_id = o.PRS_id ;
 								o.id = ckey;
@@ -828,7 +828,7 @@ function QueryToolController() {
 								var o = new Object;
 
 								//o.titleCRC = ckey.substring(8);
-								o.titleCRC = (i2+1) + ") " + i2b2.h.getXNodeVal(pi[i2],'item_name');
+								o.titleCRC =  i2b2.h.getXNodeVal(pi[i2],'item_name');
 								o.PRS_id = ckey.substring(19);
 								o.result_instance_id = o.PRS_id ;
 								o.id = ckey;
