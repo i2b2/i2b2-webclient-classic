@@ -189,6 +189,9 @@ i2b2.CRC.ctrlr.history = {
 		//	2) interprets the XML / populates the ONT data model, 
 		//	3) fires it's onDataUpdate event
 
+		if(direction == 'BEFORE'){
+			$('crcHistoryBegins').value = i2b2.CRC.view.history.yuiTree.root.children[0].data.i2b2_SDX.origData.created;
+		}
 		
 		// create a scoped callback message
 		var scopeCB = new i2b2_scopedCallback();
@@ -236,7 +239,7 @@ i2b2.CRC.ctrlr.history = {
 				if(direction == 'BEFORE'){
 					$('crcHistoryBegins').value = lastDate;
 				} else {
-					$('crcHistoryBegins').value = firstDate;
+					$('crcHistoryBegins').value = lastDate;
 				}
 				
 			} else {
