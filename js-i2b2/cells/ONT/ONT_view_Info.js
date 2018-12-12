@@ -1,11 +1,11 @@
 /**
- * @projectDescription	View controller for ONT's "Find Terms" tab.
+ * @projectDescription	View controller for ONT's "Info" tab.
  * @inherits 	i2b2.ONT.view
- * @namespace	i2b2.ONT.view.find
- * @author		Nick Benik, Griffin Weber MD PhD
- * @version 	1.3
+ * @namespace	i2b2.ONT.view.info
+ * @author		Nich Wattanasin
+ * @version 	1.0
  * ----------------------------------------------------------------------------------------
- * updated 9-15-08: RC4 launch [Nick Benik] 
+ * updated 12-12-18: Launch [Nich Wattanasin]
  */
 console.group('Load & Execute component file: ONT > view > Find');
 console.time('execute time');
@@ -24,24 +24,12 @@ this.currentTab = 'names';
 i2b2.ONT.view.info.showOptions = function(subScreen) {
 	if (!this.modalOptions) {
 		var handleSubmit = function() {
-			// submit value(s)
-			var value = $('ONTFINDMaxQryDisp').value;
-			if(!isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10))){
-				if(this.submit()) {
-					$('ONTFINDMaxQryDisp').style.border = "2px inset";
-					i2b2.ONT.view['info'].params.max = parseInt($('ONTFINDMaxQryDisp').value,10);
-					i2b2.ONT.view['info'].params.synonyms = $('ONTFINDshowSynonyms').checked;
-					i2b2.ONT.view['info'].params.hiddens = $('ONTFINDshowHiddens').checked;
-				}
-			} else {
-				alert('Please enter a valid number for Maximum Children to Display.');
-				$('ONTFINDMaxQryDisp').style.border = "2px inset red";
-			}
+			this.cancel();
 		}
 		var handleCancel = function() {
 			this.cancel();
 		}
-		this.modalOptions = new YAHOO.widget.SimpleDialog("optionsOntFind",
+		this.modalOptions = new YAHOO.widget.SimpleDialog("optionsOntInfo",
 		{ width : "400px", 
 			fixedcenter : true,
 			constraintoviewport : true,
@@ -50,21 +38,14 @@ i2b2.ONT.view.info.showOptions = function(subScreen) {
 			buttons : [ { text:"OK", handler:handleSubmit, isDefault:true }, 
 				    { text:"Cancel", handler:handleCancel } ] 
 		} ); 
-		$('optionsOntFind').show();
-		this.modalOptions.validate = function() {
-			if (parseInt($('ONTFINDMaxQryDisp').value,10) <= 0) {
-				alert('You must display at least one child!');
-				return false;
-			}
-			return true;
-		};
+		$('optionsOntInfo').show();
 		this.modalOptions.render(document.body);
 	}
 	this.modalOptions.show();
 	// load settings from html
-	i2b2.ONT.view['info'].params.max = parseInt($('ONTFINDMaxQryDisp').value,10);
-	i2b2.ONT.view['info'].params.synonyms = $('ONTFINDshowSynonyms').checked;
-	i2b2.ONT.view['info'].params.hiddens = $('ONTFINDshowHiddens').checked;
+	//i2b2.ONT.view['info'].params.max = parseInt($('ONTFINDMaxQryDisp').value,10);
+	//i2b2.ONT.view['info'].params.synonyms = $('ONTFINDshowSynonyms').checked;
+	//i2b2.ONT.view['info'].params.hiddens = $('ONTFINDshowHiddens').checked;
 
 	//$('ONTFINDMaxQryDisp').value = this.params.max;
 	//$('ONTFINDshowSynonyms').checked = parseBoolean(this.params.synonyms);
@@ -401,20 +382,19 @@ i2b2.ONT.view.info.showInfoByKey = function(key) {
 		$('ontInfoKey').innerHTML = term_key;
 		if (term_metadataxml.length > 0) {
 			$('ontMetadataXml').innerHTML = 'This term accepts values to be set when using the term in a query. <a href="#" style="color:green" onclick="i2b2.ONT.view.info.showValueDialog(\''+parent_key+'\')">Preview Value Box</a>';
-			
-			//this.showModValues(sdxConcept.origData.key, sdxData);
+
 		} else {
 			$('ontMetadataXml').innerHTML = 'This term does not allow values to be set.';
 		}
 		//$('ontInfoSQL').innerHTML = "SELECT * FROM i2b2metadata WHERE c_fullname LIKE '" + term_key + "%';";
-	        var sql_term_dimcode = term_dimcode.replace(/\\/g,'\\\\');
+	    //    var sql_term_dimcode = term_dimcode.replace(/\\/g,'\\\\');
 	       
-	        if(term_table.toLowerCase() == 'concept_dimension'){
-		    $('ontInfoSQL').innerHTML = "SELECT CONCEPT_PATH, CONCEPT_CD, NAME_CHAR FROM concept_dimension WHERE CONCEPT_PATH LIKE '" + sql_term_dimcode + "%';";
+	    //  if(term_table.toLowerCase() == 'concept_dimension'){
+		//    $('ontInfoSQL').innerHTML = "SELECT CONCEPT_PATH, CONCEPT_CD, NAME_CHAR FROM concept_dimension WHERE CONCEPT_PATH LIKE '" + sql_term_dimcode + "%';";
 
-		} else {
-		    $('ontInfoSQL').innerHTML = "No example is available";
-		}
+		//} else {
+		//    $('ontInfoSQL').innerHTML = "No example is available";
+		//}
 		$('ontInfoDescription').innerHTML = term_description;
 		
 		// get children

@@ -8,7 +8,7 @@
  *       i2b2 Web Client
  *           v1.7.11
  *  ************************* 
- *  @modified: 12/07/18
+ *  @modified: 12/12/18
  *  Contributors:
  *     Nick Benik
  *     Griffin Weber, MD, PhD
@@ -22,7 +22,7 @@
  */-->
 
 <script type="text/javascript">
-	var i2b2build = "1.7.11   [12/07/18 12:00 PM] ";
+	var i2b2build = "1.7.11   [12/12/18 12:00 PM] ";
 </script>
 
 <!-- LOAD YUI FROM Yahoo's CDN
@@ -542,10 +542,6 @@ YAHOO.util.Event.addListener(window, "load", init);
 		<div style="padding:5px;">
 			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Values</span><br/>
 			<span id="ontMetadataXml"></span>
-		</div>
-		<div style="padding:5px;">
-			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Example SQL</span><br/>
-			<span id="ontInfoSQL" style="font-family:'Courier New'"></span>
 		</div>
 		<div style="padding:5px;">
 			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Children of Term</span><br/>
@@ -1231,6 +1227,11 @@ YAHOO.util.Event.addListener(window, "load", init);
       <div style="margin-left:50px">
         <input type="checkbox" id="ONTFINDdisableModifiers" />
         Disable Modifiers</div>
+    </div>
+  </div>
+  <div id="optionsOntInfo" style="display:none;">
+    <div class="hd" style="background:#6677AA;">Options for Term Info</div>
+    <div class="bd"> <br />No Options
     </div>
   </div>
   <!-- ############### </Option Screens> ############### -->
