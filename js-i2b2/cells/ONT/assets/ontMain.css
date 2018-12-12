@@ -167,6 +167,16 @@ DIV#ontMainBox DIV#ontNavDisp {
 	padding: 3px;
 	white-space: nowrap;
 }
+
+DIV#ontMainBox DIV#ontInfoDisp {
+    width: auto;
+    background: #FFFFFF none repeat scroll 0%;
+    border: 1px solid #667788;
+    overflow: auto;
+    padding: 3px;
+	white-space: normal;
+}	
+	
 DIV#ontMainBox DIV#ontFormFindCode {
 	width:auto;
 	overflow: hidden;
