@@ -7,9 +7,8 @@
  *  *************************
  *       i2b2 Web Client
  *           v1.7.11
- *			  ALPHA
  *  ************************* 
- *  @modified: 07/20/18
+ *  @modified: 12/07/18
  *  Contributors:
  *     Nick Benik
  *     Griffin Weber, MD, PhD
@@ -23,7 +22,7 @@
  */-->
 
 <script type="text/javascript">
-	var i2b2build = "1.7.11   [07/20/18 2:00 PM] ";
+	var i2b2build = "1.7.11   [12/07/18 12:00 PM] ";
 </script>
 
 <!-- LOAD YUI FROM Yahoo's CDN
@@ -437,6 +436,9 @@ YAHOO.util.Event.addListener(window, "load", init);
         <div id="tabFind" class="tabBox" onClick="i2b2.ONT.view.main.selectTab('find')">
           <div>Find</div>
         </div>
+        <div id="tabInfo" class="tabBox" onClick="i2b2.ONT.view.main.selectTab('info')">
+          <div>Info</div>
+        </div>
       </div>
       <div class="opXML"> 
         <!--				<a href="JavaScript:showXML('ONT',i2b2.ONT.view.main.currentTab,'Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
@@ -521,6 +523,35 @@ YAHOO.util.Event.addListener(window, "load", init);
           </form>
         </div>
         <div id="ontSearchModifiersResults" oncontextmenu="return false"></div>
+      </div>
+      <div id="ontInfoDisp" style="display:none">
+		<div style="font-size:11px;background: #dadada;color: #585858; padding-left:5px">Detailed Information for Term:</div>
+		<div id="ontInfoName" style="font-size:13px;color:#333;font-weight:bold;padding:5px;"></div>
+		<div style="padding:5px;">
+			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Description</span><br/>
+			<span id="ontInfoDescription" style=""></span>
+		</div>
+		<div style="padding:5px;">
+			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Hierarchy</span><br/>
+			<span id="ontInfoTooltip" style=""></span>
+		</div>
+		<div style="padding:5px;">
+			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Concept Path</span><br/>
+			<span id="ontInfoKey" style="font-family:'Courier New'"></span>
+		</div>
+		<div style="padding:5px;">
+			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Values</span><br/>
+			<span id="ontMetadataXml"></span>
+		</div>
+		<div style="padding:5px;">
+			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Example SQL</span><br/>
+			<span id="ontInfoSQL" style="font-family:'Courier New'"></span>
+		</div>
+		<div style="padding:5px;">
+			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Children of Term</span><br/>
+			<span id="ontInfoChildren" style=""></span>
+		</div>
+
       </div>
       <div id="ontBalloonBox" xonmouseover="i2b2.ONT.view.main.hballoon.hideBalloons()"> 
         <!--

@@ -244,7 +244,7 @@ i2b2.events.afterCellInit.subscribe(
 						{ lazyload: true,
 						trigger: $('ontNavDisp'), 
 						itemdata: [
-							{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.nav.doRefreshAll } }
+							//{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.nav.doRefreshAll } }
 					] }  
 			); 
 			i2b2.ONT.view.nav.ContextMenu.subscribe("triggerContextMenu",i2b2.ONT.view.nav.ContextMenuValidate);			
@@ -264,6 +264,8 @@ i2b2.ONT.view.nav.setChecked = function(here) {
 	}
 }
 
+
+
 //================================================================================================== //
 i2b2.ONT.view.nav.doRefreshAll = function() { 
 	i2b2.ONT.ctrlr.gen.loadCategories();
@@ -272,6 +274,7 @@ i2b2.ONT.view.nav.doRefreshAll = function() {
 
 //================================================================================================== //
 i2b2.ONT.view.nav.ContextMenuValidate = function(p_oEvent) {
+
 	var clickId = null;
 	var currentNode = this.contextEventTarget;
 	while (!currentNode.id) {
@@ -286,16 +289,38 @@ i2b2.ONT.view.nav.ContextMenuValidate = function(p_oEvent) {
 	clickId = currentNode.id;
 	// see if the ID maps back to a treenode with SDX data
 	var tvNode = i2b2.ONT.view.nav.yuiTree.getNodeByProperty('nodeid', clickId);
+	i2b2.ONT.view.nav.ContextMenu.clearContent();
+	i2b2.ONT.view.nav.ContextMenu.show();
+	
+	var mil = [];
+	
 	if (tvNode) {
 		if (tvNode.data.i2b2_SDX) {
 			if (tvNode.data.i2b2_SDX.sdxInfo.sdxType == "CONCPT") {
 				i2b2.ONT.view.nav.contextRecord = tvNode.data.i2b2_SDX;
+				
+				mil.push({ text: "Show More Info",	onclick: { fn: i2b2.ONT.view.info.doShowInfo, obj: tvNode.data.i2b2_SDX }});
+				/*
+				if(!Object.isUndefined(i2b2.ONT.view.nav.contextRecord.origData.comment)){
+					var v_tempurl = i2b2.ONT.view.nav.contextRecord.origData.comment.match(/\[URL\](.*)\[\/URL\]/i);
+					if(v_tempurl != null){
+						v_infourl = v_tempurl[1];
+						mil.push({ text: "Show More Info",	onclick: { fn: i2b2.ONT.view.nav.doShowInfo, obj: v_infourl }});
+
+					}
+				}
+				*/
+				console.log(i2b2.ONT.view.nav.contextRecord);
 			} else {
 				this.cancel();
 				return;
 			}
 		}
 	}
+	mil.push({ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.nav.doRefreshAll } });
+	
+	i2b2.ONT.view.nav.ContextMenu.addItems(mil);
+	i2b2.ONT.view.nav.ContextMenu.render();
 };
 
 

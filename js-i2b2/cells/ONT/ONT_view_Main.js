@@ -31,11 +31,19 @@ i2b2.ONT.view.main.selectTab = function(tabCode) {
 			this.currentTab = 'find';
 			this.cellRoot.view['nav'].hideView();
 			this.cellRoot.view['find'].showView();
+			this.cellRoot.view['info'].hideView();
 		break;
 		case "nav":
 			this.currentTab = 'nav';
 			this.cellRoot.view['nav'].showView();
 			this.cellRoot.view['find'].hideView();
+			this.cellRoot.view['info'].hideView();
+		break;
+		case "info":
+			this.currentTab = 'info';
+			this.cellRoot.view['info'].showView();
+			this.cellRoot.view['find'].hideView();
+			this.cellRoot.view['nav'].hideView();
 		break;
 	}
 }
@@ -80,6 +88,8 @@ i2b2.ONT.view.main.Resize = function(e) {
 				break;
 		}
 		$$('DIV#ontMainBox DIV#ontNavDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
+		$$('DIV#ontMainBox DIV#ontInfoDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
+
 		//$$('DIV#ontMainBox DIV#ontFindDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
 		//$$('DIV#ontMainBox DIV#ontTopTabs')[0].style.width = (parseInt(ve.width)-330) + 'px'; 		
 		$$('DIV#ontMainBox DIV#ontFindFrameModifier')[0].style.width = (parseInt(ve.width)-14) + 'px';
@@ -104,6 +114,7 @@ i2b2.ONT.view.main.splitterDragged = function()
 	ont.style.width	= Math.max((parseInt(splitter.style.left) - ont.offsetLeft - 3), 0) + "px";
 	
 	$$('DIV#ontMainBox DIV#ontNavDisp')[0].style.width = Math.max((parseInt(ont.style.width)-20), 0) + 'px';
+	$$('DIV#ontMainBox DIV#ontInfoDisp')[0].style.width = Math.max((parseInt(ont.style.width)-20), 0) + 'px';
 	$$('DIV#ontMainBox DIV#ontSearchNamesResults')[0].style.width = Math.max((parseInt(ont.style.width)-14), 0) + 'px';
 	$$('DIV#ontMainBox DIV#ontSearchCodesResults')[0].style.width = Math.max((parseInt(ont.style.width)-14), 0) + 'px';
 }
