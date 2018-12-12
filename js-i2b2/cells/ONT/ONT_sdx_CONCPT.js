@@ -202,6 +202,13 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 			retHtml += "]";
 		}
 	}
+	// protected_access
+	if ((!Object.isUndefined(sdxData.origData.protected_access)) && (sdxData.origData.protected_access != 'N')) 
+	{
+		retHtml += " <img src='js-i2b2/cells/ONT/assets/protected.png' style='height: 12px;width: 12px;margin-bottom: 3px;' title='You are able to view this protected folder.' />";
+		//retHtml += " <div style='background: #a771bd;width: 20px;color: #fff;font-size: 11px;display: inline-block;text-align: center;border-radius: 4px;font-weight: bold;'>id</div>";
+	}
+	
 	retHtml += '</DIV></DIV>';
 	render.html = retHtml;
 	render.htmlID =  id;

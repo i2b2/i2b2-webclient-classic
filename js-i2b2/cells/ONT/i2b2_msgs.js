@@ -38,6 +38,7 @@ i2b2.ONT.cfg.parsers.ExtractConcepts = function(){
 			o.column_datatype = i2b2.h.getXNodeVal(c[i],'columndatatype');
 			o.operator = i2b2.h.getXNodeVal(c[i],'operator');
 			o.dim_code = i2b2.h.getXNodeVal(c[i],'dimcode');
+			o.protected_access = i2b2.h.getXNodeVal(c[i],'protected_access');
 			// encapsulate the data node into SDX package
 			var sdxDataPack = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
 			// save extracted info

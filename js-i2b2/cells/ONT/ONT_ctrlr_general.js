@@ -46,6 +46,7 @@ i2b2.ONT.ctrlr.gen.loadCategories = function() {
 				o.column_name = i2b2.h.getXNodeVal(c[i],'columnname');
 				o.operator = i2b2.h.getXNodeVal(c[i],'operator');
 				o.dim_code = i2b2.h.getXNodeVal(c[i],'dimcode');
+				o.protected_access = i2b2.h.getXNodeVal(c[i],'protected_access');
 				// save the node to the ONT data model
 				this.push(o);
 			}
