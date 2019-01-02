@@ -1799,6 +1799,7 @@ function QueryToolController() {
 				// Concepts
 				for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
 					var sdxData = panel_list[p].items[i];
+					if (sdxData.origData.parent ==  undefined  || sdxData.origData.parent.encapType == undefined || sdxData.origData.parent.encapType != "FOLDER") {
 					s += '\t\t<item>\n';
 					if(panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo){ // BUG FIX: WEBCLIENT-136
 						s += '\t\t\t<constrain_by_date>\n';
@@ -1836,7 +1837,7 @@ function QueryToolController() {
 						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
 						s += '\t\t\t<hlevel>0</hlevel>\n';
 						break;
-					case "WRKF":
+					case "WRKF_OLD":
 						var varInput = {
 							parent_key_value: sdxData.sdxInfo.sdxKeyValue,
 							result_wait_time: 180
@@ -2020,6 +2021,7 @@ function QueryToolController() {
 						}
 
 						if (p < panel_cnt-1) {auto_query_name += '-';}
+					}
 					}
 				}
 				s += '\t</panel>\n';

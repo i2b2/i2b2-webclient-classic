@@ -571,6 +571,9 @@ function i2b2_PanelController(parentCtrlr) {
 		else	
 			var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData.parent, sdxConceptOrig.sdxInfo.sdxType);
 
+		// Add back from workplace folder
+		if (sdxConceptOrig.origData.wrkFolder != undefined)
+			sdxConcept.origData.wrkFolder = sdxConceptOrig.origData.wrkFolder;
 		// insert concept into our panel's items array;
 		var dm = i2b2.CRC.model.queryCurrent;
 		var repos = false;
@@ -836,7 +839,8 @@ function i2b2_PanelController(parentCtrlr) {
 				var lvMetaDatas2 = i2b2.h.XPath(sdxConcept.origData.xmlOrig, 'metadataxml/ValueMetadata[string-length(Version)>0]');
 				if (lvMetaDatas2.length > 0) {
 					//bring up popup
-					this.showLabValues(sdxConcept.origData.key, sdxData);
+					if ( sdxConcept.origData.wrkFolder == undefined &&  sdxConcept.origData.wrkFolder != "YES")
+						this.showLabValues(sdxConcept.origData.key, sdxData);
 				}
 			} 
 			else // check for Mod values
@@ -845,7 +849,8 @@ function i2b2_PanelController(parentCtrlr) {
 				var lvMetaDatas1 = i2b2.h.XPath(sdxConcept.origData.xmlOrig, 'metadataxml/ValueMetadata[string-length(Version)>0]');
 				if (lvMetaDatas1.length > 0) {
 					//bring up popup
-					this.showModValues(sdxConcept.origData.key, sdxData);
+					if ( sdxConcept.origData.wrkFolder == undefined &&  sdxConcept.origData.wrkFolder != "YES")
+						this.showModValues(sdxConcept.origData.key, sdxData);
 				}
 			}
 		}
@@ -854,8 +859,8 @@ function i2b2_PanelController(parentCtrlr) {
 		if (sdxConcept.LabValues) sdxData.LabValues = sdxConcept.LabValues;
 		if (sdxConcept.ModValues) sdxData.ModValues = sdxConcept.Modalues;
 
-
-		i2b2.sdx.Master.AppendTreeNode(tvTree, tvParent, sdxData);
+		if (sdxConcept.sdxInfo.sdxType != "WRKF")
+			i2b2.sdx.Master.AppendTreeNode(tvTree, tvParent, sdxData);
 		return sdxData;
 	}	
 

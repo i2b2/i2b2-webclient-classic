@@ -402,6 +402,34 @@ i2b2.WORK.view.main._generateTvNode = function(title, nodeData, parentNode){
             } 
             catch (e) {
             }
+            break;
+              case "ZZ":
+            // create a new WORK SDX object
+            var o = nodeData;
+            o.index = nodeData.key;
+            try {
+                var sdxDataNode = i2b2.sdx.Master.EncapsulateData('WRK', o);
+                if (o.encapType == "FOLDER")
+                	return sdxDataNode;
+                var sdxRenderData = i2b2.sdx.Master.RenderHTML("wrkTreeview", sdxDataNode, {
+                    'title': title,
+					'tooltip': 	nodeData.annotation.replace("\n","\nAnnotation: ") // PARTIAL BUG-FIX: WEBCLIENT-98
+                });
+				if (!sdxRenderData) { break; }
+                var renderObj = sdxRenderData; // i2b2.sdx.Master.AppendTreeNode(parentNode.tree, parentNode, sdxRenderData);
+/*
+                renderObj.data.i2b2_SDX = sdxDataNode;
+                var id = renderObj.data.nodeid;
+                var ddProxy = i2b2.sdx.Master.Attach2Data(id, "WRK", id);
+                // attach encapsulated data type as well
+                ddProxy.addToGroup(sdxDataNode.sdxUnderlyingPackage.sdxInfo.sdxType);
+                ddProxy.yuiTreeNode = renderObj;
+                ddProxy.config.isTarget = false;
+                ddProxy.isTarget = false;
+                */
+            } 
+            catch (e) {
+            }
     }
     return renderObj;
 }

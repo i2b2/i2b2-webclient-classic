@@ -102,7 +102,83 @@ i2b2.sdx.TypeControllers.WRKF.RenderHTML= function(sdxData, options, targetDiv) 
 	var sMainEvents = sDD;
 	var sImgEvents = sDD;
 
+
+	var varInput = {
+							parent_key_value: sdxData.sdxInfo.sdxKeyValue,
+							result_wait_time: 180
+					};
+
+	var results = i2b2.WORK.ajax.getChildren("WORK:Workplace", varInput );
+
+						var nlst = i2b2.h.XPath(results.refXML, "//folder[name and share_id and index and visual_attributes]");
+						for (var i = 0; i < nlst.length; i++) {
+							/*if (i != 0)
+							{
+								s += '\t\t</item>\n';
+								if (i != nlst.length)
+									s += '\t\t<item>\n';
+							}
+							*/
+	
+							if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'FOLDER') {
+
+										var s = nlst[i];
+							            var nodeData = {};
+							            nodeData.xmlOrig = s;
+							            nodeData.index = i2b2.h.getXNodeVal(s, "index");
+							            nodeData.key = nodeData.index;
+							            nodeData.name = i2b2.h.getXNodeVal(s, "folder/name");
+							            nodeData.annotation = i2b2.h.getXNodeVal(s, "tooltip");
+							            nodeData.share_id = i2b2.h.getXNodeVal(s, "share_id");
+							            nodeData.visual = 'ZZ'; //String(i2b2.h.getXNodeVal(s, "visual_attributes")).strip();
+							            nodeData.encapType = i2b2.h.getXNodeVal(s, "work_xml_i2b2_type");
+							            nodeData.isRoot = false;
+							            // create new root node
+							            var tmpNode = i2b2.WORK.view.main._generateTvNode(nodeData.name, nodeData, targetDiv);
+							            var newSdxData = i2b2.sdx.TypeControllers.PR.RenderHTML(tmpNode, options, targetDiv);
+							            
+								            i2b2.sdx.TypeControllers.WRKF.RenderHTML(newSdxData, options, targetDiv);
+	
+							}
+							 else {
+							 
+								var work_xml= i2b2.h.XPath(nlst[i], "work_xml");
+								for (var j=0; j < work_xml.length; j++) {
+
+
+										
+										var s = nlst[i];
+							            var nodeData = {};
+							            nodeData.xmlOrig = s;
+							            nodeData.index = i2b2.h.getXNodeVal(s, "index");
+							            nodeData.key = nodeData.index;
+							            nodeData.name = i2b2.h.getXNodeVal(s, "folder/name");
+							            nodeData.annotation = i2b2.h.getXNodeVal(s, "tooltip");
+							            nodeData.share_id = i2b2.h.getXNodeVal(s, "share_id");
+							            nodeData.visual = 'ZZ'; //String(i2b2.h.getXNodeVal(s, "visual_attributes")).strip();
+							            nodeData.encapType = i2b2.h.getXNodeVal(s, "work_xml_i2b2_type");
+							            nodeData.isRoot = false;
+							            // create new root node
+							            var tmpNode = i2b2.WORK.view.main._generateTvNode(nodeData.name, nodeData, targetDiv);
+							            var newSdxData = i2b2.sdx.TypeControllers.PR.RenderHTML(tmpNode, options, targetDiv);
+							            newSdxData.origData.wrkFolder = "YES";
+							            
+							 
+							           	i2b2.sdx.Master.ProcessDrop(newSdxData, targetDiv.tree.id);
+
+
+								}							
+							}
+				
+			}
+
+
+
+
+
+
 	// **** Render the HTML ***
+	
 	var retHtml = '<DIV id="' + id + '" ' + sMainEvents + ' style="white-space:nowrap;cursor:pointer;">';
 	retHtml += '<DIV ';
 	if (Object.isString(options.cssClass)) {
@@ -126,6 +202,9 @@ i2b2.sdx.TypeControllers.WRKF.RenderHTML= function(sdxData, options, targetDiv) 
 	Object.extend(retObj, sdxData);
 	retObj.renderData = render;
 	return retObj;
+	
+	//var retObj = {};
+	//return retObj;
 }
 
 
