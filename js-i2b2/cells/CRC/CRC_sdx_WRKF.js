@@ -178,7 +178,11 @@ i2b2.sdx.TypeControllers.WRKF.RenderHTML= function(sdxData, options, targetDiv) 
 
 
 	// **** Render the HTML ***
-	
+	if (nlst.length == 0)
+	{
+		alert("Workpalce folder is empty.");
+		return false;
+	} else {
 	var retHtml = '<DIV id="' + id + '" ' + sMainEvents + ' style="white-space:nowrap;cursor:pointer;">';
 	retHtml += '<DIV ';
 	if (Object.isString(options.cssClass)) {
@@ -202,7 +206,7 @@ i2b2.sdx.TypeControllers.WRKF.RenderHTML= function(sdxData, options, targetDiv) 
 	Object.extend(retObj, sdxData);
 	retObj.renderData = render;
 	return retObj;
-	
+	}
 	//var retObj = {};
 	//return retObj;
 }

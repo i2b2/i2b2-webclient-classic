@@ -607,15 +607,22 @@ function i2b2_PanelController(parentCtrlr) {
 		this._addConcept(sdxConcept,this.yuiTree.root, true);
 		// reset the query name to be blank and flag as having dirty data
 		i2b2.CRC.ctrlr.QT.doSetQueryName('');
-		this.QTController._redrawAllPanels();
+		if (sdxConcept.sdxInfo.sdxType != "WRKF")
+			this.QTController._redrawAllPanels();
 	}
 
 //	================================================================================================== //
 	this._addConcept = function (sdxConcept, tvParent, isDragged) {
 		var tmpNode = this._addConceptVisuals.call(this, sdxConcept, tvParent, isDragged);
 		// add concept to data model record for panel
+		if (tmpNode != false)
+			{
 		var panel = i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][this.panelCurrentIndex];
 		panel.items[panel.items.length] = sdxConcept;
+		
+		if (sdxConcept.sdxInfo.sdxType == "WRKF")
+			this.QTController._redrawAllPanels();
+			}
 		return tmpNode;
 	}
 
@@ -859,7 +866,7 @@ function i2b2_PanelController(parentCtrlr) {
 		if (sdxConcept.LabValues) sdxData.LabValues = sdxConcept.LabValues;
 		if (sdxConcept.ModValues) sdxData.ModValues = sdxConcept.Modalues;
 
-		if (sdxConcept.sdxInfo.sdxType != "WRKF")
+		if ((sdxConcept.sdxInfo.sdxType != "WRKF") && (sdxData != false))
 			i2b2.sdx.Master.AppendTreeNode(tvTree, tvParent, sdxData);
 		return sdxData;
 	}	
