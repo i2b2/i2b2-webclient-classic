@@ -418,6 +418,7 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 								// Concepts
 								for (var i2=0; i2 < panel_list[p2].items.length; i2++) {
 									sdxData[0] = panel_list[p2].items[i2];
+									if (sdxData[0].sdxInfo.sdxType == "CONCPT")
 									i2b2.Timeline.conceptDropped(sdxData, false); // nw096 - turn off dialogs when auto-generating timeline
 								}
 							}
