@@ -814,16 +814,6 @@ function QueryToolController() {
 
 								var sdxDataNode = i2b2.sdx.Master.EncapsulateData('QM',o);
 								po.items.push(sdxDataNode);								
-							} else  if (ckey.toLowerCase().startsWith("patient")) {
-								var o = new Object;
-
-								//o.titleCRC = ckey.substring(8);
-								o.titleCRC = i2b2.h.getXNodeVal(pi[i2],'item_key');
-								o.PRS_id = ckey.substring(19);
-								o.result_instance_id = o.PRS_id ;
-								o.id = ckey;
-								var sdxDataNode = i2b2.sdx.Master.EncapsulateData('PRS',o);
-								po.items.push(sdxDataNode);
 							} else  if (ckey.toLowerCase().startsWith("folder")) {
 								var o = new Object;
 
@@ -850,7 +840,16 @@ function QueryToolController() {
 
 								var sdxDataNode = i2b2.sdx.Master.EncapsulateData('ENS',o);
 								po.items.push(sdxDataNode);		
+							} else  if (ckey.toLowerCase().startsWith("patient")) {
+								var o = new Object;
 
+								//o.titleCRC = ckey.substring(8);
+								o.titleCRC = i2b2.h.getXNodeVal(pi[i2],'item_key');
+								o.patient_id = ckey.substring(13);
+								o.result_instance_id = o.PRS_id ;
+								o.id = ckey;
+								var sdxDataNode = i2b2.sdx.Master.EncapsulateData('PR',o);
+								po.items.push(sdxDataNode);
 							} else {
 								//Get the modfier if it exists
 								//		if (i2b2.h.getXNodeVal(pi[i2],'constrain_by_modifier') != null)
