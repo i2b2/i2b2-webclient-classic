@@ -3232,8 +3232,14 @@ function QueryToolController() {
 									:(v_items[n].origData.newName ? v_items[n].origData.newName 
 											: (v_items[n].origData.name?v_items[n].origData.name:""));
 								itemObj.hasChildren = v_items[n].origData.hasChildren;
+
+								if (v_items[n].sdxInfo.sdxType == "PR")
+									itemObj.name = v_items[n].origData.titleCRC;
+								if ( v_items[n].sdxInfo.sdxType != "WRKF")
 								po.items.push(itemObj);
 								//itemObj.level = 	
+						// deal with PR
+
 					}
 					panels[x] = po;
 				}
