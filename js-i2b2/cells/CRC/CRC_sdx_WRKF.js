@@ -180,7 +180,7 @@ i2b2.sdx.TypeControllers.WRKF.RenderHTML= function(sdxData, options, targetDiv) 
 	// **** Render the HTML ***
 	if (nlst.length == 0)
 	{
-		alert("Workpalce folder is empty.");
+		//alert("Workpalce folder is empty.");
 		return false;
 	} else {
 	var retHtml = '<DIV id="' + id + '" ' + sMainEvents + ' style="white-space:nowrap;cursor:pointer;">';
@@ -217,7 +217,7 @@ i2b2.sdx.TypeControllers.WRKF.RenderHTML= function(sdxData, options, targetDiv) 
 // *********************************************************************************
 i2b2.sdx.TypeControllers.WRKF.onHoverOver = function(e, id, ddProxy) {    
 	var el = $(id);	
-	if (el) { Element.addClassName(el,'ddWRKFTarget'); }
+	if (el) { Element.addClassName(el,'ddCONCPTTarget'); }
 }
 
 // *********************************************************************************
@@ -225,7 +225,7 @@ i2b2.sdx.TypeControllers.WRKF.onHoverOver = function(e, id, ddProxy) {
 // *********************************************************************************
 i2b2.sdx.TypeControllers.WRKF.onHoverOut = function(e, id, ddProxy) { 
 	var el = $(id);	
-	if (el) { Element.removeClassName(el,'ddWRKFTarget'); }
+	if (el) { Element.removeClassName(el,'ddCONCPTTarget'); }
 }
 
 
