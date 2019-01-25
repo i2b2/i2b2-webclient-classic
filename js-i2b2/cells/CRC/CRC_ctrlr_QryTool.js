@@ -3241,7 +3241,7 @@ function QueryToolController() {
 								itemObj.hasChildren = v_items[n].origData.hasChildren;
 
 								if (v_items[n].sdxInfo.sdxType == "PR")
-									itemObj.name = v_items[n].origData.titleCRC;
+									itemObj.name = v_items[n].origData.title;
 								if ( v_items[n].sdxInfo.sdxType != "WRKF")
 								po.items.push(itemObj);
 								//itemObj.level = 	
