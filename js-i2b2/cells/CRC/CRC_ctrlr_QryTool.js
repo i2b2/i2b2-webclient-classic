@@ -1063,7 +1063,12 @@ function QueryToolController() {
 			alert('You must enter at least one concept to run a query.');
 			return void(0);
 		}
-
+		
+		if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][0].items.length < 1)
+		{
+			alert('You must enter at least one concept to run a query.');
+			return void(0);
+		}
 		// tdw9 1707c: validate temporal query if we are in temporal mode
 		if (i2b2.CRC.view.QT.isShowingTemporalQueryUI)
 		{
