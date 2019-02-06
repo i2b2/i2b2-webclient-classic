@@ -1421,6 +1421,7 @@ function QueryToolController() {
 
 		for (var p = 0; p < panel_cnt; p++) 
 		{
+			if (panel_list[p].items.length > 0) {
 			s += '\t<panel>\n';
 			s += '\t\t<panel_number>' + (p + 1) + '</panel_number>\n';
 			// date range constraints
@@ -1580,6 +1581,7 @@ function QueryToolController() {
 				}
 			}
 			s += '\t</panel>\n';
+			}
 		}
 		if (isTemporal && ip > 0)
 			s += '</subquery>\n ';
@@ -1645,6 +1647,7 @@ function QueryToolController() {
 		for (var i = 0; i < populationPanels.length; i++ )
 		{
 			var sdxData = populationPanels[i].items[0];
+			if (populationPanels[i].items.length > 0) {
 			if (undefined != sdxData.origData.name)
 				autoQueryName += sdxData.origData.name.substring(0,auto_query_name_len);
 			else if (undefined != sdxData.origData.title)
@@ -1653,6 +1656,7 @@ function QueryToolController() {
 				autoQueryName += "new query";
 			if ( i < populationPanels.length-1)
 				autoQueryName += "-";
+			}
 		}
 
 		// build the temporal event portion of the query name
