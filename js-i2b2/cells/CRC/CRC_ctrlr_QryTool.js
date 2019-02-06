@@ -3783,6 +3783,7 @@ function QueryToolController() {
 					var orCounter = 0;
 					var numItemsInPanel = panelData.items.length;
 
+					if (numItemsInPanel > 0) {
 					var panelContdivObj = "<div class=\"panelContainer";
 					var PanelTableObj = "<table width=\"615px\" border=\"0\">";
 					var PanelTableTrObj = "<tr>";
@@ -4029,7 +4030,7 @@ function QueryToolController() {
 					}
 					else
 						tdObj = tdObj + panelOperatorDiv + panelContdivObj;
-
+					}
 				});
 			});
 		}
