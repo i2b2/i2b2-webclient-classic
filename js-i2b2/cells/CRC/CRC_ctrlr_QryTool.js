@@ -1787,6 +1787,7 @@ function QueryToolController() {
 
 
 			for (var p = 0; p < panel_cnt; p++) {
+				if ( panel_list[p].items.length> 0) {
 				s += '\t<panel>\n';
 				s += '\t\t<panel_number>' + (p+1) + '</panel_number>\n';
 				// date range constraints
@@ -2036,6 +2037,7 @@ function QueryToolController() {
 					}
 				}
 				s += '\t</panel>\n';
+				}
 			}
 			if (isTemporal && ip > 0)
 			{
