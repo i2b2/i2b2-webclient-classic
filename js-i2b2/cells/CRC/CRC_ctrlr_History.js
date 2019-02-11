@@ -236,23 +236,27 @@ i2b2.CRC.ctrlr.history = {
 					// save the node to the CRC data model
 					i2b2.sdx.Master.Save(sdxDataPack, null);
 				}
+				if (qm.length > 0){
 				if(direction == 'BEFORE'){
 					$('crcHistoryBegins').value = lastDate;
 				} else {
 					$('crcHistoryBegins').value = lastDate;
 				}
-				
+
+					// Broadcast an update event letting interested view controllers know that the Categories data model has been updated
+					var DataUpdateSignal = {
+						DataLocation: "i2b2.CRC.model.QueryMasters",
+						DataRef: i2b2.CRC.model.QueryMasters
+					}
+					console.info("EVENT FIRE i2b2.CRC.ctrlr.gen.events.onDataUpdate; Msg:",DataUpdateSignal);
+					i2b2.CRC.ctrlr.history.events.onDataUpdate.fire(DataUpdateSignal);
+				}
 			} else {
 				alert("An error has occurred in the Cell's AJAX library.\n Press F12 for more information");
 			}
-			// Broadcast an update event letting interested view controllers know that the Categories data model has been updated
-			var DataUpdateSignal = {
-				DataLocation: "i2b2.CRC.model.QueryMasters",
-				DataRef: i2b2.CRC.model.QueryMasters
-			}
-			console.info("EVENT FIRE i2b2.CRC.ctrlr.gen.events.onDataUpdate; Msg:",DataUpdateSignal);
+
 			console.groupEnd();
-			i2b2.CRC.ctrlr.history.events.onDataUpdate.fire(DataUpdateSignal);
+			
 		};
 		
 		// fire the AJAX call
