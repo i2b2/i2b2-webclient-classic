@@ -1063,7 +1063,7 @@ function QueryToolController() {
 			alert('You must enter at least one concept to run a query.');
 			return void(0);
 		}
-		
+
 		if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup][0].items.length < 1)
 		{
 			alert('You must enter at least one concept to run a query.');
@@ -1422,142 +1422,144 @@ function QueryToolController() {
 		for (var p = 0; p < panel_cnt; p++) 
 		{
 			if (panel_list[p].items.length > 0) {
-			s += '\t<panel>\n';
-			s += '\t\t<panel_number>' + (p + 1) + '</panel_number>\n';
-			// date range constraints
-			//if (panel_list[p].dateFrom) {
-			//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
-			//}
-			//if (panel_list[p].dateTo) {
-			//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
-			//}
-			s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
-			// Exclude constraint (invert flag)
-			if (panel_list[p].exclude) {
-				s += '\t\t<invert>1</invert>\n';
-			} else {
-				s += '\t\t<invert>0</invert>\n';
-			}
-			// Panel Timing
-			s += '\t\t<panel_timing>' + panel_list[p].timing + '</panel_timing>\n';
-			// Occurs constraint
-			s += '\t\t<total_item_occurrences>' + ((panel_list[p].occurs * 1) + 1) + '</total_item_occurrences>\n';
-			// Concepts
-			for (i = 0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
-				var sdxData = panel_list[p].items[i];
-				s += '\t\t<item>\n';
-				if (panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo) { // BUG FIX: WEBCLIENT-136
-					s += '\t\t\t<constrain_by_date>\n';
-					if (panel_list[p].items[i].dateFrom) {
-						s += '\t\t\t\t<date_from>' + panel_list[p].items[i].dateFrom.Year + '-' + padNumber(panel_list[p].items[i].dateFrom.Month, 2) + '-' + padNumber(panel_list[p].items[i].dateFrom.Day, 2) + 'T00:00:00.000-05:00</date_from>\n';
-
-					}
-					if (panel_list[p].items[i].dateTo) {
-						s += '\t\t\t\t<date_to>' + panel_list[p].items[i].dateTo.Year + '-' + padNumber(panel_list[p].items[i].dateTo.Month, 2) + '-' + padNumber(panel_list[p].items[i].dateTo.Day, 2) + 'T00:00:00.000-05:00</date_to>\n';
-					}
-					s += '\t\t\t</constrain_by_date>\n';
+				s += '\t<panel>\n';
+				s += '\t\t<panel_number>' + (p + 1) + '</panel_number>\n';
+				// date range constraints
+				//if (panel_list[p].dateFrom) {
+				//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
+				//}
+				//if (panel_list[p].dateTo) {
+				//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
+				//}
+				s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
+				// Exclude constraint (invert flag)
+				if (panel_list[p].exclude) {
+					s += '\t\t<invert>1</invert>\n';
+				} else {
+					s += '\t\t<invert>0</invert>\n';
 				}
-				switch (sdxData.sdxInfo.sdxType) {
-				case "QM":
-					if (sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
-						s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
-					else
-						s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
-					s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
-					s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
-					s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-					s += '\t\t\t<hlevel>0</hlevel>\n';
-					break;
-				case "PRS":
-					s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-					s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
-					s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
-					s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-					s += '\t\t\t<hlevel>0</hlevel>\n';
-					break;
-				case "ENS":
-					s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-					s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
-					s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
-					s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-					s += '\t\t\t<hlevel>0</hlevel>\n';
-					break;
-				case "PR":
-					s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-					s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-					s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
-					s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-					s += '\t\t\t<hlevel>0</hlevel>\n';
-					break;					
-				default:
-					if (sdxData.origData.isModifier) {
+				// Panel Timing
+				s += '\t\t<panel_timing>' + panel_list[p].timing + '</panel_timing>\n';
+				// Occurs constraint
+				s += '\t\t<total_item_occurrences>' + ((panel_list[p].occurs * 1) + 1) + '</total_item_occurrences>\n';
+				// Concepts
+				for (i = 0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
+					var sdxData = panel_list[p].items[i];
+					if (sdxData.sdxInfo.sdxType =="WRKF")
+						break;
+					s += '\t\t<item>\n';
+					if (panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo) { // BUG FIX: WEBCLIENT-136
+						s += '\t\t\t<constrain_by_date>\n';
+						if (panel_list[p].items[i].dateFrom) {
+							s += '\t\t\t\t<date_from>' + panel_list[p].items[i].dateFrom.Year + '-' + padNumber(panel_list[p].items[i].dateFrom.Month, 2) + '-' + padNumber(panel_list[p].items[i].dateFrom.Day, 2) + 'T00:00:00.000-05:00</date_from>\n';
 
-						var modParent = sdxData.origData.parent;
-						var level = sdxData.origData.level;
-						var key = sdxData.origData.parent.key;
-						var name = (sdxData.origData.parent.name != null ? i2b2.h.Escape(sdxData.origData.parent.name) : i2b2.h.Escape(sdxData.origData.name));
-						var tooltip = sdxData.origData.tooltip;
-						var itemicon = sdxData.origData.hasChildren;
-						while (modParent != null) {
-							if (modParent.isModifier) {
-								modParent = modParent.parent;
-							} else {
-								level = modParent.level;
-								key = modParent.key;
-								name = modParent.name;
-								tooltip = modParent.tooltip;
-								itemicon = modParent.hasChildren;
-								break;
+						}
+						if (panel_list[p].items[i].dateTo) {
+							s += '\t\t\t\t<date_to>' + panel_list[p].items[i].dateTo.Year + '-' + padNumber(panel_list[p].items[i].dateTo.Month, 2) + '-' + padNumber(panel_list[p].items[i].dateTo.Day, 2) + 'T00:00:00.000-05:00</date_to>\n';
+						}
+						s += '\t\t\t</constrain_by_date>\n';
+					}
+					switch (sdxData.sdxInfo.sdxType) {
+					case "QM":
+						if (sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
+							s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
+						else
+							s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
+						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
+						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
+						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+						s += '\t\t\t<hlevel>0</hlevel>\n';
+						break;
+					case "PRS":
+						s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+						s += '\t\t\t<hlevel>0</hlevel>\n';
+						break;
+					case "ENS":
+						s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+						s += '\t\t\t<hlevel>0</hlevel>\n';
+						break;
+					case "PR":
+						s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+						s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
+						s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+						s += '\t\t\t<hlevel>0</hlevel>\n';
+						break;					
+					default:
+						if (sdxData.origData.isModifier) {
+
+							var modParent = sdxData.origData.parent;
+							var level = sdxData.origData.level;
+							var key = sdxData.origData.parent.key;
+							var name = (sdxData.origData.parent.name != null ? i2b2.h.Escape(sdxData.origData.parent.name) : i2b2.h.Escape(sdxData.origData.name));
+							var tooltip = sdxData.origData.tooltip;
+							var itemicon = sdxData.origData.hasChildren;
+							while (modParent != null) {
+								if (modParent.isModifier) {
+									modParent = modParent.parent;
+								} else {
+									level = modParent.level;
+									key = modParent.key;
+									name = modParent.name;
+									tooltip = modParent.tooltip;
+									itemicon = modParent.hasChildren;
+									break;
+								}
 							}
+
+							s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
+							s += '\t\t\t<item_key>' + key + '</item_key>\n';
+							s += '\t\t\t<item_name>' + i2b2.h.Escape(name) + '</item_name>\n';
+							// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
+							s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
+							s += '\t\t\t<class>ENC</class>\n';
+
+							s += '\t\t\t\t<constrain_by_modifier>\n';
+							s += '\t\t\t\t\t<modifier_name>' + sdxData.origData.name + '</modifier_name>\n';
+							s += '\t\t\t\t\t<applied_path>' + sdxData.origData.applied_path + '</applied_path>\n';
+							s += '\t\t\t\t\t<modifier_key>' + sdxData.origData.key + '</modifier_key>\n';
+							if (sdxData.ModValues) {
+								s += this.getValues(sdxData.ModValues);
+							}
+
+							s += '\t\t\t\t</constrain_by_modifier>\n';
+						} else {
+							sdxData.origData.key = (sdxData.origData.key).replace(/</g, "&lt;");
+							sdxData.origData.name = (sdxData.origData.name).replace(/</g, "&lt;");
+							if (undefined != sdxData.origData.tooltip)
+								sdxData.origData.tooltip = (sdxData.origData.tooltip).replace(/</g, "&lt;");
+							s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
+							//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
+							s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
+							s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
+							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
+							s += '\t\t\t<class>ENC</class>\n';
+							s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';
 						}
-
-						s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
-						s += '\t\t\t<item_key>' + key + '</item_key>\n';
-						s += '\t\t\t<item_name>' + i2b2.h.Escape(name) + '</item_name>\n';
-						// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
-						s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
-						s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
-						s += '\t\t\t<class>ENC</class>\n';
-
-						s += '\t\t\t\t<constrain_by_modifier>\n';
-						s += '\t\t\t\t\t<modifier_name>' + sdxData.origData.name + '</modifier_name>\n';
-						s += '\t\t\t\t\t<applied_path>' + sdxData.origData.applied_path + '</applied_path>\n';
-						s += '\t\t\t\t\t<modifier_key>' + sdxData.origData.key + '</modifier_key>\n';
-						if (sdxData.ModValues) {
-							s += this.getValues(sdxData.ModValues);
-						}
-
-						s += '\t\t\t\t</constrain_by_modifier>\n';
-					} else {
-						sdxData.origData.key = (sdxData.origData.key).replace(/</g, "&lt;");
-						sdxData.origData.name = (sdxData.origData.name).replace(/</g, "&lt;");
-						if (undefined != sdxData.origData.tooltip)
-							sdxData.origData.tooltip = (sdxData.origData.tooltip).replace(/</g, "&lt;");
-						s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
-						//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
-						s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
-						s += '\t\t\t<item_key>' + sdxData.origData.key + '</item_key>\n';
-						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
-						s += '\t\t\t<class>ENC</class>\n';
-						s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';
+					try {
+						var t = i2b2.h.XPath(sdxData.origData.xmlOrig, 'descendant::synonym_cd/text()');
+						t = (t[0].nodeValue == "Y");
+					} catch (e) {
+						var t = "false";
 					}
-				try {
-					var t = i2b2.h.XPath(sdxData.origData.xmlOrig, 'descendant::synonym_cd/text()');
-					t = (t[0].nodeValue == "Y");
-				} catch (e) {
-					var t = "false";
-				}
-				s += '\t\t\t<item_is_synonym>' + t + '</item_is_synonym>\n';
+					s += '\t\t\t<item_is_synonym>' + t + '</item_is_synonym>\n';
 
-				if (sdxData.LabValues) {
-					//s += '\t\t\t<constrain_by_value>\n';
-					s += this.getValues(sdxData.LabValues);
-				}
+					if (sdxData.LabValues) {
+						//s += '\t\t\t<constrain_by_value>\n';
+						s += this.getValues(sdxData.LabValues);
+					}
 
-				break;
-				}
-				//TODO add contraint to the item in the future
-				/*
+					break;
+					}
+					//TODO add contraint to the item in the future
+					/*
                         s += '\t\t\t<constrain_by_date>\n';
                         if (panel_list[p].dateFrom) {
                             s += '\t\t\t\t<date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'Z</date_from>\n';
@@ -1566,21 +1568,21 @@ function QueryToolController() {
                             s += '\t\t\t\t<date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'Z</date_to>\n';
                         }
                         s += '\t\t\t</constrain_by_date>\n';	
-				 */
-				s += '\t\t</item>\n';
-				if (i == 0) {
-					if (undefined != sdxData.origData.name) {
-						auto_query_name += sdxData.origData.name.substring(0, auto_query_name_len);
-					} else if (undefined != sdxData.origData.title) {
-						auto_query_name += sdxData.origData.title.substring(0, auto_query_name_len);
-					} else {
-						auto_query_name += "new query";
-					}
+					 */
+					s += '\t\t</item>\n';
+					if (i == 0) {
+						if (undefined != sdxData.origData.name) {
+							auto_query_name += sdxData.origData.name.substring(0, auto_query_name_len);
+						} else if (undefined != sdxData.origData.title) {
+							auto_query_name += sdxData.origData.title.substring(0, auto_query_name_len);
+						} else {
+							auto_query_name += "new query";
+						}
 
-					if (p < panel_cnt - 1) { auto_query_name += '-'; }
+						if (p < panel_cnt - 1) { auto_query_name += '-'; }
+					}
 				}
-			}
-			s += '\t</panel>\n';
+				s += '\t</panel>\n';
 			}
 		}
 		if (isTemporal && ip > 0)
@@ -1648,14 +1650,14 @@ function QueryToolController() {
 		{
 			var sdxData = populationPanels[i].items[0];
 			if (populationPanels[i].items.length > 0) {
-			if (undefined != sdxData.origData.name)
-				autoQueryName += sdxData.origData.name.substring(0,auto_query_name_len);
-			else if (undefined != sdxData.origData.title)
-				autoQueryName += sdxData.origData.title.substring(0,auto_query_name_len);					
-			else
-				autoQueryName += "new query";
-			if ( i < populationPanels.length-1)
-				autoQueryName += "-";
+				if (undefined != sdxData.origData.name)
+					autoQueryName += sdxData.origData.name.substring(0,auto_query_name_len);
+				else if (undefined != sdxData.origData.title)
+					autoQueryName += sdxData.origData.title.substring(0,auto_query_name_len);					
+				else
+					autoQueryName += "new query";
+				if ( i < populationPanels.length-1)
+					autoQueryName += "-";
 			}
 		}
 
@@ -1792,231 +1794,231 @@ function QueryToolController() {
 
 			for (var p = 0; p < panel_cnt; p++) {
 				if ( panel_list[p].items.length> 0) {
-				s += '\t<panel>\n';
-				s += '\t\t<panel_number>' + (p+1) + '</panel_number>\n';
-				// date range constraints
-				//if (panel_list[p].dateFrom) {
-				//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
-				//}
-				//if (panel_list[p].dateTo) {
-				//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
-				//}
-				s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
-				// Exclude constraint (invert flag)
-				if (panel_list[p].exclude) {
-					s += '\t\t<invert>1</invert>\n';
-				} else {
-					s += '\t\t<invert>0</invert>\n';
-				}
-				// Panel Timing
-				s += '\t\t<panel_timing>' + panel_list[p].timing + '</panel_timing>\n';
-				// Occurs constraint
-				s += '\t\t<total_item_occurrences>'+((panel_list[p].occurs*1)+1)+'</total_item_occurrences>\n';
-				// Concepts
-				for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
-					var sdxData = panel_list[p].items[i];
-					if (sdxData.origData.parent ==  undefined  || sdxData.origData.parent.encapType == undefined || sdxData.origData.parent.encapType != "FOLDER") {
-					s += '\t\t<item>\n';
-					if(panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo){ // BUG FIX: WEBCLIENT-136
-						s += '\t\t\t<constrain_by_date>\n';
-						if (panel_list[p].items[i].dateFrom) {
-							s += '\t\t\t\t<date_from>'+panel_list[p].items[i].dateFrom.Year+'-'+padNumber(panel_list[p].items[i].dateFrom.Month,2)+'-'+padNumber(panel_list[p].items[i].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
-
-						}
-						if (panel_list[p].items[i].dateTo) {
-							s += '\t\t\t\t<date_to>'+panel_list[p].items[i].dateTo.Year+'-'+padNumber(panel_list[p].items[i].dateTo.Month,2)+'-'+padNumber(panel_list[p].items[i].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
-						}
-						s += '\t\t\t</constrain_by_date>\n';
+					s += '\t<panel>\n';
+					s += '\t\t<panel_number>' + (p+1) + '</panel_number>\n';
+					// date range constraints
+					//if (panel_list[p].dateFrom) {
+					//	s += '\t\t<panel_date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'T00:00:00.000-05:00</panel_date_from>\n';
+					//}
+					//if (panel_list[p].dateTo) {
+					//	s += '\t\t<panel_date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'T00:00:00.000-05:00</panel_date_to>\n';
+					//}
+					s += "\t\t<panel_accuracy_scale>" + panel_list[p].relevance + "</panel_accuracy_scale>\n";
+					// Exclude constraint (invert flag)
+					if (panel_list[p].exclude) {
+						s += '\t\t<invert>1</invert>\n';
+					} else {
+						s += '\t\t<invert>0</invert>\n';
 					}
-					switch(sdxData.sdxInfo.sdxType) {
-					case "QM":
-						if(sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
-							s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
-						else
-							s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
-						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
-						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
-						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-						s += '\t\t\t<hlevel>0</hlevel>\n';
-						break;
-					case "PRS":	
-						s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
-						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
-						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-						s += '\t\t\t<hlevel>0</hlevel>\n';
-						break;
-					case "PR":
-						s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-						s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
-						s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
-						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-						s += '\t\t\t<hlevel>0</hlevel>\n';
-						break;
-					case "WRKF_OLD":
-						var varInput = {
-							parent_key_value: sdxData.sdxInfo.sdxKeyValue,
-							result_wait_time: 180
-					};
-						var results = i2b2.WORK.ajax.getChildren("WORK:Workplace", varInput );
+					// Panel Timing
+					s += '\t\t<panel_timing>' + panel_list[p].timing + '</panel_timing>\n';
+					// Occurs constraint
+					s += '\t\t<total_item_occurrences>'+((panel_list[p].occurs*1)+1)+'</total_item_occurrences>\n';
+					// Concepts
+					for (i=0; i < panel_list[p].items.length; i++) { // BUG FIX: WEBCLIENT-153 (Added i2b2.h.Escape() to all names/tooltips)
+						var sdxData = panel_list[p].items[i];
+						if (sdxData.origData.parent ==  undefined  || sdxData.origData.parent.encapType == undefined || sdxData.origData.parent.encapType != "FOLDER") {
+							s += '\t\t<item>\n';
+							if(panel_list[p].items[i].dateFrom || panel_list[p].items[i].dateTo){ // BUG FIX: WEBCLIENT-136
+								s += '\t\t\t<constrain_by_date>\n';
+								if (panel_list[p].items[i].dateFrom) {
+									s += '\t\t\t\t<date_from>'+panel_list[p].items[i].dateFrom.Year+'-'+padNumber(panel_list[p].items[i].dateFrom.Month,2)+'-'+padNumber(panel_list[p].items[i].dateFrom.Day,2)+'T00:00:00.000-05:00</date_from>\n';
 
-						var nlst = i2b2.h.XPath(results.refXML, "//folder[name and work_xml and share_id and index and visual_attributes]");
-						for (var i = 0; i < nlst.length; i++) {
-							if (i != 0)
-							{
-								s += '\t\t</item>\n';
-								if (i != nlst.length)
-									s += '\t\t<item>\n';
+								}
+								if (panel_list[p].items[i].dateTo) {
+									s += '\t\t\t\t<date_to>'+panel_list[p].items[i].dateTo.Year+'-'+padNumber(panel_list[p].items[i].dateTo.Month,2)+'-'+padNumber(panel_list[p].items[i].dateTo.Day,2)+'T00:00:00.000-05:00</date_to>\n';
+								}
+								s += '\t\t\t</constrain_by_date>\n';
 							}
+							switch(sdxData.sdxInfo.sdxType) {
+							case "QM":
+								if(sdxData.origData.id.startsWith("masterid")) // BUG FIX: WEBCLIENT-149
+									s += '\t\t\t<item_key>' + sdxData.origData.id + '</item_key>\n';
+								else
+									s += '\t\t\t<item_key>masterid:' + sdxData.origData.id + '</item_key>\n';
+								s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.origData.title) + '</item_name>\n';
+								s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.name) + '</tooltip>\n';
+								s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+								s += '\t\t\t<hlevel>0</hlevel>\n';
+								break;
+							case "PRS":	
+								s += '\t\t\t<item_key>patient_set_coll_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+								s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+								s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+								s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+								s += '\t\t\t<hlevel>0</hlevel>\n';
+								break;
+							case "PR":
+								s += '\t\t\t<item_key>PATIENT:HIVE:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+								s += '\t\t\t<item_name>' + sdxData.sdxInfo.sdxDisplayName + '</item_name>\n';
+								s += '\t\t\t<tooltip>' + sdxData.sdxInfo.sdxDisplayName + '</tooltip>\n';
+								s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+								s += '\t\t\t<hlevel>0</hlevel>\n';
+								break;
+							case "WRKF_OLD":
+								var varInput = {
+									parent_key_value: sdxData.sdxInfo.sdxKeyValue,
+									result_wait_time: 180
+							};
+								var results = i2b2.WORK.ajax.getChildren("WORK:Workplace", varInput );
 
-							if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'CONCEPT') {
+								var nlst = i2b2.h.XPath(results.refXML, "//folder[name and work_xml and share_id and index and visual_attributes]");
+								for (var i = 0; i < nlst.length; i++) {
+									if (i != 0)
+									{
+										s += '\t\t</item>\n';
+										if (i != nlst.length)
+											s += '\t\t<item>\n';
+									}
 
-								var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::concept/..");
-								for (var j=0; j < work_xml.length; j++) {
-									if (i2b2.h.getXNodeVal(work_xml[j], "level") != "undefined") {
-										s += '\t\t\t<hlevel>' + i2b2.h.getXNodeVal(work_xml[j], "level") + '</hlevel>\n';
-										s += '\t\t\t<item_name>' + i2b2.h.getXNodeVal(work_xml[j], "name")  + '</item_name>\n';
-										s += '\t\t\t<item_key>' + i2b2.h.getXNodeVal(work_xml[j], "key") + '</item_key>\n';
-										s += '\t\t\t<tooltip>' + i2b2.h.getXNodeVal(work_xml[j], "tooltip")  + '</tooltip>\n';
-										s += '\t\t\t<class>ENC</class>\n';
-										s += '\t\t\t<item_icon>' + i2b2.h.getXNodeVal(work_xml[j], "visualattributes") + '</item_icon>\n';
-										try {
-											var t = i2b2.h.XPath(work_xml[j],'descendant::synonym_cd/text()');
-											t = (t[0].nodeValue=="Y");
-										} catch(e) {
-											var t = "false";
+									if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'CONCEPT') {
+
+										var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::concept/..");
+										for (var j=0; j < work_xml.length; j++) {
+											if (i2b2.h.getXNodeVal(work_xml[j], "level") != "undefined") {
+												s += '\t\t\t<hlevel>' + i2b2.h.getXNodeVal(work_xml[j], "level") + '</hlevel>\n';
+												s += '\t\t\t<item_name>' + i2b2.h.getXNodeVal(work_xml[j], "name")  + '</item_name>\n';
+												s += '\t\t\t<item_key>' + i2b2.h.getXNodeVal(work_xml[j], "key") + '</item_key>\n';
+												s += '\t\t\t<tooltip>' + i2b2.h.getXNodeVal(work_xml[j], "tooltip")  + '</tooltip>\n';
+												s += '\t\t\t<class>ENC</class>\n';
+												s += '\t\t\t<item_icon>' + i2b2.h.getXNodeVal(work_xml[j], "visualattributes") + '</item_icon>\n';
+												try {
+													var t = i2b2.h.XPath(work_xml[j],'descendant::synonym_cd/text()');
+													t = (t[0].nodeValue=="Y");
+												} catch(e) {
+													var t = "false";
+												}
+												s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
+											}
 										}
-										s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
-									}
+									} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'PATIENT') {
+
+										var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::patient/..");
+										for (var j=0; j < work_xml.length; j++) {
+											if (i2b2.h.getXNodeVal(work_xml[j], "patient_id") != "undefined") {
+												s += '\t\t\t<item_key>PATIENT:HIVE:' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</item_key>\n';
+												s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</item_name>\n';
+												s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</tooltip>\n';
+												s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+												s += '\t\t\t<hlevel>0</hlevel>\n';
+
+											}
+										}
+									} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'PREV_QUERY') {
+										var work_xml= i2b2.h.XPath(nlst[i], "work_xml");
+										for (var j=0; j < work_xml.length; j++) {
+											if (i2b2.h.getXNodeVal(work_xml[j], "query_master_id") != "undefined") {
+												s += '\t\t\t<item_key>masterid:' +  i2b2.h.getXNodeVal(work_xml[j], "query_master_id") + '</item_key>\n';
+												s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "name") + '</item_name>\n';
+												s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "name") + '</tooltip>\n';
+												s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+												s += '\t\t\t<hlevel>0</hlevel>\n';
+
+											}
+										}
+									} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'PATIENT_COLL') {
+										var work_xml= i2b2.h.XPath(nlst[i], "work_xml");
+										for (var j=0; j < work_xml.length; j++) {
+											if (i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") != "undefined") {
+												s += '\t\t\t<item_key>patient_set_col_id:' +  i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") + '</item_key>\n';
+												s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</item_name>\n';
+												s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</tooltip>\n';
+												s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+												s += '\t\t\t<hlevel>0</hlevel>\n';
+
+											}
+										}
+									} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'ENCOUNTER_COLL') {
+										var work_xml= i2b2.h.XPath(nlst[i], "work_xml");
+										for (var j=0; j < work_xml.length; j++) {
+											if (i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") != "undefined") {
+												s += '\t\t\t<item_key>encounter_set_col_id:' +  i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") + '</item_key>\n';
+												s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</item_name>\n';
+												s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</tooltip>\n';
+												s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+												s += '\t\t\t<hlevel>0</hlevel>\n';
+
+											}
+										}
+									}							
+
 								}
-							} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'PATIENT') {
+								break;
+							case "ENS":	
+								s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
+								s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
+								s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
+								s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
+								s += '\t\t\t<hlevel>0</hlevel>\n';
+								break;
+							default:
+								if (sdxData.origData.isModifier) {
 
-								var work_xml= i2b2.h.XPath(nlst[i], "work_xml/descendant::patient/..");
-								for (var j=0; j < work_xml.length; j++) {
-									if (i2b2.h.getXNodeVal(work_xml[j], "patient_id") != "undefined") {
-										s += '\t\t\t<item_key>PATIENT:HIVE:' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</item_key>\n';
-										s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</item_name>\n';
-										s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "patient_id") + '</tooltip>\n';
-										s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-										s += '\t\t\t<hlevel>0</hlevel>\n';
+									var modParent = sdxData.origData.parent;
+									var level = sdxData.origData.level;
+									var key = sdxData.origData.parent.key;
+									var name = (sdxData.origData.parent.name != null ? i2b2.h.Escape(sdxData.origData.parent.name) : i2b2.h.Escape(sdxData.origData.name)) ;
+									var tooltip = sdxData.origData.tooltip;
+									var itemicon = sdxData.origData.hasChildren;
+									while  (modParent != null)
+									{
+										if (modParent.isModifier)
+										{
+											modParent = modParent.parent;
+										} else {
+											level = modParent.level;
+											key = modParent.key;
+											name = modParent.name;
+											tooltip = modParent.tooltip;
+											itemicon = modParent.hasChildren;
+											break;
+										}
+									}							
 
+									s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
+									s += '\t\t\t<item_key>' + i2b2.h.Escape(key) + '</item_key>\n';
+									s += '\t\t\t<item_name>' +  i2b2.h.Escape(name) + '</item_name>\n';
+									// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
+									s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
+									s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
+									s += '\t\t\t<class>ENC</class>\n';
+
+									s += '\t\t\t\t<constrain_by_modifier>\n';
+									s += '\t\t\t\t\t<modifier_name>' + sdxData.origData.name + '</modifier_name>\n';
+									s += '\t\t\t\t\t<applied_path>' + sdxData.origData.applied_path + '</applied_path>\n';
+									s += '\t\t\t\t\t<modifier_key>' + sdxData.origData.key + '</modifier_key>\n';
+									if (sdxData.ModValues)
+									{
+										s += this.getValues( sdxData.ModValues);
 									}
-								}
-							} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'PREV_QUERY') {
-								var work_xml= i2b2.h.XPath(nlst[i], "work_xml");
-								for (var j=0; j < work_xml.length; j++) {
-									if (i2b2.h.getXNodeVal(work_xml[j], "query_master_id") != "undefined") {
-										s += '\t\t\t<item_key>masterid:' +  i2b2.h.getXNodeVal(work_xml[j], "query_master_id") + '</item_key>\n';
-										s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "name") + '</item_name>\n';
-										s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "name") + '</tooltip>\n';
-										s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-										s += '\t\t\t<hlevel>0</hlevel>\n';
 
-									}
-								}
-							} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'PATIENT_COLL') {
-								var work_xml= i2b2.h.XPath(nlst[i], "work_xml");
-								for (var j=0; j < work_xml.length; j++) {
-									if (i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") != "undefined") {
-										s += '\t\t\t<item_key>patient_set_col_id:' +  i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") + '</item_key>\n';
-										s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</item_name>\n';
-										s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</tooltip>\n';
-										s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-										s += '\t\t\t<hlevel>0</hlevel>\n';
-
-									}
-								}
-							} else if (i2b2.h.getXNodeVal(nlst[i], "work_xml_i2b2_type") == 'ENCOUNTER_COLL') {
-								var work_xml= i2b2.h.XPath(nlst[i], "work_xml");
-								for (var j=0; j < work_xml.length; j++) {
-									if (i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") != "undefined") {
-										s += '\t\t\t<item_key>encounter_set_col_id:' +  i2b2.h.getXNodeVal(work_xml[j], "result_instance_id") + '</item_key>\n';
-										s += '\t\t\t<item_name>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</item_name>\n';
-										s += '\t\t\t<tooltip>' +  i2b2.h.getXNodeVal(work_xml[j], "description") + '</tooltip>\n';
-										s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-										s += '\t\t\t<hlevel>0</hlevel>\n';
-
-									}
-								}
-							}							
-
-						}
-						break;
-					case "ENS":	
-						s += '\t\t\t<item_key>patient_set_enc_id:' + sdxData.sdxInfo.sdxKeyValue + '</item_key>\n';
-						s += '\t\t\t<item_name>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</item_name>\n';
-						s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.sdxInfo.sdxDisplayName) + '</tooltip>\n';
-						s += '\t\t\t<item_is_synonym>false</item_is_synonym>\n';
-						s += '\t\t\t<hlevel>0</hlevel>\n';
-						break;
-					default:
-						if (sdxData.origData.isModifier) {
-
-							var modParent = sdxData.origData.parent;
-							var level = sdxData.origData.level;
-							var key = sdxData.origData.parent.key;
-							var name = (sdxData.origData.parent.name != null ? i2b2.h.Escape(sdxData.origData.parent.name) : i2b2.h.Escape(sdxData.origData.name)) ;
-							var tooltip = sdxData.origData.tooltip;
-							var itemicon = sdxData.origData.hasChildren;
-							while  (modParent != null)
-							{
-								if (modParent.isModifier)
-								{
-									modParent = modParent.parent;
+									s += '\t\t\t\t</constrain_by_modifier>\n';					
 								} else {
-									level = modParent.level;
-									key = modParent.key;
-									name = modParent.name;
-									tooltip = modParent.tooltip;
-									itemicon = modParent.hasChildren;
-									break;
+									s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
+									//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
+									s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
+									s += '\t\t\t<item_key>' + i2b2.h.Escape(sdxData.origData.key) + '</item_key>\n'; // BUG FIX: WEBCLIENT-227
+									s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
+									s += '\t\t\t<class>ENC</class>\n';
+									s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';	
 								}
-							}							
+							try {
+								var t = i2b2.h.XPath(sdxData.origData.xmlOrig,'descendant::synonym_cd/text()');
+								t = (t[0].nodeValue=="Y");
+							} catch(e) {
+								var t = "false";
+							}
+							s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
 
-							s += '\t\t\t<hlevel>' + level + '</hlevel>\n';
-							s += '\t\t\t<item_key>' + i2b2.h.Escape(key) + '</item_key>\n';
-							s += '\t\t\t<item_name>' +  i2b2.h.Escape(name) + '</item_name>\n';
-							// (sdxData.origData.newName != null ? sdxData.origData.newName : sdxData.origData.name) + '</item_name>\n';
-							s += '\t\t\t<tooltip>' + i2b2.h.Escape(tooltip) + '</tooltip>\n';
-							s += '\t\t\t<item_icon>' + itemicon + '</item_icon>\n';
-							s += '\t\t\t<class>ENC</class>\n';
-
-							s += '\t\t\t\t<constrain_by_modifier>\n';
-							s += '\t\t\t\t\t<modifier_name>' + sdxData.origData.name + '</modifier_name>\n';
-							s += '\t\t\t\t\t<applied_path>' + sdxData.origData.applied_path + '</applied_path>\n';
-							s += '\t\t\t\t\t<modifier_key>' + sdxData.origData.key + '</modifier_key>\n';
-							if (sdxData.ModValues)
-							{
-								s += this.getValues( sdxData.ModValues);
+							if (sdxData.LabValues) {
+								//s += '\t\t\t<constrain_by_value>\n';
+								s += this.getValues( sdxData.LabValues);
 							}
 
-							s += '\t\t\t\t</constrain_by_modifier>\n';					
-						} else {
-							s += '\t\t\t<hlevel>' + sdxData.origData.level + '</hlevel>\n';
-							//s += '\t\t\t<item_name>' + (sdxData.origData.newName != null ? i2b2.h.Escape(sdxData.origData.newName) : i2b2.h.Escape(sdxData.origData.name)) + '</item_name>\n';
-							s += '\t\t\t<item_name>' + (sdxData.origData.name != null ? i2b2.h.Escape(sdxData.origData.name) : i2b2.h.Escape(sdxData.origData.newName)) + '</item_name>\n';
-							s += '\t\t\t<item_key>' + i2b2.h.Escape(sdxData.origData.key) + '</item_key>\n'; // BUG FIX: WEBCLIENT-227
-							s += '\t\t\t<tooltip>' + i2b2.h.Escape(sdxData.origData.tooltip) + '</tooltip>\n'; // BUG FIX: WEBCLIENT-135 (Escape tooltip)
-							s += '\t\t\t<class>ENC</class>\n';
-							s += '\t\t\t<item_icon>' + sdxData.origData.hasChildren + '</item_icon>\n';	
-						}
-					try {
-						var t = i2b2.h.XPath(sdxData.origData.xmlOrig,'descendant::synonym_cd/text()');
-						t = (t[0].nodeValue=="Y");
-					} catch(e) {
-						var t = "false";
-					}
-					s += '\t\t\t<item_is_synonym>'+t+'</item_is_synonym>\n';
-
-					if (sdxData.LabValues) {
-						//s += '\t\t\t<constrain_by_value>\n';
-						s += this.getValues( sdxData.LabValues);
-					}
-
-					break;
-					}
-					//TODO add contraint to the item in the future
-					/*
+							break;
+							}
+							//TODO add contraint to the item in the future
+							/*
 						s += '\t\t\t<constrain_by_date>\n';
 						if (panel_list[p].dateFrom) {
 							s += '\t\t\t\t<date_from>'+panel_list[p].dateFrom.Year+'-'+padNumber(panel_list[p].dateFrom.Month,2)+'-'+padNumber(panel_list[p].dateFrom.Day,2)+'Z</date_from>\n';
@@ -2025,22 +2027,22 @@ function QueryToolController() {
 							s += '\t\t\t\t<date_to>'+panel_list[p].dateTo.Year+'-'+padNumber(panel_list[p].dateTo.Month,2)+'-'+padNumber(panel_list[p].dateTo.Day,2)+'Z</date_to>\n';
 						}
 						s += '\t\t\t</constrain_by_date>\n';	
-					 */
-					s += '\t\t</item>\n';
-					if (i==0) {
-						if (undefined != sdxData.origData.name) {
-							auto_query_name += sdxData.origData.name.substring(0,auto_query_name_len);
-						} else if (undefined != sdxData.origData.title) {
-							auto_query_name += sdxData.origData.title.substring(0,auto_query_name_len);					
-						} else {
-							auto_query_name += "new query";
-						}
+							 */
+							s += '\t\t</item>\n';
+							if (i==0) {
+								if (undefined != sdxData.origData.name) {
+									auto_query_name += sdxData.origData.name.substring(0,auto_query_name_len);
+								} else if (undefined != sdxData.origData.title) {
+									auto_query_name += sdxData.origData.title.substring(0,auto_query_name_len);					
+								} else {
+									auto_query_name += "new query";
+								}
 
-						if (p < panel_cnt-1) {auto_query_name += '-';}
+								if (p < panel_cnt-1) {auto_query_name += '-';}
+							}
+						}
 					}
-					}
-				}
-				s += '\t</panel>\n';
+					s += '\t</panel>\n';
 				}
 			}
 			if (isTemporal && ip > 0)
@@ -3254,9 +3256,9 @@ function QueryToolController() {
 								if (v_items[n].sdxInfo.sdxType == "PR")
 									itemObj.name = v_items[n].origData.title;
 								if ( v_items[n].sdxInfo.sdxType != "WRKF")
-								po.items.push(itemObj);
+									po.items.push(itemObj);
 								//itemObj.level = 	
-						// deal with PR
+								// deal with PR
 
 					}
 					panels[x] = po;
@@ -3788,252 +3790,252 @@ function QueryToolController() {
 					var numItemsInPanel = panelData.items.length;
 
 					if (numItemsInPanel > 0) {
-					var panelContdivObj = "<div class=\"panelContainer";
-					var PanelTableObj = "<table width=\"615px\" border=\"0\">";
-					var PanelTableTrObj = "<tr>";
-					var PanelTableTd1Obj = "<td width=\"5px\"><div class=\"tabSpace\"></div></td>";
-					PanelTableTrObj = PanelTableTrObj + PanelTableTd1Obj;
-					var PanelTableTd2Obj = "<td width=\"610px\">";
-					panelNum++ ;
-					var panelOperatorDivId = "PanelOp-" + panelNum;
-					var panelOperatorDiv = "<div id=\"" + panelOperatorDivId + "\" class=\"opDiv\">";
-					if(andCounter == 0){
-						andCounter++ ;
-						if (panelData.exclude)
-						{
-							panelOperatorDiv = panelOperatorDiv + "NOT";
-							panelContdivObj = panelContdivObj + " notOpPanel";
-						}
-					}
-					else
-					{
-						var text = "AND";
-						if (panelData.exclude)
-						{
-							text = "AND   NOT";
-							panelContdivObj = panelContdivObj + " notOpPanel";
-						}
-						panelOperatorDiv = panelOperatorDiv + text;
-						andCounter++ ;
-					}
-					var panelItemDiv = "<div class=\"panelItem\">";
-
-					var panelTiming = "";
-					switch(panelData.timing)
-					{
-					case "ANY":
-						panelTiming = "Independent of Visit";
-						break;
-					case "SAMEVISIT":
-						panelTiming = "Occurs in Same Encounter";
-						break;
-					case "SAMEINSTANCENUM":
-						panelTiming = "Items Instance will be the same";
-						break;
-					}
-
-					var panelItemOccurrenceText = "# of times an item is recorded is > " + panelData.occurs;
-
-					panelData.items.each(function(itemData){
-						var data = itemData;
-						if(!(typeof itemData.origData == 'undefined'))
-							data = itemData.origData;
-						var qrPanelItemTableObj = "<table class=\"qrPanelItemTable\">";
-						var qrPanelItemTableTrObj = "<tr>";
-						var imageObj = null;
-
-
-						var itemDateFrom = "";
-						if(itemData.dateFrom)
-						{
-							if(itemData.dateFrom.Month && itemData.dateFrom.Day && itemData.dateFrom.Year)
-								itemDateFrom = itemData.dateFrom.Month + "/" + itemData.dateFrom.Day + "/" + itemData.dateFrom.Year;
-							else
+						var panelContdivObj = "<div class=\"panelContainer";
+						var PanelTableObj = "<table width=\"615px\" border=\"0\">";
+						var PanelTableTrObj = "<tr>";
+						var PanelTableTd1Obj = "<td width=\"5px\"><div class=\"tabSpace\"></div></td>";
+						PanelTableTrObj = PanelTableTrObj + PanelTableTd1Obj;
+						var PanelTableTd2Obj = "<td width=\"610px\">";
+						panelNum++ ;
+						var panelOperatorDivId = "PanelOp-" + panelNum;
+						var panelOperatorDiv = "<div id=\"" + panelOperatorDivId + "\" class=\"opDiv\">";
+						if(andCounter == 0){
+							andCounter++ ;
+							if (panelData.exclude)
 							{
-								itemDateFrom = itemData.dateFrom;
+								panelOperatorDiv = panelOperatorDiv + "NOT";
+								panelContdivObj = panelContdivObj + " notOpPanel";
 							}
-						}
-
-						var itemDateTo = "";
-						if(itemData.dateTo)
-						{
-							if(itemData.dateTo.Month && itemData.dateTo.Day && itemData.dateTo.Year)
-								panelDateTo = itemData.dateTo.Month + "/" + itemData.dateTo.Day + "/" + itemData.dateTo.Year;
-							else
-							{
-								itemDateTo = itemData.dateTo;
-							}
-						}
-
-						var itemDateRangeText = "From earliest date available to latest date available";
-						if(itemData.dateFrom && itemData.dateTo)
-						{
-							if(itemDateFrom == "none")
-								itemDateFrom = "earliest date available";
-							if(itemDateTo == "none")
-								itemDateTo = "latest date available";
-							itemDateRangeText = "From " + itemDateFrom + " to " + itemDateTo;
 						}
 						else
 						{
-							if(itemDateFrom == "none")
-								itemDateFrom = "earliest date available";
-							if(itemDateTo == "none")
-								itemDateTo = "latest date available";
-							if(itemData.dateFrom && !itemData.dateTo)
-								itemDateRangeText = "From " + itemDateFrom + " to latest date available";
+							var text = "AND";
+							if (panelData.exclude)
+							{
+								text = "AND   NOT";
+								panelContdivObj = panelContdivObj + " notOpPanel";
+							}
+							panelOperatorDiv = panelOperatorDiv + text;
+							andCounter++ ;
+						}
+						var panelItemDiv = "<div class=\"panelItem\">";
 
-							if(!itemData.dateFrom && itemData.dateTo)
-								itemDateRangeText = "From earliest date available to " + itemDateTo;
+						var panelTiming = "";
+						switch(panelData.timing)
+						{
+						case "ANY":
+							panelTiming = "Independent of Visit";
+							break;
+						case "SAMEVISIT":
+							panelTiming = "Occurs in Same Encounter";
+							break;
+						case "SAMEINSTANCENUM":
+							panelTiming = "Items Instance will be the same";
+							break;
 						}
 
+						var panelItemOccurrenceText = "# of times an item is recorded is > " + panelData.occurs;
 
-						//Evaluate the lab values
-						var str_lab_values = "";
-						if(data.LabValues){
-							var v_lab_values = data.LabValues;
+						panelData.items.each(function(itemData){
+							var data = itemData;
+							if(!(typeof itemData.origData == 'undefined'))
+								data = itemData.origData;
+							var qrPanelItemTableObj = "<table class=\"qrPanelItemTable\">";
+							var qrPanelItemTableTrObj = "<tr>";
+							var imageObj = null;
 
-							if(v_lab_values.GeneralValueType == "NUMBER") {
-								var labOp = "";
-								switch(v_lab_values.NumericOp)
+
+							var itemDateFrom = "";
+							if(itemData.dateFrom)
+							{
+								if(itemData.dateFrom.Month && itemData.dateFrom.Day && itemData.dateFrom.Year)
+									itemDateFrom = itemData.dateFrom.Month + "/" + itemData.dateFrom.Day + "/" + itemData.dateFrom.Year;
+								else
 								{
-								case "LT":
-									labOp = " <";
-									break;
-								case "LE":
-									labOp = " <=";
-									break;
-								case "EQ":
-									labOp = " =";
-									break;
-								case "BETWEEN":
-									labOp = " Between";
-									break;
-								case "GE":
-									labOp = " >=";
-									break;
-								case "GT":
-									labOp = " >";
-									break;
+									itemDateFrom = itemData.dateFrom;
 								}
-								str_lab_values =
-									labOp +" ";
+							}
 
-								if((v_lab_values.ValueLow != null) ||
-										(v_lab_values.ValueLow != undefined)
+							var itemDateTo = "";
+							if(itemData.dateTo)
+							{
+								if(itemData.dateTo.Month && itemData.dateTo.Day && itemData.dateTo.Year)
+									panelDateTo = itemData.dateTo.Month + "/" + itemData.dateTo.Day + "/" + itemData.dateTo.Year;
+								else
+								{
+									itemDateTo = itemData.dateTo;
+								}
+							}
+
+							var itemDateRangeText = "From earliest date available to latest date available";
+							if(itemData.dateFrom && itemData.dateTo)
+							{
+								if(itemDateFrom == "none")
+									itemDateFrom = "earliest date available";
+								if(itemDateTo == "none")
+									itemDateTo = "latest date available";
+								itemDateRangeText = "From " + itemDateFrom + " to " + itemDateTo;
+							}
+							else
+							{
+								if(itemDateFrom == "none")
+									itemDateFrom = "earliest date available";
+								if(itemDateTo == "none")
+									itemDateTo = "latest date available";
+								if(itemData.dateFrom && !itemData.dateTo)
+									itemDateRangeText = "From " + itemDateFrom + " to latest date available";
+
+								if(!itemData.dateFrom && itemData.dateTo)
+									itemDateRangeText = "From earliest date available to " + itemDateTo;
+							}
+
+
+							//Evaluate the lab values
+							var str_lab_values = "";
+							if(data.LabValues){
+								var v_lab_values = data.LabValues;
+
+								if(v_lab_values.GeneralValueType == "NUMBER") {
+									var labOp = "";
+									switch(v_lab_values.NumericOp)
+									{
+									case "LT":
+										labOp = " <";
+										break;
+									case "LE":
+										labOp = " <=";
+										break;
+									case "EQ":
+										labOp = " =";
+										break;
+									case "BETWEEN":
+										labOp = " Between";
+										break;
+									case "GE":
+										labOp = " >=";
+										break;
+									case "GT":
+										labOp = " >";
+										break;
+									}
+									str_lab_values =
+										labOp +" ";
+
+									if((v_lab_values.ValueLow != null) ||
+											(v_lab_values.ValueLow != undefined)
+									){
+										str_lab_values +=
+											v_lab_values.ValueLow + " - "+
+											v_lab_values.ValueHigh;
+									} else {
+										str_lab_values +=
+											v_lab_values.Value;
+									}							
+									str_lab_values += " "+ v_lab_values.UnitsCtrl;
+								}
+								//String
+								else if((v_lab_values.ValueString != null) ||
+										(v_lab_values.ValueString != undefined)
 								){
-									str_lab_values +=
-										v_lab_values.ValueLow + " - "+
-										v_lab_values.ValueHigh;
-								} else {
-									str_lab_values +=
-										v_lab_values.Value;
-								}							
-								str_lab_values += " "+ v_lab_values.UnitsCtrl;
-							}
-							//String
-							else if((v_lab_values.ValueString != null) ||
-									(v_lab_values.ValueString != undefined)
-							){
-								str_lab_values =
-									"By String: "+
-									v_lab_values.ValueString;
-							}
-							//Flag
-							else if((v_lab_values.ValueFlag != null) ||
-									(v_lab_values.ValueFlag != undefined)
-							){
-								var v_flag = "Normal";
-								if(v_lab_values.ValueFlag == "H"){
-									v_flag = "High";
+									str_lab_values =
+										"By String: "+
+										v_lab_values.ValueString;
 								}
-								else if(v_lab_values.ValueFlag == "L"){
-									v_flag = "Low";
-								}
+								//Flag
+								else if((v_lab_values.ValueFlag != null) ||
+										(v_lab_values.ValueFlag != undefined)
+								){
+									var v_flag = "Normal";
+									if(v_lab_values.ValueFlag == "H"){
+										v_flag = "High";
+									}
+									else if(v_lab_values.ValueFlag == "L"){
+										v_flag = "Low";
+									}
 
-								str_lab_values = 
-									"By Flag: "+ v_flag;
+									str_lab_values = 
+										"By Flag: "+ v_flag;
+								}
+								// End evaluate lab values
 							}
-							// End evaluate lab values
-						}
-						if(data.hasChildren)  //It is a previous query inside a query, so no item-icon provided
-						{	
-							if( data.hasChildren.indexOf("LA") >=0 )
+							if(data.hasChildren)  //It is a previous query inside a query, so no item-icon provided
+							{	
+								if( data.hasChildren.indexOf("LA") >=0 )
+								{
+									imageObj = "<img src=\"js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_leaf.gif\" style=\"float:left;margin-top:5px;margin-right:5px;\">";
+								}
+								else
+								{
+									imageObj = "<img src=\"js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_branch-exp.gif\" style=\"float:left;margin-top: 5px;margin-right: 5px;\">";
+								}
+							}
+							if(imageObj)
 							{
-								imageObj = "<img src=\"js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_leaf.gif\" style=\"float:left;margin-top:5px;margin-right:5px;\">";
+								var nameText = "";
+								if(data.newName)
+									nameText = data.newName;
+								else
+									nameText = data.name;
+								var qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:18px;\"><div width=\"400px\" style=\"display:inline;\">" + imageObj + "<div>" + "    " + nameText + str_lab_values + "</div></div>" + "</td>";
 							}
 							else
 							{
-								imageObj = "<img src=\"js-i2b2/cells/ONT/assets/sdx_ONT_CONCPT_branch-exp.gif\" style=\"float:left;margin-top: 5px;margin-right: 5px;\">";
+								var qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:18px;\">" + data.name + str_lab_values + "</td>";
 							}
-						}
-						if(imageObj)
+
+
+							qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj;
+							qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj + "</tr>";
+
+							qrPanelItemTableTrObj = "<tr>";
+							qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:14px;\">" + data.tooltip + "</td>";
+							qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+							qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+
+							qrPanelItemTableTrObj = "<tr>";
+							qrPanelItemTableTdObj = "<td width=\"610px\"  style=\"font-size:14px;\">" + panelTiming + "</td>" ;
+							qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+							qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+
+							qrPanelItemTableTrObj = "<tr>";
+							qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-size:14px;\">" + itemDateRangeText + "</td>" ;
+							qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+							qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+
+							qrPanelItemTableTrObj = "<tr>";
+							qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-size:14px;\">" + panelItemOccurrenceText + "</td>" ;
+							qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
+							qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
+
+							qrPanelItemTableObj = qrPanelItemTableObj + "</table>";
+							panelItemDiv = panelItemDiv + "<br>" + qrPanelItemTableObj + "<br>";
+
+							if(++orCounter < numItemsInPanel)
+							{
+								var orDiv = "<div style=\"font-size: 20px;font-style: italic;font-weight: bold;\">" + "OR" + "</div>";
+								panelItemDiv = panelItemDiv + orDiv;
+							}
+
+						});
+						panelItemDiv = panelItemDiv + "</div>";
+						PanelTableTd2Obj = PanelTableTd2Obj + panelItemDiv + "</td>";
+						PanelTableTrObj = PanelTableTrObj + PanelTableTd2Obj + "</tr>";
+						PanelTableObj = PanelTableObj + PanelTableTrObj + "</table>";
+						panelContdivObj = panelContdivObj + "\">" + PanelTableObj + "</div>";
+
+						panelOperatorDiv = panelOperatorDiv + "</div>";
+						if(panelData.subquery)
 						{
-							var nameText = "";
-							if(data.newName)
-								nameText = data.newName;
+							if(!subQryEventNameDisplayed){
+								var eventNameDiv = "<div class=\"opDiv\">" + panelData.name + "</div>";
+								tdObj = tdObj + eventNameDiv + panelOperatorDiv + panelContdivObj;
+								subQryEventNameDisplayed = true;
+							}
 							else
-								nameText = data.name;
-							var qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:18px;\"><div width=\"400px\" style=\"display:inline;\">" + imageObj + "<div>" + "    " + nameText + str_lab_values + "</div></div>" + "</td>";
-						}
-						else
-						{
-							var qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:18px;\">" + data.name + str_lab_values + "</td>";
-						}
-
-
-						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj;
-						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj + "</tr>";
-
-						qrPanelItemTableTrObj = "<tr>";
-						qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-weight:bold; font-size:14px;\">" + data.tooltip + "</td>";
-						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
-						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
-
-						qrPanelItemTableTrObj = "<tr>";
-						qrPanelItemTableTdObj = "<td width=\"610px\"  style=\"font-size:14px;\">" + panelTiming + "</td>" ;
-						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
-						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
-
-						qrPanelItemTableTrObj = "<tr>";
-						qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-size:14px;\">" + itemDateRangeText + "</td>" ;
-						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
-						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
-
-						qrPanelItemTableTrObj = "<tr>";
-						qrPanelItemTableTdObj = "<td width=\"610px\" style=\"font-size:14px;\">" + panelItemOccurrenceText + "</td>" ;
-						qrPanelItemTableTrObj = qrPanelItemTableTrObj + qrPanelItemTableTdObj + "</tr>";
-						qrPanelItemTableObj = qrPanelItemTableObj + qrPanelItemTableTrObj;
-
-						qrPanelItemTableObj = qrPanelItemTableObj + "</table>";
-						panelItemDiv = panelItemDiv + "<br>" + qrPanelItemTableObj + "<br>";
-
-						if(++orCounter < numItemsInPanel)
-						{
-							var orDiv = "<div style=\"font-size: 20px;font-style: italic;font-weight: bold;\">" + "OR" + "</div>";
-							panelItemDiv = panelItemDiv + orDiv;
-						}
-
-					});
-					panelItemDiv = panelItemDiv + "</div>";
-					PanelTableTd2Obj = PanelTableTd2Obj + panelItemDiv + "</td>";
-					PanelTableTrObj = PanelTableTrObj + PanelTableTd2Obj + "</tr>";
-					PanelTableObj = PanelTableObj + PanelTableTrObj + "</table>";
-					panelContdivObj = panelContdivObj + "\">" + PanelTableObj + "</div>";
-
-					panelOperatorDiv = panelOperatorDiv + "</div>";
-					if(panelData.subquery)
-					{
-						if(!subQryEventNameDisplayed){
-							var eventNameDiv = "<div class=\"opDiv\">" + panelData.name + "</div>";
-							tdObj = tdObj + eventNameDiv + panelOperatorDiv + panelContdivObj;
-							subQryEventNameDisplayed = true;
+								tdObj = tdObj + panelOperatorDiv + panelContdivObj;
 						}
 						else
 							tdObj = tdObj + panelOperatorDiv + panelContdivObj;
-					}
-					else
-						tdObj = tdObj + panelOperatorDiv + panelContdivObj;
 					}
 				});
 			});
