@@ -24,7 +24,8 @@
 		paramTranslation: [
 			{xmlName:'OntMax', thinClientName:'max', defaultValue:500},
 			{xmlName:'OntHiddens', thinClientName:'hiddens', defaultValue:false},
-			{xmlName:'OntSynonyms', thinClientName:'synonyms', defaultValue:true}
+			{xmlName:'OntSynonyms', thinClientName:'synonyms', defaultValue:true},
+			{xmlName:'OntReduceResults', thinClientName:'reduce', defaultValue:true}
 		]
 	}
 }
