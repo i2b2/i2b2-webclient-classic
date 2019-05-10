@@ -153,7 +153,7 @@ i2b2.ONT.ctrlr.FindBy = {
 		
 			// Render the tree view showing the relative levels of the nodes in the find results (jgk 0519)
 			// TODO: If results are missing an hlevel (i.e. hlevel 3 and then hlevel 5), it might render the deeper hlevel as a root node
-			// NOTE: Requires hlevel-sorted results (ONT cell 1.7.12)
+			// NOTE: Looks best with hlevel-sorted results (ONT cell 1.7.12)
 			levelNodes = {}
 			// Helper function, get category from table code
 			getCatNameFromCode = function(code) {
@@ -195,9 +195,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				
 				if (!bAddRoot) {parentNode = levelNodes[hlevel-1];} else {parentNode=treeObj.root;}
 				 // add to appropriate level
-				 // hlevels must be sorted and added in order - requires i2b2 1.7.12 ONT cell
 				
-
 				var sdxRenderData = i2b2.sdx.Master.RenderHTML(treeObj.id, sdxDataNode, renderOptions);
 				var tmpNode = i2b2.sdx.Master.AppendTreeNode(treeObj, parentNode, sdxRenderData);
 				tmpNode.expand(); // Show children
@@ -207,14 +205,10 @@ i2b2.ONT.ctrlr.FindBy = {
 
 			// display the results
 			var c = results.refXML.getElementsByTagName('concept');
-			// abort the hierarchical display if we didn't get a (1.7.12) sorted list
-			var isSorted = true;
-			for(var i2=1; i2<1*c.length; i2++) { if(c[i2].level<c[i2-1].level) isSorted=false;}
 			totalCount = totalCount + c.length;
 			
 			for(var i2=0; i2<1*c.length; i2++) {
-				var levelNode = treeObj.root; 
-				if (isSorted) levelNode=getLevelNode(i2b2.h.getXNodeVal(c[i2],'level'));
+				var levelNode = getLevelNode(i2b2.h.getXNodeVal(c[i2],'level'));
 				var o = new Object;
 				o.xmlOrig = c[i2];
 				o.name = /*'['+i2b2.h.getXNodeVal(c[i2],'level')+'] ' +*/ i2b2.h.getXNodeVal(c[i2],'name');
