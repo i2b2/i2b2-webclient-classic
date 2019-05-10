@@ -268,7 +268,12 @@ i2b2.sdx.TypeControllers.CONCPT.AppendTreeNode = function(yuiTree, yuiRootNode, 
 //GET CHILD RECORDS (DEFAULT HANDELER)
 //*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.LoadChildrenFromTreeview = function(node, onCompleteCallback) {
-	if ((node.tree.id == 'ontSearchModifiersResults') || (!$('ONTNAVdisableModifiers').checked && node.tree.id == 'ontNavResults')) {
+	// jgk 0519 - Hardcoded way to bypass SDX processing for hlevel nodes added via "find by name"
+	if (node.html.includes("sdx_ONT_SEARCH")) { 
+			node.expand();
+			onCompleteCallback();
+	} 
+	else if ((node.tree.id == 'ontSearchModifiersResults') || (!$('ONTNAVdisableModifiers').checked && node.tree.id == 'ontNavResults')) {
 		i2b2.sdx.TypeControllers.CONCPT.LoadModifiers(node, onCompleteCallback, true);
 	} else {
 		i2b2.sdx.TypeControllers.CONCPT.LoadConcepts(node, onCompleteCallback, false);

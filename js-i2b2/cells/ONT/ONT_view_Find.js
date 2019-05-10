@@ -31,6 +31,7 @@ i2b2.ONT.view.find.showOptions = function(subScreen) {
 					i2b2.ONT.view['find'].params.max = parseInt($('ONTFINDMaxQryDisp').value,10);
 					i2b2.ONT.view['find'].params.synonyms = $('ONTFINDshowSynonyms').checked;
 					i2b2.ONT.view['find'].params.hiddens = $('ONTFINDshowHiddens').checked;
+					i2b2.ONT.view['find'].params.reduce = $('ONTFINDreduceResults').checked;
 				}
 			} else {
 				alert('Please enter a valid number for Maximum Children to Display.');
@@ -64,6 +65,7 @@ i2b2.ONT.view.find.showOptions = function(subScreen) {
 	i2b2.ONT.view['find'].params.max = parseInt($('ONTFINDMaxQryDisp').value,10);
 	i2b2.ONT.view['find'].params.synonyms = $('ONTFINDshowSynonyms').checked;
 	i2b2.ONT.view['find'].params.hiddens = $('ONTFINDshowHiddens').checked;
+	i2b2.ONT.view['find'].params.reduce = $('ONTFINDreduceResults').checked;
 
 	//$('ONTFINDMaxQryDisp').value = this.params.max;
 	//$('ONTFINDshowSynonyms').checked = parseBoolean(this.params.synonyms);

@@ -151,14 +151,73 @@ i2b2.ONT.ctrlr.FindBy = {
 				}
 			} 
 		
+			// Render the tree view showing the relative levels of the nodes in the find results (jgk 0519)
+			// TODO: If results are missing an hlevel (i.e. hlevel 3 and then hlevel 5), it might render the deeper hlevel as a root node
+			// NOTE: Requires hlevel-sorted results (ONT cell 1.7.12)
+			levelNodes = {}
+			// Helper function, get category from table code
+			getCatNameFromCode = function(code) {
+				var d = i2b2.ONT.model.Categories;
+				var l = d.length;
+				for (var i=0; i<l; i++) {
+					if(d[i].key.includes("\\"+code+"\\")) return d[i].name;
+				}
+				return code;
+			}
+			// Helper function, add hlevel nodes to the tree
+			getLevelNode = function(hlevel) {
+				if (hlevel in levelNodes) return levelNodes[hlevel]; // only add it once
+				
+				bAddRoot = !(hlevel-1 in levelNodes); // Name is category if its the root node
+				ontCat = getCatNameFromCode(results.msgParams.ont_category);
+				
+				var o = new Object;
+				if (bAddRoot) {
+					o.name = ontCat;
+				}
+				else {
+					o.name = 'More....';//(Hierarchy level:'+hlevel+')';
+				}
+				o.hasChildren = 'CA';
+				o.level = hlevel;
+				o.key = '\\'; // dummy: required by SDX
+				o.tooltip = 'Search results,'+ontCat+', hierarchy level '+hlevel;
+				// append the data node
+				var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
+				var renderOptions = {
+					title: o.name,
+					showchildren: true,
+					icon: {
+						root: "sdx_ONT_SEARCH_root.png",
+						rootExp: "sdx_ONT_SEARCH_root.png"
+					}
+				};
+				
+				if (!bAddRoot) {parentNode = levelNodes[hlevel-1];} else {parentNode=treeObj.root;}
+				 // add to appropriate level
+				 // hlevels must be sorted and added in order - requires i2b2 1.7.12 ONT cell
+				
+
+				var sdxRenderData = i2b2.sdx.Master.RenderHTML(treeObj.id, sdxDataNode, renderOptions);
+				var tmpNode = i2b2.sdx.Master.AppendTreeNode(treeObj, parentNode, sdxRenderData);
+				tmpNode.expand(); // Show children
+				levelNodes[hlevel]= tmpNode;
+				return tmpNode;
+			}
 
 			// display the results
 			var c = results.refXML.getElementsByTagName('concept');
+			// abort the hierarchical display if we didn't get a (1.7.12) sorted list
+			var isSorted = true;
+			for(var i2=1; i2<1*c.length; i2++) { if(c[i2].level<c[i2-1].level) isSorted=false;}
 			totalCount = totalCount + c.length;
+			
 			for(var i2=0; i2<1*c.length; i2++) {
+				var levelNode = treeObj.root; 
+				if (isSorted) levelNode=getLevelNode(i2b2.h.getXNodeVal(c[i2],'level'));
 				var o = new Object;
 				o.xmlOrig = c[i2];
-				o.name = i2b2.h.getXNodeVal(c[i2],'name');
+				o.name = /*'['+i2b2.h.getXNodeVal(c[i2],'level')+'] ' +*/ i2b2.h.getXNodeVal(c[i2],'name');
 				o.hasChildren =  i2b2.h.getXNodeVal(c[i2],'visualattributes');
 				if (o.hasChildren != undefined && o.hasChildren.length > 1)
 				{
@@ -188,7 +247,7 @@ i2b2.ONT.ctrlr.FindBy = {
 					}
 				};
 				var sdxRenderData = i2b2.sdx.Master.RenderHTML(treeObj.id, sdxDataNode, renderOptions);
-				i2b2.sdx.Master.AppendTreeNode(treeObj, treeObj.root, sdxRenderData);
+				i2b2.sdx.Master.AppendTreeNode(treeObj, levelNode, sdxRenderData);
 			//}
 			// redraw treeview
 				treeObj.draw();
@@ -216,6 +275,7 @@ i2b2.ONT.ctrlr.FindBy = {
 		searchOptions.ont_max_records = "max='"+i2b2.ONT.view['find'].params.max+"' ";
 		searchOptions.ont_synonym_records = i2b2.ONT.view['find'].params.synonyms;
 		searchOptions.ont_hidden_records = i2b2.ONT.view['find'].params.hiddens;
+		searchOptions.ont_reduce_results = i2b2.ONT.view['find'].params.reduce;
 		searchOptions.ont_search_strategy = inSearchData.Strategy;
 		searchOptions.ont_search_string = inSearchData.SearchStr;
 			
