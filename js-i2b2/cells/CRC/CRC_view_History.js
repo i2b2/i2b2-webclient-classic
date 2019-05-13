@@ -615,8 +615,11 @@ i2b2.events.changedViewMode.subscribe((function(eventTypeName, newMode) {
 // ================================================================================================== //
 i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, zoomMsg) {
 	newMode = zoomMsg[0];
+	var ve = $('crcHistoryBox');
 	if (!newMode.action) { return; }
 	if (newMode.action == "ADD") {
+		// This and the corresponding line below show/hide the tabs only available in the single-pane expanded view
+		Array.from(ve.getElementsByClassName("tabBox")).filter(val=>val.id.includes("guest")).forEach(val => val.style.display="");
 		switch (newMode.window) {
 			case "HISTORY":
 				this.isZoomed = true;
@@ -628,6 +631,7 @@ i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, zoomMsg) {
 				this.isZoomed = false;
 		}
 	} else {
+		Array.from(ve.getElementsByClassName("tabBox")).filter(val=>val.id.includes("guest")).forEach(val => val.style.display="None");
 		switch (newMode.window) {
 			case "HISTORY":
 			case "ONT":
