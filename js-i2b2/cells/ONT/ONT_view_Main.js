@@ -155,6 +155,7 @@ i2b2.ONT.view.main.ResizeHeight = function()
 				break;
 		}
 		if (viewObj.isZoomed) { ve.height = h-93; }
+		
 	} else {
 		ve.hide();
 	}
@@ -229,6 +230,15 @@ i2b2.events.afterCellInit.subscribe(
 	})
 );
 
+// ================================================================================================== //
+// Presently start with zoomed panels now that they all work together nicely
+//i2b2.events.afterHiveInit.subscribe(
+i2b2.events.afterLogin.subscribe(
+	(function() {
+		i2b2.ONT.view.main.ZoomView();
+	})
+);
+
 //================================================================================================== //
 i2b2.events.initView.subscribe((function(eventTypeName, newMode) {
 // -------------------------------------------------------
@@ -273,8 +283,11 @@ i2b2.events.changedViewMode.subscribe((function(eventTypeName, newMode) {
 i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, newMode) {
 // -------------------------------------------------------
 	newMode = newMode[0];
+	var ve = $('ontMainBox');
 	if (!newMode.action) { return; } 
 	if (newMode.action == "ADD") {
+		// This and the corresponding line below show/hide the tabs only available in the single-pane expanded view
+		Array.from(ve.getElementsByClassName("tabBox")).filter(val=>val.id.includes("guest")).forEach(val => val.style.display="");
 		switch (newMode.window) {
 			case "ONT":
 				this.isZoomed = true;
@@ -286,6 +299,7 @@ i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, newMode) {
 				this.isZoomed = false;
 		}
 	} else {
+		Array.from(ve.getElementsByClassName("tabBox")).filter(val=>val.id.includes("guest")).forEach(val => val.style.display="None");
 		switch (newMode.window) {
 			case "ONT":
 			case "HISTORY":

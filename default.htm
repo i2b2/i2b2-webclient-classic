@@ -18,6 +18,7 @@
  *     Hannah Murphy
  *     Nich Wattanasin
  *     Bhaswati Ghosh
+ *	   Jeffrey Klann, PhD
  *
  */-->
 
@@ -174,9 +175,11 @@
 /****************************************************/
 
 // declare and obtain the dimension of the initial browser viewport and initialize screen width division
-var rightSideProportion = 0.65;                         
+var rightSideProportion = 0.65;       
+var leftSideMinimum = 428;                  
 var initBrowserViewPortDim = document.viewport.getDimensions();
-var rightSideWidth = initBrowserViewPortDim.width * rightSideProportion; 	// this component will take up 75% of the screen
+var rightSideWidth = initBrowserViewPortDim.width * rightSideProportion; 	// this component will take up 65% of the screen
+if (initBrowserViewPortDim.width - rightSideWidth < leftSideMinimum) rightSideWidth = initBrowserViewPortDim.width-leftSideMinimum; // Correction if not enough screen is available
 
 // following added to support webclient plugin manager / installer only
 var i2b2Admin = "";    
@@ -255,6 +258,7 @@ function initI2B2()
 			// update dimension values
 			initBrowserViewPortDim = document.viewport.getDimensions();
 			rightSideWidth = initBrowserViewPortDim.width * rightSideProportion; 	// this component will take up 60% of the screen
+			if (initBrowserViewPortDim.width - rightSideWidth < leftSideMinimum) rightSideWidth = initBrowserViewPortDim.width-leftSideMinimum; // Correction if not enough screen is available
 
 			if (i2b2.PM.model.admin_only)
 			{
@@ -431,14 +435,23 @@ YAHOO.util.Event.addListener(window, "load", init);
     <div id="ontTopTabs">
       <div style="position:absolute;z-index:200;">
         <div id="tabNavigate" class="tabBox active" onClick="i2b2.ONT.view.main.selectTab('nav')">
-          <div>Navigate Terms</div>
+          <div>Terms</div>
         </div>
         <div id="tabFind" class="tabBox" onClick="i2b2.ONT.view.main.selectTab('find')">
-          <div>Find</div>
+          <div>Find Trm</div>
         </div>
         <div id="tabInfo" class="tabBox" onClick="i2b2.ONT.view.main.selectTab('info')">
           <div>Info</div>
         </div>
+        <div id="guestTabWorkplace" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView(); i2b2.WORK.view.main.ZoomView()">
+          <div>Workplace</div>
+        </div>
+        <div id="guestTabQueries" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView(); i2b2.CRC.view.history.ZoomView(); i2b2.CRC.view.history.selectTab('nav')"; >
+          <div>Queries</div>
+        </div>   
+        <div id="guestTabQuerySearch" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView(); i2b2.CRC.view.history.ZoomView(); i2b2.CRC.view.history.selectTab('find')"; >
+          <div>Find Qry</div>
+        </div>     
       </div>
       <div class="opXML"> 
         <!--				<a href="JavaScript:showXML('ONT',i2b2.ONT.view.main.currentTab,'Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
@@ -629,9 +642,24 @@ YAHOO.util.Event.addListener(window, "load", init);
   <!-- ############### <WRK View> ############### -->
   <div id="wrkWorkplace" style="display:none;">
     <div class="TopTabs">
+        <div id="WRKguestTabNavigate" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('nav')">
+          <div>Terms</div>
+        </div>
+        <div id="WRKguestTabFind" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('find');">
+          <div>Find Trm</div>
+        </div>
+        <div id="WRKguestTabInfo" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('info');">
+          <div>Info</div>
+        </div>
       <div class="tabBox active">
         <div>Workplace</div>
       </div>
+        <div id="WRKguestTabQueries" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView(); i2b2.CRC.view.history.ZoomView(); i2b2.CRC.view.history.selectTab('nav')">
+          <div>Queries</div>
+        </div>
+        <div id="WRKguestTabFindQueries" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView(); i2b2.CRC.view.history.ZoomView(); i2b2.CRC.view.history.selectTab('find')">
+          <div>Find Qry</div>
+        </div>
       <div class="opXML"> 
         <!--				<a href="JavaScript:showXML('WORK','main','Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
         <!--				<a href="JavaScript:showXML('WORK','main','Response');" class="debug"><img src="assets/images/msg_response.gif" border="0" width="16" height="16" alt="Show XML Response" title="Show XML Response" /></a> --> 
@@ -651,11 +679,23 @@ YAHOO.util.Event.addListener(window, "load", init);
   <div id="crcHistoryBox" style="display:none;">
     <div class="TopTabs">
       <div style="position:absolute;z-index:200;">
+        <div id="CRCguestTabNavigate" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('nav')">
+          <div>Terms</div>
+        </div>
+        <div id="CRCguestTabFind" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('find');">
+          <div>Find Trm</div>
+        </div>
+        <div id="CRCguestTabInfo" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView(); i2b2.ONT.view.main.ZoomView(); i2b2.ONT.view.main.selectTab('info');">
+          <div>Info</div>
+        </div>
+        <div id="CRCguestTabWorkplace" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView(); i2b2.WORK.view.main.ZoomView()">
+          <div>Workplace</div>
+        </div>
         <div id="crctabNavigate" class="tabBox active" onClick="i2b2.CRC.view.history.selectTab('nav')">
-          <div>Previous Queries</div>
+          <div>Queries</div>
         </div>
         <div id="crctabFind" class="tabBox" onClick="i2b2.CRC.view.history.selectTab('find')">
-          <div>Find</div>
+          <div>Find Qry</div>
         </div>
       </div>
       <div class="opXML"> 
