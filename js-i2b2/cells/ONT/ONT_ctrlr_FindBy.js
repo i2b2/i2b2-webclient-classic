@@ -174,15 +174,22 @@ i2b2.ONT.ctrlr.FindBy = {
 				var o = new Object;
 				if (bAddRoot) {
 					o.name = ontCat;
+					
+					o.tooltip='Find results for '+ontCat;
 				}
 				else {
-					o.name = 'More....';//(Hierarchy level:'+hlevel+')';
+					o.name = 'More specific results....';//(Hierarchy level:'+hlevel+')';
+					
+					if (i2b2.ONT.view['find'].params.reduce) {
+						o.tooltip = 'These '+ontCat+' results are more specific (deeper in the hierarchy) and not contained in any of the folders above. [Hierarchy level '+hlevel+']';
+					} else {
+						o.tooltip = 'These '+ontCat+' results are more specific (deeper in the hierarchy). [Hierarchy level '+hlevel+']';
+					}
 				}
 				o.hasChildren = 'CA';
 				o.level = hlevel;
 				o.key = '\\'; // dummy: required by SDX
-				o.tooltip = 'Search results,'+ontCat+', hierarchy level '+hlevel;
-				// append the data node
+
 				var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
 				var renderOptions = {
 					title: o.name,
