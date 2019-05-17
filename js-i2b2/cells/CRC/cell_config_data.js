@@ -57,7 +57,7 @@
 		paramTranslation: [
 			{thinClientName:'sortBy', defaultValue:'DATE'},
 			{thinClientName:'sortOrder', defaultValue:'DESC'},
-			{thinClientName:'maxQueriesDisp', defaultValue:20},
+			{thinClientName:'maxQueriesDisp', defaultValue:50},
 			{thinClientName:'maxChildren', defaultValue:200},
 			{thinClientName:'queryTimeout', defaultValue:180}
 		]
