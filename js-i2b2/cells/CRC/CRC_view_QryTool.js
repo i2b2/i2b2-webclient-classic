@@ -405,8 +405,8 @@ i2b2.CRC.view.QT.Resize = function(e) {
 
 	$('crcQueryToolBox').style.left = w-550;
 	if (i2b2.WORK && i2b2.WORK.isLoaded) {
-		var z = h - 438; //392 + 44 - 17 - 25;
-		if (i2b2.CRC.view.QT.isZoomed) { z += 196 - 44; }	
+		var z = h - i2b2.CRC.cfg.config.ui.statusBox-276; // 438; //392 + 44 - 17 - 25;
+		if (i2b2.CRC.view.QT.isZoomed) { z += i2b2.CRC.cfg.config.ui.statusBox - 10; /*196-44*/ }	
 	} else {
 		var z = h - 348;
 		if (i2b2.CRC.view.QT.isZoomed) { z += 196; }
@@ -574,9 +574,9 @@ i2b2.CRC.view.QT.ResizeHeight = function()
 	if (h < 517) {h = 517;}
 	// resize our visual components
 	if (i2b2.WORK && i2b2.WORK.isLoaded) {
-		var z = h - 438;
+		var z = h - i2b2.CRC.cfg.config.ui.statusBox-276; // 438;
 		if (i2b2.CRC.view.QT.isZoomed) 
-			z += 196;  /* - 44; //tdw9 1707c: remvoed unnecessary subtraction */
+			z += i2b2.CRC.cfg.config.ui.statusBox+34; //196 /* - 44; //tdw9 1707c: remvoed unnecessary subtraction */
 	} 
 	else 
 	{

@@ -54,6 +54,7 @@
 			size32x32: "CRC_icon_32x32.gif"
 		},
 		category: ["core","cell"],
+		ui: { 'statusBox':162,'largeStatusBox':300,'defaultStatusBox':162 /* original was 162 */ },
 		paramTranslation: [
 			{thinClientName:'sortBy', defaultValue:'DATE'},
 			{thinClientName:'sortOrder', defaultValue:'DESC'},

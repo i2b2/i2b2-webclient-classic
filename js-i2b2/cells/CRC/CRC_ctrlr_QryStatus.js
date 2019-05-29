@@ -297,7 +297,15 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 				}
 				//alert(sCompiledResultsTest); //snm0 
 				i2b2.CRC.view.graphs.createGraphs("infoQueryStatusChart", sCompiledResultsTest, i2b2.CRC.view.graphs.bIsSHRINE);
-				if (i2b2.CRC.view.graphs.bisGTIE8) i2b2.CRC.view.status.selectTab('graphs');
+				if (i2b2.CRC.view.graphs.bisGTIE8) {
+					// Resize the query status box depending on whether breakdowns are included
+					if (sCompiledResultsTest.includes("breakdown"))
+						i2b2.CRC.cfg.config.ui.statusBox = i2b2.CRC.cfg.config.ui.largeStatusBox; 
+						else i2b2.CRC.cfg.config.ui.statusBox = i2b2.CRC.cfg.config.ui.defaultStatusBox;
+					i2b2.CRC.view.status.selectTab('graphs'); 
+					//$(window).trigger('resize');
+					window.dispatchEvent(new Event('resize'));	
+				}	
 				//self.dispDIV.innerHTML += this.dispMsg;
 			}
 		}
