@@ -231,11 +231,12 @@ i2b2.events.afterCellInit.subscribe(
 );
 
 // ================================================================================================== //
-// Presently start with zoomed panels now that they all work together nicely
+// Start with zoomed panels now that they all work together nicely, if startZoomed:true in i2b2_config_data 
 //i2b2.events.afterHiveInit.subscribe(
 i2b2.events.afterLogin.subscribe(
 	(function() {
-		i2b2.ONT.view.main.ZoomView();
+		if (i2b2.hive.cfg.startZoomed && i2b2.hive.cfg.startZoomed==true)
+			i2b2.ONT.view.main.ZoomView();
 	})
 );
 
