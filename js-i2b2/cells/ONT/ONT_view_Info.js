@@ -16,6 +16,7 @@ i2b2.ONT.view.info = new i2b2Base_cellViewController(i2b2.ONT, 'info');
 i2b2.ONT.view.info.visible = false;
 i2b2.ONT.view.info.modifier = false;
 i2b2.ONT.view.info.currentSdxData = '';
+i2b2.ONT.view.info.currentKey = '';
 this.currentTab = 'names';
 
 
@@ -57,6 +58,7 @@ i2b2.ONT.view.info.showOptions = function(subScreen) {
 i2b2.ONT.view.info.showView = function() {
 	$('tabInfo').addClassName('active');
 	$('ontInfoDisp').style.display = 'block';
+	this.showInfoByKey();
 }
 
 // ================================================================================================== //
@@ -317,13 +319,21 @@ i2b2.ONT.view.info.showValueDialog = function(key) {
 
 //================================================================================================== //
 i2b2.ONT.view.info.showInfoByKey = function(key) {
+	 
+	// if you specify a key, make it the current key and bring this tab to the front, otherwise use a previously set key and assume we're already at the front
+	if(!key) key = i2b2.ONT.view.info.currentKey;
+		else {
+			i2b2.ONT.view.info.currentKey = key;
+			$('tabInfo').click();
+		}
+	if (key=="") return;
 	
 	i2b2.ONT.view.info.currentSdxData = '';
 	var t = i2b2.ONT.view.nav.params;
 	if($('ontMainBox').style.display == "none"){
 		i2b2.ONT.view.main.ZoomView();
 	}
-	$('tabInfo').click();
+
 	
 	var term = i2b2.ONT.ajax.GetTermInfo("ONT", {ont_max_records:'max="1"', ont_synonym_records:'false', ont_hidden_records: 'false', concept_key_value: key}).parse();
 	if(term.model.length > 0){
@@ -373,7 +383,30 @@ i2b2.ONT.view.info.showInfoByKey = function(key) {
 		term_description += 'have children below it.';
 		
 		// display
-		$('ontInfoName').innerHTML = '<img src="js-i2b2/cells/ONT/assets/'+term_icon+'" align="absbottom"> ' + term_name;
+		/*$('ontInfoName').innerHTML = '<img src="js-i2b2/cells/ONT/assets/'+term_icon+'" align="absbottom"> ' + term_name;
+		$('ontInfoName').setAttribute("onmouseover","i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data('ontInfoName','ontInfoDisp')");*/
+		var o = new Object;
+				o.name = term_name;
+				o.tooltip = term_name;
+				o.hasChildren = 'L';
+				o.key = '\\\\'; // Note, some value required by SDX
+
+				var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
+				var renderOptions = {
+					title: o.name,
+					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+					showchildren: true,
+					icon: {
+						branch: "sdx_ONT_SEARCH_branch.gif",
+						branchExp: "sdx_ONT_SEARCH_branch.gif",
+						leaf: "sdx_ONT_CONCPT_leaf.gif"
+					}
+				};				
+				var sdxRenderData = i2b2.sdx.Master.RenderHTML("ontInfoName", sdxDataNode, renderOptions);
+				$('ontInfoName').innerHTML=sdxRenderData.renderData.html;
+				//jgk
+		
+		
 		$('ontInfoTooltip').innerHTML = term_tooltip;
 		if(term_parent_key !== ''){
 			var parent_key = term_parent_key.replace(/\\/g,'\\\\');
@@ -434,6 +467,12 @@ i2b2.ONT.view.info.showInfoByKey = function(key) {
 		$('ontInfoChildren').innerHTML = '<ul><li>This term has no children</li></ul>';
 	}
 	
+}
+
+//================================================================================================== //
+i2b2.ONT.view.info.SetKey = function(key) { 
+
+	i2b2.ONT.view.info.currentKey = decodeURI(key);
 }
 
 //================================================================================================== //
@@ -527,6 +566,10 @@ i2b2.events.afterCellInit.subscribe(
 		if (co[0].cellCode=='ONT') {
 // ===================================================================
 			var thisview = i2b2.ONT.view.info;
+			
+			// register the treeview with the SDX subsystem to be a container for CONCPT objects
+			i2b2.sdx.Master.AttachType("ontInfoName","CONCPT");
+			
 			// perform visual actions
 			thisview.Resize();
 

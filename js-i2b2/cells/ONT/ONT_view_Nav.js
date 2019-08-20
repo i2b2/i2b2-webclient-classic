@@ -123,6 +123,7 @@ i2b2.ONT.view.nav.PopulateCategories = function() {
 			title: catData.name,
 			dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",			
 			dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+this.yuiTree.id+"')",
+			click: "i2b2.ONT.view.info.SetKey('"+encodeURI(sdxDataNode.sdxInfo.sdxKeyValue)+"')",
 			icon: {
 				root: "sdx_ONT_CONCPT_root.gif",
 				rootExp: "sdx_ONT_CONCPT_root-exp.gif",
