@@ -404,7 +404,7 @@ i2b2.ONT.view.info.showInfoByKey = function(key) {
 				};				
 				var sdxRenderData = i2b2.sdx.Master.RenderHTML("ontInfoName", sdxDataNode, renderOptions);
 				$('ontInfoName').innerHTML=sdxRenderData.renderData.html;
-				//jgk
+				//jgk - for dragging the term from the info panel, doesn't quite work
 		
 		
 		$('ontInfoTooltip').innerHTML = term_tooltip;
@@ -419,7 +419,9 @@ i2b2.ONT.view.info.showInfoByKey = function(key) {
 		} else {
 			$('ontMetadataXml').innerHTML = 'This term does not allow values to be set.';
 		}
-		//$('ontInfoSQL').innerHTML = "SELECT * FROM i2b2metadata WHERE c_fullname LIKE '" + term_key + "%';";
+		if (sdxData.origData.operator.toLowerCase()=='like')
+			$('ontInfoSQL').innerHTML = "SELECT * FROM concept_dimension WHERE concept_path LIKE '" + sdxData.origData.dim_code+ "%';";
+	    else $('ontInfoSQL').innerHTML = "(n/a)";
 	    //    var sql_term_dimcode = term_dimcode.replace(/\\/g,'\\\\');
 	       
 	    //  if(term_table.toLowerCase() == 'concept_dimension'){
