@@ -160,7 +160,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				o.name = key;
 				o.tooltip = key;
 				
-				o.hasChildren = 'FA';
+				o.hasChildren = lvl==1 ? 'CA':'FA';
 				o.level = lvl;
 				o.key = fullkey; // Note, some value required by SDX
 
@@ -171,6 +171,8 @@ i2b2.ONT.ctrlr.FindBy = {
 					click: "i2b2.ONT.view.info.SetKey('"+encodeURI(fullkey)+"')",
 					showchildren: true,
 					icon: {
+						root: "sdx_ONT_SEARCH_root2.gif",
+						rootExp: "sdx_ONT_SEARCH_root2.gif",
 						branch: "sdx_ONT_SEARCH_branch.gif",
 						branchExp: "sdx_ONT_SEARCH_branch.gif"
 					}
