@@ -94,7 +94,15 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 			sdxData.origData.hasChildren = sdxData.origData.hasChildren.replace("A","I");
 		}
 	}
-	if (sdxData.origData.hasChildren.substring(2,1) === "I")
+	if ((!Object.isUndefined(sdxData.origData.search_viz_attr)) && (sdxData.origData.search_viz_attr == 'T')) // hierarchy node in a search result
+	{
+		sDD += " style='color: #505050;' ";	
+	}
+	else if ((!Object.isUndefined(sdxData.origData.search_viz_attr)) && (sdxData.origData.search_viz_attr == 'N')) // hierarchy node in a search result
+	{
+		sDD += " style='color: #000000; background-color: #c8fdce' ";	
+	}
+	else if (sdxData.origData.hasChildren.substring(2,1) === "I")
 	{
 		bCanExp = true;
 		sDD = " style='color: #c0c0c0;' ";		
@@ -141,6 +149,7 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 		if (options.context) { sMainEvents += ' oncontext="'+ options.context +'" '; } else {retHtml += ' oncontextmenu="return false" '; }
 		break;
 	default:
+		if (options.click) { sMainEvents += ' onclick="'+ options.click +'" '; } // support click events on leafs
 		sMainEvents += ' oncontextmenu="return false" ';
 	}
 
@@ -399,11 +408,12 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 			var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
 			 */
 			var sdxDataNode = i2b2.sdx.TypeControllers.CONCPT.MakeObject(c[i], modifier, cl_options, this.origData);
-			if (modifier) {				
+			if (modifier) {				/* jgk 0819 - this code seems no longer used? */
 				var renderOptions = {
 						title: i2b2.h.getXNodeVal(c[i],'name'),
 						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
 						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						click: "i2b2.ONT.view.info.SetKey('"+encodeURI(sdxDataNode.sdxInfo.sdxKeyValue)+"')",
 						icon: {
 							root: "sdx_ONT_MODIFIER_root.gif",
 							rootExp: "sdx_ONT_MODIFIER_root-exp.gif",
@@ -417,6 +427,7 @@ i2b2.sdx.TypeControllers.CONCPT.LoadConcepts = function(node, onCompleteCallback
 						title: i2b2.h.getXNodeVal(c[i],'name'),
 						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
 						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						click: "i2b2.ONT.view.info.SetKey('"+encodeURI(sdxDataNode.sdxInfo.sdxKeyValue)+"')",
 						icon: {
 							root: "sdx_ONT_CONCPT_root.gif",
 							rootExp: "sdx_ONT_CONCPT_root-exp.gif",
@@ -576,6 +587,7 @@ i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallbac
 						title: i2b2.h.getXNodeVal(c[i],'name'),
 						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
 						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						click: "i2b2.ONT.view.info.SetKey('"+encodeURI(sdxDataNode.sdxInfo.sdxKeyValue)+"')",
 						icon: {
 							root: "sdx_ONT_MODIFIER_root.gif",
 							rootExp: "sdx_ONT_MODIFIER_root-exp.gif",
@@ -589,6 +601,7 @@ i2b2.sdx.TypeControllers.CONCPT.LoadModifiers = function(node, onCompleteCallbac
 						title: i2b2.h.getXNodeVal(c[i],'name'),
 						dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
 						dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+cl_node.tree.id+"')",
+						click: "i2b2.ONT.view.info.SetKey('"+encodeURI(sdxDataNode.sdxInfo.sdxKeyValue)+"')",
 						icon: {
 							root: "sdx_ONT_CONCPT_root.gif",
 							rootExp: "sdx_ONT_CONCPT_root-exp.gif",
