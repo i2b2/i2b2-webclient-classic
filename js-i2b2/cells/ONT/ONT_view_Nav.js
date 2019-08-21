@@ -93,6 +93,31 @@ i2b2.ONT.view.nav.ToggleNode = function(divTarg, divTreeID) {
 }
 
 // ================================================================================================== //
+i2b2.ONT.view.nav.findByPath = function(root, targetKey) {
+	if(root.childrenRendered == false){
+		window.setTimeout(function(){ i2b2.ONT.view.nav.findByPath(root, targetKey)},100);
+	} else {
+		for(var i=0; i<root.children.length; i++){
+			var activeKey = root.children[i].data.i2b2_SDX.sdxInfo.sdxKeyValue;
+			if(targetKey == activeKey){
+				jQuery('#'+root.children[i].data.nodeid).css('background-color','#b2d7e1').css('font-weight','bold');
+				document.getElementById(root.children[i].data.nodeid).scrollIntoView(true);
+				return;
+			}
+			if(targetKey.indexOf(activeKey) === 0){
+				document.getElementById(root.children[i].data.nodeid).scrollIntoView(true);
+				root.children[i].toggle();
+				i2b2.ONT.view.nav.findByPath(root.children[i], targetKey);
+				return;
+			}
+		}
+	}
+	// search for: \\i2b2metadata\i2b2metadata\Diagnosis_ICD10\(I00-I99) Dise~3w8h\(I30-I52) Othe~w6tz\(I34) Nonrheum~rpju\
+	// i2b2.ONT.view.nav.findByPath(i2b2.ONT.view.nav.yuiTree.root,'\\i2b2metadata\i2b2metadata\Diagnosis_ICD10\(I00-I99) Dise~3w8h\(I30-I52) Othe~w6tz\(I34) Nonrheum~rpju\')
+
+}
+
+// ================================================================================================== //
 i2b2.ONT.view.nav.PopulateCategories = function() {		
 	// insert the categories nodes into the Nav Treeview
 	console.info("Populating Nav treeview with Categories");
@@ -242,7 +267,8 @@ i2b2.events.afterCellInit.subscribe(
 
 			i2b2.ONT.view.nav.ContextMenu = new YAHOO.widget.ContextMenu( 
 					"divContextMenu-Nav",  
-						{ lazyload: true,
+						{ zIndex: 5000,
+						lazyload: true,
 						trigger: $('ontNavDisp'), 
 						itemdata: [
 							//{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.nav.doRefreshAll } }

@@ -547,7 +547,7 @@ i2b2.ONT.view.info.ContextMenuValidate = function(p_oEvent) {
 };
 
 //================================================================================================== //
-i2b2.ONT.view.info.ContextMenu = new YAHOO.widget.ContextMenu( 
+/*i2b2.ONT.view.info.ContextMenu = new YAHOO.widget.ContextMenu( 
 		"divContextMenu-Find",  
 			{ lazyload: true,
 			trigger: $('ontFindDisp'), 
@@ -555,7 +555,7 @@ i2b2.ONT.view.info.ContextMenu = new YAHOO.widget.ContextMenu(
 				{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.info.doRefreshAll } },
 				{ text: "Find Modifiers",	onclick: { fn: i2b2.ONT.view.info.doShowModifiers } }
 		] }  
-); 
+);*/ 
 //================================================================================================== //
 i2b2.ONT.view.info.ContextMenu.subscribe("triggerContextMenu",i2b2.ONT.view.info.ContextMenuValidate); 
 

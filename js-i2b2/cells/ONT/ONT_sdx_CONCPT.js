@@ -49,9 +49,9 @@ i2b2.sdx.TypeControllers.CONCPT.RenderHTML= function(sdxData, options, targetDiv
 
 	// process drag drop controllers
 	if (!Object.isUndefined(options.dragdrop)) {
-//		NOTE TO SELF: should attachment of node dragdrop controller be handled by the SDX system as well? 
-//		This would ensure removal of the onmouseover call in a cross-browser way
-		var sDD = '  onmouseover="' + options.dragdrop + '(\''+ targetDiv.id +'\',\'' + id + '\')" ';
+// NOTE TO SELF: should attachment of node dragdrop controller be handled by the SDX system as well? 
+// This would ensure removal of the onmouseover call in a cross-browser way
+		var sDD = '  onmouseover="' + options.dragdrop + '(\''+ targetDiv.id +'\',\'' + id + '\')" onmouseout="i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight(\'' + id + '\')" ';
 	} else {
 		var sDD = '';
 	}
@@ -716,6 +716,12 @@ i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data = function(divParentID, divDataI
 }
 
 
+i2b2.sdx.TypeControllers.CONCPT.RemoveHighlight = function(divDataID){
+	if (Object.isUndefined($(divDataID))) {	return false; }
+	
+	document.getElementById(divDataID).style.backgroundColor = "";
+	document.getElementById(divDataID).style.border = "";
+}
 
 
 
