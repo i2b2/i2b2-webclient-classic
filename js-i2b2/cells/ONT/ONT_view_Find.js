@@ -350,6 +350,18 @@ i2b2.ONT.view.find.doShowModifiers = function(e) {
 //	i2b2.ONT.view.nav.PopulateCategories();
 }
 
+//================================================================================================== //
+i2b2.ONT.view.find.doFindInTree = function(e) { 
+	i2b2.ONT.view.nav.yuiTree.root.collapseAll();
+	var op = i2b2.ONT.view.find.contextRecord;	
+	if($('ontMainBox').style.display == "none")
+		i2b2.ONT.view.main.ZoomView();
+	$('tabNavigate').click();
+	i2b2.ONT.view.nav.findByPath(i2b2.ONT.view.nav.yuiTree.root,op.sdxInfo.sdxKeyValue)
+	
+	//i2b2.hive.MasterView.addZoomWindow("ONT");
+}
+
 // ================================================================================================== //
 i2b2.ONT.view.find.ContextMenuValidate = function(p_oEvent) {
 	var clickId = null;
@@ -402,7 +414,8 @@ i2b2.ONT.view.find.ContextMenu = new YAHOO.widget.ContextMenu(
 			trigger: $('ontFindDisp'), 
 			itemdata: [
 				{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.find.doRefreshAll } },
-				{ text: "Find Modifiers",	onclick: { fn: i2b2.ONT.view.find.doShowModifiers } }
+				{ text: "Find Modifiers",	onclick: { fn: i2b2.ONT.view.find.doShowModifiers } },
+				{ text: "Find Term in Tree",	onclick: { fn: i2b2.ONT.view.find.doFindInTree } }
 		] }  
 ); 
 //================================================================================================== //
