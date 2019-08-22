@@ -289,7 +289,7 @@ i2b2.ONT.ctrlr.FindBy = {
 			for(var i2=0;i2<oset.length;i2++) {
 				var o = oset[i2];
 				// parent nodes
-				if (i2b2.h.getXNodeVal(c[i2],'key_name'))
+				if (i2b2.h.getXNodeVal(c[i2],'key_name') && i2b2.ONT.view['find'].params.hierarchy)
 					var parentNode = getHigherNodes(i2b2.h.getXNodeVal(c[i2],'key_name'),i2b2.h.getXNodeVal(c[i2],'key'))['.'];
 				else var parentNode = getLevelNode(i2b2.h.getXNodeVal(c[i2],'level'));
 				
@@ -338,6 +338,7 @@ i2b2.ONT.ctrlr.FindBy = {
 		searchOptions.ont_synonym_records = i2b2.ONT.view['find'].params.synonyms;
 		searchOptions.ont_hidden_records = i2b2.ONT.view['find'].params.hiddens;
 		searchOptions.ont_reduce_results = i2b2.ONT.view['find'].params.reduce;
+		searchOptions.ont_hierarchy = i2b2.ONT.view['find'].params.hierarchy;
 		searchOptions.ont_search_strategy = inSearchData.Strategy;
 		searchOptions.ont_search_string = inSearchData.SearchStr;
 			

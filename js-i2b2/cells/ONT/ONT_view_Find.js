@@ -32,6 +32,7 @@ i2b2.ONT.view.find.showOptions = function(subScreen) {
 					i2b2.ONT.view['find'].params.synonyms = $('ONTFINDshowSynonyms').checked;
 					i2b2.ONT.view['find'].params.hiddens = $('ONTFINDshowHiddens').checked;
 					i2b2.ONT.view['find'].params.reduce = !$('ONTFINDreduceResults').checked;
+					i2b2.ONT.view['find'].params.hierarchy = $('ONTFINDhierarchy').checked;
 				}
 			} else {
 				alert('Please enter a valid number for Maximum Children to Display.');
