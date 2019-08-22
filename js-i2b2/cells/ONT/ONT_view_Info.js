@@ -555,10 +555,9 @@ i2b2.ONT.view.info.ContextMenuValidate = function(p_oEvent) {
 				{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.info.doRefreshAll } },
 				{ text: "Find Modifiers",	onclick: { fn: i2b2.ONT.view.info.doShowModifiers } }
 		] }  
-);*/ 
+);
+i2b2.ONT.view.info.ContextMenu.subscribe("triggerContextMenu",i2b2.ONT.view.info.ContextMenuValidate); */
 //================================================================================================== //
-i2b2.ONT.view.info.ContextMenu.subscribe("triggerContextMenu",i2b2.ONT.view.info.ContextMenuValidate); 
-
 
 // This is done once the entire cell has been loaded
 // ================================================================================================== //
