@@ -151,6 +151,56 @@ i2b2.ONT.ctrlr.FindBy = {
 				}
 			} 
 		
+			higherNodes = { '.':treeObj.root }
+			makeHigherNode = function(parent,key,lvl,fullkey) {
+				var o = new Object;
+
+				o.search_viz_attr = "T";
+
+				o.name = key;
+				o.tooltip = key;
+				
+				o.hasChildren = lvl==1 ? 'CA':'FA';
+				o.level = lvl;
+				o.key = fullkey; // Note, some value required by SDX
+
+				var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
+				var renderOptions = {
+					title: o.name,
+					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+					click: "i2b2.ONT.view.info.SetKey('"+encodeURI(fullkey)+"')",
+					showchildren: true,
+					icon: {
+						root: "sdx_ONT_SEARCH_root2.gif",
+						rootExp: "sdx_ONT_SEARCH_root2.gif",
+						branch: "sdx_ONT_SEARCH_branch.gif",
+						branchExp: "sdx_ONT_SEARCH_branch.gif"
+					}
+				};
+				
+				parentNode = parent['.']
+				
+				var sdxRenderData = i2b2.sdx.Master.RenderHTML(treeObj.id, sdxDataNode, renderOptions);
+				var tmpNode = i2b2.sdx.Master.AppendTreeNode(treeObj, parentNode, sdxRenderData);
+				tmpNode.expand(); // Show children 
+				treeObj.draw(); // If this isn't here, some nodes are undraggable at random due to YUI
+				
+				return { '.':tmpNode }
+			}
+			getHigherNodes = function(key_name,key) { 
+				var keys = key.split("\\").slice(2,-1); // Skip the leading '\\', skip the final node
+				var key_names = key_name.split("\\").slice(1,-1); // Skip the leading '\', skip the final node	
+				var key_key_offset = keys.length - key_names.length; // Number of elements in key is different than key_name due to preamble
+				var parent = higherNodes;
+				for(var i2=0;i2<key_names.length-1;i2++) {
+					var fullkey = key.substring(0,i2b2.h.nthIndex(key,'\\',i2+key_key_offset+3)+1); 
+					var shortKeyname = key_names[i2];
+					if(!(shortKeyname in parent)) parent[shortKeyname]=makeHigherNode(parent,shortKeyname,i2+1,fullkey);
+					parent=parent[shortKeyname];
+				}
+				return parent;
+			}
+		
 			// Render the tree view showing the relative levels of the nodes in the find results (jgk 0519)
 			// TODO: If results are missing an hlevel (i.e. hlevel 3 and then hlevel 5), it might render the deeper hlevel as a root node
 			// NOTE: Looks best with hlevel-sorted results (ONT cell 1.7.12)
@@ -202,7 +252,6 @@ i2b2.ONT.ctrlr.FindBy = {
 				
 				if (!bAddRoot) {parentNode = levelNodes[hlevel-1];} else {parentNode=treeObj.root;}
 				 // add to appropriate level
-				
 				var sdxRenderData = i2b2.sdx.Master.RenderHTML(treeObj.id, sdxDataNode, renderOptions);
 				var tmpNode = i2b2.sdx.Master.AppendTreeNode(treeObj, parentNode, sdxRenderData);
 				tmpNode.expand(); // Show children
@@ -213,13 +262,14 @@ i2b2.ONT.ctrlr.FindBy = {
 			// display the results
 			var c = results.refXML.getElementsByTagName('concept');
 			totalCount = totalCount + c.length;
-			
+			var oset = [];
 			for(var i2=0; i2<1*c.length; i2++) {
-				var levelNode = getLevelNode(i2b2.h.getXNodeVal(c[i2],'level'));
+
 				var o = new Object;
 				o.xmlOrig = c[i2];
 				o.name = /*'['+i2b2.h.getXNodeVal(c[i2],'level')+'] ' +*/ i2b2.h.getXNodeVal(c[i2],'name');
 				o.hasChildren =  i2b2.h.getXNodeVal(c[i2],'visualattributes');
+				o.search_viz_attr = "N"; // Display as a result node in the search results
 				if (o.hasChildren != undefined && o.hasChildren.length > 1)
 				{
 					o.hasChildren = o.hasChildren.substring(0,2)
@@ -233,11 +283,22 @@ i2b2.ONT.ctrlr.FindBy = {
 				o.operator = i2b2.h.getXNodeVal(c[i2],'operator');
 				o.dim_code = i2b2.h.getXNodeVal(c[i2],'dimcode');
 				o.basecode = i2b2.h.getXNodeVal(c[i2],'basecode');
+				oset.push(o);
+			}
+			//oset.sort(function(a,b) {return (a.key > b.key) ? 1 : ((b.key > a.key) ? -1 : 0);} );
+			for(var i2=0;i2<oset.length;i2++) {
+				var o = oset[i2];
+				// parent nodes
+				if (i2b2.h.getXNodeVal(c[i2],'key_name'))
+					var parentNode = getHigherNodes(i2b2.h.getXNodeVal(c[i2],'key_name'),i2b2.h.getXNodeVal(c[i2],'key'))['.'];
+				else var parentNode = getLevelNode(i2b2.h.getXNodeVal(c[i2],'level'));
+				
 				// append the data node
 				var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
 				var renderOptions = {
 					title: o.name,
 					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+					click: "i2b2.ONT.view.info.SetKey('"+encodeURI(o.key)+"')",
 					showchildren: true,
 					icon: {
 						root: "sdx_ONT_CONCPT_root.gif",
@@ -248,7 +309,7 @@ i2b2.ONT.ctrlr.FindBy = {
 					}
 				};
 				var sdxRenderData = i2b2.sdx.Master.RenderHTML(treeObj.id, sdxDataNode, renderOptions);
-				i2b2.sdx.Master.AppendTreeNode(treeObj, levelNode, sdxRenderData);
+				i2b2.sdx.Master.AppendTreeNode(treeObj, parentNode, sdxRenderData);
 			//}
 			// redraw treeview
 				treeObj.draw();
@@ -592,6 +653,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				var renderOptions = {
 					title: o.name,
 					dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",
+					click: "i2b2.ONT.view.info.SetKey('"+encodeURI(o.key)+"')",
 					showchildren: false,
 					icon: {
 						root: "sdx_ONT_CONCPT_root.gif",

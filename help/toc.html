@@ -5,9 +5,11 @@
 		<title>Default TreeView</title>
 		<link rel="stylesheet" type="text/css" href="../js-ext/yui/build/fonts/fonts-min.css" />
 		<link rel="stylesheet" type="text/css" href="../js-ext/yui/build/treeview/assets/skins/sam/treeview.css" />
+
 <script type="text/javascript" src="../js-ext/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
 
 <script type="text/javascript" src="../js-ext/yui/build/treeview/treeview-min.js"></script>
+
 
 
 <!--begin custom header content for this example-->
@@ -40,9 +42,17 @@ var tree;
 	
 		//instantiate the tree:
         tree = new YAHOO.widget.TreeView("treeDiv1");
+        
+new YAHOO.widget.TextNode({ label:"1. Quick Start", href:"1.-Quick-Start_9995017.html", target:"right"}, tree.getRoot(), false)
+new YAHOO.widget.TextNode({ label:"2. Webclient Layout", href:"2.-Webclient-Layout_9995019.html", target:"right"}, tree.getRoot(), false)
+new YAHOO.widget.TextNode({ label:"3. Query Tool", href:"3.-Query-Tool_9995021.html", target:"right"}, tree.getRoot(), false)
+new YAHOO.widget.TextNode({ label:"4. Navigate Terms", href:"4.-Navigate-Terms_9995027.html", target:"right"}, tree.getRoot(), false)
+new YAHOO.widget.TextNode({ label:"5. Query Status", href:"5.-Query-Status_9995032.html", target:"right"}, tree.getRoot(), false)
+new YAHOO.widget.TextNode({ label:"6. Previous Queries", href:"6.-Previous-Queries_9995034.html", target:"right"}, tree.getRoot(), false)
+new YAHOO.widget.TextNode({ label:"7. Workplace", href:"7.-Workplace_9995036.html", target:"right"}, tree.getRoot(), false)
 
-
-		 var tmpNode = new YAHOO.widget.TextNode({ label:"i2b2 Find Terms", href:"ft.html#ftView", target:"right"}, tree.getRoot(), false);
+		
+/*		 var tmpNode = new YAHOO.widget.TextNode({ label:"i2b2 Find Terms", href:"ft.html#ftView", target:"right"}, tree.getRoot(), false);
 		 new YAHOO.widget.TextNode({ label:"Introduction", href:"ft.html#ftIntro", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Navigation", href:"ft.html#ftNavigation", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Searching Terms", href:"ft.html#ftSearch", target:"right"},  tmpNode, false)
@@ -75,7 +85,7 @@ var tree;
 		 new YAHOO.widget.TextNode({ label:"Navigation", href:"wp.html#wpNavigation", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Adding Items to Workplace view", href:"wp.html#wpAddToWp", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Using Items in Workplace view", href:"wp.html#wpUseItems", target:"right"},  tmpNode, false)
-
+*/
 //        for (var i = 0; i < Math.floor((Math.random()*4) + 3); i++) {
   //          var tmpNode = new YAHOO.widget.TextNode("label-" + i, tree.getRoot(), false);
             // tmpNode.collapse();

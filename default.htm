@@ -539,7 +539,7 @@ YAHOO.util.Event.addListener(window, "load", init);
       </div>
       <div id="ontInfoDisp" style="display:none">
 		<div style="font-size:11px;background: #dadada;color: #585858; padding-left:5px">Detailed Information for Term:</div>
-		<div id="ontInfoName" style="font-size:13px;color:#333;font-weight:bold;padding:5px;"></div>
+		<div id="ontInfoName" style="font-size:13px;color:#333;font-weight:bold;padding:5px;"><img src="js-i2b2/cells/ONT/assets/sdx_ONT_SEARCH_root.png" align="absbottom"> Please select a term in Navigate Terms or Find Terms</div>
 		<div style="padding:5px;">
 			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Description</span><br/>
 			<span id="ontInfoDescription" style=""></span>
@@ -551,6 +551,10 @@ YAHOO.util.Event.addListener(window, "load", init);
 		<div style="padding:5px;">
 			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Concept Path</span><br/>
 			<span id="ontInfoKey" style="font-family:'Courier New'"></span>
+		</div>
+		<div style="padding:5px;">
+			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">SQL Code (to retrieve children)</span><br/>
+			<span id="ontInfoSQL" style="font-family:'Courier New'"></span>
 		</div>
 		<div style="padding:5px;">
 			<span style="font-size:11px;color: #667788; border-bottom: 1px solid #667788;">Values</span><br/>
@@ -801,7 +805,7 @@ YAHOO.util.Event.addListener(window, "load", init);
                   <div id="tutorialDiv" class="tutorialClass"> 
                       <a href="#" onclick="i2b2.CRC.view.QT.toggleTutorial(); return false;"> <span id="tutorialOnOffSpan"> Turn on Tutorial </span> </a> <span id="tutorialText" class="tutorialComponent"></span> <a href="#" id="tutorialShowMeLink" class="tutorialComponent"  onclick="i2b2.CRC.view.QT.runTutorialAtState(); return false;"> <span id="tutorShowMeText"> Show Me </span> </a>
                   </div>
-                  <p id="temporalSequenceHeaderMessage" class="temporalSequenceMsgHeader">Drop a Concept into the Box to Start Bulding a Temporal Sequence</p>
+                  <p id="temporalSequenceHeaderMessage" class="temporalSequenceMsgHeader">Drop a Concept into the Box to Start Building a Temporal Sequence</p>
                   <!--<p id="temporalSequenceMessage" class="temporalSequenceMsg"><a href="#" onclick="i2b2.CRC.view.QT.runTutorial(1); return false;">(Show me)</a></p> -->
                   <div id="tqDropBox" class="tqDropBoxClass"></div>
                   <div id="startDrop" class="tqDrop">
