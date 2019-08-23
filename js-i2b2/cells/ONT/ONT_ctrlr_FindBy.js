@@ -48,6 +48,9 @@ i2b2.ONT.ctrlr.FindBy = {
 		//   Category: what category is being searched.  Blank for all
 		//   Strategy: what matching strategy should be used
 
+		// Debug: add time check
+		var mytime = new Date().getTime();
+			
 		// VERIFY that the above information has been passed		
 		var f = false;
 		if (Object.isUndefined(inSearchData)) return false;
@@ -70,8 +73,6 @@ i2b2.ONT.ctrlr.FindBy = {
 				s = 'contains';
 		}
 		inSearchData.Strategy = s;
-		
-		
 
 		// special client processing to search all categories
 		var searchCats = [];
@@ -116,7 +117,7 @@ i2b2.ONT.ctrlr.FindBy = {
 			//			msgResponse: xml (string)
 			//			error: boolean
 			//			errorStatus: string [only with error=true]
-			//			errorMsg: string [only with error=true]
+			//			errorMsg: string [only with error=true]			
 
 			//Create a new treeobject so it does not append 
 			//treeObj = new YAHOO.widget.TreeView("ontSearchNamesResults");
@@ -256,6 +257,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				var tmpNode = i2b2.sdx.Master.AppendTreeNode(treeObj, parentNode, sdxRenderData);
 				tmpNode.expand(); // Show children
 				levelNodes[hlevel]= tmpNode;
+			
 				return tmpNode;
 			}
 
@@ -269,7 +271,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				o.xmlOrig = c[i2];
 				o.name = /*'['+i2b2.h.getXNodeVal(c[i2],'level')+'] ' +*/ i2b2.h.getXNodeVal(c[i2],'name');
 				o.hasChildren =  i2b2.h.getXNodeVal(c[i2],'visualattributes');
-				o.search_viz_attr = "N"; // Display as a result node in the search results
+				if (i2b2.h.getXNodeVal(c[i2],'key_name')) o.search_viz_attr = "N"; // Display as a result node in the search results
 				if (o.hasChildren != undefined && o.hasChildren.length > 1)
 				{
 					o.hasChildren = o.hasChildren.substring(0,2)
@@ -289,7 +291,7 @@ i2b2.ONT.ctrlr.FindBy = {
 			for(var i2=0;i2<oset.length;i2++) {
 				var o = oset[i2];
 				// parent nodes
-				if (i2b2.h.getXNodeVal(c[i2],'key_name') && i2b2.ONT.view['find'].params.hierarchy)
+				if (i2b2.h.getXNodeVal(c[i2],'key_name')) // && i2b2.ONT.view['find'].params.hierarchy)
 					var parentNode = getHigherNodes(i2b2.h.getXNodeVal(c[i2],'key_name'),i2b2.h.getXNodeVal(c[i2],'key'))['.'];
 				else var parentNode = getLevelNode(i2b2.h.getXNodeVal(c[i2],'level'));
 				
@@ -329,6 +331,12 @@ i2b2.ONT.ctrlr.FindBy = {
 
 			//document.getElementById('ontFindNameButtonWorking').style.display = 'none';
 
+				
+			// How long did it take?
+			if (searchCatsCount == searchCats.length) {
+				var outtime = new Date().getTime()-mytime;
+				console.log("FindBy took "+outtime+"ms");
+			}
 		}
 		
 	
@@ -353,8 +361,6 @@ i2b2.ONT.ctrlr.FindBy = {
 			i2b2.ONT.ajax.GetNameInfo("ONT:FindBy", searchOptions, scopedCallback);
 
 		}
-			
-
 
 	},
 
