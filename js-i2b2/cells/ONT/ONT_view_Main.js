@@ -87,6 +87,7 @@ i2b2.ONT.view.main.Resize = function(e) {
 				}
 				break;
 		}
+
 		$$('DIV#ontMainBox DIV#ontNavDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
 		$$('DIV#ontMainBox DIV#ontInfoDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
 
@@ -113,6 +114,21 @@ i2b2.ONT.view.main.splitterDragged = function()
 	var ont = $("ontMainBox");
 	ont.style.width	= Math.max((parseInt(splitter.style.left) - ont.offsetLeft - 3), 0) + "px";
 	
+	// Minimize tab text if needed 
+	//$('tabNavigate')
+	//$('tabInfo')
+	//$('guestTabWorkplace')
+	//$('guestTabQueries')
+	if (parseInt(ont.style.width)<550 && i2b2.hive.MasterView.getZoomWindows().size()>0) {
+		//$('ontTopTabs').style.height = 24;
+		$('tabFind').innerHTML = '<div>Find Trm</div>';
+		$('guestTabQuerySearch').innerHTML = "<div>Find Qry</div>";
+	} else {
+		//$('ontTopTabs').style.height =  48;
+		$('tabFind').innerHTML = '<div>Find Terms</div>';
+		$('guestTabQuerySearch').innerHTML = "<div>Find Queries</div>";
+	}	
+
 	$$('DIV#ontMainBox DIV#ontNavDisp')[0].style.width = Math.max((parseInt(ont.style.width)-20), 0) + 'px';
 	$$('DIV#ontMainBox DIV#ontInfoDisp')[0].style.width = Math.max((parseInt(ont.style.width)-20), 0) + 'px';
 	$$('DIV#ontMainBox DIV#ontSearchNamesResults')[0].style.width = Math.max((parseInt(ont.style.width)-14), 0) + 'px';

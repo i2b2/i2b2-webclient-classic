@@ -76,6 +76,21 @@ i2b2.WORK.view.main.splitterDragged = function()
 	var splitter = $( i2b2.hive.mySplitter.name );
 	var work = $("wrkWorkplace");
 	work.style.width	= Math.max((parseInt(splitter.style.left) - work.offsetLeft - 3), 0) + "px";	
+	
+	// Minimize tab text if needed 
+	//$('WRKguestTabNavigate')
+	//$('WRKguestTabFind')
+	//$('WRKguestTabInfo')
+	//$('WRKguestTabQueries')
+	if (parseInt(work.style.width)<550 && i2b2.hive.MasterView.getZoomWindows().size()>0) {
+		//$('ontTopTabs').style.height = 24;
+		$('WRKguestTabFind').innerHTML = '<div>Find Trm</div>';
+		$('WRKguestTabFindQueries').innerHTML = "<div>Find Qry</div>";
+	} else {
+		//$('ontTopTabs').style.height =  48;
+		$('WRKguestTabFind').innerHTML = '<div>Find Terms</div>';
+		$('WRKguestTabFindQueries').innerHTML = "<div>Find Queries</div>";
+	}	
 }
 
 //================================================================================================== //

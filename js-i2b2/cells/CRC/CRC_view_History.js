@@ -212,6 +212,20 @@ i2b2.CRC.view.history.splitterDragged = function()
 	CRCHist.style.width	= Math.max((parseInt(splitter.style.left) - CRCHist.offsetLeft - 3), 0) + "px";
 	$$('DIV#crcHistoryBox DIV#crcHistoryData')[0].style.width = Math.max((parseInt(CRCHist.style.width)-24), 0) + 'px';
 	$$('DIV#crcHistoryBox DIV#crcSearchNamesResults')[0].style.width = Math.max((parseInt(CRCHist.style.width)-24), 0) + 'px';
+			
+	// Minimize tab text if needed 
+	//$('CRCguestTabNavigate')
+	//$('CRCguestTabInfo')
+	//$('crctabNavigate')
+	if (parseInt(CRCHist.style.width)<550 && i2b2.hive.MasterView.getZoomWindows().size()>0) {
+		//$('ontTopTabs').style.height = 24;
+		$('CRCguestTabFind').innerHTML = '<div>Find Trm</div>';
+		$('crctabFind').innerHTML = "<div>Find Qry</div>";
+	} else {
+		//$('ontTopTabs').style.height =  48;
+		$('CRCguestTabFind').innerHTML = '<div>Find Terms</div>';
+		$('crctabFind').innerHTML = "<div>Find Queries</div>";
+	}
 }
 
 //================================================================================================== //

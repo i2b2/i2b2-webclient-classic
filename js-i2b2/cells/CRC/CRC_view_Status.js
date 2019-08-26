@@ -115,6 +115,7 @@ i2b2.CRC.view.status.splitterDragged = function()
 	var CRCStatus = $("crcStatusBox");
 	CRCStatus.style.left	= (parseInt(splitter.offsetWidth) + parseInt(splitter.style.left) + 3) + "px";
 	CRCStatus.style.width 	= Math.max(parseInt(w) - parseInt(splitter.style.left) - parseInt(splitter.offsetWidth) - 29, 0) + "px";
+
 }
 
 //================================================================================================== //

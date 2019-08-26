@@ -3,9 +3,10 @@
  * @inherits 	i2b2.ONT.ctrlr
  * @namespace	i2b2.ONT.ctrlr.FindBy
  * @author		Nick Benik, Griffin Weber MD PhD
- * @version 	1.3
+ * @version 	1.7.12
  * ----------------------------------------------------------------------------------------
  * updated 9-15-08: RC4 launch [Nick Benik] 
+ * hierarchical result display 08-19 by Jeff Klann, PhD
  */
 console.group('Load & Execute component file: ONT > ctrlr > FindBy');
 console.time('execute time');
