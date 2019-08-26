@@ -86,7 +86,9 @@ function TQueryPanelController(eventController, panelDOMID, index, isSecondary)
     this.performDrop = function(sdxConceptOrig)
     {
         i2b2.CRC.view.QT.resetQueryResults();
-        var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData.parent, sdxConceptOrig.sdxInfo.sdxType);
+        if (!('xmlOrig' in sdxConceptOrig.origData)) // jgk0719 While it's a good habit to repackage the XML into an sdx object, it's not usually necessary, so if we don't have the XML (find terms hierarchy result), just use the original
+			var sdxConcept = sdxConceptOrig;
+        else var sdxConcept = i2b2.sdx.TypeControllers.CONCPT.MakeObject(sdxConceptOrig.origData.xmlOrig, sdxConceptOrig.origData.isModifier, null, sdxConceptOrig.origData.parent, sdxConceptOrig.sdxInfo.sdxType);
         // following nw096's Date Constraints overhaul
         if (this.dateFrom)
             sdxConcept.dateFrom = this.dateFrom;
