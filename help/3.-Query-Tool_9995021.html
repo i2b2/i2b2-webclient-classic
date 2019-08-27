@@ -5,7 +5,6 @@
    i2b2 Web Client : 3. Query Tool
   </title>
   <link href="styles/site.css" rel="stylesheet" type="text/css"/>
-  <link href="i2b2Style.css" rel="stylesheet" type="text/css" />
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
  </head>
  <body class="theme-default aui-theme-default">
@@ -14,196 +13,24 @@
     <div class="columnLayout single" data-layout="single">
      <div class="cell normal" data-type="normal">
       <div class="innerCell">
-       <div class="rwui_expandable_item rw_open ">
-        <a class="rwui_expandable_item_title rwui_expand" data-hash="expand-TableofContents" id="rwui_expand-TableofContents" onclick="RWUI.toggleExpandItem(this);">
-         <div class="rwui_icon">
-         </div>
-         Table of Contents
-        </a>
-        <div class="rwui_expandable_item_body rwui_body">
-         <p>
-          <style type="text/css">
-           /*<![CDATA[*/
-div.rbtoc1566411916676 {padding: 0px;}
-div.rbtoc1566411916676 ul {list-style: none;margin-left: 0px;}
-div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
+       <p>
+        <p>
+         The
+         <strong>
+          Query Tool
+         </strong>
+         panel is where queries are constructed and run.
+        </p>
+        <style type="text/css">
+         /*<![CDATA[*/
+div.rbtoc1566937351195 {padding: 0px;}
+div.rbtoc1566937351195 ul {list-style: none;margin-left: 0px;}
+div.rbtoc1566937351195 li {margin-left: 0px;padding-left: 0px;}
 
 /*]]>*/
-          </style>
-          <div class="toc-macro rbtoc1566411916676">
-           <ul class="toc-indentation">
-            <li>
-             <a href="#id-3.QueryTool-3.1Layout">
-              3.1 Layout
-             </a>
-            </li>
-            <li>
-             <a href="#id-3.QueryTool-3.2CreatingaQuery">
-              3.2 Creating a Query
-             </a>
-             <ul class="toc-indentation">
-              <li>
-               <a href="#id-3.QueryTool-3.2.1i2b2ItemsforQuerying">
-                3.2.1 i2b2 Items for Querying
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-3.2.1OperatorsandOrderofPrecedence">
-                3.2.1 Operators and Order of Precedence
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-3.2.2Constraints">
-                3.2.2 Constraints
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-3.2.3QueryTiming(inprogress)">
-                3.2.3 Query Timing (in progress)
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-3.2.4ReloadingaPreviousQuery(inprogress)">
-                3.2.4 Reloading a Previous Query (in progress)
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-3.2.5ResettingtheQueryTool(inprogress)">
-                3.2.5 Resetting the Query Tool (in progress)
-               </a>
-              </li>
-             </ul>
-            </li>
-            <li>
-             <a href="#id-3.QueryTool-3.3RunningaQuery">
-              3.3 Running a Query
-             </a>
-             <ul class="toc-indentation">
-              <li>
-               <a href="#id-3.QueryTool-3.3.1RunQuery">
-                3.3.1 Run Query
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-3.3.2QueryResultOptions">
-                3.3.2 Query Result Options
-               </a>
-               <ul class="toc-indentation">
-                <li>
-                 <a href="#id-3.QueryTool-1)NumberofPatients">
-                  1) Number of Patients
-                 </a>
-                </li>
-                <li>
-                 <a href="#id-3.QueryTool-2)Patient/EncounterSet">
-                  2) Patient/Encounter Set
-                 </a>
-                </li>
-                <li>
-                 <a href="#id-3.QueryTool-4)PatientBreakdowns">
-                  4) Patient Breakdowns
-                 </a>
-                </li>
-               </ul>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-3.3.3.QueryStatus(inprogress)">
-                3.3.3. Query Status (in progress)
-               </a>
-               <ul class="toc-indentation">
-                <li>
-                 <a href="#id-3.QueryTool-1)Running">
-                  1) Running
-                 </a>
-                </li>
-                <li>
-                 <a href="#id-3.QueryTool-2)Finished">
-                  2) Finished
-                 </a>
-                </li>
-                <li>
-                 <a href="#id-3.QueryTool-3)Queued">
-                  3) Queued
-                 </a>
-                </li>
-                <li>
-                 <a href="#id-3.QueryTool-4)Error">
-                  4) Error
-                 </a>
-                </li>
-               </ul>
-              </li>
-             </ul>
-            </li>
-            <li>
-             <a href="#id-3.QueryTool-3.4ExampleQueries(inprogress)">
-              3.4 Example Queries (in progress)
-             </a>
-             <ul class="toc-indentation">
-              <li>
-               <a href='#id-3.QueryTool-i.SimpleQuery:"FindingpatientswithadiagnosisAoradiagnosisBorhaslabtestC."'>
-                i. Simple Query: "Finding patients with a diagnosis A or a diagnosis B or has lab test C."
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-ii.RunningaPreviousQuery">
-                ii. Running a Previous Query
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-iii.TemporalQuery(Simple)">
-                iii. Temporal Query (Simple)
-               </a>
-              </li>
-              <li>
-               <a href="#id-3.QueryTool-iv.HowtofindPatientswith&gt;1diagnosisXOR&gt;1diagnosisY(Usingnestedqueries)">
-                iv.  How to find Patients with &gt;1 diagnosis X OR &gt;1 diagnosis Y  (Using nested queries)
-               </a>
-              </li>
-             </ul>
-            </li>
-           </ul>
-          </div>
-          <div class="plugin_pagetree">
-           <ul class="plugin_pagetree_children_list plugin_pagetree_children_list_noleftspace">
-            <div class="plugin_pagetree_children">
-            </div>
-           </ul>
-           <fieldset class="hidden">
-            <input name="treeId" type="hidden" value=""/>
-            <input name="treeRequestId" type="hidden" value="/wiki/plugins/pagetree/naturalchildren.action?decorator=none&amp;excerpt=true&amp;sort=position&amp;reverse=false&amp;disableLinks=false&amp;expandCurrent=false"/>
-            <input name="treePageId" type="hidden" value="9995021"/>
-            <input name="noRoot" type="hidden" value="false"/>
-            <input name="rootPageId" type="hidden" value="9995021"/>
-            <input name="rootPage" type="hidden" value=""/>
-            <input name="startDepth" type="hidden" value="0"/>
-            <input name="spaceKey" type="hidden" value="webclient"/>
-            <input name="i18n-pagetree.loading" type="hidden" value="Loading..."/>
-            <input name="i18n-pagetree.error.permission" type="hidden" value="Unable to load page tree. It seems that you do not have permission to view the root page."/>
-            <input name="i18n-pagetree.eeror.general" type="hidden" value="There was a problem retrieving the page tree. Please check the server log file for more information."/>
-            <input name="loginUrl" type="hidden" value=""/>
-            <input name="mobile" type="hidden" value="false"/>
-            <fieldset class="hidden">
-             <input name="ancestorId" type="hidden" value="9995021"/>
-            </fieldset>
-           </fieldset>
-          </div>
-         </p>
-        </div>
-       </div>
-       <p>
-        <br/>
+        </style>
        </p>
-       <p>
-        <br/>
-       </p>
-       <p>
-        The
-        <strong>
-         Query Tool
-        </strong>
-        panel is where queries are constructed and run.
-       </p>
+       <br/>
       </div>
      </div>
     </div>
@@ -215,7 +42,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
        </h2>
        <p>
         <span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size">
-         <img class="confluence-embedded-image image-center" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995276.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_12-25-7.png" data-linked-resource-id="9995276" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995276.png" width="600"/>
+         <img class="confluence-embedded-image image-center" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995276.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_12-25-7.png" data-linked-resource-id="9995276" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995276.png" width="600"/>
         </span>
        </p>
        <ol>
@@ -224,7 +51,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
           Panel Options
          </strong>
          <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-          <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386463.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-7_15-56-48.png" data-linked-resource-id="12386463" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="21" src="attachments/9995021/12386463.png"/>
+          <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386463.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-7_15-56-48.png" data-linked-resource-id="12386463" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="21" src="attachments/9995021/12386463.png"/>
          </span>
          allow users to (1) view the XML exchange between the client and the i2b2 server (if enabled) , (2) set options for the panel, and (3) resize the panel.
         </li>
@@ -267,7 +94,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
        <h3 id="id-3.QueryTool-3.2.1i2b2ItemsforQuerying">
         3.2.1 i2b2 Items for Querying
        </h3>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         These items may be dragged into Query Groups to construct queries.
        </p>
        <div class="table-wrap">
@@ -448,7 +275,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
        <h3 id="id-3.QueryTool-3.2.1OperatorsandOrderofPrecedence">
         3.2.1 Operators and Order of Precedence
        </h3>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         i2b2 items are combined using Boolean operators
         <strong>
          AND
@@ -459,7 +286,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
         </strong>
         .
        </p>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         Items within each Group are first
         <strong>
          OR
@@ -470,10 +297,10 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
         </strong>
         ed together.
        </p>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         <br/>
        </p>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         <em>
          <strong>
           Example 1 (AND):
@@ -494,15 +321,15 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
          </strong>
         </em>
        </p>
-       <p style="margin-left: 60.0px;">
+       <p style="margin-left: 60.0px;text-align: center;">
         <span class="confluence-embedded-file-wrapper">
-         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995284.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-47-34.png" data-linked-resource-id="9995284" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995284.png"/>
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995284.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-47-34.png" data-linked-resource-id="9995284" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995284.png"/>
         </span>
        </p>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         <br/>
        </p>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         <em>
          <strong>
           Example 2 (OR):
@@ -517,15 +344,15 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
          <br/>
         </em>
        </p>
-       <p style="margin-left: 60.0px;">
+       <p style="margin-left: 60.0px;text-align: center;">
         <span class="confluence-embedded-file-wrapper">
-         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995283.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-43-50.png" data-linked-resource-id="9995283" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995283.png"/>
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995283.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-43-50.png" data-linked-resource-id="9995283" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995283.png"/>
         </span>
        </p>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         <br/>
        </p>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         <strong>
          Example 3 (AND of ORs)
         </strong>
@@ -541,18 +368,18 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
          male.
         </em>
        </p>
-       <p style="margin-left: 180.0px;">
+       <p style="margin-left: 180.0px;text-align: center;">
         *Note that the OR expression in the parentheses is evaluated first.
        </p>
-       <p style="margin-left: 60.0px;">
+       <p style="margin-left: 60.0px;text-align: center;">
         <span class="confluence-embedded-file-wrapper">
-         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995282.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-41-51.png" data-linked-resource-id="9995282" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995282.png"/>
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995282.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-41-51.png" data-linked-resource-id="9995282" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995282.png"/>
         </span>
        </p>
        <h3 id="id-3.QueryTool-3.2.2Constraints">
         3.2.2 Constraints
        </h3>
-       <p style="margin-left: 30.0px;">
+       <p style="margin-left: 30.0px;text-align: center;">
         <strong>
          Constraints
         </strong>
@@ -575,7 +402,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
              Setting Date Constraint for the entire Group
              <br/>
              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386647.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-27-4.png" data-linked-resource-id="12386647" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="220" src="attachments/9995021/12386647.png"/>
+              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386647.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-27-4.png" data-linked-resource-id="12386647" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="220" src="attachments/9995021/12386647.png"/>
              </span>
              <br/>
              <br/>
@@ -584,7 +411,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
              <br/>
              <br/>
              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-              <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386648.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-27-38.png" data-linked-resource-id="12386648" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="210" src="attachments/9995021/12386648.png"/>
+              <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386648.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-27-38.png" data-linked-resource-id="12386648" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="210" src="attachments/9995021/12386648.png"/>
              </span>
              <br/>
              <br/>
@@ -592,7 +419,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
              <br/>
              <br/>
              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386649.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-28-6.png" data-linked-resource-id="12386649" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="201" src="attachments/9995021/12386649.png"/>
+              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386649.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-28-6.png" data-linked-resource-id="12386649" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="201" src="attachments/9995021/12386649.png"/>
              </span>
              <br/>
              <br/>
@@ -607,7 +434,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
              to set the date constraint for that item specifically.
              <br/>
              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-              <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386651.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-32-41.png" data-linked-resource-id="12386651" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="135" src="attachments/9995021/12386651.png"/>
+              <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386651.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-32-41.png" data-linked-resource-id="12386651" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="135" src="attachments/9995021/12386651.png"/>
              </span>
              <br/>
              <br/>
@@ -624,7 +451,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
              <br/>
              <br/>
              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386650.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-29-7.png" data-linked-resource-id="12386650" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="87" src="attachments/9995021/12386650.png"/>
+              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386650.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-29-7.png" data-linked-resource-id="12386650" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="87" src="attachments/9995021/12386650.png"/>
              </span>
              <br/>
              <p>
@@ -646,7 +473,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
            </h5>
            <p>
             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-             <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386652.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-33-25.png" data-linked-resource-id="12386652" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="221" src="attachments/9995021/12386652.png"/>
+             <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386652.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-33-25.png" data-linked-resource-id="12386652" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="221" src="attachments/9995021/12386652.png"/>
             </span>
             <br/>
             <br/>
@@ -657,7 +484,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
             <br/>
            </p>
            <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
-            <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386653.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-33-46.png" data-linked-resource-id="12386653" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="143" src="attachments/9995021/12386653.png"/>
+            <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386653.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-33-46.png" data-linked-resource-id="12386653" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="143" src="attachments/9995021/12386653.png"/>
            </span>
            <br/>
            <p>
@@ -716,7 +543,7 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
           <li>
            Exclusion
            <span class="confluence-embedded-file-wrapper image-right-wrapper confluence-embedded-manual-size">
-            <img class="confluence-embedded-image image-right" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12387209.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="79" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="screenshot_1680.png" data-linked-resource-id="12387209" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/12387209.png" width="400"/>
+            <img class="confluence-embedded-image image-right" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12387209.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="screenshot_1680.png" data-linked-resource-id="12387209" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/12387209.png" width="400"/>
            </span>
            <br/>
            Constraint will not include patients with the concepts listed in the panel.
@@ -811,15 +638,22 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
          </ol>
         </li>
        </ol>
-       <h3 id="id-3.QueryTool-3.2.3QueryTiming(inprogress)">
+       <h3 id="id-3.QueryTool-3.2.3QueryTiming">
         3.2.3 Query Timing
-        <span style="color: rgb(255,0,0);">
-         (in progress)
-        </span>
        </h3>
+       <p>
+        <span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image image-center" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/15630724.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-8-27_13-4-54.png" data-linked-resource-id="15630724" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="78" src="attachments/9995021/15630724.png"/>
+        </span>
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        Choose the relationship between the query panels. The default is independent.
+       </p>
        <ol>
         <li>
-         Independent
+         <h4 id="id-3.QueryTool-Independent">
+          Independent
+         </h4>
          <ul>
           <li>
            <p class="auto-cursor-target">
@@ -837,20 +671,15 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
                Patient has a medication with a dose greater than 500 mg and a medication that is taken once a day documented at any time in their history.
               </span>
              </p>
-             <p>
-              RESULTS: there are 47 patients who have had a medication with a dose of 500 mg and a frequency of once a day entered as a fact in the observation_fact table, where medication dose and frequency have the
-              <span>
-               same
-              </span>
-              patient_num.
-             </p>
             </div>
            </div>
           </li>
          </ul>
         </li>
         <li>
-         Same Financial Encounter
+         <h4 id="id-3.QueryTool-SameFinancialEncounter">
+          Same Financial Encounter
+         </h4>
          <ol>
           <li style="list-style-type: circle;">
            <p>
@@ -858,101 +687,214 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
            </p>
           </li>
           <li style="list-style-type: circle;">
-           <p>
-            Temporal constraint has to be set to Same financial encounter in order to be available for selection
-           </p>
-           <div class="projectdoc-information-macro projectdoc-information-macro-example" data-projectdoc-box-type="example" title="Example">
-            <p class="title">
-             Example
-            </p>
-            <span class="aui-icon aui-icon-small projectdoc-information-macro-icon">
-            </span>
-            <div class="projectdoc-information-macro-body">
-             <p>
-              <span>
-               Patient has a diagnosis of Acute MI documented at any time in their history and they have a medication with a dose greater than 500 mg and a medication that is taken once a day documented during the same visit.
-              </span>
-             </p>
-             <p>
-              RESULTS: there are 4 patients who have had a medication with a dose greater than 500 mg and a frequency of once a day entered as a fact in the observation_fact table, where the medication dose and frequency have the
-              <span>
-               same
-              </span>
-              encounter_num AND the diagnosis of acute MI, the medication dose and frequency all have the
-              <span>
-               same
-              </span>
-              patient_num
-             </p>
-            </div>
-           </div>
-           <p>
-            <br/>
-           </p>
+           When this is selected, individual panels can be included in the "same encounter" query, or they can be treated independently.
           </li>
          </ol>
-        </li>
-        <li>
-         Same Observation
-         <ol>
-          <li style="list-style-type: circle;">
-           <p>
-            The items (facts) occur during the same visit (financial encounter) AND the same instance.
-           </p>
-          </li>
-          <li style="list-style-type: circle;">
-           <p>
-            Temporal constraint has to be set to Items instance will be the same in order to be available for selection.
-           </p>
-           <div class="projectdoc-information-macro projectdoc-information-macro-example" data-projectdoc-box-type="example" title="Example">
-            <p class="title">
-             Example
-            </p>
-            <span class="aui-icon aui-icon-small projectdoc-information-macro-icon">
-            </span>
-            <div class="projectdoc-information-macro-body">
-             <p>
-              <span>
-               Patient has a diagnosis of Acute MI documented at any time in their history and they have a medication with a dose greater than 500 mg and a medication that is taken once a day documented during the same instance.
-              </span>
-             </p>
-             <p>
-              RESULTS: there are 3 patients who have had a medication with a dose of 500 mg and a frequency of once a day entered as a fact in the observation_fact table, where the medication dose and frequency have the
-              <span>
-               same
-              </span>
-              encounter_num , concept_cd, provider_id, start_date, AND instance_num AND the diagnosis of acute MI, the medication dose and frequency all have the
-              <span>
-               same
-              </span>
-              patient_num
-             </p>
-            </div>
-           </div>
-          </li>
-         </ol>
-        </li>
-        <li>
-         Temporal Query
-         <span style="color: rgb(255,0,0);">
-          (in progress)
-         </span>
         </li>
        </ol>
-       <h3 id="id-3.QueryTool-3.2.4ReloadingaPreviousQuery(inprogress)">
+       <p class="auto-cursor-target" style="margin-left: 90.0px;text-align: center;">
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/15630725.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-8-27_13-14-14.png" data-linked-resource-id="15630725" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="58" src="attachments/9995021/15630725.png"/>
+        </span>
+       </p>
+       <div class="projectdoc-information-macro projectdoc-information-macro-example" data-projectdoc-box-type="example" title="Example">
+        <p class="title">
+         Example
+        </p>
+        <span class="aui-icon aui-icon-small projectdoc-information-macro-icon">
+        </span>
+        <div class="projectdoc-information-macro-body">
+         <p>
+          <span>
+           Patient has a diagnosis of Acute MI documented at any time in their history and they have a medication with a dose greater than 500 mg and a medication that is taken once a day documented during the same visit
+          </span>
+         </p>
+        </div>
+       </div>
+       <ol>
+        <li>
+         <h4 id="id-3.QueryTool-TemporalQuery">
+          Temporal Query
+         </h4>
+        </li>
+       </ol>
+       <p style="margin-left: 60.0px;">
+        In this mode, a sequence of events are defined that are anchored by a constraining population. The constraining population is defined exactly like other query types. The process of building a sequence of events is explained by a a tutorial that is viewable by clicking 'Turn On Tutorial' in the upper-right corner of the query tool.
+       </p>
+       <p style="margin-left: 60.0px;">
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/15630726.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-8-27_13-21-42.png" data-linked-resource-id="15630726" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="400" src="attachments/9995021/15630726.png"/>
+        </span>
+       </p>
+       <p style="margin-left: 60.0px;">
+        This example finds patients who were diagnosed with diabetes prior to the first observation of an antidiabetic medication
+        <em>
+         (top panel)
+        </em>
+        . The population is constrained to patients over 64 years of age
+        <em>
+         (bottom panel)
+        </em>
+        .
+       </p>
+       <h3 id="id-3.QueryTool-3.2.4ReloadingaPreviousQuery">
         3.2.4 Reloading a Previous Query
-        <span style="color: rgb(255,0,0);">
-         (in progress)
-        </span>
        </h3>
-       <h3 id="id-3.QueryTool-3.2.5ResettingtheQueryTool(inprogress)">
+       <p>
+        Saved queries (either from Previous Queries or the Workplace) can be reloaded by dragging them to the Query Name bar at the top of the Query Tool. They can be used within a query by dragging them into a query panel. See the
+        <a href="https://community.i2b2.org/wiki/display/IWDD/6.+Previous+Queries">
+         Previous Query section
+        </a>
+        .
+       </p>
+       <p>
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995034/12386498.png" data-linked-resource-container-id="9995034" data-linked-resource-container-version="49" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="worddavbd5541c4ee9b7e7eef6a440d2943bc75.png" data-linked-resource-id="12386498" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="250" src="attachments/9995034/12386498.png"/>
+        </span>
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995034/12386500.png" data-linked-resource-container-id="9995034" data-linked-resource-container-version="49" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="worddav91dcd114fa750a2ab45982c17e24c5c0.png" data-linked-resource-id="12386500" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="250" src="attachments/9995034/12386500.png"/>
+        </span>
+       </p>
+       <p>
+        Left: reload a previous query. Right: Use a previous query within a new query.
+       </p>
+       <h3 id="id-3.QueryTool-3.2.5ResettingtheQueryTool">
         3.2.5 Resetting the Query Tool
-        <span style="color: rgb(255,0,0);">
-         (in progress)
-        </span>
        </h3>
+       <p>
+        There are three options for resetting the
+        <span>
+        </span>
+        <strong>
+         Query Tool view
+        </strong>
+        . Users can (1) reset all the groups, (2) clear all items in a panel, or (3) delete an individual item from the group.
+       </p>
+       <div class="table-wrap">
+        <table class="confluenceTable">
+         <colgroup>
+          <col/>
+         </colgroup>
+         <tbody>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span style="color: rgb(51,51,51);">
+               <strong>
+                A. Reset All Groups:
+               </strong>
+              </span>
+              <span>
+               Click on the
+              </span>
+              <span>
+              </span>
+              <strong>
+               Clear button
+              </strong>
+              <span>
+              </span>
+              <span>
+               located on the toolbar at the bottom of the
+              </span>
+              <span>
+              </span>
+              <em>
+               Query Tool view
+              </em>
+              <span>
+               .
+              </span>
+             </p>
+             <p>
+              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+               <img alt="qtToolbarClear" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtToolbarClearButton.png" height="40" src="images/qtToolbarClearButton.png" width="524"/>
+              </span>
+             </p>
+            </div>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <strong>
+               B. Clear Items in a Panel / Group
+              </strong>
+              <span>
+               : Click on the
+              </span>
+              <span>
+              </span>
+              <strong>
+               Delete button
+               <span style="color: rgb(204,204,204);">
+                (
+                <span class="confluence-embedded-file-wrapper">
+                 <img alt="delete" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/buttonDelete.png" src="images/buttonDelete.png"/>
+                </span>
+                )
+               </span>
+              </strong>
+              <span>
+               located in the top right corner of the panel (next to the Group name)
+              </span>
+             </p>
+            </div>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <span style="color: rgb(51,51,51);">
+              C. Delete Single Item:
+             </span>
+             <span>
+              Using the
+             </span>
+             <span>
+             </span>
+             <em>
+              right mouse button
+             </em>
+             <span>
+              , click on the name of the item to be
+             </span>
+             <span>
+              remove
+             </span>
+             <span>
+              d and s
+             </span>
+             <span>
+              elect
+             </span>
+             <span>
+             </span>
+             <strong>
+              Delete
+             </strong>
+             <span>
+             </span>
+             <span>
+              from the list.
+             </span>
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img alt="deleteItem" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtDeleteItem.png" src="images/qtDeleteItem.png"/>
+              </span>
+             </p>
+            </div>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
        <h2 id="id-3.QueryTool-3.3RunningaQuery">
-        3.3 Running a Query
+        <span style="color: rgb(51,51,51);font-size: 20.0px;letter-spacing: -0.008em;">
+         3.3 Running a Query
+        </span>
        </h2>
        <h3 id="id-3.QueryTool-3.3.1RunQuery">
         3.3.1 Run Query
@@ -1077,11 +1019,6 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
        <p>
         The following query types will return patient counts stratified by the selected breakdown category (e.g., Gender or Age).
        </p>
-       <p>
-        <span>
-         breakdown
-        </span>
-       </p>
        <div class="table-wrap">
         <table class="wrapped confluenceTable">
          <colgroup>
@@ -1153,42 +1090,62 @@ div.rbtoc1566411916676 li {margin-left: 0px;padding-left: 0px;}
        <p>
         <br/>
        </p>
-       <h3 id="id-3.QueryTool-3.3.3.QueryStatus(inprogress)">
+       <h3 id="id-3.QueryTool-3.3.3.QueryStatus">
         3.3.3. Query Status
-        <span style="color: rgb(255,0,0);">
-         (in progress)
-        </span>
        </h3>
-       <h4 id="id-3.QueryTool-1)Running">
-        1) Running
+       <h4 id="id-3.QueryTool-Whenaqueryisrunning,thequerystatuspanelwillshowitsstatus.">
+        When a query is running, the query status panel will show its status.
        </h4>
-       <h4 id="id-3.QueryTool-2)Finished">
-        2) Finished
-       </h4>
-       <h4 id="id-3.QueryTool-3)Queued">
-        3) Queued
-       </h4>
-       <h4 id="id-3.QueryTool-4)Error">
-        4) Error
-       </h4>
-       <h2 id="id-3.QueryTool-3.4ExampleQueries(inprogress)">
-        3.4 Example Queries
-        <span style="color: rgb(255,0,0);">
-         (in progress)
-        </span>
-       </h2>
-       <h4 id='id-3.QueryTool-i.SimpleQuery:"FindingpatientswithadiagnosisAoradiagnosisBorhaslabtestC."'>
-        i. Simple Query: "Finding patients with a diagnosis A or a diagnosis B or has lab test C."
-       </h4>
-       <h4 id="id-3.QueryTool-ii.RunningaPreviousQuery">
-        ii. Running a Previous Query
-       </h4>
-       <h4 id="id-3.QueryTool-iii.TemporalQuery(Simple)">
-        iii. Temporal Query (Simple)
-       </h4>
-       <h4 id="id-3.QueryTool-iv.HowtofindPatientswith&gt;1diagnosisXOR&gt;1diagnosisY(Usingnestedqueries)">
-        iv.  How to find Patients with &gt;1 diagnosis X OR &gt;1 diagnosis Y  (Using nested queries)
-       </h4>
+       <div class="table-wrap">
+        <table class="confluenceTable">
+         <colgroup>
+          <col/>
+          <col/>
+         </colgroup>
+         <tbody>
+          <tr>
+           <th class="confluenceTh">
+            Status
+           </th>
+           <th class="confluenceTh">
+            Meaning
+           </th>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Running
+           </td>
+           <td class="confluenceTd">
+            The query is currently running on the server and the client is waiting for results.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Finished
+           </td>
+           <td class="confluenceTd">
+            The query has completed. Results will be shown below this message.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Queued
+           </td>
+           <td class="confluenceTd">
+            The query took longer than the configured timeout. (Defaults to 180 seconds.) It is still running in the background and the results will appear in Previous Queries when it completes.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Error
+           </td>
+           <td class="confluenceTd">
+            An error occurred running the query. More information might be available in the XML Message Log.
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
       </div>
      </div>
     </div>
