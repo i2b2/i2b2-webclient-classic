@@ -659,7 +659,12 @@ i2b2.PM._processLaunchFramework = function() {
 				var l = x.length;
 				for (var i=0; i<l; i++) {
 					var n = i2b2.h.XPath(x[i], "attribute::name")[0].nodeValue;
+					if (typeof x[i].firstChild.children === "undefined") {
 					cellRef.params[n] = x[i].firstChild.nodeValue;
+                    } else {
+					    // the parameter is an xml node with children
+                        cellRef.params[n] = x[i].children;
+                    }
 				}
 				// do not save cell info unless the URL attribute has been set (exception is PM cell)
 				if (cellRef.url == "" && cellKey != "PM") {
