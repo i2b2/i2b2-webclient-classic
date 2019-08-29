@@ -294,14 +294,20 @@ i2b2.CRC.view.ENUM = {
 		try { 
 			var t = i2b2.h.getXNodeVal(refXML, 'Flagstouse'); 
 			if (t) {
-				if (t == "A") {
-					dm.flagType = 'NA';
-					dm.flags = [{name:'Normal', value:'@'},{name:'Abnormal', value:'A'}];
-				} else if (t == "HL") {
-					dm.flagType = 'HL';
-					dm.flags = [{name:'Normal', value:'@'},{name:'High', value:'H'},{name:'Low', value:'L'}];
+				if(!i2b2.UI.cfg.useExpandedLabFlags) {
+					if (t == "A") {
+						dm.flagType = 'NA';
+						dm.flags = [{name:'Normal', value:'@'},{name:'Abnormal', value:'A'}];
+					} else if (t == "HL") {
+						dm.flagType = 'HL';
+						dm.flags = [{name:'Normal', value:'@'},{name:'High', value:'H'},{name:'Low', value:'L'}];
+					} else {
+						dm.flagType = false;
+					}
 				} else {
-					dm.flagType = false;
+					var t_flags = i2b2.LabExpandedFlags.process(t);
+					dm.flagType = t_flags.flagType;
+					dm.flags = t_flags.flags;
 				}
 			} else {
 				dm.flagType = false;
