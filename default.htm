@@ -178,7 +178,7 @@
 
 // declare and obtain the dimension of the initial browser viewport and initialize screen width division
 var rightSideProportion = 0.65;       
-var leftSideMinimum = 428;                  
+var leftSideMinimum = 510;                  
 var initBrowserViewPortDim = document.viewport.getDimensions();
 var rightSideWidth = initBrowserViewPortDim.width * rightSideProportion; 	// this component will take up 65% of the screen
 if (initBrowserViewPortDim.width - rightSideWidth < leftSideMinimum) rightSideWidth = initBrowserViewPortDim.width-leftSideMinimum; // Correction if not enough screen is available
