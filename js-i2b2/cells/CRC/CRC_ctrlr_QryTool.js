@@ -4022,6 +4022,10 @@ function QueryToolController() {
 								var orDiv = "<div style=\"font-size: 20px;font-style: italic;font-weight: bold;\">" + "OR" + "</div>";
 								panelItemDiv = panelItemDiv + orDiv;
 							}
+							if( nameText === undefined)
+                                                        {
+                                                                panelItemDiv = "<div class=\"panelItem\">";
+                                                        }
 
 						});
 						panelItemDiv = panelItemDiv + "</div>";
