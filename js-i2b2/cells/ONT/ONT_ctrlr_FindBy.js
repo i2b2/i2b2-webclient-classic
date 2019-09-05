@@ -313,11 +313,10 @@ i2b2.ONT.ctrlr.FindBy = {
 				};
 				var sdxRenderData = i2b2.sdx.Master.RenderHTML(treeObj.id, sdxDataNode, renderOptions);
 				i2b2.sdx.Master.AppendTreeNode(treeObj, parentNode, sdxRenderData);
-			//}
-			// redraw treeview
-				treeObj.draw();
-
 			}
+			
+			// redraw treeview
+			treeObj.draw();
 
 			// BUG FIX: WEBCLIENT-139 & WEBCLIENT-150
 			searchCatsCount++;
