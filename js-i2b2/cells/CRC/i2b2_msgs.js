@@ -640,6 +640,7 @@ i2b2.CRC.cfg.msgs.runQueryInstance_fromQueryDefinition = '<?xml version="1.0" en
 '			<user group="{{{sec_project}}}" login="{{{sec_user}}}">{{{sec_user}}}</user>\n'+
 '			<patient_set_limit>0</patient_set_limit>\n'+
 '			<estimated_time>0</estimated_time>\n'+
+'           {{{query_run_method}}}'+
 '			<query_mode>optimize_without_temp_table</query_mode>\n'+
 '			<request_type>CRC_QRY_runQueryInstance_fromQueryDefinition</request_type>\n'+
 '		</ns4:psmheader>\n'+
@@ -653,7 +654,7 @@ i2b2.CRC.cfg.msgs.runQueryInstance_fromQueryDefinition = '<?xml version="1.0" en
 i2b2.CRC.ajax._addFunctionCall(	"runQueryInstance_fromQueryDefinition", 
 								"{{{URL}}}request", 
 								i2b2.CRC.cfg.msgs.runQueryInstance_fromQueryDefinition, 
-								["psm_result_output","psm_query_definition","shrine_topic"]);
+								["query_run_method","psm_result_output","psm_query_definition","shrine_topic"]);
 
 
 // ================================================================================================== //1
