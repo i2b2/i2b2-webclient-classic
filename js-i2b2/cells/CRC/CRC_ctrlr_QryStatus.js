@@ -289,9 +289,26 @@ i2b2.CRC.ctrlr.QueryStatus.prototype = function() {
 								var value = i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
 							}
 						}
+						// N.Benik - Override the display value if specified by server setting the "display" attribute
+						var displayValue = value;
+                        if (typeof params[i2].attributes.display !== 'undefined') {
+						    displayValue = params[i2].attributes.display.textContent;
+                        }
+						var graphValue = displayValue;
+                       if (typeof params[i2].attributes.comment !== 'undefined') {
+						    displayValue += ' &nbsp; <span style="color:#090;">[' + params[i2].attributes.comment.textContent + ']<span>';
+						    graphValue += '|' + params[i2].attributes.comment.textContent;
+                        }
+
 						// display a line of results in the status box
-						self.dispDIV.innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") + ": <font color=\"#0000dd\">" + value  + "</font></div>";  //Query Report BG
+						self.dispDIV.innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") + ": <font color=\"#0000dd\">" + displayValue + "</font></div>";  //Query Report BG
+
+						//sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + value + "\n"; //snm0
+						if (params[i2].getAttribute("column") == 'patient_count') {
+							sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + graphValue + "\n"; //snm0
+						} else {
 						sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + value + "\n"; //snm0
+						}
 					}
 					var ri_id = i2b2.h.XPath(temp, 'descendant-or-self::result_instance_id')[0].firstChild.nodeValue;
 				}

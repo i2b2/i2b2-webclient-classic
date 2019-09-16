@@ -1661,10 +1661,16 @@ YAHOO.util.Event.addListener(window, "load", init);
     <div class="hd" style="background:#6677AA;">Run Query</div>
     <div class="bd"> <br />
       <div style="font-size:12px; margin-left:50px" >Please type a name for the query:</div>
-      <div style="margin-left:50px">
+      <div style="margin-left:50px; margin-bottom:20px;">
         <input class="inputQueryName" style="width:275px" maxlength="164" />
       </div>
-      <div style="height:25px;"></div>
+      <div id="CRC_QUERY_OPTIONS_UI" style="margin-left:50px; margin-bottom:20px;">
+          <div style="font-size:12px">Please select a query method:</div>
+          <div style="font-size:12px">
+              <select id="CRC_QUERY_TYPE" name="CRC_QUERY_TYPE" style="width:275px">
+              </select>
+          </div>
+      </div>
       <div style="font-size:12px; margin-left:50px" >Please check the query result type(s):</div>
       <div style="border: 1px solid rgb(171, 173, 179); height:100px; overflow:auto; margin-left: 50px; width: 275px; padding: 4px" id="dialogQryRunResultType">
         <div id="crcDlgResultOutputPRC">

@@ -1105,6 +1105,9 @@ function QueryToolController() {
 						options['chk_'+t2[i].value] = t2[i].checked;
 					}
 				}				
+                    if (typeof i2b2.CRC.cfg.cellParams['QUERY_OPTIONS_XML'] !== "undefined") {
+                        options['QUERY_RUN_TYPE'] = jQuery("#CRC_QUERY_TYPE option:selected")[0].value;
+                    }
 				$('queryName').innerHTML = queryNameInput.value;
 				i2b2.CRC.model.queryCurrent.name = queryNameInput.value;
 				i2b2.CRC.ctrlr.QT._queryRun(queryNameInput.value, options);
@@ -1159,6 +1162,14 @@ function QueryToolController() {
 				result_wait_time: i2b2.CRC.view.QT.params.queryTimeout,
 				psm_query_definition: query_definition.queryXML
 		}
+
+		// see if we are doing a normal run or sketchs based run
+        params['query_run_method'] = "";
+        if (typeof options['QUERY_RUN_TYPE'] !== 'undefined') {
+            params['query_run_method'] = "<query_method>"+options['QUERY_RUN_TYPE']+"</query_method>\n";
+            delete options['QUERY_RUN_TYPE'];
+        }
+
 		// SHRINE topic if we are running SHRINE query
 		if (i2b2.h.isSHRINE()) {
 			var topicSELECT = $('queryTopicSelect');
@@ -1237,6 +1248,25 @@ function QueryToolController() {
 					queryNameInput.value = "No Query Name is currently provided";
 				i2b2.CRC.ctrlr.QT.doPrintQueryNew(true,queryNameInput.value,true);
 			};
+
+            // N. Benik - show query run options if server has the capability to do time/accuracy trade-off
+            if (typeof i2b2.CRC.cfg.cellParams['QUERY_OPTIONS_XML'] === "undefined") {
+                jQuery('#CRC_QUERY_OPTIONS_UI').hide();
+            } else {
+                // populate the dropdown
+                var select = jQuery("#CRC_QUERY_TYPE");
+                select.empty();
+                var ids = i2b2.h.XPath(i2b2.CRC.cfg.cellParams['QUERY_OPTIONS_XML'][0], "//QueryMethod/@ID");
+                ids.forEach(function(item) {
+                    select.append(jQuery('<option>', {
+                        value: item.nodeValue,
+                        text: item.ownerElement.textContent
+                    }));
+                });
+                // show the extra query execution options
+                jQuery("#CRC_QUERY_OPTIONS_UI").show();
+            }
+
 			i2b2.CRC.view.dialogQryRun = new YAHOO.widget.SimpleDialog("dialogQryRun", {
 				width: "400px",
 				fixedcenter: true,
@@ -1265,6 +1295,13 @@ function QueryToolController() {
 					alert('You must select one query result type to run.');
 					return false;
 				}
+                if (typeof i2b2.CRC.cfg.cellParams['QUERY_OPTIONS_XML'] !== "undefined") {
+                    var query_type = jQuery("#CRC_QUERY_TYPE option:selected");
+                    if (query_type.length == 0) {
+                        alert('You must choose a query method.');
+				        return false;
+                    }
+                }
 				return true;
 			};
 			i2b2.CRC.view.dialogQryRun.render(document.body);
@@ -2469,10 +2506,23 @@ function QueryToolController() {
 							}
 						}
 
-						$('infoQueryStatusText').innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + value  +   "</font></div>";
-						i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + value + "\n"; //snm0						
-						//$('infoQueryStatusText').innerHTML += "</div>";						//i2b2.h.XPath(newxml, 'descendant-or-self::result/data')[0].firstChild.nodeValue;
+						var displayValue = value;
+                        if (typeof params[i2].attributes.display !== 'undefined') {
+						    displayValue = params[i2].attributes.display.textContent;
+                        }
+						var graphValue = displayValue;
+                       if (typeof params[i2].attributes.comment !== 'undefined') {
+						    displayValue += ' &nbsp; <span style="color:#090;">[' + params[i2].attributes.comment.textContent + ']<span>';
+						    graphValue += '|' + params[i2].attributes.comment.textContent;
+                        }
+						
+						$('infoQueryStatusText').innerHTML += "<div class=\'" + description + "\' style=\"clear: both; margin-left: 20px; float: left; height: 16px; line-height: 16px;\">" + params[i2].getAttribute("column") +  ": <font color=\"#0000dd\">" + displayValue +   "</font></div>";
 
+						if (params[i2].getAttribute("column") == 'patient_count') {
+							i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + graphValue + "\n"; //snm0
+						} else {
+							i2b2.CRC.ctrlr.QT.sCompiledResultsTest += params[i2].getAttribute("column").substring(0,20) + " : " + value + "\n"; //snm0						
+						}
 					}
 
 
@@ -4308,7 +4358,7 @@ function QueryToolController() {
 					//Generate data for charts
 					var quotedItemLabel = '"' + item.key + '"';
 					labelsPerChart[index] = quotedItemLabel;
-					values[index]=itemValue;
+					values[index]=itemValue.split(' ')[0].replace(/,/g, '');
 					index++;
 				});
 				var subResultDivId = "subResults-" + resultNumber;
@@ -4331,7 +4381,7 @@ function QueryToolController() {
 					jQuery("#chartsDiv").append('<div id="chart"></div>');
 					var c3xaxis = pair.value.keys();
 					c3xaxis.splice(0, 0, 'x');
-					var c3values = pair.value.values();
+					var c3values = values; //pair.value.values();
 					var sBreakdownText = "";
 					var iPbLocation = pair.key.toLowerCase().indexOf(" patient breakdown");
 					if (iPbLocation != -1) {
@@ -4395,6 +4445,9 @@ function QueryToolController() {
 								y: {
 									label: {
 										text: 'Number of Patients',
+									},
+									tick: {
+										format: d3.format(",")
 									}
 								}
 							},
