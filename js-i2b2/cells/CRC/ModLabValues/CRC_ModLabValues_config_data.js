@@ -20,6 +20,9 @@ i2b2.ValueTypes.type = {
 
 i2b2.LabExpandedFlags = {};
 i2b2.LabExpandedFlags.type = {
+	abnormal_default: {name:'Abnormal' , value:'A'},
+	high_default: {name:'High' , value:'H'},
+	low_default: {name:'Low' , value:'L'},
 	abnormal: {name:'Abnormal' , value:'[A]'},
 	high: {name:'High' , value:'[H]'},
 	low: {name:'Low' , value:'[L]'},
