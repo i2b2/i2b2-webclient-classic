@@ -325,6 +325,7 @@ i2b2.ONT.view.info.showInfoByKey = function(key) {
 		else {
 			i2b2.ONT.view.info.currentKey = key;
 			$('tabInfo').click();
+			return;
 		}
 	if (key=="") return;
 	
