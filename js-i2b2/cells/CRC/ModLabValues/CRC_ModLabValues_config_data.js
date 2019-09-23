@@ -20,9 +20,11 @@ i2b2.ValueTypes.type = {
 
 i2b2.LabExpandedFlags = {};
 i2b2.LabExpandedFlags.type = {
-	abnormal_default: {name:'Abnormal' , value:'A'},
-	high_default: {name:'High' , value:'H'},
-	low_default: {name:'Low' , value:'L'},
+	/*  A,H,L are included below to show how to set up the expanded lab flags with the default flag values.
+	    Note however that it is not possible to use these and the two-character flags at the same time, because indexOf will return false positives, e.g. H and CH */
+	//abnormal_default: {name:'Abnormal' , value:'A'},
+	//high_default: {name:'High' , value:'H'},
+	//low_default: {name:'Low' , value:'L'}, */
 	abnormal: {name:'Abnormal' , value:'[A]'},
 	high: {name:'High' , value:'[H]'},
 	low: {name:'Low' , value:'[L]'},
