@@ -93,6 +93,31 @@ i2b2.ONT.view.nav.ToggleNode = function(divTarg, divTreeID) {
 }
 
 // ================================================================================================== //
+i2b2.ONT.view.nav.findByPath = function(root, targetKey) {
+	if(root.childrenRendered == false){
+		window.setTimeout(function(){ i2b2.ONT.view.nav.findByPath(root, targetKey)},100);
+	} else {
+		for(var i=0; i<root.children.length; i++){
+			var activeKey = root.children[i].data.i2b2_SDX.sdxInfo.sdxKeyValue;
+			if(targetKey == activeKey){
+				jQuery('#'+root.children[i].data.nodeid).css('background-color','#b2d7e1').css('font-weight','bold');
+				document.getElementById(root.children[i].data.nodeid).scrollIntoView(true);
+				return;
+			}
+			if(targetKey.indexOf(activeKey) === 0){
+				document.getElementById(root.children[i].data.nodeid).scrollIntoView(true);
+				root.children[i].toggle();
+				i2b2.ONT.view.nav.findByPath(root.children[i], targetKey);
+				return;
+			}
+		}
+	}
+	// search for: \\i2b2metadata\i2b2metadata\Diagnosis_ICD10\(I00-I99) Dise~3w8h\(I30-I52) Othe~w6tz\(I34) Nonrheum~rpju\
+	// i2b2.ONT.view.nav.findByPath(i2b2.ONT.view.nav.yuiTree.root,'\\i2b2metadata\i2b2metadata\Diagnosis_ICD10\(I00-I99) Dise~3w8h\(I30-I52) Othe~w6tz\(I34) Nonrheum~rpju\')
+
+}
+
+// ================================================================================================== //
 i2b2.ONT.view.nav.PopulateCategories = function() {		
 	// insert the categories nodes into the Nav Treeview
 	console.info("Populating Nav treeview with Categories");
@@ -123,6 +148,7 @@ i2b2.ONT.view.nav.PopulateCategories = function() {
 			title: catData.name,
 			dragdrop: "i2b2.sdx.TypeControllers.CONCPT.AttachDrag2Data",			
 			dblclick: "i2b2.ONT.view.nav.ToggleNode(this,'"+this.yuiTree.id+"')",
+			click: "i2b2.ONT.view.info.SetKey('"+encodeURI(sdxDataNode.sdxInfo.sdxKeyValue)+"')",
 			icon: {
 				root: "sdx_ONT_CONCPT_root.gif",
 				rootExp: "sdx_ONT_CONCPT_root-exp.gif",
@@ -241,10 +267,11 @@ i2b2.events.afterCellInit.subscribe(
 
 			i2b2.ONT.view.nav.ContextMenu = new YAHOO.widget.ContextMenu( 
 					"divContextMenu-Nav",  
-						{ lazyload: true,
+						{ zIndex: 5000,
+						lazyload: true,
 						trigger: $('ontNavDisp'), 
 						itemdata: [
-							{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.nav.doRefreshAll } }
+							//{ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.nav.doRefreshAll } }
 					] }  
 			); 
 			i2b2.ONT.view.nav.ContextMenu.subscribe("triggerContextMenu",i2b2.ONT.view.nav.ContextMenuValidate);			
@@ -264,6 +291,8 @@ i2b2.ONT.view.nav.setChecked = function(here) {
 	}
 }
 
+
+
 //================================================================================================== //
 i2b2.ONT.view.nav.doRefreshAll = function() { 
 	i2b2.ONT.ctrlr.gen.loadCategories();
@@ -272,6 +301,7 @@ i2b2.ONT.view.nav.doRefreshAll = function() {
 
 //================================================================================================== //
 i2b2.ONT.view.nav.ContextMenuValidate = function(p_oEvent) {
+
 	var clickId = null;
 	var currentNode = this.contextEventTarget;
 	while (!currentNode.id) {
@@ -286,16 +316,38 @@ i2b2.ONT.view.nav.ContextMenuValidate = function(p_oEvent) {
 	clickId = currentNode.id;
 	// see if the ID maps back to a treenode with SDX data
 	var tvNode = i2b2.ONT.view.nav.yuiTree.getNodeByProperty('nodeid', clickId);
+	i2b2.ONT.view.nav.ContextMenu.clearContent();
+	i2b2.ONT.view.nav.ContextMenu.show();
+	
+	var mil = [];
+	
 	if (tvNode) {
 		if (tvNode.data.i2b2_SDX) {
 			if (tvNode.data.i2b2_SDX.sdxInfo.sdxType == "CONCPT") {
 				i2b2.ONT.view.nav.contextRecord = tvNode.data.i2b2_SDX;
+				
+				mil.push({ text: "Show More Info",	onclick: { fn: i2b2.ONT.view.info.doShowInfo, obj: tvNode.data.i2b2_SDX }});
+				/*
+				if(!Object.isUndefined(i2b2.ONT.view.nav.contextRecord.origData.comment)){
+					var v_tempurl = i2b2.ONT.view.nav.contextRecord.origData.comment.match(/\[URL\](.*)\[\/URL\]/i);
+					if(v_tempurl != null){
+						v_infourl = v_tempurl[1];
+						mil.push({ text: "Show More Info",	onclick: { fn: i2b2.ONT.view.nav.doShowInfo, obj: v_infourl }});
+
+					}
+				}
+				*/
+				console.log(i2b2.ONT.view.nav.contextRecord);
 			} else {
 				this.cancel();
 				return;
 			}
 		}
 	}
+	mil.push({ text: "Refresh All",	onclick: { fn: i2b2.ONT.view.nav.doRefreshAll } });
+	
+	i2b2.ONT.view.nav.ContextMenu.addItems(mil);
+	i2b2.ONT.view.nav.ContextMenu.render();
 };
 
 

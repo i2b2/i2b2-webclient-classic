@@ -31,6 +31,13 @@ delete i2b2.protoObjhack;
 
 
 // ================================================================================================== //
+// This shows/hides the tabs only available in the single-pane expanded view
+// Pass in a JQuery element holding the tabs and a display parameter, either "" or "None"
+i2b2.h.hideShowGuestTabs = function(ve, displayString) {
+		Array.from(ve.getElementsByClassName("tabBox")).filter(function(val) { return val.id.includes("guest") } ).forEach(function(val) { val.style.display=displayString } );
+}
+
+// ================================================================================================== //
 i2b2.h.parseXml = function(xmlString){
 	var xmlDocRet = false;
 	var isActiveXSupported = false;
@@ -189,6 +196,14 @@ i2b2.h.GenerateISO8601DateTime = function(inDate) {
 	return (year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + timezone);
 };
 
+i2b2.h.nthIndex = function(str, pat, n){
+    var L= str.length, i= -1;
+    while(n-- && i++<L){
+        i= str.indexOf(pat, i);
+        if (i < 0) break;
+    }
+    return i;
+};
 
 i2b2.h.HideBreak = function(inStrValue) {
 	if (typeof inStrValue == "number") {

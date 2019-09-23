@@ -38,6 +38,7 @@ i2b2.ONT.cfg.parsers.ExtractConcepts = function(){
 			o.column_datatype = i2b2.h.getXNodeVal(c[i],'columndatatype');
 			o.operator = i2b2.h.getXNodeVal(c[i],'operator');
 			o.dim_code = i2b2.h.getXNodeVal(c[i],'dimcode');
+			o.protected_access = i2b2.h.getXNodeVal(c[i],'protected_access');
 			// encapsulate the data node into SDX package
 			var sdxDataPack = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
 			// save extracted info
@@ -446,7 +447,7 @@ i2b2.ONT.cfg.msgs.GetNameInfo = '<?xml version="1.0" encoding="UTF-8" standalone
 '        <result_waittime_ms>{{{result_wait_time}}}000</result_waittime_ms>\n'+
 '    </request_header>\n'+
 '    <message_body>\n'+
-'        <ns4:get_name_info blob="true" type="core" {{{ont_max_records}}} hiddens="{{{ont_hidden_records}}}" synonyms="{{{ont_synonym_records}}}" category="{{{ont_category}}}">\n'+
+'        <ns4:get_name_info blob="true" type="core" {{{ont_max_records}}} reducedResults="{{{ont_reduce_results}}}" keyname="{{{ont_hierarchy}}}" hiddens="{{{ont_hidden_records}}}" synonyms="{{{ont_synonym_records}}}" category="{{{ont_category}}}">\n'+
 '            <match_str strategy="{{{ont_search_strategy}}}">{{{ont_search_string}}}</match_str>\n'+
 '        </ns4:get_name_info>\n'+
 '    </message_body>\n'+

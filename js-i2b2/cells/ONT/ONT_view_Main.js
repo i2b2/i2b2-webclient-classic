@@ -31,11 +31,19 @@ i2b2.ONT.view.main.selectTab = function(tabCode) {
 			this.currentTab = 'find';
 			this.cellRoot.view['nav'].hideView();
 			this.cellRoot.view['find'].showView();
+			this.cellRoot.view['info'].hideView();
 		break;
 		case "nav":
 			this.currentTab = 'nav';
 			this.cellRoot.view['nav'].showView();
 			this.cellRoot.view['find'].hideView();
+			this.cellRoot.view['info'].hideView();
+		break;
+		case "info":
+			this.currentTab = 'info';
+			this.cellRoot.view['info'].showView();
+			this.cellRoot.view['find'].hideView();
+			this.cellRoot.view['nav'].hideView();
 		break;
 	}
 }
@@ -79,7 +87,10 @@ i2b2.ONT.view.main.Resize = function(e) {
 				}
 				break;
 		}
+
 		$$('DIV#ontMainBox DIV#ontNavDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
+		$$('DIV#ontMainBox DIV#ontInfoDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
+
 		//$$('DIV#ontMainBox DIV#ontFindDisp')[0].style.width = (parseInt(ve.width)-20) + 'px';  // was -20
 		//$$('DIV#ontMainBox DIV#ontTopTabs')[0].style.width = (parseInt(ve.width)-330) + 'px'; 		
 		$$('DIV#ontMainBox DIV#ontFindFrameModifier')[0].style.width = (parseInt(ve.width)-14) + 'px';
@@ -103,7 +114,23 @@ i2b2.ONT.view.main.splitterDragged = function()
 	var ont = $("ontMainBox");
 	ont.style.width	= Math.max((parseInt(splitter.style.left) - ont.offsetLeft - 3), 0) + "px";
 	
+	// Minimize tab text if needed 
+	//$('tabNavigate')
+	//$('tabInfo')
+	//$('guestTabWorkplace')
+	//$('guestTabQueries')
+	if (parseInt(ont.style.width)<550 && i2b2.hive.MasterView.getZoomWindows().size()>0) {
+		//$('ontTopTabs').style.height = 24;
+		$('tabFind').innerHTML = '<div>Find Trm</div>';
+		$('guestTabQuerySearch').innerHTML = "<div>Find Qry</div>";
+	} else {
+		//$('ontTopTabs').style.height =  48;
+		$('tabFind').innerHTML = '<div>Find Terms</div>';
+		$('guestTabQuerySearch').innerHTML = "<div>Find Queries</div>";
+	}	
+
 	$$('DIV#ontMainBox DIV#ontNavDisp')[0].style.width = Math.max((parseInt(ont.style.width)-20), 0) + 'px';
+	$$('DIV#ontMainBox DIV#ontInfoDisp')[0].style.width = Math.max((parseInt(ont.style.width)-20), 0) + 'px';
 	$$('DIV#ontMainBox DIV#ontSearchNamesResults')[0].style.width = Math.max((parseInt(ont.style.width)-14), 0) + 'px';
 	$$('DIV#ontMainBox DIV#ontSearchCodesResults')[0].style.width = Math.max((parseInt(ont.style.width)-14), 0) + 'px';
 }
@@ -144,6 +171,7 @@ i2b2.ONT.view.main.ResizeHeight = function()
 				break;
 		}
 		if (viewObj.isZoomed) { ve.height = h-93; }
+		
 	} else {
 		ve.hide();
 	}
@@ -218,6 +246,16 @@ i2b2.events.afterCellInit.subscribe(
 	})
 );
 
+// ================================================================================================== //
+// Start with zoomed panels now that they all work together nicely, if startZoomed:true in i2b2_config_data 
+//i2b2.events.afterHiveInit.subscribe(
+i2b2.events.afterLogin.subscribe(
+	(function() {
+		if (i2b2.hive.cfg.startZoomed && i2b2.hive.cfg.startZoomed==true)
+			i2b2.ONT.view.main.ZoomView();
+	})
+);
+
 //================================================================================================== //
 i2b2.events.initView.subscribe((function(eventTypeName, newMode) {
 // -------------------------------------------------------
@@ -262,17 +300,20 @@ i2b2.events.changedViewMode.subscribe((function(eventTypeName, newMode) {
 i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, newMode) {
 // -------------------------------------------------------
 	newMode = newMode[0];
+	var ve = $('ontMainBox');
 	if (!newMode.action) { return; } 
 	if (newMode.action == "ADD") {
 		switch (newMode.window) {
 			case "ONT":
 				this.isZoomed = true;
 				this.visible = true;
+				i2b2.h.hideShowGuestTabs(ve,"");
 				break;
 			case "HISTORY":
 			case "WORK":
 				this.visible = false;
 				this.isZoomed = false;
+				i2b2.h.hideShowGuestTabs(ve,"");
 		}
 	} else {
 		switch (newMode.window) {
@@ -281,6 +322,7 @@ i2b2.events.changedZoomWindows.subscribe((function(eventTypeName, newMode) {
 			case "WORK":
 				this.isZoomed = false;
 				this.visible = true;
+				i2b2.h.hideShowGuestTabs(ve,"None");
 		}
 	}
 	this.ResizeHeight();

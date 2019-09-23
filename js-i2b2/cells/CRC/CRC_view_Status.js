@@ -84,12 +84,13 @@ i2b2.CRC.view.status.Resize = function(e) {
 				//ve.left = w-550;
 				//ve.width = 524;
 				if (i2b2.WORK && i2b2.WORK.isLoaded) {
-					$('infoQueryStatusText').style.height = '146px';  // 100;
-					if (YAHOO.env.ua.ie > 0) {  
+					$('infoQueryStatusText').style.height = i2b2.CRC.cfg.config.ui.statusBox-16; //'146px';  // 100;
+					ve.top = h-i2b2.CRC.cfg.config.ui.statusBox-36;
+					/*if (YAHOO.env.ua.ie > 0) {  
 						ve.top = h-172-26;//h-155-26; //196+44 (135);
 					} else {
 						ve.top = h-172-26; //196+44 (152);
-					}
+					}*/
 				} else {
 					$('infoQueryStatusText').style.height = '190px'; // 144;
 					//ve.top = h-206;  // 186;
@@ -114,6 +115,7 @@ i2b2.CRC.view.status.splitterDragged = function()
 	var CRCStatus = $("crcStatusBox");
 	CRCStatus.style.left	= (parseInt(splitter.offsetWidth) + parseInt(splitter.style.left) + 3) + "px";
 	CRCStatus.style.width 	= Math.max(parseInt(w) - parseInt(splitter.style.left) - parseInt(splitter.offsetWidth) - 29, 0) + "px";
+
 }
 
 //================================================================================================== //
@@ -139,10 +141,10 @@ i2b2.CRC.view.status.ResizeHeight = function()
 						ve.top = 45;
 						$('crcQueryToolBox').hide();
 					} else {
-						$('infoQueryStatusText').style.height = '146px';
-						$('infoQueryStatusChart').style.height = '146px';
-						$('infoQueryStatusReport').style.height = '146px';
-						ve.top = h-198;
+						$('infoQueryStatusText').style.height = i2b2.CRC.cfg.config.ui.statusBox-16; //'146px'; 
+						$('infoQueryStatusChart').style.height = i2b2.CRC.cfg.config.ui.statusBox-16; //'146px';
+						$('infoQueryStatusReport').style.height = i2b2.CRC.cfg.config.ui.statusBox-16; // '146px';
+						ve.top = h-i2b2.CRC.cfg.config.ui.statusBox-36; //h-198;
 						$('crcQueryToolBox').show();
 						i2b2.hive.mySplitter.dragged(); // WEBCLIENT-175
 					}

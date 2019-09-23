@@ -1,6 +1,7 @@
 {
 	urlProxy: "index.php",
 	urlFramework: "js-i2b2/",
+	startZoomed: true,
 	//-------------------------------------------------------------------------------------------
 	// THESE ARE ALL THE DOMAINS A USER CAN LOGIN TO
 	lstDomains: [

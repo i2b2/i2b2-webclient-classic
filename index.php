@@ -9,7 +9,7 @@
 	Author: Nick Benik
 	Contributors: Nich Wattanasin
 				  Mike Mendis
-	Last Revised: 05-03-17
+	Last Revised: 03-06-19
 
 *****************************************************************
 
@@ -93,6 +93,12 @@ if ($PostBody=="") {
 	$proxyURL = substr($PostBody, $startPos, ($endPos - $startPos));
 	$newXML = $PostBody;
 
+	// Do not allow DOCTYPE declarations
+	$replace_match = '/^.*(?:!DOCTYPE).*$(?:\r\n|\n)?/m';
+	if(preg_match($replace_match, $newXML)){
+	  exit('DOCTYPE not allowed to be proxied');
+	}
+	
 	if ($pmCheckAllRequests) 
 	{	
 	error_log("Searhing for Security in " . $PostBody);

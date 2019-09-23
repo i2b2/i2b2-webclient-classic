@@ -39,6 +39,7 @@ i2b2.CRC.ctrlr.history = {
 			// the THIS scope is already set to i2b2.CRC.model.QueryMasters
 			i2b2.sdx.Master.ClearAll('QM');
 			if (!i2b2CellMsg.error) {		
+				var lastDate = '';
 				var qm = i2b2CellMsg.refXML.getElementsByTagName('query_master');
 				for(var i=0; i<1*qm.length; i++) {
 					var o = new Object;
@@ -50,6 +51,7 @@ i2b2.CRC.ctrlr.history = {
 					o.created = i2b2.h.getXNodeVal(qm[i],'create_date');
 					o.master_type_cd = i2b2.h.getXNodeVal(qm[i],'master_type_cd');
 				
+					lastDate = o.created;
 					var dStr = '';
 					var d = o.created.match(/^[0-9\-]*/).toString();
 					if (d) {
@@ -65,6 +67,7 @@ i2b2.CRC.ctrlr.history = {
 					// save the node to the CRC data model
 					i2b2.sdx.Master.Save(sdxDataPack, null);
 				}
+				$('crcHistoryBegins').value = lastDate;
 			} else {
 				alert("An error has occurred in the Cell's AJAX library.\n Press F12 for more information");
 			}
@@ -83,12 +86,22 @@ i2b2.CRC.ctrlr.history = {
 		$('refreshPQImg').src="assets/images/spin.gif";		
 
 		// fire the AJAX call
+		var request_type = "CRC_QRY_getQueryMasterList_fromUserId";
+		var user_type = i2b2.PM.model.login_username;
+		if(i2b2.PM.model.userRoles.indexOf("MANAGER") > -1){
+			if($('HISTUser').value == '@'){
+				request_type = "CRC_QRY_getQueryMasterList_fromGroupId";
+			} else {
+				user_type = $('HISTUser').value;
+			}
+		}
 		var options = {
 			result_wait_time: 180,
 			crc_max_records: i2b2.CRC.view['history'].params.maxQueriesDisp,
 			crc_sort_by: i2b2.CRC.view['history'].params.sortBy,
-			crc_user_type: 	(i2b2.PM.model.userRoles.indexOf("MANAGER") == -1? 	"CRC_QRY_getQueryMasterList_fromUserId" : "CRC_QRY_getQueryMasterList_fromGroupId"),	
-			crc_sort_order: i2b2.CRC.view['history'].params.sortOrder
+			crc_user_type: request_type,
+			crc_sort_order: i2b2.CRC.view['history'].params.sortOrder,
+			crc_user_by: user_type
 		};
 		i2b2.CRC.ajax.getQueryMasterList_fromUserId("CRC:History", options, scopeCB);
 	
@@ -160,11 +173,101 @@ i2b2.CRC.ctrlr.history = {
 			result_wait_time: 180,
 			crc_max_records: i2b2.CRC.view['history'].params.maxQueriesDisp,
 			crc_sort_by: i2b2.CRC.view['history'].params.sortBy,
-			crc_user_type: 	(i2b2.PM.model.userRoles.indexOf("MANAGER") == -1? 	"CRC_QRY_getQueryMasterList_fromUserId" : "CRC_QRY_getQueryMasterList_fromGroupId"),	
+			crc_user_type: 	(i2b2.PM.model.userRoles.indexOf("MANAGER") == -1? 	"CRC_QRY_getQueryMasterList_fromUserId" : "CRC_QRY_getQueryMasterList_fromGroupId"),
 			crc_sort_order: (i2b2.CRC.view['history'].params.sortOrder.indexOf("DESC") == -1?"true": "false"),
 			crc_find_category: $('crcFindCategory').value,
 			crc_find_strategy: $('crcFindStrategy').value,
 			crc_find_string: $('crcFindNameMatch').value
+		};
+		i2b2.CRC.ajax.getNameInfo("CRC:History", options, scopeCB);
+	},
+	
+	begins: function(direction) {
+		console.info("CALLED i2b2.CRC.ctrlr.history.begins()");
+		// THIS FUNCTION DOES THE FOLLOWING:
+		//	1) fires a call to ajax.getCategories(), 
+		//	2) interprets the XML / populates the ONT data model, 
+		//	3) fires it's onDataUpdate event
+
+		if(direction == 'BEFORE'){
+			$('crcHistoryBegins').value = i2b2.CRC.view.history.yuiTree.root.children[0].data.i2b2_SDX.origData.created;
+		}
+		
+		// create a scoped callback message
+		var scopeCB = new i2b2_scopedCallback();
+		scopeCB.scope = i2b2.CRC.model.QueryMasters;
+		scopeCB.callback = function(i2b2CellMsg) {
+			// define the XML processing function
+			console.group("CALLBACK Processing AJAX i2b2CellMsg");
+			console.dir(i2b2CellMsg);
+			
+			i2b2.CRC.view.history.queryResponse = i2b2CellMsg.msgResponse;
+			i2b2.CRC.view.history.queryRequest = i2b2CellMsg.msgRequest;
+			i2b2.CRC.view.history.queryUrl = i2b2CellMsg.msgUrl;
+			// the THIS scope is already set to i2b2.CRC.model.QueryMasters
+			i2b2.sdx.Master.ClearAll('QM');
+			if (!i2b2CellMsg.error) {
+				var firstDate = '';
+				var lastDate = '';
+				var qm = i2b2CellMsg.refXML.getElementsByTagName('query_master');
+				for(var i=0; i<1*qm.length; i++) {
+					var o = new Object;
+					o.xmlOrig = qm[i];
+					o.id = i2b2.h.getXNodeVal(qm[i],'query_master_id');
+					o.realname = i2b2.h.getXNodeVal(qm[i],'name');
+					o.userid = i2b2.h.getXNodeVal(qm[i],'user_id');
+					o.group = i2b2.h.getXNodeVal(qm[i],'group_id');
+					o.created = i2b2.h.getXNodeVal(qm[i],'create_date');
+					o.master_type_cd = i2b2.h.getXNodeVal(qm[i],'master_type_cd');
+					if(i==0) firstDate = o.created;
+					lastDate = o.created;
+					var dStr = '';
+					var d = o.created.match(/^[0-9\-]*/).toString();
+					if (d) {
+						d = d.replace(/-/g,'/');
+						d = new Date(Date.parse(d));
+						if (d) {
+							dStr = ' [' + (d.getMonth()+1) + '-' + d.getDate() + '-' + d.getFullYear().toString() + ']';
+						}
+					}
+					o.name = o.realname +  dStr + ' ['+o.userid+']';
+					// encapsulate into an SDX package
+					var sdxDataPack = i2b2.sdx.Master.EncapsulateData('QM',o);
+					// save the node to the CRC data model
+					i2b2.sdx.Master.Save(sdxDataPack, null);
+				}
+				if (qm.length > 0){
+				if(direction == 'BEFORE'){
+					$('crcHistoryBegins').value = lastDate;
+				} else {
+					$('crcHistoryBegins').value = lastDate;
+				}
+
+					// Broadcast an update event letting interested view controllers know that the Categories data model has been updated
+					var DataUpdateSignal = {
+						DataLocation: "i2b2.CRC.model.QueryMasters",
+						DataRef: i2b2.CRC.model.QueryMasters
+					}
+					console.info("EVENT FIRE i2b2.CRC.ctrlr.gen.events.onDataUpdate; Msg:",DataUpdateSignal);
+					i2b2.CRC.ctrlr.history.events.onDataUpdate.fire(DataUpdateSignal);
+				}
+			} else {
+				alert("An error has occurred in the Cell's AJAX library.\n Press F12 for more information");
+			}
+
+			console.groupEnd();
+			
+		};
+		
+		// fire the AJAX call
+		var options = {
+			result_wait_time: 180,
+			crc_max_records: i2b2.CRC.view['history'].params.maxQueriesDisp,
+			crc_sort_order: (direction == 'BEFORE'?"true": "false"),
+			crc_find_category: 'top',
+			crc_find_strategy: 'contains',
+			crc_find_string: '',
+			crc_create_date: $('crcHistoryBegins').value
 		};
 		i2b2.CRC.ajax.getNameInfo("CRC:History", options, scopeCB);
 	},
@@ -316,6 +419,34 @@ i2b2.CRC.ctrlr.history = {
 		// display the dialoge
 		i2b2.CRC.view.dialogQmName.center();
 		i2b2.CRC.view.dialogQmName.show();
+	},
+// ================================================================================================== //
+	_loadUsersInOptions: function() {
+		// check if manager
+		if(i2b2.PM.model.userRoles.indexOf("MANAGER") > -1){
+			// get all user roles call
+			// parse thru the list and add them to the drop down
+			var projUserList = i2b2.PM.ajax.getAllRole("PM:Admin", { id: i2b2.PM.model.login_project });
+			projUserList.parse();
+			var tmp = {};
+			for (var i=0; i<projUserList.model.length; i++) {
+				if(typeof projUserList.model[i].username !== 'undefined'){
+					tmp[projUserList.model[i].username] = projUserList.model[i];
+				}
+			}
+			delete projUserList;
+			jQuery.each(tmp, function (idx, obj) {
+				jQuery('#HISTUser').append(jQuery('<option>', {value:idx, text:idx}));
+			});
+			//i2b2.PM.model.admin.ProjectUserList = tmp;
+			
+		} else {
+			$('HISTUserLabel').style.color = '#a6a6a6';
+			$('HISTUser').disabled = 'disabled';
+		}
+		
+		// if not manager, then disable the option
+		
 	}
 }
 

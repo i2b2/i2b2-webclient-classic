@@ -1,0 +1,1 @@
+These are images for icons for jQuery UI.

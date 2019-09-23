@@ -350,7 +350,7 @@ i2b2.sdx.TypeControllers.PRS.LoadChildrenFromTreeview = function(node, onComplet
 		for(var i1=0; i1<1*results.length; i1++) {
 			var o = results[i1];
 			var renderOptions = {
-				dragdrop: "i2b2.sdx.TypeControllers.PRC.AttachDrag2Data",
+				dragdrop: "i2b2.sdx.TypeControllers.PR.AttachDrag2Data",
 				icon: "sdx_CRC_PR.jpg",
 				title: o.sdxInfo.sdxDisplayName, 
 				showchildren: false

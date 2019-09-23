@@ -15,7 +15,12 @@ i2b2.CRC.ctrlr.dateConstraint = {
 	defaultStartDate: '12/01/1979',
 	defaultEndDate: '12/31/2006',
 	currentPanelIndex: false,
-
+    panelDateTitle: "Constrain Panel by Date Range",
+    panelDateMsg1: "Setting this will apply the date constraint to the entire panel.",
+    panelDateMsg2: "Any item-level date constraints will be overwritten.",
+    itemDateTitle: "Constrain Item by Date Range",
+    itemDateMsg1: "Setting date range for this item.",
+    itemDateMsg2: "It will overwrite panel-level date constraint on this item, if any.",
 // ================================================================================================== //
 	showDates: function(panelControllerIndex) {
 		var dm = i2b2.CRC.model.queryCurrent;
@@ -178,6 +183,102 @@ i2b2.CRC.ctrlr.dateConstraint = {
 		}
 	},
 	
+    // tdw9: making date dialogs for temporal panels and temporal panel items
+	tqShowDates: function(dateModel, itemNumber) // dateModel is the data model object that has properties fromDate and toDate
+    {
+	    this.targetDateModel = dateModel;
+	    // only build the prompt box 1 time
+	    if (!i2b2.CRC.view.tqModalDates) 
+        {
+	        var handleSubmit = function() 
+            {
+	            // save the dates
+                var index = null;
+                if ( !i2b2.CRC.ctrlr.dateConstraint.targetDateModel.items ) // only panels have items
+                    index = i2b2.CRC.ctrlr.dateConstraint.targetDateModel.itemNumber - 1; // we are dealing with a single concept, get its itemNumber
+	            if (i2b2.CRC.ctrlr.dateConstraint.qtDoProcessDates( index ))
+                {
+                    i2b2.CRC.view.QT.resetQueryResults(); // clear query results
+	                // saved and validated, close modal form
+	                this.submit();
+	            }
+	        };
+	        var handleCancel = function() 
+            {
+	            this.cancel();
+	        }
+	        i2b2.CRC.view.tqModalDates = new YAHOO.widget.SimpleDialog("tqConstraintDates", {
+	            width: "400px",
+	            fixedcenter: true,
+	            constraintoviewport: true,
+	            modal: true,
+	            zindex: 700,
+	            buttons: [{
+	                text: "OK",
+	                isDefault: true,
+	                handler: handleSubmit
+	            }, {
+	                text: "Cancel",
+	                handler: handleCancel
+	            }]
+	        });
+	        $('tqConstraintDates').show();
+	        i2b2.CRC.view.tqModalDates.render(document.body);
+	    }
+
+        // update dialog title and messages depending on whether the dialog is for panel or item
+        var title   = this.panelDateTitle;
+        var msgHTML = "<br>" + this.panelDateMsg1 + "<br><br>" + this.panelDateMsg2;
+
+        if (itemNumber != undefined ) // we are setting date constrain to the entire PANEL
+        {
+            title   = this.itemDateTitle
+            msgHTML = "<br>" + this.itemDateMsg1 + "<br><br>" + this.itemDateMsg2;
+        }
+        jQuery("#tqConstraintDates .hd").text(title);           // set title
+        jQuery("#tqConstraintDates .bd span").html(msgHTML);    // set message
+
+
+	    i2b2.CRC.view.tqModalDates.show();
+	    // load date model into dialog		
+	    var DateRecord = new Object;
+	    if (this.targetDateModel.dateFrom)
+	        DateRecord.Start = padNumber(this.targetDateModel.dateFrom.Month, 2) + '/' + padNumber(this.targetDateModel.dateFrom.Day, 2) + '/' + this.targetDateModel.dateFrom.Year;
+        else 
+	        DateRecord.Start = this.defaultStartDate;
+	    $('tqConstraintDateStart').value = DateRecord.Start;
+	    if (this.targetDateModel.dateTo) 
+	        DateRecord.End = padNumber(this.targetDateModel.dateTo.Month, 2) + '/' + padNumber(this.targetDateModel.dateTo.Day, 2) + '/' + this.targetDateModel.dateTo.Year;
+        else
+        {
+	        var curdate = new Date();
+	        DateRecord.End = padNumber(curdate.getMonth() + 1, 2) + '/' + padNumber(curdate.getDate(), 2) + '/' + curdate.getFullYear();
+        }
+	    $('tqConstraintDateEnd').value = DateRecord.End;
+
+	    if (this.targetDateModel.dateFrom) 
+        {
+	        $('tqCheckboxDateStart').checked = true;
+	        $('tqConstraintDateStart').disabled = false;
+	    } 
+        else 
+        {
+	        $('tqCheckboxDateStart').checked = false;
+	        $('tqConstraintDateStart').disabled = true;
+	    }
+	    if (this.targetDateModel.dateTo) 
+        {
+	        $('tqCheckboxDateEnd').checked = true;
+	        $('tqConstraintDateEnd').disabled = false;
+	    } 
+        else 
+        {
+	        $('tqCheckboxDateEnd').checked = false;
+	        $('tqConstraintDateEnd').disabled = true;
+	    }
+	},
+
+
 // ================================================================================================== //
 	toggleDate: function() {
 		if ($('checkboxDateStart').checked) {
@@ -209,7 +310,21 @@ i2b2.CRC.ctrlr.dateConstraint = {
 			$('item_constraintDateEnd').disabled = true;
 		}
 	},
-
+// ================================================================================================== //
+	tqToggleDate: function() {
+	    if ($('tqCheckboxDateStart').checked) {
+	        $('tqConstraintDateStart').disabled = false;
+	        setTimeout("$('tqConstraintDateStart').select()",150);
+	    } else {
+	        $('tqConstraintDateStart').disabled = true;
+	    }
+	    if ($('tqCheckboxDateEnd').checked) {
+	        $('tqConstraintDateEnd').disabled = false;
+	        setTimeout("$('tqConstraintDateEnd').select()", 150);
+	    } else {
+	        $('tqConstraintDateEnd').disabled = true;
+	    }
+	},
 // ================================================================================================== //
 	doShowCalendar: function(whichDate) {
 		// create calendar if not already initialized
@@ -315,7 +430,59 @@ i2b2.CRC.ctrlr.dateConstraint = {
 		this.ItemDateConstrainCal.render(document.body);
 	},
 
-	
+// ================================================================================================== //
+	tqDoShowCalendar: function(whichDate) 
+    {
+	    // create calendar if not already initialized
+	    if (!this.tqDateConstrainCal) 
+        {
+	        this.tqDateConstrainCal = new YAHOO.widget.Calendar("tqDateConstrainCal", "tqCalendarDiv");
+	        this.tqDateConstrainCal.selectEvent.subscribe(this.tqDateSelected, this.tqDateConstrainCal, true);
+	    }
+	    this.tqDateConstrainCal.clear();
+	    // process click
+	    if (whichDate == 'S') {
+	        if ($('tqCheckboxDateStart').checked == false) { return; }
+	        var apos = Position.cumulativeOffset($('tqDropDateStart'));
+	        var cx = apos[0] - $("tqCalendarDiv").getWidth() + $('tqDropDateStart').width + 3;
+	        var cy = apos[1] + $('tqDropDateStart').height - 42;
+	        $("tqCalendarDiv").style.top = cy + 'px';
+	        $("tqCalendarDiv").style.left = cx + 'px';
+	        $("tqConstraintDateStart").select();
+	        var sDateValue = $('tqConstraintDateStart').value;
+	    } else {
+	        if ($('tqCheckboxDateEnd').checked == false) { return; }
+	        var apos = Position.cumulativeOffset($('tqDropDateEnd'));
+	        var cx = apos[0] - $("tqCalendarDiv").getWidth() + $('tqDropDateEnd').width + 3;
+	        var cy = apos[1] + $('tqDropDateEnd').height - 42;
+	        $("tqCalendarDiv").style.top = cy + 'px';
+	        $("tqCalendarDiv").style.left = cx + 'px';
+	        $("tqConstraintDateEnd").select();
+	        var sDateValue = $('tqConstraintDateEnd').value;
+	    }
+	    var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+	    if (rxDate.test(sDateValue)) {
+	        var aDate = sDateValue.split(/\//);
+	        this.tqDateConstrainCal.setMonth(aDate[0] - 1);
+	        this.tqDateConstrainCal.setYear(aDate[2]);
+	    } else {
+	        alert("Invalid Date Format, please use mm/dd/yyyy or select a date using the calendar.");
+	    }
+	    // save our date type on the calendar object for later use
+	    this.whichDate = whichDate;
+	    // display everything
+	    $("tqCalendarDiv").show();
+
+	    var w = window.innerWidth || (window.document.documentElement.clientWidth || window.document.body.clientWidth);
+	    var h = window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight);
+
+	    $("tqCalendarDivMask").style.top = "0px";
+	    $("tqCalendarDivMask").style.left = "0px";
+	    $("tqCalendarDivMask").style.width = (w - 10) + "px";
+	    $("tqCalendarDivMask").style.height = (h - 10) + "px";
+	    $("tqCalendarDivMask").show();
+	    this.tqDateConstrainCal.render(document.body);
+	},
 // ================================================================================================== //
 	dateSelected: function(eventName, selectedDate) {
 		// function is event callback fired by YUI Calendar control 
@@ -347,6 +514,22 @@ i2b2.CRC.ctrlr.dateConstraint = {
 	},
 
 // ================================================================================================== //
+	tqDateSelected: function(eventName, selectedDate) 
+    {
+	    // function is event callback fired by YUI Calendar control 
+	    // (this function looses it's class scope)
+	    var cScope = i2b2.CRC.ctrlr.dateConstraint;
+	    if (cScope.whichDate == 'S') {
+	        var tn = $('tqConstraintDateStart');
+	    } else {
+	        var tn = $('tqConstraintDateEnd');
+	    }
+	    var selectDate = selectedDate[0][0];
+	    tn.value = selectDate[1] + '/' + selectDate[2] + '/' + selectDate[0];
+	    cScope.tqHideCalendar.call(cScope);
+	},
+
+// ================================================================================================== //
 	hideCalendar: function() {
 		$("calendarDiv").hide();
 		$("calendarDivMask").hide();
@@ -356,6 +539,12 @@ i2b2.CRC.ctrlr.dateConstraint = {
 	hideItemCalendar: function() {
 		$("item_calendarDiv").hide();
 		$("item_calendarDivMask").hide();
+	},
+
+// ================================================================================================== //
+	tqHideCalendar: function() {
+	    $("tqCalendarDiv").hide();
+	    $("tqCalendarDivMask").hide();
 	},
 
 
@@ -434,8 +623,8 @@ i2b2.CRC.ctrlr.dateConstraint = {
 						var table_name = results.model[0].origData.table_name;
 					}
 				}
-				if(table_name.toLowerCase() == 'patient_dimension'){
-					delete dm.items[i].dateFrom;
+				 if(typeof(table_name) != "undefined" && table_name.toLowerCase() == 'patient_dimension'){
+ 					delete dm.items[i].dateFrom;
 					delete dm.items[i].dateTo;
 					alert("Date constraints are not allowed on patient dimension concepts and will not be set.");
 				}
@@ -546,6 +735,102 @@ i2b2.CRC.ctrlr.dateConstraint = {
 		}
 		if (panelctrlFound!==false) { panelctrlFound._redrawButtons(); panelctrlFound._redrawDates(); }
 		return true;
+	},
+
+    // ================================================================================================== //
+	qtDoProcessDates: function(index) 
+    {
+	    // push the dates into the data model
+	    var sDate = new String;
+	    var sDateError = false;
+	    var rxDate = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+	    var DateRecord = {};
+	    // start date
+	    if ($('tqCheckboxDateStart').checked) 
+        {
+	        DateRecord.Start = {};
+	        sDate = $('tqConstraintDateStart').value;
+	        if (rxDate.test(sDate)) 
+            {
+	            var aDate = sDate.split(/\//);
+	            DateRecord.Start.Month = padNumber(aDate[0], 2);
+	            DateRecord.Start.Day = padNumber(aDate[1], 2);
+	            DateRecord.Start.Year = aDate[2];
+	        } 
+            else 
+	            sDateError = "Invalid Start Date\n";
+	    }
+	    // end date
+	    if ($('tqCheckboxDateEnd').checked) 
+        {
+	        DateRecord.End = {};
+	        sDate = $('tqConstraintDateEnd').value;
+	        if (rxDate.test(sDate)) 
+            {
+	            var aDate = sDate.split(/\//);
+	            DateRecord.End.Month = padNumber(aDate[0]);
+	            DateRecord.End.Day = padNumber(aDate[1]);
+	            DateRecord.End.Year = aDate[2];
+	        } 
+            else
+	            sDateError = "Invalid End Date\n";
+	    }
+	    // check for processing errors
+	    if (sDateError) 
+        {
+	        sDateError += "\nPlease use the following format: mm/dd/yyyy";
+	        alert(sDateError);
+	        return false;
+	    } 
+        else 
+        {
+            if (index != null )  // apply to a particular item (targetDateModel is an sdxConcept, an item in panel.items[]
+            {
+                if (DateRecord.Start)
+                    this.targetDateModel.dateFrom = DateRecord.Start;
+                else
+                    delete this.targetDateModel.dateFrom;
+                if (DateRecord.End)
+                    this.targetDateModel.dateTo = DateRecord.End;
+                else
+                    delete this.targetDateModel.dateTo;
+                this.targetDateModel.parentPanel.redrawItemDates();
+            }
+            else// apply to all items in panel
+            {
+	            // attach the data to our panel data
+	            if (DateRecord.Start) 
+                {
+	                for (var i = 0; i < this.targetDateModel.items.length; i++)
+	                    this.targetDateModel.items[i].dateFrom = DateRecord.Start;
+	                this.targetDateModel.dateFrom = DateRecord.Start;
+	            } 
+                else 
+                {
+	                for (var i = 0; i < this.targetDateModel.items.length; i++)
+	                    delete this.targetDateModel.items[i].dateFrom;
+	                delete this.targetDateModel.dateFrom;
+	            }
+	            if (DateRecord.End) 
+                {
+	                for (var i = 0; i < this.targetDateModel.items.length; i++)
+	                    this.targetDateModel.items[i].dateTo = DateRecord.End;
+	                this.targetDateModel.dateTo = DateRecord.End;
+	            } 
+                else 
+                {
+	                for (var i = 0; i < this.targetDateModel.items.length; i++)
+	                    delete this.targetDateModel.items[i].dateTo;
+	                delete this.targetDateModel.dateTo;
+	            }
+	            this.targetDateModel.redrawDateButton(); // redraw button
+	            this.targetDateModel.redrawItemDates();
+            }
+	        // clear the query name and set the query as having dirty data
+	        //var QT = i2b2.CRC.ctrlr.QT;
+	        //QT.doSetQueryName.call(QT, '');
+	    }
+        return true;
 	}
 };
 

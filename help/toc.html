@@ -5,9 +5,11 @@
 		<title>Default TreeView</title>
 		<link rel="stylesheet" type="text/css" href="../js-ext/yui/build/fonts/fonts-min.css" />
 		<link rel="stylesheet" type="text/css" href="../js-ext/yui/build/treeview/assets/skins/sam/treeview.css" />
+
 <script type="text/javascript" src="../js-ext/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
 
 <script type="text/javascript" src="../js-ext/yui/build/treeview/treeview-min.js"></script>
+
 
 
 <!--begin custom header content for this example-->
@@ -40,9 +42,96 @@ var tree;
 	
 		//instantiate the tree:
         tree = new YAHOO.widget.TreeView("treeDiv1");
+        
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"Web Client Help", href:"home.html", target:"right"}, tree.getRoot(), false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"1. Quick Start", href:"1.-Quick-Start_9995017.html", target:"right"}, tree.getRoot(), false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"2. Webclient Layout", href:"2.-Webclient-Layout_9995019.html", target:"right"}, tree.getRoot(), false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"3. Query Tool", href:"3.-Query-Tool_9995021.html", target:"right"}, tree.getRoot(), false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"3.1 Layout", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.1Layout", target:"right"}, tmpNode0, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"3.2 Creating a Query", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.2CreatingaQuery", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.2.1 i2b2 Items for Querying", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.2.1i2b2ItemsforQuerying", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.2.1 Operators and Order of Precedence", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.2.1OperatorsandOrderofPrecedence", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.2.2 Constraints", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.2.2Constraints", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.2.3 Query Timing", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.2.3QueryTiming", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"Independent", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-Independent", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"Same Financial Encounter", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-SameFinancialEncounter", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"Temporal Query ", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-TemporalQuery", target:"right"}, tmpNode2, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.2.4 Reloading a Previous Query ", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.2.4ReloadingaPreviousQuery", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.2.5 Resetting the Query Tool", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.2.5ResettingtheQueryTool", target:"right"}, tmpNode1, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"3.3 Running a Query ", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.3RunningaQuery", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.3.1 Run Query", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.3.1RunQuery", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.3.2 Query Result Options", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.3.2QueryResultOptions", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"1) Number of Patients", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-1)NumberofPatients", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"2) Patient/Encounter Set", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-2)Patient/EncounterSet", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"4) Patient Breakdowns", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-4)PatientBreakdowns", target:"right"}, tmpNode2, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"3.3.3. Query Status ", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-3.3.3.QueryStatus", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"When a query is running, the query status panel will show its status.", href:"3.-Query-Tool_9995021.html#id-3.QueryTool-Whenaqueryisrunning,thequerystatuspanelwillshowitsstatus.", target:"right"}, tmpNode2, false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"4. Navigate Terms", href:"4.-Navigate-Terms_9995027.html", target:"right"}, tree.getRoot(), false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"Navigate Terms Tab", href:"4.-Navigate-Terms_9995027.html#id-4.NavigateTerms-NavigateTermsTab", target:"right"}, tmpNode0, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"Find Tab", href:"4.-Navigate-Terms_9995027.html#id-4.NavigateTerms-FindTab", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"A. The Search By Names tab is used to find all query items containing particular text .", href:"4.-Navigate-Terms_9995027.html#id-4.NavigateTerms-A.TheSearchByNamestabisusedtofindallqueryitemscontainingparticulartext.", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:" B. The Search by Codes tab is used to find coded variables. ", href:"4.-Navigate-Terms_9995027.html#id-4.NavigateTerms-B.TheSearchbyCodestabisusedtofindcodedvariables.", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"Options for Finding Terms", href:"4.-Navigate-Terms_9995027.html#id-4.NavigateTerms-OptionsforFindingTerms", target:"right"}, tmpNode1, false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"5. Query Status", href:"5.-Query-Status_9995032.html", target:"right"}, tree.getRoot(), false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"Show Query Status", href:"5.-Query-Status_9995032.html#id-5.QueryStatus-ShowQueryStatus", target:"right"}, tmpNode0, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"Graph Results", href:"5.-Query-Status_9995032.html#id-5.QueryStatus-GraphResults", target:"right"}, tmpNode0, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"Query Report", href:"5.-Query-Status_9995032.html#id-5.QueryStatus-QueryReport", target:"right"}, tmpNode0, false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"6. Previous Queries", href:"6.-Previous-Queries_9995034.html", target:"right"}, tree.getRoot(), false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"6.2 Find tab", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.2Findtab", target:"right"}, tmpNode0, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"6.3 Layout of a Previous Query Display", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.3LayoutofaPreviousQueryDisplay", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"6.3.1 Previous Query Name", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.3.1PreviousQueryName", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"6.3.2 Results Folder", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.3.2ResultsFolder", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.3.2.1.1 Patient Set", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.3.2.1.1PatientSet", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.3.2.1.2 Encounter Set", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.3.2.1.2EncounterSet", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.3.2.1.3 Number of Patients", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.3.2.1.3NumberofPatients", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.3.2.1.4 Breakdown", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.3.2.1.4Breakdown", target:"right"}, tmpNode2, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"6.4 Navigation", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4Navigation", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"6.4.1 Menu", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.1Menu", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.4.1.1 Display", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.1.1Display", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.4.1.2 Rename a Previous Query", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.1.2RenameaPreviousQuery", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.4.1.3 Delete / Remove a Previous Query", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.1.3Delete/RemoveaPreviousQuery", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.4.1.4 Refresh the List", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.1.4RefreshtheList", target:"right"}, tmpNode2, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"6.4.2 Options", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.2Options", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.4.2.1 Maximum to Display", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.2.1MaximumtoDisplay", target:"right"}, tmpNode2, false)
+var tmpNode4 = new YAHOO.widget.TextNode({ label:"6.4.2.1.1 Queries to Display", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.2.1.1QueriestoDisplay", target:"right"}, tmpNode3, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.4.2.2 Sort Queries", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.2.2SortQueries", target:"right"}, tmpNode2, false)
+var tmpNode4 = new YAHOO.widget.TextNode({ label:"6.4.2.2.1 Sort by Name", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.2.2.1SortbyName", target:"right"}, tmpNode3, false)
+var tmpNode4 = new YAHOO.widget.TextNode({ label:"6.4.2.2.2 Sort by Create Date", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.2.2.2SortbyCreateDate", target:"right"}, tmpNode3, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.4.2.3 Auto Refresh", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.4.2.3AutoRefresh", target:"right"}, tmpNode2, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"6.5 Using a Previous Query", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.5UsingaPreviousQuery", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"6.5.1 Draggable Items", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.5.1DraggableItems", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.5.1.1 Previous Query", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.5.1.1PreviousQuery", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.5.1.2 Patient Set", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.5.1.2PatientSet", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"6.5.1.3 Encounter Set", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.5.1.3EncounterSet", target:"right"}, tmpNode2, false)
+var tmpNode4 = new YAHOO.widget.TextNode({ label:"6.5.2.1.1 Add Previous Query to the Query Name (New Query) ", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.5.2.1.1AddPreviousQuerytotheQueryName(NewQuery)", target:"right"}, tmpNode3, false)
+var tmpNode4 = new YAHOO.widget.TextNode({ label:"6.5.2.1.2 Add Previous Query to the Query Name (Query-in-Query) ", href:"6.-Previous-Queries_9995034.html#id-6.PreviousQueries-6.5.2.1.2AddPreviousQuerytotheQueryName(Query-in-Query)", target:"right"}, tmpNode3, false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"7. Workplace", href:"7.-Workplace_9995036.html", target:"right"}, tree.getRoot(), false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.1.1 Containers", href:"7.-Workplace_9995036.html#id-7.Workplace-7.1.1Containers", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.1.2 Folders", href:"7.-Workplace_9995036.html#id-7.Workplace-7.1.2Folders", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.1.3 Leaves (Items)", href:"7.-Workplace_9995036.html#id-7.Workplace-7.1.3Leaves(Items)", target:"right"}, tmpNode1, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"7.2 Adding a folder and items", href:"7.-Workplace_9995036.html#id-7.Workplace-7.2Addingafolderanditems", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.2.1 Folders and Items Draggable to Workplace", href:"7.-Workplace_9995036.html#id-7.Workplace-7.2.1FoldersandItemsDraggabletoWorkplace", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.2.2 Adding a Folder", href:"7.-Workplace_9995036.html#id-7.Workplace-7.2.2AddingaFolder", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.2.3 Adding Items", href:"7.-Workplace_9995036.html#id-7.Workplace-7.2.3AddingItems", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.2.3.1 Adding Concept, Concept Folder, Modifier, and Modifier Folder", href:"7.-Workplace_9995036.html#id-7.Workplace-7.2.3.1AddingConcept,ConceptFolder,Modifier,andModifierFolder", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.2.3.2 Adding Previous Query, Patient Set, and Encounter Set", href:"7.-Workplace_9995036.html#id-7.Workplace-7.2.3.2AddingPreviousQuery,PatientSet,andEncounterSet", target:"right"}, tmpNode2, false)
+var tmpNode1 = new YAHOO.widget.TextNode({ label:"7.3 Navigation", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3Navigation", target:"right"}, tmpNode0, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.3.1 Folders", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.1Folders", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.3.1.1 Expand / Collapse a Folder", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.1.1Expand/CollapseaFolder", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.3.1.2 Rename a Folder", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.1.2RenameaFolder", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.3.1.3 Annotate a Folder", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.1.3AnnotateaFolder", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.3.1.4 Delete a Folder", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.1.4DeleteaFolder", target:"right"}, tmpNode2, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.3.2 Items", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.2Items", target:"right"}, tmpNode1, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.3.2.1 Rename Items", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.2.1RenameItems", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.3.2.2 Annotate Items", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.2.2AnnotateItems", target:"right"}, tmpNode2, false)
+var tmpNode3 = new YAHOO.widget.TextNode({ label:"7.3.2.3 Delete Items", href:"7.-Workplace_9995036.html#id-7.Workplace-7.3.2.3DeleteItems", target:"right"}, tmpNode2, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.4.1 Items Draggable from Workplace", href:"7.-Workplace_9995036.html#id-7.Workplace-7.4.1ItemsDraggablefromWorkplace", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.4.2 Using Folders, Concepts, Modifier Folders, Modifiers, Patient Set, and Encounter Set", href:"7.-Workplace_9995036.html#id-7.Workplace-7.4.2UsingFolders,Concepts,ModifierFolders,Modifiers,PatientSet,andEncounterSet", target:"right"}, tmpNode1, false)
+var tmpNode2 = new YAHOO.widget.TextNode({ label:"7.4.3 Using Previous Query", href:"7.-Workplace_9995036.html#id-7.Workplace-7.4.3UsingPreviousQuery", target:"right"}, tmpNode1, false)
+var tmpNode0 = new YAHOO.widget.TextNode({ label:"8. Other Operations", href:"8.-Other-Operations_9995038.html", target:"right"}, tree.getRoot(), false)
 
-
-		 var tmpNode = new YAHOO.widget.TextNode({ label:"i2b2 Find Terms", href:"ft.html#ftView", target:"right"}, tree.getRoot(), false);
+		
+/*		 var tmpNode = new YAHOO.widget.TextNode({ label:"i2b2 Find Terms", href:"ft.html#ftView", target:"right"}, tree.getRoot(), false);
 		 new YAHOO.widget.TextNode({ label:"Introduction", href:"ft.html#ftIntro", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Navigation", href:"ft.html#ftNavigation", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Searching Terms", href:"ft.html#ftSearch", target:"right"},  tmpNode, false)
@@ -75,7 +164,7 @@ var tree;
 		 new YAHOO.widget.TextNode({ label:"Navigation", href:"wp.html#wpNavigation", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Adding Items to Workplace view", href:"wp.html#wpAddToWp", target:"right"},  tmpNode, false)
 		 new YAHOO.widget.TextNode({ label:"Using Items in Workplace view", href:"wp.html#wpUseItems", target:"right"},  tmpNode, false)
-
+*/
 //        for (var i = 0; i < Math.floor((Math.random()*4) + 3); i++) {
   //          var tmpNode = new YAHOO.widget.TextNode("label-" + i, tree.getRoot(), false);
             // tmpNode.collapse();

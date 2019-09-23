@@ -307,6 +307,10 @@ i2b2.WORK.cfg.parsers.getChildren = function(){
 			// encapsulate into SDX object
 			var sdxDataPack = i2b2.sdx.Master.EncapsulateData('WRK', nodeData);
 			this.model.push(sdxDataPack);
+			if (nodeData.encapType == "FOLDER") {
+				var sdxDataPack = i2b2.sdx.Master.EncapsulateData('WRKF', nodeData);
+				this.model.push(sdxDataPack);
+			}
 		}
 	} else {
 		this.model = false;
@@ -523,7 +527,6 @@ i2b2.WORK.cfg.msgs.encapsulatePR = ''+
 '				</ns5:plugin_drag_drop> \n'+
 '			</work_xml>\n';
 // ================================================================================================== //
-
 
 // URL: <none> (used by addChild to encapsulate non-WRK SDX type of QDEF)
 i2b2.WORK.cfg.msgs.encapsulateQDEF = ''+

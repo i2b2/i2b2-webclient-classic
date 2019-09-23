@@ -201,8 +201,8 @@ try {
 		var asInputSentences = sInputString.split("\n");
 		var iFragmentArrayCounter = 0;
 		for(var i = 0; i < asInputSentences.length; i++) {
-			if (asInputSentences[i].indexOf("for") > 0) { 
-				asTempArray = asInputSentences[i].split("for");
+			if (asInputSentences[i].indexOf('for "') > 0) { 
+				asTempArray = asInputSentences[i].split('for "');
 				sLatestTitle = asTempArray[0];
 				sLatestQueryName = asTempArray[1];
 				sLatestSite = ".";
@@ -239,8 +239,8 @@ try {
 		var asInputSentences = sInputString.split("\n");
 		var iFragmentArrayCounter = 0;
 		for (var i = 0; i < asInputSentences.length; i++) {
-			if (asInputSentences[i].indexOf("for") > 0) { 
-				asTempArray = asInputSentences[i].split("for");
+			if (asInputSentences[i].indexOf('for "') > 0) { 
+				asTempArray = asInputSentences[i].split('for "');
 				sLatestTitle = asTempArray[0];
 				if (asTempArray[1].indexOf("=") > 0) {
 					asTemp2Array = asTempArray[1].split("=");
@@ -408,6 +408,15 @@ try {
 	document.getElementById(sDivName).setAttribute("style",sDivStyle);
 	// establish table in Div and set up its style.
 	var sDisplayNumber = i2b2.CRC.view.graphs.sTexti2b2Value(asBreakdownArray[0][1]);
+	var sDisplayNumberParts = sDisplayNumber.split('|');
+	if (sDisplayNumberParts.length == 2) {
+		sDisplayNumber = sDisplayNumberParts[0];
+		sBreakdownType += ' (' + sDisplayNumberParts[1] + ')';
+	}
+	var sFontSize = '45';
+	if (sDisplayNumber.length > 10) {
+			sFontSize = '30';
+	}
 	var sTableHtml = '<table style="width: 400px; margin-left: auto; margin-right: auto;">' +
                         '<tr style="background-color: white">' +
 					        '<td style="color: red; text-align: center; vertical-align: middle;">&nbsp</td>' +
@@ -416,7 +425,7 @@ try {
 					        '<td style="color: black; text-align: center; vertical-align: middle;">'+sBreakdownType+'</td>' +
 						'</tr>' +
                         '<tr style="background-color: #B0C4DE">' +
-					        '<td style="color: darkblue; text-align: center; vertical-align: middle; font-size: 45px">'+sDisplayNumber+'</td>' +
+					        '<td style="color: darkblue; text-align: center; vertical-align: middle; font-size: '+sFontSize+'px">'+sDisplayNumber+'</td>' +
 						'</tr>' +
                         '<tr style="background-color: #B0C4DE">' +
 					        '<td style="color: black; text-align: center; vertical-align: middle;">For Query '+asInputFragments[0][0]+'</td>' +
@@ -510,14 +519,15 @@ try {
 									return i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString();
 								}
 							}
+							var w = v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 							if (i2b2.PM.model.isObfuscated) {
 								if(v == 0){
 									return i2b2.CRC.view.graphs.sObfuscatedText;
 								} else {
-									return v + i2b2.CRC.view.graphs.sObfuscatedEnding.replace(/\&plusmn;/g, " +/- ");
+									return w + i2b2.CRC.view.graphs.sObfuscatedEnding.replace(/\&plusmn;/g, " +/- ");
 								}
 							} else {
-								return v;
+								return w;
 							}
 						}
                     }
@@ -543,6 +553,9 @@ try {
 					text: 'Number of Patients',
 					//position: 'outer-middle',
 					position: 'outer-bottom'
+				},
+				tick: {
+					format: d3.format(",")
 				}
 			}
 		},
@@ -882,6 +895,12 @@ try {
 		if (sValue.trim() == i2b2.UI.cfg.floorThresholdText + i2b2.UI.cfg.floorThresholdNumber.toString()){
 			iValue = "0";
 		}
+	} else {
+        if (parseInt(sValue) != sValue) {
+            return sValue;
+        }// else {
+         //   iValue = parseInt(sValue);
+        //}
 	}
 	function isNumber(obj) {return ! isNaN(obj-0) && obj; };
 	if (!isNumber(iValue)) {
@@ -909,20 +928,21 @@ try {
 	function isNumber(obj) {return ! isNaN(obj-0) && obj; };
 
 	if (!isNumber(iValue)) {
-		sValue = "undefined";
-		return sValue;
+//		sValue = "undefined";
+		return String(iValue);
 	}		
+	var cValue = iValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	if (iValue >= i2b2.CRC.view.graphs.iObfuscatedFloorNumber) {
 		if (i2b2.PM.model.isObfuscated) {
-			sValue = iValue+i2b2.CRC.view.graphs.sObfuscatedEnding;
+			sValue = cValue+i2b2.CRC.view.graphs.sObfuscatedEnding;
 		} else {
-			sValue = iValue;
+			sValue = cValue;
 		}
 	} else {
 		if (i2b2.PM.model.isObfuscated) {
 			sValue = i2b2.CRC.view.graphs.sObfuscatedText;
 		} else {
-			sValue = iValue;
+			sValue = cValue;
 		}
 	}
 	if(i2b2.UI.cfg.useFloorThreshold){

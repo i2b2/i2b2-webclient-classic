@@ -17,12 +17,15 @@ i2b2.hive.HelpViewer = {
 					// load the help page
 		new Ajax.Updater('help-viewer-body', 'help/default.htm', {method: 'get', parameters: { cell: 'CORE', page:'ROOT' }});
 
+			var D = YAHOO.util.Dom; 
+			var clientRegion = D.getClientRegion();  
+					
 			// show non-modal dialog with help documentation		
 			var panel = new YAHOO.widget.Panel("help-viewer-panel", { 
 				draggable: true,
 				zindex:10000,
-				width: "900px", 
-				height: "550px", 
+				width: clientRegion.right - YAHOO.widget.Overlay.VIEWPORT_OFFSET - 200, 
+				height: clientRegion.bottom - YAHOO.widget.Overlay.VIEWPORT_OFFSET - 200, 
 				autofillheight: "body", 
 				constraintoviewport: true, 
 				context: ["showbtn", "tl", "bl"]

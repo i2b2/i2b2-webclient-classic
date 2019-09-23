@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   i2b2 Web Client : 3. Query Tool
+  </title>
+  <link href="styles/site.css" rel="stylesheet" type="text/css"/>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+ </head>
+ <body class="theme-default aui-theme-default">
+  <div class="wiki-content group" id="main-content">
+   <div class="contentLayout2">
+    <div class="columnLayout single" data-layout="single">
+     <div class="cell normal" data-type="normal">
+      <div class="innerCell">
+       <p>
+        <p>
+         The
+         <strong>
+          Query Tool
+         </strong>
+         panel is where queries are constructed and run.
+        </p>
+        <style type="text/css">
+         /*<![CDATA[*/
+div.rbtoc1566937351195 {padding: 0px;}
+div.rbtoc1566937351195 ul {list-style: none;margin-left: 0px;}
+div.rbtoc1566937351195 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/
+        </style>
+       </p>
+       <br/>
+      </div>
+     </div>
+    </div>
+    <div class="columnLayout single" data-layout="single">
+     <div class="cell normal" data-type="normal">
+      <div class="innerCell">
+       <h2 id="id-3.QueryTool-3.1Layout">
+        3.1 Layout
+       </h2>
+       <p>
+        <span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image image-center" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995276.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_12-25-7.png" data-linked-resource-id="9995276" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995276.png" width="600"/>
+        </span>
+       </p>
+       <ol>
+        <li>
+         <strong>
+          Panel Options
+         </strong>
+         <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+          <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386463.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-7_15-56-48.png" data-linked-resource-id="12386463" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="21" src="attachments/9995021/12386463.png"/>
+         </span>
+         allow users to (1) view the XML exchange between the client and the i2b2 server (if enabled) , (2) set options for the panel, and (3) resize the panel.
+        </li>
+        <li>
+         <strong>
+          Query Name Display
+         </strong>
+         shows the name of the current query. Users can also drop a previous query here to load it.
+        </li>
+        <li>
+         <strong>
+          Query Timing Selector
+         </strong>
+         enables users to select the appropriate timings for their query, including temporal queries.
+        </li>
+        <li>
+         <strong>
+          Query Groups
+         </strong>
+         are where users can drag and drop terms to build queries. There are initially three Groups, but more can be added.
+        </li>
+        <li>
+         <strong>
+          Tool Bar
+         </strong>
+         contains buttons to run queries, clear all the panels, add new panels, and navigate between panels.
+        </li>
+       </ol>
+      </div>
+     </div>
+    </div>
+    <div class="columnLayout single" data-layout="single">
+     <div class="cell normal" data-type="normal">
+      <div class="innerCell">
+       <h2 id="id-3.QueryTool-3.2CreatingaQuery">
+        <span style="color: rgb(51,51,51);">
+         3.2 Creating a Query
+        </span>
+       </h2>
+       <h3 id="id-3.QueryTool-3.2.1i2b2ItemsforQuerying">
+        3.2.1 i2b2 Items for Querying
+       </h3>
+       <p style="margin-left: 30.0px;text-align: center;">
+        These items may be dragged into Query Groups to construct queries.
+       </p>
+       <div class="table-wrap">
+        <table class="relative-table wrapped confluenceTable" style="width: 92.0373%;margin-left: 30.0px;">
+         <colgroup>
+          <col style="width: 5.30291%;"/>
+          <col style="width: 11.0725%;"/>
+          <col style="width: 78.7129%;"/>
+         </colgroup>
+         <tbody style="margin-left: 30.0px;">
+          <tr style="margin-left: 30.0px;">
+           <th class="highlight-green confluenceTh" data-highlight-colour="green" style="text-align: center;margin-left: 30.0px;">
+            Icons
+           </th>
+           <th class="highlight-green confluenceTh" data-highlight-colour="green" style="text-align: center;">
+            Names
+           </th>
+           <th class="highlight-green confluenceTh" data-highlight-colour="green" style="text-align: center;">
+            Description
+           </th>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img alt="leaf" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/leaf.png" src="images/leaf.png"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd">
+            Terms
+           </td>
+           <td class="confluenceTd">
+            Terms (also called concepts) are the words or phrases that make up vocabularies. Terms are the basic query items.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img alt="folder" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/folder.png" src="images/folder.png"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd">
+            Term Groups
+           </td>
+           <td class="confluenceTd">
+            Related terms are grouped into hierarchies. When a term group is used in a query, all terms in the group are searched for.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img alt="leaf" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/modifier.png" src="images/modifier.png"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd">
+            Modifiers
+           </td>
+           <td class="confluenceTd">
+            Modifiers are descriptors that can be attached to terms to make small changes to them. For example, a Diagnosis concept may be additionally described by Modifiers "Principal Diagnosis" or "Secondary diagnosis."
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img alt="folder" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/modifierFolder.png" src="images/modifierFolder.png"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd">
+            Modifier Groups
+           </td>
+           <td class="confluenceTd">
+            Groups of Modifiers, similar to Term Groups.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img alt="prevQuery" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/prevQuery.jpg" src="images/prevQuery.jpg"/>
+              </span>
+              /
+              <span class="confluence-embedded-file-wrapper">
+               <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_QMT.gif" src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_QMT.gif"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd">
+            Previous Queries
+           </td>
+           <td class="confluenceTd">
+            Previous Queries are queries that have been run before and are stored in the 'Previous Queries' panel.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_PR.jpg" src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_PR.jpg"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd">
+            Individual Patients
+           </td>
+           <td class="confluenceTd">
+            If selected when running a query, a query can return a Patient Set,
+            <span>
+             which is a set of patient numbers that satisfy the query criteria
+            </span>
+            . The Patient Set is stored with the query in the Previous Queries panel. The Patient Set can be expanded, and individual subjects dragged into query groups to be used in a new query.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_PRS.jpg" src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_PRS.jpg"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd">
+            Patient Sets
+           </td>
+           <td class="confluenceTd">
+            If selected when running a query, a query can return a Patient Set, which is a set of patient numbers that satisfy the query criteria.
+            <span>
+             The Patient Set is stored with the query in the Previous Queries panel and can be dragged into query groups to be used in a new query.
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd" colspan="1">
+            <div class="content-wrapper">
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_PRS.jpg" src="https://www.i2b2.org/webclient/js-i2b2/cells/CRC/assets/sdx_CRC_PRS.jpg"/>
+              </span>
+             </p>
+            </div>
+           </td>
+           <td class="confluenceTd" colspan="1">
+            Encounter Sets
+           </td>
+           <td class="confluenceTd" colspan="1">
+            <span>
+             If selected when running a query, a query can return an Encounter Set, which is a set of encounter numbers that satisfy the query criteria. The Encounter Set is stored with the query in the Previous Queries panel
+             <span>
+              and can be dragged into query groups to be used in a new query
+             </span>
+             .
+            </span>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <h3 id="id-3.QueryTool-3.2.1OperatorsandOrderofPrecedence">
+        3.2.1 Operators and Order of Precedence
+       </h3>
+       <p style="margin-left: 30.0px;text-align: center;">
+        i2b2 items are combined using Boolean operators
+        <strong>
+         AND
+        </strong>
+        and
+        <strong>
+         OR
+        </strong>
+        .
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        Items within each Group are first
+        <strong>
+         OR
+        </strong>
+        ed together. The Groups are then
+        <strong>
+         AND
+        </strong>
+        ed together.
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        <br/>
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        <em>
+         <strong>
+          Example 1 (AND):
+         </strong>
+        </em>
+        This query finds patients with
+        <em>
+         Acute Myocardial Infarction
+        </em>
+        AND
+        <em>
+         Angina Pectoris
+        </em>
+        .
+        <em>
+         <strong>
+          <br/>
+         </strong>
+        </em>
+       </p>
+       <p style="margin-left: 60.0px;text-align: center;">
+        <span class="confluence-embedded-file-wrapper">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995284.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-47-34.png" data-linked-resource-id="9995284" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995284.png"/>
+        </span>
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        <br/>
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        <em>
+         <strong>
+          Example 2 (OR):
+         </strong>
+         This query finds patients with
+         <em>
+          Acute Myocardial Infarction
+         </em>
+         <em>
+          OR Angina Pectoris.
+         </em>
+         <br/>
+        </em>
+       </p>
+       <p style="margin-left: 60.0px;text-align: center;">
+        <span class="confluence-embedded-file-wrapper">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995283.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-43-50.png" data-linked-resource-id="9995283" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995283.png"/>
+        </span>
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        <br/>
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        <strong>
+         Example 3 (AND of ORs)
+        </strong>
+        : This query finds patients with (
+        <em>
+         Acute Myocardial Infarction
+        </em>
+        <em>
+         OR Angina Pectoris) AND
+        </em>
+        who are
+        <em>
+         male.
+        </em>
+       </p>
+       <p style="margin-left: 180.0px;text-align: center;">
+        *Note that the OR expression in the parentheses is evaluated first.
+       </p>
+       <p style="margin-left: 60.0px;text-align: center;">
+        <span class="confluence-embedded-file-wrapper">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/9995282.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-2_14-41-51.png" data-linked-resource-id="9995282" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/9995282.png"/>
+        </span>
+       </p>
+       <h3 id="id-3.QueryTool-3.2.2Constraints">
+        3.2.2 Constraints
+       </h3>
+       <p style="margin-left: 30.0px;text-align: center;">
+        <strong>
+         Constraints
+        </strong>
+        are used to narrow down the search criteria to a particular time frame, number of occurrences or a specific value or range of values. In i2b2, there are several types of constraints that can be defined in the Query Tool view.
+       </p>
+       <ol>
+        <li>
+         Group Constraints
+        </li>
+       </ol>
+       <ol>
+        <li style="list-style-type: none;background-image: none;">
+         <ol>
+          <li>
+           <strong>
+            Date Constraint
+           </strong>
+           <ol>
+            <li>
+             Setting Date Constraint for the entire Group
+             <br/>
+             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386647.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-27-4.png" data-linked-resource-id="12386647" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="220" src="attachments/9995021/12386647.png"/>
+             </span>
+             <br/>
+             <br/>
+             <br/>
+             Clicking on 'Dates' will display a dialog box in which a date range can be selected to restrict the occurrences of the items in the Group to within that range. Check one or both of the check boxes to indicate whether there is a begin date (From) or an end date (To) or both.
+             <br/>
+             <br/>
+             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+              <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386648.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-27-38.png" data-linked-resource-id="12386648" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="210" src="attachments/9995021/12386648.png"/>
+             </span>
+             <br/>
+             <br/>
+             Then type the date directly in the text box or click on the drop-down arrow to open the calendar below to select a date. This will set the date range for all items in this Group.
+             <br/>
+             <br/>
+             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386649.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-28-6.png" data-linked-resource-id="12386649" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="201" src="attachments/9995021/12386649.png"/>
+             </span>
+             <br/>
+             <br/>
+            </li>
+            <li>
+             Setting Date Constraint on individual items.
+             <br/>
+             Sometimes only some items in the Group need date constraints or different items in one group require different date constraints. In this case, right click on an item and select
+             <strong>
+              Set Date Constraint
+             </strong>
+             to set the date constraint for that item specifically.
+             <br/>
+             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+              <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386651.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-32-41.png" data-linked-resource-id="12386651" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="135" src="attachments/9995021/12386651.png"/>
+             </span>
+             <br/>
+             <br/>
+             <br/>
+            </li>
+            <li>
+             Once a date constraint is applied,
+             <strong>
+              Dates
+             </strong>
+             <span>
+              will now be underlined to indicate a date constraint has been set.
+             </span>
+             <br/>
+             <br/>
+             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+              <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386650.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-29-7.png" data-linked-resource-id="12386650" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="87" src="attachments/9995021/12386650.png"/>
+             </span>
+             <br/>
+             <p>
+              <br/>
+             </p>
+            </li>
+           </ol>
+          </li>
+          <li>
+           <strong>
+            Occurrence Constraint
+           </strong>
+           <br/>
+           <p>
+            Users can define the number of times an item must occur for each subject.
+           </p>
+           <h5 id="id-3.QueryTool-Clickon'Occurs&gt;0x'">
+            Click on 'Occurs&gt;0x'
+           </h5>
+           <p>
+            <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+             <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386652.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-33-25.png" data-linked-resource-id="12386652" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="221" src="attachments/9995021/12386652.png"/>
+            </span>
+            <br/>
+            <br/>
+           </p>
+           <p>
+            A new window will open
+            <br/>
+            <br/>
+           </p>
+           <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+            <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12386653.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-5-8_15-33-46.png" data-linked-resource-id="12386653" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="143" src="attachments/9995021/12386653.png"/>
+           </span>
+           <br/>
+           <p>
+            <br/>
+            Click on the
+            <strong>
+             drop-down arrow
+            </strong>
+            to display a list of numbers.
+            <br/>
+            Select a number from the list.
+           </p>
+           <p>
+            <br/>
+           </p>
+           <p>
+            <br/>
+           </p>
+           <span class="confluence-embedded-file-wrapper">
+            <img alt="qtConstOccurSelection" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstOccurSelection.png" src="images/qtConstOccurSelection.png"/>
+           </span>
+           <p>
+            <span style="letter-spacing: 0.0px;">
+             Click on the
+            </span>
+            <strong style="letter-spacing: 0.0px;">
+             OK
+            </strong>
+            button
+            <span style="letter-spacing: 0.0px;">
+             .
+            </span>
+           </p>
+           <p>
+            <strong style="letter-spacing: 0.0px;">
+             Occurs &gt; 0x
+            </strong>
+            <span style="letter-spacing: 0.0px;">
+             will now be underlined to indicate a constraint has been set and the 0 will be replaced with the selected number.
+            </span>
+           </p>
+           <p>
+            <span class="confluence-embedded-file-wrapper">
+             <img alt="qtConstOccurSet" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstOccurSet.png" src="images/qtConstOccurSet.png"/>
+            </span>
+           </p>
+           <p>
+            <span style="letter-spacing: 0.0px;">
+             <br/>
+            </span>
+           </p>
+           <p>
+            <br/>
+           </p>
+          </li>
+          <li>
+           Exclusion
+           <span class="confluence-embedded-file-wrapper image-right-wrapper confluence-embedded-manual-size">
+            <img class="confluence-embedded-image image-right" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/12387209.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="screenshot_1680.png" data-linked-resource-id="12387209" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" src="attachments/9995021/12387209.png" width="400"/>
+           </span>
+           <br/>
+           Constraint will not include patients with the concepts listed in the panel.
+           <p>
+            <span>
+             Click on the Exclude button located in the selection criteria section of the panel.
+            </span>
+           </p>
+           <p>
+            <span>
+             The text in the information box will change to "none of these" and the background color will change to pink.
+            </span>
+           </p>
+          </li>
+          <li>
+           Value Constraints (eg. labs)
+           <br/>
+           Constraint is by the value associated to a concept or modifier. Not all items have values.
+           <span>
+            The value constraint window will open automatically when you drop a concept into a panel in the Query Tool view. To set the constraint at a later time, right click on the item in the panel and select Set Value.
+           </span>
+           <br/>
+           <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+            <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstValSelect.png" height="40" src="images/qtConstValSelect.png"/>
+           </span>
+           <br/>
+           <ol>
+            <li>
+             Numeric
+             <br/>
+             <p>
+              The numeric value is defined in the source system when the result is entered. Enter a numerical value at the Please enter a value field.
+             </p>
+             <p>
+              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+               <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstValEnterVal.png" height="41" src="images/qtConstValEnterVal.png"/>
+              </span>
+             </p>
+             <p>
+              <span style="letter-spacing: 0.0px;">
+               Unlike flag and text values, numeric values use operators, such as greater than or less than when setting the constraints.
+              </span>
+             </p>
+             <p style="margin-left: 60.0px;">
+              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+               <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstValOperator.png" height="150" src="images/qtConstValOperator.png"/>
+              </span>
+             </p>
+             <p>
+              The Units will default to the normal units defined for the item.
+              <span>
+               Click on the drop-down arrow to change the units.
+              </span>
+             </p>
+             <p>
+              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+               <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstValUnitsList.png" height="203" src="images/qtConstValUnitsList.png"/>
+              </span>
+              <br/>
+              (In order for unit conversion to work a parameter called CRC_ENABLE_UNITCD_CONVERSION must be defined for the project. If this is not defined you need to contact your system administrator.)
+             </p>
+            </li>
+            <li>
+             Categorical
+             <br/>
+             <br/>
+            </li>
+            <li>
+             Text
+             <br/>
+             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+              <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstValCkmb2.png" height="250" src="images/qtConstValCkmb2.png"/>
+             </span>
+            </li>
+           </ol>
+           <br/>
+           <ol>
+            <li>
+             Flags (high, low, etc.)
+             <br/>
+             <br/>
+            </li>
+            <li>
+             Modifier Value Constraints
+             <br/>
+             <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+              <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtConstValTrimoxFreq2.png" height="250" src="images/qtConstValTrimoxFreq2.png"/>
+             </span>
+            </li>
+           </ol>
+          </li>
+         </ol>
+        </li>
+       </ol>
+       <h3 id="id-3.QueryTool-3.2.3QueryTiming">
+        3.2.3 Query Timing
+       </h3>
+       <p>
+        <span class="confluence-embedded-file-wrapper image-center-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image image-center" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/15630724.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-8-27_13-4-54.png" data-linked-resource-id="15630724" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="78" src="attachments/9995021/15630724.png"/>
+        </span>
+       </p>
+       <p style="margin-left: 30.0px;text-align: center;">
+        Choose the relationship between the query panels. The default is independent.
+       </p>
+       <ol>
+        <li>
+         <h4 id="id-3.QueryTool-Independent">
+          Independent
+         </h4>
+         <ul>
+          <li>
+           <p class="auto-cursor-target">
+            The items (facts) can occur at any time in the patient's history.
+           </p>
+           <div class="projectdoc-information-macro projectdoc-information-macro-example" data-projectdoc-box-type="example" title="Example">
+            <p class="title">
+             Example
+            </p>
+            <span class="aui-icon aui-icon-small projectdoc-information-macro-icon">
+            </span>
+            <div class="projectdoc-information-macro-body">
+             <p>
+              <span>
+               Patient has a medication with a dose greater than 500 mg and a medication that is taken once a day documented at any time in their history.
+              </span>
+             </p>
+            </div>
+           </div>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <h4 id="id-3.QueryTool-SameFinancialEncounter">
+          Same Financial Encounter
+         </h4>
+         <ol>
+          <li style="list-style-type: circle;">
+           <p>
+            The items (facts) occur during the same visit (financial encounter).
+           </p>
+          </li>
+          <li style="list-style-type: circle;">
+           When this is selected, individual panels can be included in the "same encounter" query, or they can be treated independently.
+          </li>
+         </ol>
+        </li>
+       </ol>
+       <p class="auto-cursor-target" style="margin-left: 90.0px;text-align: center;">
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image confluence-thumbnail" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/15630725.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-8-27_13-14-14.png" data-linked-resource-id="15630725" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="58" src="attachments/9995021/15630725.png"/>
+        </span>
+       </p>
+       <div class="projectdoc-information-macro projectdoc-information-macro-example" data-projectdoc-box-type="example" title="Example">
+        <p class="title">
+         Example
+        </p>
+        <span class="aui-icon aui-icon-small projectdoc-information-macro-icon">
+        </span>
+        <div class="projectdoc-information-macro-body">
+         <p>
+          <span>
+           Patient has a diagnosis of Acute MI documented at any time in their history and they have a medication with a dose greater than 500 mg and a medication that is taken once a day documented during the same visit
+          </span>
+         </p>
+        </div>
+       </div>
+       <ol>
+        <li>
+         <h4 id="id-3.QueryTool-TemporalQuery">
+          Temporal Query
+         </h4>
+        </li>
+       </ol>
+       <p style="margin-left: 60.0px;">
+        In this mode, a sequence of events are defined that are anchored by a constraining population. The constraining population is defined exactly like other query types. The process of building a sequence of events is explained by a a tutorial that is viewable by clicking 'Turn On Tutorial' in the upper-right corner of the query tool.
+       </p>
+       <p style="margin-left: 60.0px;">
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995021/15630726.png" data-linked-resource-container-id="9995021" data-linked-resource-container-version="95" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="image2019-8-27_13-21-42.png" data-linked-resource-id="15630726" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="400" src="attachments/9995021/15630726.png"/>
+        </span>
+       </p>
+       <p style="margin-left: 60.0px;">
+        This example finds patients who were diagnosed with diabetes prior to the first observation of an antidiabetic medication
+        <em>
+         (top panel)
+        </em>
+        . The population is constrained to patients over 64 years of age
+        <em>
+         (bottom panel)
+        </em>
+        .
+       </p>
+       <h3 id="id-3.QueryTool-3.2.4ReloadingaPreviousQuery">
+        3.2.4 Reloading a Previous Query
+       </h3>
+       <p>
+        Saved queries (either from Previous Queries or the Workplace) can be reloaded by dragging them to the Query Name bar at the top of the Query Tool. They can be used within a query by dragging them into a query panel. See the
+        <a href="https://community.i2b2.org/wiki/display/IWDD/6.+Previous+Queries">
+         Previous Query section
+        </a>
+        .
+       </p>
+       <p>
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995034/12386498.png" data-linked-resource-container-id="9995034" data-linked-resource-container-version="49" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="worddavbd5541c4ee9b7e7eef6a440d2943bc75.png" data-linked-resource-id="12386498" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="250" src="attachments/9995034/12386498.png"/>
+        </span>
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image" data-base-url="https://community.i2b2.org/wiki" data-image-src="attachments/9995034/12386500.png" data-linked-resource-container-id="9995034" data-linked-resource-container-version="49" data-linked-resource-content-type="image/png" data-linked-resource-default-alias="worddav91dcd114fa750a2ab45982c17e24c5c0.png" data-linked-resource-id="12386500" data-linked-resource-type="attachment" data-linked-resource-version="1" data-unresolved-comment-count="0" height="250" src="attachments/9995034/12386500.png"/>
+        </span>
+       </p>
+       <p>
+        Left: reload a previous query. Right: Use a previous query within a new query.
+       </p>
+       <h3 id="id-3.QueryTool-3.2.5ResettingtheQueryTool">
+        3.2.5 Resetting the Query Tool
+       </h3>
+       <p>
+        There are three options for resetting the
+        <span>
+        </span>
+        <strong>
+         Query Tool view
+        </strong>
+        . Users can (1) reset all the groups, (2) clear all items in a panel, or (3) delete an individual item from the group.
+       </p>
+       <div class="table-wrap">
+        <table class="confluenceTable">
+         <colgroup>
+          <col/>
+         </colgroup>
+         <tbody>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <span style="color: rgb(51,51,51);">
+               <strong>
+                A. Reset All Groups:
+               </strong>
+              </span>
+              <span>
+               Click on the
+              </span>
+              <span>
+              </span>
+              <strong>
+               Clear button
+              </strong>
+              <span>
+              </span>
+              <span>
+               located on the toolbar at the bottom of the
+              </span>
+              <span>
+              </span>
+              <em>
+               Query Tool view
+              </em>
+              <span>
+               .
+              </span>
+             </p>
+             <p>
+              <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+               <img alt="qtToolbarClear" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtToolbarClearButton.png" height="40" src="images/qtToolbarClearButton.png" width="524"/>
+              </span>
+             </p>
+            </div>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <p>
+              <strong>
+               B. Clear Items in a Panel / Group
+              </strong>
+              <span>
+               : Click on the
+              </span>
+              <span>
+              </span>
+              <strong>
+               Delete button
+               <span style="color: rgb(204,204,204);">
+                (
+                <span class="confluence-embedded-file-wrapper">
+                 <img alt="delete" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/buttonDelete.png" src="images/buttonDelete.png"/>
+                </span>
+                )
+               </span>
+              </strong>
+              <span>
+               located in the top right corner of the panel (next to the Group name)
+              </span>
+             </p>
+            </div>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <div class="content-wrapper">
+             <span style="color: rgb(51,51,51);">
+              C. Delete Single Item:
+             </span>
+             <span>
+              Using the
+             </span>
+             <span>
+             </span>
+             <em>
+              right mouse button
+             </em>
+             <span>
+              , click on the name of the item to be
+             </span>
+             <span>
+              remove
+             </span>
+             <span>
+              d and s
+             </span>
+             <span>
+              elect
+             </span>
+             <span>
+             </span>
+             <strong>
+              Delete
+             </strong>
+             <span>
+             </span>
+             <span>
+              from the list.
+             </span>
+             <p>
+              <span class="confluence-embedded-file-wrapper">
+               <img alt="deleteItem" class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtDeleteItem.png" src="images/qtDeleteItem.png"/>
+              </span>
+             </p>
+            </div>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <h2 id="id-3.QueryTool-3.3RunningaQuery">
+        <span style="color: rgb(51,51,51);font-size: 20.0px;letter-spacing: -0.008em;">
+         3.3 Running a Query
+        </span>
+       </h2>
+       <h3 id="id-3.QueryTool-3.3.1RunQuery">
+        3.3.1 Run Query
+       </h3>
+       <p style="margin-left: 30.0px;">
+        Once the query criterion has been defined, the final steps are to click on the Run Query button, select the result type(s), and click on the OK button to run the query.
+       </p>
+       <p style="margin-left: 60.0px;">
+        <span>
+         Once you have defined the search criteria click on the
+        </span>
+        <span>
+         Run Query button
+        </span>
+        <span>
+         located on the toolbar at the bottom of the
+        </span>
+        <span>
+         Query Tool view
+        </span>
+        <span>
+         .
+        </span>
+        <span>
+         A new window will open.
+        </span>
+       </p>
+       <ul>
+        <li style="list-style-type: none;background-image: none;">
+         <ul>
+          <li>
+           <span>
+            A name for the query will default at the query name field.
+           </span>
+           <span>
+            Either change the name of the query or accept the default.
+           </span>
+          </li>
+          <li>
+           <span>
+            In the query result type section, click on the
+           </span>
+           <span>
+            checkboxes
+           </span>
+           <span>
+            for those
+           </span>
+           <span>
+            result types
+           </span>
+           <span>
+            you want to include when the query is run.
+           </span>
+          </li>
+          <li>
+           <span>
+            Click on the
+           </span>
+           <span>
+            OK button
+           </span>
+           <span>
+            .
+           </span>
+          </li>
+          <li>
+           <span>
+            The Run Query window will close and the querying process will begin
+           </span>
+          </li>
+         </ul>
+        </li>
+       </ul>
+       <p style="margin-left: 60.0px;">
+        Once you begin the process of running the query the Query Status view will display "Running Query", the name of the query, and the time that has elapsed.
+       </p>
+       <p style="margin-left: 60.0px;">
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtRunQueryWindow.png" height="250" src="images/qtRunQueryWindow.png"/>
+        </span>
+       </p>
+       <h3 id="id-3.QueryTool-3.3.2QueryResultOptions">
+        3.3.2 Query Result Options
+       </h3>
+       <p>
+        There are three categories of query type: counts, sets, and breakdowns. (Note that the Timeline type is not used in the Web Client. If selected it will work the same as patient set.)
+       </p>
+       <h4 id="id-3.QueryTool-1)NumberofPatients">
+        1) Number of Patients
+       </h4>
+       <p>
+        This option will return a total count for those patients who meet the defined criteria. This is the most common and fastest query type.
+       </p>
+       <p>
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtQueryStatusPtCount.png" height="150" src="images/qtQueryStatusPtCount.png"/>
+        </span>
+       </p>
+       <h4 id="id-3.QueryTool-2)Patient/EncounterSet">
+        2) Patient/Encounter Set
+       </h4>
+       <p>
+        These options return a set of patients or encounters that meet the defined criteria. The set is visible in the Previous Query view and can be used in future queries, the workspace, and by plugins.
+       </p>
+       <p>
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/pqPtSet.png" height="141" src="images/pqPtSet.png"/>
+        </span>
+       </p>
+       <p>
+        Only information on the query's completion is shown in the Query Status panel.
+       </p>
+       <p>
+        <span class="confluence-embedded-file-wrapper confluence-embedded-manual-size">
+         <img class="confluence-embedded-image confluence-external-resource" data-image-src="https://www.i2b2.org/webclient/help/images/qtQueryStatusPtSet.png" height="141" src="images/qtQueryStatusPtSet.png"/>
+        </span>
+       </p>
+       <h4 id="id-3.QueryTool-4)PatientBreakdowns">
+        4) Patient Breakdowns
+       </h4>
+       <p>
+        The following query types will return patient counts stratified by the selected breakdown category (e.g., Gender or Age).
+       </p>
+       <div class="table-wrap">
+        <table class="wrapped confluenceTable">
+         <colgroup>
+          <col/>
+         </colgroup>
+         <tbody>
+          <tr>
+           <th class="confluenceTh">
+            Breakdown type
+           </th>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <span>
+             Gender patient breakdown
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <span>
+             Vital Status patient breakdown
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <span>
+             Race patient breakdown
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            <span>
+             Age patient breakdown
+            </span>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd" colspan="1">
+            Length of Stay breakdown
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd" colspan="1">
+            <p>
+             Top 20 Medications Breakdown
+            </p>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd" colspan="1">
+            <p>
+             Top 20 diagnoses Breakdown
+            </p>
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd" colspan="1">
+            <p>
+             Inpatient and Outpatient Breakdown
+            </p>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <p>
+        <br/>
+       </p>
+       <h3 id="id-3.QueryTool-3.3.3.QueryStatus">
+        3.3.3. Query Status
+       </h3>
+       <h4 id="id-3.QueryTool-Whenaqueryisrunning,thequerystatuspanelwillshowitsstatus.">
+        When a query is running, the query status panel will show its status.
+       </h4>
+       <div class="table-wrap">
+        <table class="confluenceTable">
+         <colgroup>
+          <col/>
+          <col/>
+         </colgroup>
+         <tbody>
+          <tr>
+           <th class="confluenceTh">
+            Status
+           </th>
+           <th class="confluenceTh">
+            Meaning
+           </th>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Running
+           </td>
+           <td class="confluenceTd">
+            The query is currently running on the server and the client is waiting for results.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Finished
+           </td>
+           <td class="confluenceTd">
+            The query has completed. Results will be shown below this message.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Queued
+           </td>
+           <td class="confluenceTd">
+            The query took longer than the configured timeout. (Defaults to 180 seconds.) It is still running in the background and the results will appear in Previous Queries when it completes.
+           </td>
+          </tr>
+          <tr>
+           <td class="confluenceTd">
+            Error
+           </td>
+           <td class="confluenceTd">
+            An error occurred running the query. More information might be available in the XML Message Log.
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

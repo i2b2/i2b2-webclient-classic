@@ -9,6 +9,11 @@
 		"CRC_ctrlr_QryPanel.js",
 		"CRC_ctrlr_QryTool.js",
 		"CRC_ctrlr_QryStatus.js",
+        "CRC_ctrlr_TQryRelationship.js", /* tdw9 1707c: added temporal query relationship datamodel*/
+        "CRC_ctrlr_TQryEvent.js",        /* tdw9 1707c: added temporal query Event controller */
+        "CRC_ctrlr_TQryPanel.js",        /* tdw9 1707c: added temporal query Panel controller */
+        "CRC_view_TemporalRelationshipEditor.js", /* tdw9 1707c: added editor for temporal relationship */
+        "CRC_eventGraph.js",             /* tdw9 1707c: added graph model to check for temporal query reload modes to be SIMPLE or ADVANCED */
 		"CRC_sdx_QM.js",
 		"CRC_sdx_QI.js",
 		"CRC_sdx_PRC.js",
@@ -17,6 +22,7 @@
 		"CRC_sdx_PR.js",
 		"CRC_sdx_QDEF.js",
 		"CRC_sdx_QGDEF.js",
+		"CRC_sdx_WRKF.js",
 		"CRC_view_History.js",
 		"CRC_view_Find.js",
 		"CRC_view_QryTool.js",
@@ -48,10 +54,11 @@
 			size32x32: "CRC_icon_32x32.gif"
 		},
 		category: ["core","cell"],
+		ui: { 'statusBox':162,'largeStatusBox':300,'defaultStatusBox':162 /* original was 162 */ },
 		paramTranslation: [
 			{thinClientName:'sortBy', defaultValue:'DATE'},
 			{thinClientName:'sortOrder', defaultValue:'DESC'},
-			{thinClientName:'maxQueriesDisp', defaultValue:20},
+			{thinClientName:'maxQueriesDisp', defaultValue:50},
 			{thinClientName:'maxChildren', defaultValue:200},
 			{thinClientName:'queryTimeout', defaultValue:180}
 		]

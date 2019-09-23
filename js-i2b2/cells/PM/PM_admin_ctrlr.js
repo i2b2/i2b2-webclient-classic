@@ -2076,7 +2076,7 @@ i2b2.PM.admin.refreshDBLookupListData = function(tablename, url, id) {
 	var tmp = {};
 	var l = projUserList.model.length;
 	for (var i=0; i<l; i++) {
-		tmp[projUserList.model[i].db_nicename] = projUserList.model[i];
+		tmp[i] = projUserList.model[i];
 	}
 	delete projUserList;
 	i2b2.PM.model.admin.DBLookupList = tmp;

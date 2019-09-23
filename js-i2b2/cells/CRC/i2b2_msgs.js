@@ -67,7 +67,7 @@ i2b2.CRC.cfg.msgs.getQueryMasterList_fromUserId = '<?xml version="1.0" encoding=
 '			<request_type>{{{crc_user_type}}}</request_type>\n'+
 '		</ns4:psmheader>\n'+
 '		<ns4:request xsi:type="ns4:user_requestType" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n'+
-'			<user_id>{{{sec_user}}}</user_id>\n'+
+'			<user_id>{{{crc_user_by}}}</user_id>\n'+
 '			<group_id>{{{sec_project}}}</group_id>\n'+
 '			<fetch_size>{{{crc_max_records}}}</fetch_size>\n'+
 '		</ns4:request>\n'+
@@ -164,6 +164,7 @@ i2b2.CRC.cfg.msgs.getNameInfo = '<?xml version="1.0" encoding="UTF-8" standalone
 '		</ns4:psmheader>\n'+
 '   	<ns4:get_name_info category="{{{crc_find_category}}}" max="{{{crc_max_records}}}">\n'+
 '      		<match_str strategy="{{{crc_find_strategy}}}">{{{crc_find_string}}}</match_str>\n'+
+'			<create_date>{{{crc_create_date}}}</create_date>\n'+
 '      		<ascending>{{{crc_sort_order}}}</ascending>\n'+
 ' 	    </ns4:get_name_info>\n'+
 '	</message_body>\n'+
@@ -639,6 +640,7 @@ i2b2.CRC.cfg.msgs.runQueryInstance_fromQueryDefinition = '<?xml version="1.0" en
 '			<user group="{{{sec_project}}}" login="{{{sec_user}}}">{{{sec_user}}}</user>\n'+
 '			<patient_set_limit>0</patient_set_limit>\n'+
 '			<estimated_time>0</estimated_time>\n'+
+'           {{{query_run_method}}}'+
 '			<query_mode>optimize_without_temp_table</query_mode>\n'+
 '			<request_type>CRC_QRY_runQueryInstance_fromQueryDefinition</request_type>\n'+
 '		</ns4:psmheader>\n'+
@@ -652,7 +654,7 @@ i2b2.CRC.cfg.msgs.runQueryInstance_fromQueryDefinition = '<?xml version="1.0" en
 i2b2.CRC.ajax._addFunctionCall(	"runQueryInstance_fromQueryDefinition", 
 								"{{{URL}}}request", 
 								i2b2.CRC.cfg.msgs.runQueryInstance_fromQueryDefinition, 
-								["psm_result_output","psm_query_definition","shrine_topic"]);
+								["query_run_method","psm_result_output","psm_query_definition","shrine_topic"]);
 
 
 // ================================================================================================== //1

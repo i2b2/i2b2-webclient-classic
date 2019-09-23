@@ -243,7 +243,13 @@ i2b2.PM._processUserConfig = function (data) {
 		if (s.length > 0) {
 			// we have a proper error msg
 			try {
+				if (s[0].firstChild.nodeValue == "Password Expired.")
+				{
+					i2b2.PM.changePassword.show();
+				} else
+				{
 					alert("ERROR: "+s[0].firstChild.nodeValue);				
+				}
 			} catch (e) {
 				alert("An unknown error has occured during your login attempt!");
 			}
@@ -313,6 +319,9 @@ i2b2.PM.changePassword = {
 	},
 	hide: function() {
 		try {
+                        $('curpass').value = "";                
+                        $('newpass').value = "";
+                        $('retypepass').value = "";			
 			i2b2.PM.changePassword.yuiPanel.hide();
 			//$("changepassword-viewer-panel").hide();
 		} catch (e) {}
@@ -324,7 +333,7 @@ i2b2.PM.changePassword = {
 			var retypepass = $('retypepass').value;
 			
 			if (newpass != retypepass) {
-				alert("New password and Retype Password dont match");
+				alert("Password doesn't match the confirm password");
 			} else { 
 				
 				// callback processor
@@ -342,11 +351,27 @@ i2b2.PM.changePassword = {
 					
 					// check for errors
 					if (results.error) {
-						alert('Current password is incorrect');
+						
+ 						var s = i2b2.h.XPath(results.refXML, 'descendant::result_status/status[@type="ERROR"]');
+						if (s.length > 0) {
+							// we have a proper error msg
+							 try {
+ 								if (s[0].firstChild.nodeValue == "Password Validation Failed")
+                                                                        alert("Password Requirements\n\t- Be at least 8 characters\n\n- Must contain\n\t- upper case letters (A-Z)\n\t- lower case letters (a-z)\n\t- numbers (0-9)\n\t- special character (,.!@()}{#$%^&+=)\n\n- Must NOT contain\n\t- spaces\n\t- start or end with a special characters");
+                                                                else				 
+									alert(s[0].firstChild.nodeValue);
+							} catch(e) { alert("Error in PM Response");}    
+						}
+
+						
+						
 						console.error("Bad Results from Cell Communicator: ",results);
 						return false;
 					}
 					alert("Password successfully changed");	
+                      			$('curpass').value = "";                
+                        		$('newpass').value = "";
+                        		$('retypepass').value = "";								
 					i2b2.PM.changePassword.yuiPanel.hide();
 
 
@@ -634,7 +659,12 @@ i2b2.PM._processLaunchFramework = function() {
 				var l = x.length;
 				for (var i=0; i<l; i++) {
 					var n = i2b2.h.XPath(x[i], "attribute::name")[0].nodeValue;
+					if (typeof x[i].firstChild.children === "undefined") {
 					cellRef.params[n] = x[i].firstChild.nodeValue;
+                    } else {
+					    // the parameter is an xml node with children
+                        cellRef.params[n] = x[i].children;
+                    }
 				}
 				// do not save cell info unless the URL attribute has been set (exception is PM cell)
 				if (cellRef.url == "" && cellKey != "PM") {
