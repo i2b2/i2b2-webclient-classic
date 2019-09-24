@@ -485,6 +485,31 @@ function getObjectClass(obj) {
     return undefined;
 }
 
+// Add a non-modal alert box alternative, adapted from https://codepen.io/oriadam/pen/doJqmR
+
+i2b2.h.nonmodalAlert = function (str) {
+						// default css:
+						var css = 'cursor:default;z-index:2147483646;display:block;overflow:hidden;whitespace:normal;vertical-align:middle;font-weight:normal;font-size:14px;line-height:20px;font-family:sans-serif;max-width:none;max-height:none;min-width:10px;height:auto;min-height:10px;padding:0;margin:0;background:#f1f1f1;border:1px solid #333;border-color:#fff #333 #333 #fff;border-radius:1px;box-shadow:none;vertical-align:top;'
+						var wrapper = document.createElement('div')
+						var textLength=0
+						str.split('\n').forEach(function(line){
+							if (textLength<line.length)
+								textLength=line.length
+						})
+						var width = Math.floor(Math.min(innerWidth - 30, textLength*16, Math.max(innerWidth / 2, 200)))
+						var left = innerWidth / 2 - width / 2
+						wrapper.style.cssText = css + 'position:fixed;box-shadow:0 0 3px #000;padding:10px;top:50px;left:' + left + 'px;width:' + width + 'px;'
+						var x = '<div style="' + css + 'position:static;width:auto;float:right;clear:both;border:none;margin-top:-10px;margin-right:-5px;font-size:18px;">&times;</div>'
+						var hr = '<div style="' + css + 'width:100%;height:1px;border-top:#777;border-radius:0;margin:15px 0 5px;"></div>'
+						var ok = '<div style="' + css + 'position:static;float:right;clear:both;margin:5px;padding:4px 10px;">OK</div>'
+						wrapper.innerHTML = x + ('' + str).replace(/</g, '&lt;').replace(/\n/g, '<br>') + ok
+						wrapper.addEventListener("click", function () {
+							wrapper.style.transition = "opacity 0s ease";
+            				wrapper.style.opacity = '0';
+							setTimeout(function(){document.body.removeChild(wrapper)}, 0);					
+						}, false);
+						document.body.appendChild(wrapper)
+					}
 
 
 

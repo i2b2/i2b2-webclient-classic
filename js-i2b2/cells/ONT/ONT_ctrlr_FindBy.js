@@ -142,12 +142,12 @@ i2b2.ONT.ctrlr.FindBy = {
 				// we have a proper error msg
 				try {
 					if (s[0].firstChild.nodeValue == "MAX_EXCEEDED")
-						alert("The number of terms that were returned exceeded the maximum number currently set as " + i2b2.ONT.view['find'].params.max+ ".  Please try again with a more specific search or increase the maximum number of terms that can be returned as defined in the options screen.");
+						i2b2.h.nonmodalAlert("The number of terms that were returned for category " + results.msgParams.ont_category + " exceeded the maximum number currently set as " + i2b2.ONT.view['find'].params.max+ ".  Only the first " + i2b2.ONT.view['find'].params.max+ " results are displayed. Please try again with a more specific search or increase the maximum number of terms that can be returned as defined in the options screen.");
 					else
 						alert("ERROR: "+s[0].firstChild.nodeValue);	
 					document.getElementById('ontFindNameButtonWorking').style.display = 'none';	
 					$('ontFindNameButtonWorking').innerHTML = "";					
-					return;
+					//return;
 				} catch (e) {
 					alert("An unknown error has occured during your rest call attempt!");
 				}
@@ -321,8 +321,8 @@ i2b2.ONT.ctrlr.FindBy = {
 			// BUG FIX: WEBCLIENT-139 & WEBCLIENT-150
 			searchCatsCount++;
 			if(searchCatsCount == searchCats.length){ // found last scopedCallback AJAX call
-				if(totalCount == 0){
-					alert('No records found.');
+				if(totalCount == 0 && s.length == 0){ // s.length fix - don't display err messages twice
+					alert('No records found for category ' + results.msgParams.ont_category);
 				}
 				$('ontFindNameButtonWorking').innerHTML = "";
 			}
@@ -472,11 +472,11 @@ i2b2.ONT.ctrlr.FindBy = {
 				// we have a proper error msg
 				try {
 					if (s[0].firstChild.nodeValue == "MAX_EXCEEDED")
-						alert("Max number of terms exceeded please try with a more specific query.");
+						i2b2.h.nonmodalAlert("Max number of terms exceeded please try with a more specific query.");
 					else
 						alert("ERROR: "+s[0].firstChild.nodeValue);	
 					document.getElementById('ontFindNameButtonWorking').style.display = 'none';						
-					return;
+					//return;
 				} catch (e) {
 					alert("An unknown error has occured during your rest call attempt!");
 				}
