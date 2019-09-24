@@ -6,6 +6,7 @@
  * @version 	1.7.12
  * ----------------------------------------------------------------------------------------
  * updated 9-15-08: RC4 launch [Nick Benik] 
+ * updated 01-12-18: Mauro Bucalo
  * hierarchical result display 08-19 by Jeff Klann, PhD
  */
 console.group('Load & Execute component file: ONT > ctrlr > FindBy');
@@ -286,6 +287,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				o.operator = i2b2.h.getXNodeVal(c[i2],'operator');
 				o.dim_code = i2b2.h.getXNodeVal(c[i2],'dimcode');
 				o.basecode = i2b2.h.getXNodeVal(c[i2],'basecode');
+				o.total_num = i2b2.h.getXNodeVal(c[i2],'totalnum');
 				oset.push(o);
 			}
 			//oset.sort(function(a,b) {return (a.key > b.key) ? 1 : ((b.key > a.key) ? -1 : 0);} );
