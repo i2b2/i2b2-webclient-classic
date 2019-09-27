@@ -34,7 +34,7 @@ delete i2b2.protoObjhack;
 // This shows/hides the tabs only available in the single-pane expanded view
 // Pass in a JQuery element holding the tabs and a display parameter, either "" or "None"
 i2b2.h.hideShowGuestTabs = function(ve, displayString) {
-		Array.from(ve.getElementsByClassName("tabBox")).filter(function(val) { return val.id.includes("guest") } ).forEach(function(val) { val.style.display=displayString } );
+		Array.from(ve.getElementsByClassName("tabBox")).filter(function(val) { return val.id.startsWith("guest") } ).forEach(function(val) { val.style.display=displayString } );
 }
 
 // ================================================================================================== //
