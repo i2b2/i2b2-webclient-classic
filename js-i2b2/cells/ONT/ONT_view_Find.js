@@ -339,6 +339,14 @@ i2b2.ONT.view.find.showConceptCode = function() {
 //================================================================================================== //
 i2b2.ONT.view.find.doRefreshAll = function() { 
 	i2b2.ONT.view.find.PopulateCategories();
+	switch(i2b2.ONT.view.find.currentTab) { /* Redo the current search when refreshing all */
+		case "names":
+			i2b2.ONT.ctrlr.FindBy.clickSearchName();
+			break;
+		case "codes":
+			i2b2.ONT.ctrlr.FindBy.clickSearchCode();
+			break;
+	}
 }
 
 //================================================================================================== //
@@ -396,16 +404,13 @@ i2b2.ONT.view.find.ContextMenuValidate = function(p_oEvent) {
 		tvNode = i2b2.ONT.view.find.yuiTreeCode.getNodeByProperty('nodeid', clickId);
 	}
 
-	if (tvNode) {
-		if (tvNode.data.i2b2_SDX) {
-			if (tvNode.data.i2b2_SDX.sdxInfo.sdxType == "CONCPT") {
+	if (tvNode && tvNode.data.i2b2_SDX && tvNode.data.i2b2_SDX.sdxInfo.sdxType == "CONCPT") {
 				i2b2.ONT.view.find.contextRecord = tvNode.data.i2b2_SDX;
-			} else {
-				this.cancel();
-				return;
-			}
-		}
+	} else {
+		this.cancel();
+		return;
 	}
+
 };
 
 //================================================================================================== //
