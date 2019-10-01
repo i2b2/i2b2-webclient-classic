@@ -324,7 +324,7 @@ i2b2.ONT.ctrlr.FindBy = {
 			searchCatsCount++;
 			if(searchCatsCount == searchCats.length){ // found last scopedCallback AJAX call
 				if(totalCount == 0 && s.length == 0){ // s.length fix - don't display err messages twice
-					alert('No records found for category ' + results.msgParams.ont_category);
+					alert('No records found.'); // ' for category ' + results.msgParams.ont_category);
 				}
 				$('ontFindNameButtonWorking').innerHTML = "";
 			}
