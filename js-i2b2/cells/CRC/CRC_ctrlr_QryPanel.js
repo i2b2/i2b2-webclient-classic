@@ -213,18 +213,52 @@ function i2b2_PanelController(parentCtrlr) {
 
 		jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]').find('span.itemDateConstraint').remove();
 		if(pd.items.length > 0){
+			var dateConsExclusionConcptExists = false;
 			for(var i=0;i<pd.items.length;i++){
-				if(pd.items[i].dateFrom && pd.items[i].dateTo){
-					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;['+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+' to '+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);
-				}
-				if(pd.items[i].dateFrom && !pd.items[i].dateTo){
-					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&ge;'+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);					
-				}
-				if(!pd.items[i].dateFrom && pd.items[i].dateTo){
-					jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&le;'+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);										
+				if(pd.items[i].dateFrom || pd.items[i].dateTo) {
+					if (this._ConcptExcludeDateCons(pd.items[i])) {
+						dateConsExclusionConcptExists = true;
+						continue;
+					}
+					if(pd.items[i].dateFrom && pd.items[i].dateTo){
+						jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;['+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+' to '+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);
+					}
+					if(pd.items[i].dateFrom && !pd.items[i].dateTo){
+						jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&ge;'+pd.items[i].dateFrom.Month+'/'+pd.items[i].dateFrom.Day+'/'+pd.items[i].dateFrom.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);					
+					}
+					if(!pd.items[i].dateFrom && pd.items[i].dateTo){
+						jQuery('<span title="This item has a date constraint" class="itemDateConstraint">&nbsp;[&le;'+pd.items[i].dateTo.Month+'/'+pd.items[i].dateTo.Day+'/'+pd.items[i].dateTo.Year+']</span>').appendTo(jQuery('#QPD'+(this.actualPanelIndex+1)+' table.ygtvdepth0 [class^="sdxDefault"]')[i]);										
+					}
 				}
 			}
+		// if(dateConsExclusionConcptExists)
+			// alert("Date constraints are not allowed on Demographics data, Genomics data, Patient Sets and Previous Queries and will not be set.");
 		}
+	}
+
+	// new date constraint exclusion code - nw096
+	this._ConcptExcludeDateCons = function (thisItem) {
+		var dateConsExclusionConcpt = false;
+		try {
+			if (thisItem.origData.title && thisItem.origData.title.toLowerCase().indexOf('patient set') >= 0)
+				dateConsExclusionConcpt = true;
+			else
+				if (thisItem.origData.titleCRC && thisItem.origData.titleCRC.toLowerCase().indexOf('patient set') >= 0)
+					dateConsExclusionConcpt = true;
+			if (thisItem.origData.title && thisItem.origData.title.toLowerCase().indexOf('prevquery') >= 0)
+				dateConsExclusionConcpt = true;
+			else
+				if (thisItem.origData.name && thisItem.origData.name.toLowerCase().indexOf('prevquery') >= 0)
+					dateConsExclusionConcpt = true;
+			if (thisItem.origData.table_name && thisItem.origData.table_name.toLowerCase() == 'patient_dimension')
+				dateConsExclusionConcpt = true;
+			if (thisItem.origData.key && thisItem.origData.key.toLowerCase().indexOf('metadata_genomics')>=0)
+				dateConsExclusionConcpt = true;
+		}
+		catch (e) {
+			console.error(e);
+		}
+		return dateConsExclusionConcpt;
 	}
 
 	// ================================================================================================== //

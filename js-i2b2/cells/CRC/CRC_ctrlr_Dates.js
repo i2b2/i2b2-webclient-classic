@@ -18,6 +18,7 @@ i2b2.CRC.ctrlr.dateConstraint = {
     panelDateTitle: "Constrain Panel by Date Range",
     panelDateMsg1: "Setting this will apply the date constraint to the entire panel.",
     panelDateMsg2: "Any item-level date constraints will be overwritten.",
+	panelDateMsg3: "Date constraints do not apply on Demographics data.",
     itemDateTitle: "Constrain Item by Date Range",
     itemDateMsg1: "Setting date range for this item.",
     itemDateMsg2: "It will overwrite panel-level date constraint on this item, if any.",
@@ -228,7 +229,7 @@ i2b2.CRC.ctrlr.dateConstraint = {
 
         // update dialog title and messages depending on whether the dialog is for panel or item
         var title   = this.panelDateTitle;
-        var msgHTML = "<br>" + this.panelDateMsg1 + "<br><br>" + this.panelDateMsg2;
+        var msgHTML = "<br>" + this.panelDateMsg1 + "<br><br>" + this.panelDateMsg2 + "<br><br>" + this.panelDateMsg3;
 
         if (itemNumber != undefined ) // we are setting date constrain to the entire PANEL
         {
