@@ -709,12 +709,15 @@ i2b2.CRC.ctrlr.dateConstraint = {
 			QT.doSetQueryName.call(QT,'');
 		}
 		
-		if(dm.items[itemIndex].origData.hasOwnProperty('table_name')){ // WEBCLIENT-133: Remove dates from patient_dimension concepts
+		var table_name="";
+		if(dm.items[itemIndex].origData.hasOwnProperty('table_name') && typeof dm.items[itemIndex].origData.table_name != "undefined"){ // WEBCLIENT-133: Remove dates from patient_dimension concepts
 			var table_name = dm.items[itemIndex].origData.table_name;
 		} else { // lookup table_name
-			var results = i2b2.ONT.ajax.GetTermInfo("ONT", {ont_max_records:'max="1"', ont_synonym_records:'false', ont_hidden_records: 'false', concept_key_value: dm.items[itemIndex].origData.key}).parse();
-			if(results.model.length > 0){
-				var table_name = results.model[0].origData.table_name;
+			if (typeof dm.items[itemIndex].origData.key != "undefined") {
+				var results = i2b2.ONT.ajax.GetTermInfo("ONT", {ont_max_records:'max="1"', ont_synonym_records:'false', ont_hidden_records: 'false', concept_key_value: dm.items[itemIndex].origData.key}).parse();
+				if(results.model.length > 0){
+					var table_name = results.model[0].origData.table_name;
+				}
 			}
 		}
 		if(table_name.toLowerCase() == 'patient_dimension'){
