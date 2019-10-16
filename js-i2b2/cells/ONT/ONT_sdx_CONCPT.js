@@ -278,7 +278,7 @@ i2b2.sdx.TypeControllers.CONCPT.AppendTreeNode = function(yuiTree, yuiRootNode, 
 //*********************************************************************************
 i2b2.sdx.TypeControllers.CONCPT.LoadChildrenFromTreeview = function(node, onCompleteCallback) {
 	// jgk 0519 - Hardcoded way to bypass SDX processing for hlevel nodes added via "find by name"
-	if (node.html.includes("sdx_ONT_SEARCH")) { 
+	if (node.html.indexOf("sdx_ONT_SEARCH")>=0) { 
 			node.expand();
 			onCompleteCallback();
 	} 
