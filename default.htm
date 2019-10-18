@@ -219,6 +219,18 @@ function invokeWCPinstaller() {
     mapForm.submit();
 }
 
+// polyfill for Object.entries in IE11
+if (!Object.entries)
+  Object.entries = function( obj ){
+    var ownProps = Object.keys( obj ),
+        i = ownProps.length,
+        resArray = new Array(i); // preallocate the Array
+    while (i--)
+      resArray[i] = [ownProps[i], obj[ownProps[i]]];
+
+    return resArray;
+  };
+
 function initI2B2() 
 {
 	//debugOnScreen("default.htm.initI2B2: browserViewPort = " + initBrowserViewPortDim.width + " " + initBrowserViewPortDim.height );
