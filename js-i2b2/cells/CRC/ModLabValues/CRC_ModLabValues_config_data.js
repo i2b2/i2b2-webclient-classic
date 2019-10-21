@@ -36,12 +36,13 @@ i2b2.LabExpandedFlags.process = function(flagstouse) {
 	flagList.flagType = '[N]';
 	flagList.flags = [{name:'Normal', value:'@'}];
 	
-	for (const[flag, flagInfo] of Object.entries(i2b2.LabExpandedFlags.type)) {
+	// incompatible with IE11 - for (const[flag, flagInfo] of Object.entries(i2b2.LabExpandedFlags.type)) {
+	Object.entries(i2b2.LabExpandedFlags.type).forEach(function(x) { flag=x[0]; flagInfo=x[1];  
 		if(flagstouse.indexOf(flagInfo.value) >=0 ) {
 			flagList.flagType += flagInfo.value;
 			flagList.flags.push(flagInfo);
 		}
-	}
+	});
 	/* If we only have the normal flag, we don't need a flag list */
 	if(flagList.flags.length == 1) {
 		flagList.flagType = false;
