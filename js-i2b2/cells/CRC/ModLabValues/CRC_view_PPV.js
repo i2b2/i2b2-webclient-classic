@@ -45,7 +45,7 @@ i2b2.CRC.view.PPV = {
 		var url = "js-i2b2/cells/CRC/ModLabValues/CRC_view_PPV.html";
 		var response = new Ajax.Request(url, {method: 'get', asynchronous: false});
 		console.dir(response);
-		if (response.transport.statusText=="OK") {
+		if (response.transport.status == 200) {
 			thisHTML = response.transport.responseText;
 		} else {
 			alert('A problem was encounter while loading the html for the value type!');

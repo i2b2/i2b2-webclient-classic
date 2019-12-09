@@ -118,7 +118,7 @@ i2b2.PLUGINMGR.ctrlr.main =
 			var url = i2b2[pluginCode].cfg.config.assetDir + i2b2[pluginCode].cfg.config.plugin.html.source;
 			var response = new Ajax.Request(url, {method: 'get', asynchronous: false});
 			console.dir(response);
-			if (response.transport.statusText=="OK") {
+			if (response.transport.status == 200) {
 				// load the html into the IFRAME
 				var doc = $('anaPluginIFRAME').contentDocument;
 				if (!doc) {var doc = $('anaPluginIFRAME').contentWindow.document; }
