@@ -30,6 +30,7 @@ Splitter = function( name, config )
 		{
 			splitter.style.left = this.leftProportion * (YAHOO.util.Dom.getViewportWidth()-15) + "px";
 		}
+				
 		splitter.style.top 		= this.topOffset + "px";
 		splitter.style.height 	= (YAHOO.util.Dom.getViewportHeight()-this.topOffset) + "px";
 	}
@@ -43,6 +44,22 @@ Splitter = function( name, config )
 	// fires when splitter is dragged
 	this.resizeOtherComponents = function()
 	{
+		var splitter = $( name );
+		
+		// Prevent the left pane from becoming small enough that tabs start to wrap
+		if (stripUnit(splitter.style.left,"px")<520) 
+		{
+			if (i2b2.hive.MasterView.getZoomWindows().size()>0)
+			{
+				if (stripUnit(splitter.style.left,"px")<520 && YAHOO.util.Dom.getViewportWidth()>520) splitter.style.left=appendUnit(520,"px");	
+			}
+			else
+			{
+				if (stripUnit(splitter.style.left,"px")<300 && YAHOO.util.Dom.getViewportWidth()>300) splitter.style.left=appendUnit(300,"px");
+			}
+		}
+		
+
 		i2b2.ONT.view.main.splitterDragged();		// resize ONT
 		i2b2.WORK.view.main.splitterDragged();		// resize WORK
 		i2b2.CRC.view.history.splitterDragged();	// resize Query History
