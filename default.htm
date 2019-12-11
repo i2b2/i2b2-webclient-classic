@@ -312,6 +312,11 @@ function initI2B2()
 				i2b2.PLUGINMGR.view.list.BuildCategories();
 				i2b2.PLUGINMGR.view.list.Render();
 				
+				// Drag the splitter to get the right labels on the left panel (jgk 12/19)
+				i2b2.ONT.view.main.splitterDragged();
+				i2b2.WORK.view.main.splitterDragged();
+				i2b2.CRC.view.history.splitterDragged();
+				
 			}
 			$('viewMode-Project').innerHTML = "Project: " + i2b2.PM.model.login_projectname;
 			$('viewMode-User').innerHTML = "User: " + i2b2.PM.model.login_fullname;
@@ -339,6 +344,7 @@ function init() {
 	// initialize the i2b2 framework
 	initI2B2();
 	initI2B2_UI();
+	
 }
 YAHOO.util.Event.addListener(window, "load", init);
 
