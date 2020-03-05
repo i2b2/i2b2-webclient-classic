@@ -165,6 +165,8 @@ i2b2.ONT.ctrlr.FindBy = {
 			higherNodes = { '.':treeObj.root }
 			makeHigherNode = function(parent,key,lvl,fullkey) {
 				var o = new Object;
+				
+				parentNode = parent['.'];
 
 				o.search_viz_attr = "T";
 
