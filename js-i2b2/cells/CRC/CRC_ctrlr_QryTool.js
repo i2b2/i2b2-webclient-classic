@@ -1056,7 +1056,24 @@ function QueryToolController() {
 			return void(0);
 		}
 
-		// tdw9 1707c: allow panels to be empty if submitting from new temporal query UI 
+		// 12a: validate temporal query if we are in temporal mode
+		if (i2b2.CRC.view.QT.isShowingTemporalQueryUI)
+		{
+		    var validationResult = this.validateTemporalQuery();
+		    if ( !validationResult.isValidated )
+		    {
+			i2b2.CRC.view.QT.showDialog("Cannot Run Query", validationResult.errorMainMsg, validationResult.errorSubMsg);
+			return void(0);
+		    }
+		} // if not in temporal query mode, forbid queries with empty panels to run
+		else if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup].length < 1) // if not in temporal query mode, check to see if there is a concept 
+		{
+			alert('You must enter at least one concept to run a query.');
+			return void(0);
+		}
+
+		/*
+		// tdw9 1707c: allow panels to be empty if submitting from new temporal query UI
 		if (i2b2.CRC.model.queryCurrent.panels[i2b2.CRC.ctrlr.QT.temporalGroup].length < 1 && // check to see if current set of classic UI panels is empty 
 				!(i2b2.CRC.view.QT.isShowingTemporalQueryUI && !i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI))
 		{
@@ -1079,7 +1096,8 @@ function QueryToolController() {
 				return void(0);
 			}
 		}
-
+		*/
+		
 		// make sure a shrine topic has been selected
 		if (i2b2.PM.model.shrine_domain) {
 			var topicSELECT = $('queryTopicSelect');
