@@ -881,7 +881,7 @@ try {
 		else {
 			if (sValue.indexOf(i2b2.CRC.view.graphs.sObfuscatedEnding) > 0) {
 				var asTempArray = sValue.split(i2b2.CRC.view.graphs.sObfuscatedEnding);
-				iValue = asTempArray[0];
+				iValue = asTempArray[0].trim();
 			}
 			else {
 				iValue = sValue;
@@ -896,7 +896,7 @@ try {
 			iValue = "0";
 		}
 	} else {
-        if (parseInt(sValue) != sValue) {
+        if (parseInt(sValue) != sValue && !i2b2.PM.model.isObfuscated) {
             return sValue;
         }// else {
          //   iValue = parseInt(sValue);
