@@ -4376,7 +4376,7 @@ function QueryToolController() {
 					//Generate data for charts
 					var quotedItemLabel = '"' + item.key + '"';
 					labelsPerChart[index] = quotedItemLabel;
-					values[index]=itemValue.split(' ')[0].replace(/,/g, '');
+					values[index]=item.value; //itemValue.split(' ')[0].replace(/,/g, '');
 					index++;
 				});
 				var subResultDivId = "subResults-" + resultNumber;
