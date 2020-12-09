@@ -782,16 +782,16 @@ YAHOO.util.Event.addListener(window, "load", init);
   <!-- ############### <CRC QueryTool View> ############### -->
   <div id="crcQueryToolBox">
     <div class="TopTabs">
-      <div class="tabBox active">
+      <div class="tabBox active" id="tabQT" onClick="i2b2.CRC.view.QT.selectTab('QT')">
         <div>Query Tool</div>
       </div>
-      <div class="tabBox">
+      <div class="tabBox" id="tabTQT" onClick="i2b2.CRC.view.QT.selectTab('TQT')">
         <div>Temporal Query</div>
       </div>
-      <div class="tabBox">
+      <div class="tabBox" id="tabTimeline" onClick="i2b2.CRC.view.QT.selectTab('Timeline')">
         <div>Timeline</div>
       </div>
-      <div class="tabBox">
+      <div class="tabBox" id="tabExport" onClick="i2b2.CRC.view.QT.selectTab('Export')">
         <div>CSV Export</div>
       </div>
       <div class="opXML"> 

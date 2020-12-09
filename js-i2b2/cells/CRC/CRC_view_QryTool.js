@@ -40,6 +40,52 @@ i2b2.CRC.view.QT.TQryPanel                          = {};
 i2b2.CRC.view.QT.TQryPanel.parentPanel              = "parentPanel"; // used as key to associate concept HTML to its containing parent
 
 var queryTimingButton;
+//new 1.7.13 - tabs
+i2b2.CRC.view.QT.selectTab = function(tabCode) {
+	// toggle between the Navigate and Find Terms tabs
+	switch (tabCode) {
+		case "QT":
+			this.currentTab = 'QT';
+			$('tabQT').addClassName('active');
+			$('tabTQT').removeClassName('active');
+			$('tabTimeline').removeClassName('active');
+			$('tabExport').removeClassName('active');
+			i2b2.CRC.view.QT.setQueryTiming("ANY");
+			i2b2.CRC.view.QT.clearTemportal();
+			if (i2b2.CRC.view.QT.isShowingTemporalQueryUI)
+				i2b2.CRC.view.QT.toggleTemporalQueryUI();
+			i2b2.CRC.view.QT.ResizeHeight();
+//			$('ontFindDisp').style.display = 'none';
+//			$('ontFindDisp').style.display = 'block';
+		break;
+		case "TQT":
+			this.currentTab = 'TQT';
+			$('tabQT').removeClassName('active');
+			$('tabTQT').addClassName('active');
+			$('tabTimeline').removeClassName('active');
+			$('tabExport').removeClassName('active');
+			if (!i2b2.CRC.view.QT.isShowingTemporalQueryUI)
+				i2b2.CRC.view.QT.toggleTemporalQueryUI();
+			i2b2.CRC.view.QT.setQueryTiming("TEMPORAL");
+			if (i2b2.CRC.view.QT.isShowingTemporalQueryUI && i2b2.CRC.view.QT.isShowingClassicTemporalQueryUI)
+			 i2b2.CRC.view.QT.toggleTemporalQueryMode();
+			i2b2.CRC.view.QT.ResizeHeight();
+		break;
+		case "Timeline":
+			this.currentTab = 'info';
+			this.cellRoot.view['info'].showView();
+			this.cellRoot.view['find'].hideView();
+			this.cellRoot.view['nav'].hideView();
+		break;
+		case "Export":
+			this.currentTab = 'info';
+			this.cellRoot.view['info'].showView();
+			this.cellRoot.view['find'].hideView();
+			this.cellRoot.view['nav'].hideView();
+		break;
+	}
+}
+
 //define the option functions
 //================================================================================================== //
 i2b2.CRC.view.QT.showOptions = function(subScreen) {
@@ -337,7 +383,7 @@ i2b2.CRC.view.QT.setQueryTiming = function(sText) {
 			queryTimingButton.set("label",  "Non-Temporal Query: Selected groups occur in the same financial encounter");	
 		} else if (sText == "ANY") {
 			queryTimingButton.set("label",  "Non-Temporal Query: Treat Independently");	
-			$('defineTemporalBar').hide();					
+			$('defineTemporalBar').hide();				
 		}
 
 	}
@@ -1003,6 +1049,10 @@ i2b2.CRC.view.QT.toggleTemporalQueryUI = function()
 {
 	// toggle whether we are showing any temporal query UI
 	i2b2.CRC.view.QT.isShowingTemporalQueryUI = !i2b2.CRC.view.QT.isShowingTemporalQueryUI;
+	// 1.7.13 Tabs
+	if (i2b2.CRC.view.QT.isShowingTemporalQueryUI && this.currentTab!='TQT') i2b2.CRC.view.QT.selectTab("TQT");
+	if (!i2b2.CRC.view.QT.isShowingTemporalQueryUI && this.currentTab!='QT') i2b2.CRC.view.QT.selectTab("QT");
+	
 	if (i2b2.CRC.view.QT.isShowingTemporalQueryUI)
 	{
 		jQuery("#temporalUIToggleDiv").show();
