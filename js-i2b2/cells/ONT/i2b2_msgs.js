@@ -152,13 +152,13 @@ i2b2.ONT.cfg.msgs.GetAllChildrenConcepts = '<?xml version="1.0" encoding="UTF-8"
         '        <result_waittime_ms>{{{result_wait_time}}}000</result_waittime_ms>\n' +
         '    </request_header>\n' +
         '    <message_body>\n' +
-        '        <ns4:get_all_children blob="false" type="core" {{{ont_max_records}}} synonyms="{{{ont_synonym_records}}}" hiddens="{{{ont_hidden_records}}}" numLevel="{{{ont_level_records}}}">\n' +
+        '        <ns4:get_children blob="false" type="core" {{{ont_max_records}}} synonyms="{{{ont_synonym_records}}}" hiddens="{{{ont_hidden_records}}}" numLevel="{{{ont_level_records}}}">\n' +
         '            <parent>{{{concept_key_value}}}</parent>\n' +
-        '        </ns4:get_all_children>\n' +
+        '        </ns4:get_children>\n' +
         '    </message_body>\n' +
         '</ns3:request>';
 i2b2.ONT.ajax._addFunctionCall("GetAllChildrenConcepts",
-        "{{{URL}}}getAllChildren",
+        "{{{URL}}}getChildren",
         i2b2.ONT.cfg.msgs.GetAllChildrenConcepts,
         null,
         i2b2.ONT.cfg.parsers.ExtractConcepts);
