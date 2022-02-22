@@ -271,7 +271,7 @@ i2b2.WORK.ctrlr.main.HandleDrop = function(sdxDropped) {
 	var trgtSdx = trgtNode.data.i2b2_SDX;
 	for (var i=0; i<sdxDropped.length; i++) {
 		var cSDX = sdxDropped[i];
-		if (cSDX.sdxInfo.sdxType=="WORK") {
+		if (cSDX.sdxInfo.sdxType=="WRK") {
 			console.error("The action has been prevented.  This action should have been managed by the default WRK SDX controller");
 			return false;
 		} else if (cSDX.origData.isModifier) {
@@ -290,7 +290,8 @@ i2b2.WORK.ctrlr.main.HandleDrop = function(sdxDropped) {
 i2b2.WORK.ctrlr.main.AddWorkItem = function(sdxChild, targetTvNode, options) { 
 	if (!options) { options={}; }
 	// sanity check can only add children to WRK folders
-	if (targetTvNode.data.i2b2_SDX.sdxInfo.sdxType!="WRK") {
+	if (targetTvNode.data.i2b2_SDX.sdxInfo.sdxType!="WRK" &&
+	    targetTvNode.data.i2b2_SDX.sdxInfo.sdxType!="WRKF") {
 		console.error("This operation was refused. Only a Workplace folder can contain child work items.");
 		return false;
 	}
