@@ -1,0 +1,17 @@
+{
+    "urlProxy": "index.php",
+    "urlFramework": "js-i2b2\/",
+    "startZoomed": true,
+    "lstDomains": [   
+        {
+            "domain": "i2b2demo",
+            "name": "HarvardDemo",
+            "allowAnalysis": true,
+            "urlCellPM": "http:\/\/services.i2b2.org\/i2b2\/services\/PMService\/",
+            "authenticationMethod": "",
+            "loginType": "local",
+            "showRegistration": false,
+            "debug": true
+        }
+    ]
+}
