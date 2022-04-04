@@ -1,8 +1,38 @@
 <?php
+/* * **************************************************************
+
+  i2b2 webclient v.1.7.13
+   *  Client Contributors:
+   *     Nick Benik
+   *     Griffin Weber, MD, PhD
+   *     Mike Mendis
+   *     Shawn Murphy MD, PhD
+   *     David Wang
+   *     Hannah Murphy
+   *     Nich Wattanasin
+   *     Bhaswati Ghosh
+   *	 Jeffrey Klann, PhD
+
+  PHP components:
+   * PHP-BASED I2B2 PROXY "CELL"
+    (does not use SimpleXML library)
+
+    Author: Nick Benik
+    Contributors: Nich Wattanasin
+    Mike Mendis
+    Last Revised: 03-06-19
+
+   * SAML Authentication and session management:
+
+    Author: Kevin Bui
+    Contributors: Michele Morris, Justin Prosser, Mike Mendis, Jeff Klann
+    Last Revised: 04-22
+**********************************************************************/
+
 session_start();
 
-$_SESSION["shib-session-id"] = filter_input(INPUT_SERVER, 'AJP_Shib-Session-ID', FILTER_SANITIZE_STRING);
-$_SESSION["eppn"] = filter_input(INPUT_SERVER, 'AJP_eduPersonPrincipalName', FILTER_SANITIZE_STRING);
+$_SESSION["shib-session-id"] = filter_input(INPUT_SERVER, 'AJP_Shib-Session-ID', FILTER_UNSAFE_RAW);
+$_SESSION["eppn"] = filter_input(INPUT_SERVER, 'AJP_eduPersonPrincipalName', FILTER_UNSAFE_RAW);
 
 $error_msg;
 if (isset($_SESSION['error_msg'])) {
@@ -16,20 +46,10 @@ if (isset($_SESSION['success_msg'])) {
     unset($_SESSION['success_msg']);
 }
 
-/* * **************************************************************
 
-  PHP-BASED I2B2 PROXY "CELL"
+/* * ****************************************************************
 
-  (does not use SimpleXML library)
-
-  Author: Nick Benik
-  Contributors: Nich Wattanasin
-  Mike Mendis
-  Last Revised: 03-06-19
-
- * ****************************************************************
-
-  This file acts as a simple i2b2 proxy cell.  If no variables have been sent it is assumed that the request is from a
+  This section acts as a simple i2b2 proxy cell.  If no variables have been sent it is assumed that the request is from a
   user's Web browser requesting the default page for the current directory.  In this case, this file will read the
   contents of the default.htm file and return its contents to the browser via the current HTTP connection.
 
@@ -232,9 +252,8 @@ if (!empty($PostBody)) {
             <!--
              *  *************************
              *       i2b2 Web Client
-             *           v1.7.12a
+             *           v1.7.13
              *  ************************* 
-             *  @modified: 5/1/20
              *  Contributors:
              *     Nick Benik
              *     Griffin Weber, MD, PhD
@@ -251,7 +270,7 @@ if (!empty($PostBody)) {
             <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
 
             <script type="text/javascript">
-                var i2b2build = "1.7.12a   [5/1/20 12:00 PM] ";
+                var i2b2build = "1.7.13   [4/5/22 12:00 PM] ";
 
                 function handleAgreeChbx(chbx) {
                     let selectOpt = document.getElementById("logindomain");
@@ -866,7 +885,7 @@ if (!empty($PostBody)) {
                     <td align="right" valign="middle">
                         <div id="topBar"> 
                             <span id="menuLogin">
-                                WebClient v1.7.12a &nbsp;|&nbsp; <a id="helpLink" href="Javascript:void(0)" onClick="i2b2.hive.HelpViewer.show();">Help</a>
+                                WebClient v1.7.13 &nbsp;|&nbsp; <a id="helpLink" href="Javascript:void(0)" onClick="i2b2.hive.HelpViewer.show();">Help</a>
                             </span>
                             <!--        <form name="projectsForm" style="margin: 0pt; padding: 0pt;" onSubmit="i2b2.PM.selectProject(); return false;">
                                     <select style="font-size:11px;float:left;" onChange="i2b2.PM.view.modal.projectDialog.loadProject()" name="projects" id="loginProjs2"></select>
