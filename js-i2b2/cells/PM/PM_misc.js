@@ -171,7 +171,7 @@ i2b2.PM.model.html.loginDialog = `
                 </div>
             </form>
         </div>
-        <div class="pb-3 px-3 user_reg">Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signup">Sign Up!</a></div>
+        <div class="pb-3 px-3 user_reg" style="display: none">Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signup">Sign Up!</a></div>
     </div>
 </div>
 `;

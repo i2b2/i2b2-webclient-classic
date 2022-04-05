@@ -82,7 +82,7 @@ if (!empty($postData) && isValid()) {
     if ($user_exists) {
         $_SESSION['error_msg'] = "The username has already been taken.  Please try another.";
     } else {
-        $authMethod = strtoupper(trim(getAuthenticationMethod($hostname)));
+        $authMethod = strtoupper(trim(getRegistrationMethod($hostname)));
 
         // generate secure, random default password of lenght 256*2=512 for NTLM,LDAP,OKTA accounts
         if (!empty($authMethod)) {
@@ -94,7 +94,7 @@ if (!empty($postData) && isValid()) {
             $_SESSION['error_msg'] = "Sorry.  We are unable to sign you up at this time.  Please contact the admin.";
         } else {
             if (!empty($authMethod)) {
-                addLoginAuthenticationMethod($username, $authMethod);
+                addLoginRegistrationMethod($username, $authMethod);
             }
 
             $_SESSION['success_msg'] = "Thank you for signing up!  We will contact you after your registration has been reviewed.";

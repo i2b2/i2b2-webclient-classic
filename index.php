@@ -275,7 +275,7 @@ if (!empty($PostBody)) {
                 function handleAgreeChbx(chbx) {
                     let selectOpt = document.getElementById("logindomain");
                     let domain = i2b2.PM.model.Domains[selectOpt.value];
-                    let authMethod = domain.authenticationMethod.toLowerCase();
+                    let authMethod = domain.registrationMethod.toLowerCase();
                     if (authMethod === 'saml') {
                         [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = false);
                     } else {
@@ -686,14 +686,14 @@ if (!empty($PostBody)) {
 
                 function handleHostSelectChange(selectOpt) {
                     let domain = i2b2.PM.model.Domains[selectOpt.value];
-                    let authMethod = domain.authenticationMethod.toLowerCase();
+                    let authMethod = domain.registrationMethod ? domain.registrationMethod.toLowerCase() : '';
                     let hostName = domain.name;
                     let loginType = domain.loginType;
                     let showUserReg = domain.showRegistration;
 
-                    let isLocal = loginType === 'local';
                     let isFederated = loginType === 'federated';
                     let isSamlSignUp = authMethod === 'saml';
+                    isLocal = !isFederated;
 
                     [].forEach.call(document.getElementsByClassName('local_login'), e => e.style.display = isLocal ? 'block' : 'none');
                     [].forEach.call(document.getElementsByClassName('federated_login'), e => e.style.display = isFederated ? 'block' : 'none');

@@ -46,7 +46,7 @@ if ($username) {
             if ($result_status_error) {
                 $_SESSION['error_msg'] = "Sorry.  We are unable to sign you up at this time.  Please contact the admin.";
             } else {
-                addLoginAuthenticationMethod($username, 'SAML');
+                addLoginRegistrationMethod($username, 'SAML');
 
                 $_SESSION['success_msg'] = "Thank you for signing up!  We will contact you after your registration has been reviewed.";
             }

@@ -80,14 +80,14 @@ function getUrlCellPM($hostname) {
     return $pm_uri;
 }
 
-function getAuthenticationMethod($hostname) {
+function getRegistrationMethod($hostname) {
     global $i2b2_config_data;
 
     $authMethod = '';
     if ($i2b2_config_data) {
         foreach ($i2b2_config_data['lstDomains'] as $domain) {
             if (strcmp($domain['name'], $hostname) === 0) {
-                $authMethod = $domain['authenticationMethod'];
+                $authMethod = $domain['registrationMethod'];
                 break;
             }
         }
@@ -189,7 +189,7 @@ function getUser($username) {
     return $data;
 }
 
-function addLoginAuthenticationMethod($username, $authMethod) {
+function addLoginRegistrationMethod($username, $authMethod) {
     $param_type = 'T';
     $param_status = 'A';
     $param_name = 'authentication_method';
