@@ -1272,8 +1272,17 @@ if (!empty($PostBody)) {
                 <!-- ############### <CRC QueryTool View> ############### -->
                 <div id="crcQueryToolBox">
                     <div class="TopTabs">
-                        <div class="tabBox active">
-                            <div>Query Tool</div>
+                        <div class="tabBox active" id="tabQT" onClick="i2b2.CRC.view.QT.selectTab('QT')">
+                          <div>Query Tool</div>
+                        </div>
+                        <div class="tabBox" id="tabTQT" onClick="i2b2.CRC.view.QT.selectTab('TQT')">
+                          <div>Temporal Query</div>
+                        </div>
+                        <div class="tabBox" id="tabTimeline" onClick="i2b2.CRC.view.QT.selectTab('Timeline')">
+                          <div>Timeline</div>
+                        </div>
+                        <div class="tabBox" id="tabExport" onClick="i2b2.CRC.view.QT.selectTab('Export')">
+                          <div>CSV Export</div>
                         </div>
                         <div class="opXML"> 
                             <!--				<a href="JavaScript:showXML('CRC','QT','Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
