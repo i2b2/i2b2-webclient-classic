@@ -8,7 +8,7 @@
             "name": "HarvardDemo",
             "allowAnalysis": true,
             "urlCellPM": "http:\/\/services.i2b2.org\/i2b2\/services\/PMService\/",
-            "authenticationMethod": "",
+            "registrationMethod": "",
             "loginType": "local",
             "showRegistration": false,
             "debug": true
