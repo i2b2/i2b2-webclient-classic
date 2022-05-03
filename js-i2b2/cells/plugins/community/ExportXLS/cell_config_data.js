@@ -31,7 +31,7 @@
 		name: "ExportXLS", 
 		description: "This plugin tabulates unidentified patient data of selectable concepts/observations and provides options to download the result to specified file type.",
 		icons: { size32x32: "ExportXLS_icon_32x32.png" },
-		category: ["celless","plugin","custom"],
+		category: ["celless","plugin","custom","core","top"],
 		plugin: {
 			isolateHtml: false,  // This means do not use an IFRAME
 			isolateComm: false,  // This means to expect the plugin to use AJAX communications provided by the framework

@@ -186,7 +186,9 @@ i2b2.PLUGINMGR.view.list.BuildCategories = function() {
 		dno.appendChild(dnt);
 		domDD.appendChild(dno);
 	}
-
+	
+	// Set default category to view
+	if (domDD.options.length>1 && domDD.options[2].value=='top') domDD.selectedIndex=2
 }
 
 

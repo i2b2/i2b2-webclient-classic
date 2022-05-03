@@ -14,7 +14,7 @@
 		name: "Timeline",
 		description: "This plugin creates a visual representation of when selected observations occur within a given patient set.",
 		//icons: { size32x32: "Timeline_icon_32x32.gif" },
-		category: ["celless","plugin","standard", "temporal"],
+		category: ["celless","plugin","standard", "temporal","top"],
 		plugin: {
 			isolateHtml: false,  // this means do not use an IFRAME
 			isolateComm: false,  // this means to expect the plugin to use AJAX communications provided by the framework

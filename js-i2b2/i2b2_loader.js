@@ -41,6 +41,18 @@ i2b2.hive.tempCellsList = [
 		   forceLoading: true,
 		   forceConfigMsg: { params: [] }
 		},
+		{ code:	"ExportXLS",
+		   forceLoading: true,
+		   forceConfigMsg: { params: [] },
+		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
+		   forceDir: "cells/plugins/community"
+		},
+		{ code:	"Timeline",
+		   forceLoading: true,
+		   forceConfigMsg: { params: [] },
+		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
+		   forceDir: "cells/plugins/standard"
+		},
 		{ code:	"Dem1Set",
 		   forceLoading: true,
 		   forceConfigMsg: { params: [] },
@@ -48,12 +60,6 @@ i2b2.hive.tempCellsList = [
 		   forceDir: "cells/plugins/standard"
 		},
 		{ code:	"Dem2Set",
-		   forceLoading: true,
-		   forceConfigMsg: { params: [] },
-		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
-		   forceDir: "cells/plugins/standard"
-		},
-		{ code:	"Timeline",
 		   forceLoading: true,
 		   forceConfigMsg: { params: [] },
 		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
@@ -72,12 +78,6 @@ i2b2.hive.tempCellsList = [
 		   forceDir: "cells/plugins/community"
 		},
 		{ code:	"CAREobsTally",
-		   forceLoading: true,
-		   forceConfigMsg: { params: [] },
-		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
-		   forceDir: "cells/plugins/community"
-		},
-		{ code:	"ExportXLS",
 		   forceLoading: true,
 		   forceConfigMsg: { params: [] },
 		   roles: [ "DATA_LDS", "DATA_DEID", "DATA_PROT" ],
