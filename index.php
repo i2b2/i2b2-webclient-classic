@@ -1278,12 +1278,12 @@ if (!empty($PostBody)) {
                         <div class="tabBox" id="tabTQT" onClick="i2b2.CRC.view.QT.selectTab('TQT')">
                           <div>Temporal Query</div>
                         </div>
-                        <div class="tabBox" id="tabTimeline" onClick="i2b2.CRC.view.QT.selectTab('Timeline')">
+                        <div class="tabBox" id="tabTimeline" style="display:none" onClick="i2b2.CRC.view.QT.selectTab('Timeline')">
                           <div>Timeline</div>
                         </div>
-                        <div class="tabBox" id="tabExport" onClick="i2b2.CRC.view.QT.selectTab('Export')">
+                        <div class="tabBox" id="tabExport" style="display:none" onClick="i2b2.CRC.view.QT.selectTab('Export')">
                           <div>CSV Export</div>
-                        </div>
+						</div>
                         <div class="opXML"> 
                             <!--				<a href="JavaScript:showXML('CRC','QT','Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
                             <!--				<a href="JavaScript:showXML('CRC','QT','Response');" class="debug"><img src="assets/images/msg_response.gif" border="0" width="16" height="16" alt="Show XML Response" title="Show XML Response" /></a> --> 
