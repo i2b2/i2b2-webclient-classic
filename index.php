@@ -276,10 +276,15 @@ if (!empty($PostBody)) {
                     let selectOpt = document.getElementById("logindomain");
                     let domain = i2b2.PM.model.Domains[selectOpt.value];
                     let authMethod = domain.registrationMethod.toLowerCase();
+                    let registerBtns = document.getElementsByClassName('register_btn');
                     if (authMethod === 'saml') {
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = false);
+                        for (let i = 0; i < registerBtns.length; i++) {
+                            registerBtns[i].disabled = false;
+                        }
                     } else {
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = !chbx.checked);
+                        for (let i = 0; i < registerBtns.length; i++) {
+                            registerBtns[i].disabled = !chbx.checked;
+                        }
                     }
                 }
 
@@ -558,10 +563,10 @@ if (!empty($PostBody)) {
                                             showAlert("<?php echo isset($success_msg) ? $success_msg : ''; ?>");
                                             showAlert("<?php echo isset($error_msg) ? $error_msg : ''; ?>");
 
-                                            document.getElementById('terms').innerHTML = `${i2b2.UI.cfg.termsCondition}`;
-                                            document.getElementById('loginIdp').innerHTML = `${i2b2.UI.cfg.loginIdp}`;
-                                            document.getElementById('loginIdpIcon').src = `${i2b2.UI.cfg.loginIdpIcon}`;
-                                            document.getElementById('loginIdpIcon').alt = `${i2b2.UI.cfg.loginIdp}`;
+                                            document.getElementById('terms').innerHTML = i2b2.UI.cfg.termsCondition;
+                                            document.getElementById('loginIdp').innerHTML = i2b2.UI.cfg.loginIdp;
+                                            document.getElementById('loginIdpIcon').src = i2b2.UI.cfg.loginIdpIcon;
+                                            document.getElementById('loginIdpIcon').alt = i2b2.UI.cfg.loginIdp;
                                             document.getElementById('logindomain').onchange();
         <?php
     } else {
@@ -693,13 +698,28 @@ if (!empty($PostBody)) {
 
                     let isFederated = loginType === 'federated';
                     let isSamlSignUp = authMethod === 'saml';
-                    isLocal = !isFederated;
+                    let isLocal = !isFederated;
 
-                    [].forEach.call(document.getElementsByClassName('local_login'), e => e.style.display = isLocal ? 'block' : 'none');
-                    [].forEach.call(document.getElementsByClassName('federated_login'), e => e.style.display = isFederated ? 'block' : 'none');
-                    [].forEach.call(document.getElementsByClassName('local_signup'), e => e.style.display = isSamlSignUp ? 'none' : 'block');
-                    [].forEach.call(document.getElementsByClassName('saml_signup'), e => e.style.display = isSamlSignUp ? 'block' : 'none');
-                    [].forEach.call(document.getElementsByClassName('user_reg'), e => e.style.display = showUserReg ? 'block' : 'none');
+                    let classElements = document.getElementsByClassName('local_login');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isLocal ? 'block' : 'none';
+                    }
+                    classElements = document.getElementsByClassName('federated_login');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isFederated ? 'block' : 'none';
+                    }
+                    classElements = document.getElementsByClassName('local_signup');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isSamlSignUp ? 'none' : 'block';
+                    }
+                    classElements = document.getElementsByClassName('saml_signup');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isSamlSignUp ? 'block' : 'none';
+                    }
+                    classElements = document.getElementsByClassName('user_reg');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = showUserReg ? 'block' : 'none';
+                    }
 
                     document.getElementById("term_conditions").style.display = isSamlSignUp ? 'none' : 'block';
 
@@ -711,7 +731,10 @@ if (!empty($PostBody)) {
                         document.getElementById("terms-registration").classList.remove("col-6");
                         document.getElementById("terms-registration").classList.add("col-12");
 
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = false);
+                        classElements = document.getElementsByClassName('register_btn');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].disabled = false;
+                        }
                     } else {
                         document.getElementById("signup-dialog").classList.add("modal-lg");
 
@@ -719,7 +742,10 @@ if (!empty($PostBody)) {
                         document.getElementById("terms-registration").classList.add("col-6");
 
                         let chbx = document.getElementById("agree-local");
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = !chbx.checked);
+                        classElements = document.getElementsByClassName('register_btn');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].disabled = !chbx.checked;
+                        }
                     }
 
                     // hide password field for LDAP, NTLM, OKTA
@@ -728,13 +754,19 @@ if (!empty($PostBody)) {
                         document.getElementById("confirmPassword").value = 'demouser';
                         document.getElementById("terms").rows = isSamlSignUp ? "16" : "8";
 
-                        [].forEach.call(document.getElementsByClassName('password_field'), e => e.style.display = 'none');
+                        classElements = document.getElementsByClassName('password_field');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].style.display = 'none';
+                        }
                     } else {
                         document.getElementById("password").value = '';
                         document.getElementById("confirmPassword").value = '';
                         document.getElementById("terms").rows = "16";
 
-                        [].forEach.call(document.getElementsByClassName('password_field'), e => e.style.display = 'block');
+                        classElements = document.getElementsByClassName('password_field');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].style.display = 'block';
+                        }
                     }
                 }
                 jQuery(document).ready(function ($) {
@@ -892,7 +924,7 @@ if (!empty($PostBody)) {
                             <input type="hidden" value="" name="i2b2_projects_modal_dialog"/>
                         </form>
                             --> 
-                            <span id="menuMain" style="display:none;">
+                            <div id="menuMain" style="display:none;">
                                 <span id="viewMode-Patients"> <a href="Javascript:void(0)" onClick="i2b2.hive.MasterView.setViewMode('Patients');">Find Patients</a> &nbsp;|&nbsp; </span> 
                                 <!--         <span id="viewMode-Admin">
                                                 <a href="Javascript:void(0)" onClick="i2b2.hive.MasterView.setViewMode('Admin');">Admin</a>
@@ -917,9 +949,9 @@ if (!empty($PostBody)) {
                                     </span>
                                 <?php } ?>
                                 <a href="Javascript:void(0);" onClick="i2b2.PM.doLogout();">Logout</a>
+                            </div>
                         </div>
                     </td>
-                    </span>
                 </tr>
             </table>
             <div id="screenQueryData" style="display:none"> 
@@ -939,17 +971,17 @@ if (!empty($PostBody)) {
                                 <div>Info</div>
                             </div>
                             <div id="guestTabWorkplace" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView();
-                                        i2b2.WORK.view.main.ZoomView()">
+                                        i2b2.WORK.view.main.ZoomView();">
                                 <div>Workplace</div>
                             </div>
                             <div id="guestTabQueries" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView();
                                         i2b2.CRC.view.history.ZoomView();
-                                        i2b2.CRC.view.history.selectTab('nav')"; >
+                                        i2b2.CRC.view.history.selectTab('nav');" >
                                 <div>Queries</div>
                             </div>   
                             <div id="guestTabQuerySearch" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView();
                                         i2b2.CRC.view.history.ZoomView();
-                                        i2b2.CRC.view.history.selectTab('find')"; >
+                                        i2b2.CRC.view.history.selectTab('find');" >
                                 <div>Find Qry</div>
                             </div>     
                         </div>
@@ -1307,7 +1339,7 @@ if (!empty($PostBody)) {
                                 </select>
                             </div>
                             <div id="temporalUIToggleDiv">
-                                <a href="#" id="temporalUIToggleLink" onclick=i2b2.CRC.view.QT.toggleTemporalQueryMode(); return false;"> <span id="toggleTemporalQueryModeSpan"> Swtich to Advanced Temporal Query </span> </a>
+                                <a href="#" id="temporalUIToggleLink" onclick="i2b2.CRC.view.QT.toggleTemporalQueryMode(); return false;"> <span id="toggleTemporalQueryModeSpan"> Swtich to Advanced Temporal Query </span> </a>
                             </div>
                         </div>
                         <div class="queryNameBar" id="defineTemporalBar" style="width:512px;display:none;">
@@ -1748,7 +1780,7 @@ if (!empty($PostBody)) {
                                         </table><br/> </td>
                                 </tr>
                                 <tr>
-                                    <td><span id="HISTUserLabel">Get previous queries for: </a></td>
+                                    <td><span id="HISTUserLabel">Get previous queries for: </span></td>
                                     <td><select id="HISTUser" style="font-size:11px;"><option value="@">All Users</option></select></td>
                                 </tr>
                                 <tr>
