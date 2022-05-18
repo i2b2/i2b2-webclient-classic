@@ -137,40 +137,37 @@ i2b2.PM.model.html.loginDialog = '<div id="i2b2_login_modal_dialog" style="displ
 '    <div class="hd">' + i2b2.UI.cfg.loginHeaderText + '</div>\n' +
 '    <div class="login-dialog">\n' +
 '        <div class="py-3 px-3">\n' +
-'            <form name="loginForm" style="margin:0;padding:0;" onsubmit="i2b2.PM.doLogin(); return false;">\n' +
-'                <div class="mb-3">\n' +
-'                    <label for="logindomain" class="form-label fw-bold">' + i2b2.UI.cfg.loginHostText + '</label>\n' +
-'                    <select class="form-select form-select-sm" name="server" id="logindomain" onchange="handleHostSelectChange(this);">\n' +
+'            <form name="loginForm" style="margin:0;padding:0;" onsubmit="i2b2.PM.doLogin();\n' +
+'                return false;">\n' +
+'                <div class="form-group">\n' +
+'                    <label for="logindomain" class="fw-bold">' + i2b2.UI.cfg.loginHostText + '</label>\n' +
+'                    <select class="form-select form-select-sm form-control" name="server" id="logindomain" onchange="handleHostSelectChange(this);">\n' +
 '                        <option value="">Loading...</option>\n' +
 '                    </select>\n' +
 '                </div>\n' +
 '                <div class="card bg-light">\n' +
 '                    <div class="card-body">\n' +
 '                        <div class="federated_login">\n' +
-'                            <div class="d-grid col-12 mx-auto">\n' +
-'                                <button class="btn btn-sm btn-idp" type="button" onclick="location.href=\'login.php\';">\n' +
-'                                    <img role="img" src="' + i2b2.UI.cfg.loginIdpIcon + '" alt="' + i2b2.UI.cfg.loginIdp + '" width="16" height="16" /> Sign In With ' + i2b2.UI.cfg.loginIdp + '\n' +
-'                                </button>\n' +
-'                            </div>\n' +
+'                            <button class="btn btn-sm btn-block btn-idp" type="button" onclick="location.href = \'login.php\';">\n' +
+'                                <img role="img" src="' + i2b2.UI.cfg.loginIdpIcon + '" alt="' + i2b2.UI.cfg.loginIdp + '" width="16" height="16" /> Sign In With ' + i2b2.UI.cfg.loginIdp + '\n' +
+'                            </button>\n' +
 '                        </div>\n' +
 '                        <div class="local_login">\n' +
-'                            <div class="mb-3">\n' +
-'                                <label for="loginusr" class="form-label fw-bold">' + i2b2.UI.cfg.loginUsernameText + '</label>\n' +
+'                            <div class="form-group">\n' +
+'                                <label for="loginusr" class="fw-bold">' + i2b2.UI.cfg.loginUsernameText + '</label>\n' +
 '                                <input class="form-control form-control-sm" type="text" type="text" name="uname" id="loginusr" value="' + i2b2.UI.cfg.loginDefaultUsername + '" size="20" maxlength="50" />\n' +
 '                            </div>\n' +
-'                            <div class="mb-3">\n' +
-'                                <label for="loginpass" class="form-label fw-bold">' + i2b2.UI.cfg.loginPasswordText + '</label>\n' +
+'                            <div class="form-group">\n' +
+'                                <label for="loginpass" class="fw-bold">' + i2b2.UI.cfg.loginPasswordText + '</label>\n' +
 '                                <input class="form-control form-control-sm" type="password" name="pword" id="loginpass" value="' + i2b2.UI.cfg.loginDefaultPassword + '" size="20" maxlength="50" />\n' +
 '                            </div>\n' +
-'                            <div class="d-grid col-12 mx-auto">\n' +
-'                                <button class="btn btn-sm btn-local" type="button" id="loginButton" onclick="i2b2.PM.doLogin()">Sign In</button>\n' +
-'                            </div>\n' +
+'                            <button class="btn btn-sm btn-block btn-local" type="button" id="loginButton" onclick="i2b2.PM.doLogin()">Sign In</button>\n' +
 '                        </div>\n' +
 '                    </div>\n' +
 '                </div>\n' +
 '            </form>\n' +
 '        </div>\n' +
-'        <div class="pb-3 px-3 user_reg" style="display: none">Don\'t have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signup">Sign Up!</a></div>\n' +
+'        <div class="pb-3 px-3 user_reg" style="display: block">Don\'t have an account? <a href="#" data-toggle="modal" data-target="#signup">Sign Up!</a></div>\n' +
 '    </div>\n' +
 '</div>\n';
 

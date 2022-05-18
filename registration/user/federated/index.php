@@ -96,7 +96,7 @@ if ($username) {
                 </head>
                 <body>
                     <main class="fed-user-reg">
-                        <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card mb-4 shadow-sm">
                             <div class="card-body">
                                 <form id="registration" action="" method="post">
                                     <div class="row">
@@ -113,7 +113,7 @@ if ($username) {
                                         </div>
                                         <div class="col-12">
                                             <div class="mt-3">
-                                                <button class="w-100 btn btn-sm btn-primary register_btn" type="submit" disabled="disabled">Sign Up</button>
+                                                <button class="btn btn-block btn-sm btn-primary register_btn" type="submit" disabled="disabled">Sign Up</button>
                                             </div>
                                         </div>
                                     </div>
