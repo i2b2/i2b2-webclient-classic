@@ -2,31 +2,31 @@
 /* * **************************************************************
 
   i2b2 webclient v.1.7.13
-   *  Client Contributors:
-   *     Nick Benik
-   *     Griffin Weber, MD, PhD
-   *     Mike Mendis
-   *     Shawn Murphy MD, PhD
-   *     David Wang
-   *     Hannah Murphy
-   *     Nich Wattanasin
-   *     Bhaswati Ghosh
+ *  Client Contributors:
+ *     Nick Benik
+ *     Griffin Weber, MD, PhD
+ *     Mike Mendis
+ *     Shawn Murphy MD, PhD
+ *     David Wang
+ *     Hannah Murphy
+ *     Nich Wattanasin
+ *     Bhaswati Ghosh
    *	 Jeffrey Klann, PhD
 
   PHP components:
-   * PHP-BASED I2B2 PROXY "CELL"
-    (does not use SimpleXML library)
+ * PHP-BASED I2B2 PROXY "CELL"
+  (does not use SimpleXML library)
 
-    Author: Nick Benik
-    Contributors: Nich Wattanasin
-    Mike Mendis
-    Last Revised: 03-06-19
+  Author: Nick Benik
+  Contributors: Nich Wattanasin
+  Mike Mendis
+  Last Revised: 03-06-19
 
-   * SAML Authentication and session management:
+ * SAML Authentication and session management:
 
-    Author: Kevin Bui
-    Contributors: Michele Morris, Justin Prosser, Mike Mendis, Jeff Klann
-    Last Revised: 04-22
+  Author: Kevin Bui
+  Contributors: Michele Morris, Justin Prosser, Mike Mendis, Jeff Klann
+  Last Revised: 04-22
 **********************************************************************/
 
 session_start();
@@ -276,10 +276,15 @@ if (!empty($PostBody)) {
                     let selectOpt = document.getElementById("logindomain");
                     let domain = i2b2.PM.model.Domains[selectOpt.value];
                     let authMethod = domain.registrationMethod.toLowerCase();
+                    let registerBtns = document.getElementsByClassName('register_btn');
                     if (authMethod === 'saml') {
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = false);
+                        for (let i = 0; i < registerBtns.length; i++) {
+                            registerBtns[i].disabled = false;
+                        }
                     } else {
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = !chbx.checked);
+                        for (let i = 0; i < registerBtns.length; i++) {
+                            registerBtns[i].disabled = !chbx.checked;
+                        }
                     }
                 }
 
@@ -386,6 +391,10 @@ if (!empty($PostBody)) {
                     color: #fff;
                     background-color: #bb3c2e;
                     border-color: #d54736;
+                }
+
+                .fw-bold {
+                    font-weight: 700 !important;
                 }
             </style>
             <script type="text/javascript" src="js-ext/idle-timer.js"></script>
@@ -558,10 +567,10 @@ if (!empty($PostBody)) {
                                             showAlert("<?php echo isset($success_msg) ? $success_msg : ''; ?>");
                                             showAlert("<?php echo isset($error_msg) ? $error_msg : ''; ?>");
 
-                                            document.getElementById('terms').innerHTML = `${i2b2.UI.cfg.termsCondition}`;
-                                            document.getElementById('loginIdp').innerHTML = `${i2b2.UI.cfg.loginIdp}`;
-                                            document.getElementById('loginIdpIcon').src = `${i2b2.UI.cfg.loginIdpIcon}`;
-                                            document.getElementById('loginIdpIcon').alt = `${i2b2.UI.cfg.loginIdp}`;
+                                            document.getElementById('terms').innerHTML = i2b2.UI.cfg.termsCondition;
+                                            document.getElementById('loginIdp').innerHTML = i2b2.UI.cfg.loginIdp;
+                                            document.getElementById('loginIdpIcon').src = i2b2.UI.cfg.loginIdpIcon;
+                                            document.getElementById('loginIdpIcon').alt = i2b2.UI.cfg.loginIdp;
                                             document.getElementById('logindomain').onchange();
         <?php
     } else {
@@ -693,13 +702,28 @@ if (!empty($PostBody)) {
 
                     let isFederated = loginType === 'federated';
                     let isSamlSignUp = authMethod === 'saml';
-                    isLocal = !isFederated;
+                    let isLocal = !isFederated;
 
-                    [].forEach.call(document.getElementsByClassName('local_login'), e => e.style.display = isLocal ? 'block' : 'none');
-                    [].forEach.call(document.getElementsByClassName('federated_login'), e => e.style.display = isFederated ? 'block' : 'none');
-                    [].forEach.call(document.getElementsByClassName('local_signup'), e => e.style.display = isSamlSignUp ? 'none' : 'block');
-                    [].forEach.call(document.getElementsByClassName('saml_signup'), e => e.style.display = isSamlSignUp ? 'block' : 'none');
-                    [].forEach.call(document.getElementsByClassName('user_reg'), e => e.style.display = showUserReg ? 'block' : 'none');
+                    let classElements = document.getElementsByClassName('local_login');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isLocal ? 'block' : 'none';
+                    }
+                    classElements = document.getElementsByClassName('federated_login');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isFederated ? 'block' : 'none';
+                    }
+                    classElements = document.getElementsByClassName('local_signup');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isSamlSignUp ? 'none' : 'block';
+                    }
+                    classElements = document.getElementsByClassName('saml_signup');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = isSamlSignUp ? 'block' : 'none';
+                    }
+                    classElements = document.getElementsByClassName('user_reg');
+                    for (let i = 0; i < classElements.length; i++) {
+                        classElements[i].style.display = showUserReg ? 'block' : 'none';
+                    }
 
                     document.getElementById("term_conditions").style.display = isSamlSignUp ? 'none' : 'block';
 
@@ -711,7 +735,10 @@ if (!empty($PostBody)) {
                         document.getElementById("terms-registration").classList.remove("col-6");
                         document.getElementById("terms-registration").classList.add("col-12");
 
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = false);
+                        classElements = document.getElementsByClassName('register_btn');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].disabled = false;
+                        }
                     } else {
                         document.getElementById("signup-dialog").classList.add("modal-lg");
 
@@ -719,7 +746,10 @@ if (!empty($PostBody)) {
                         document.getElementById("terms-registration").classList.add("col-6");
 
                         let chbx = document.getElementById("agree-local");
-                        [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = !chbx.checked);
+                        classElements = document.getElementsByClassName('register_btn');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].disabled = !chbx.checked;
+                        }
                     }
 
                     // hide password field for LDAP, NTLM, OKTA
@@ -728,13 +758,19 @@ if (!empty($PostBody)) {
                         document.getElementById("confirmPassword").value = 'demouser';
                         document.getElementById("terms").rows = isSamlSignUp ? "16" : "8";
 
-                        [].forEach.call(document.getElementsByClassName('password_field'), e => e.style.display = 'none');
+                        classElements = document.getElementsByClassName('password_field');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].style.display = 'none';
+                        }
                     } else {
                         document.getElementById("password").value = '';
                         document.getElementById("confirmPassword").value = '';
                         document.getElementById("terms").rows = "16";
 
-                        [].forEach.call(document.getElementsByClassName('password_field'), e => e.style.display = 'block');
+                        classElements = document.getElementsByClassName('password_field');
+                        for (let i = 0; i < classElements.length; i++) {
+                            classElements[i].style.display = 'block';
+                        }
                     }
                 }
                 jQuery(document).ready(function ($) {
@@ -892,7 +928,7 @@ if (!empty($PostBody)) {
                             <input type="hidden" value="" name="i2b2_projects_modal_dialog"/>
                         </form>
                             --> 
-                            <span id="menuMain" style="display:none;">
+                            <div id="menuMain" style="display:none;">
                                 <span id="viewMode-Patients"> <a href="Javascript:void(0)" onClick="i2b2.hive.MasterView.setViewMode('Patients');">Find Patients</a> &nbsp;|&nbsp; </span> 
                                 <!--         <span id="viewMode-Admin">
                                                 <a href="Javascript:void(0)" onClick="i2b2.hive.MasterView.setViewMode('Admin');">Admin</a>
@@ -905,7 +941,7 @@ if (!empty($PostBody)) {
                                 </span>
                                 <span id="adminPlugins" style="display:none">
                                     <a href="#" onClick="invokeWCPinstaller();
-                                                return false;" target="_blank">Install Plugins from i2b2 Gallery</a> &nbsp;|&nbsp;
+                                            return false;" target="_blank">Install Plugins from i2b2 Gallery</a> &nbsp;|&nbsp;
                                 </span>
                                 <span id="debugMsgSniffer" style="display:none">
                                     <a href="Javascript:void(0)" onClick="i2b2.hive.MsgSniffer.show();">Message Log</a> &nbsp;|&nbsp;
@@ -917,9 +953,9 @@ if (!empty($PostBody)) {
                                     </span>
                                 <?php } ?>
                                 <a href="Javascript:void(0);" onClick="i2b2.PM.doLogout();">Logout</a>
+                            </div>
                         </div>
                     </td>
-                    </span>
                 </tr>
             </table>
             <div id="screenQueryData" style="display:none"> 
@@ -939,17 +975,17 @@ if (!empty($PostBody)) {
                                 <div>Info</div>
                             </div>
                             <div id="guestTabWorkplace" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView();
-                                        i2b2.WORK.view.main.ZoomView()">
+                                    i2b2.WORK.view.main.ZoomView();">
                                 <div>Workplace</div>
                             </div>
                             <div id="guestTabQueries" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView();
-                                        i2b2.CRC.view.history.ZoomView();
-                                        i2b2.CRC.view.history.selectTab('nav')"; >
+                                    i2b2.CRC.view.history.ZoomView();
+                                    i2b2.CRC.view.history.selectTab('nav');" >
                                 <div>Queries</div>
                             </div>   
                             <div id="guestTabQuerySearch" class="tabBox" style="display:None" onClick="i2b2.ONT.view.main.ZoomView();
-                                        i2b2.CRC.view.history.ZoomView();
-                                        i2b2.CRC.view.history.selectTab('find')"; >
+                                    i2b2.CRC.view.history.ZoomView();
+                                    i2b2.CRC.view.history.selectTab('find');" >
                                 <div>Find Qry</div>
                             </div>     
                         </div>
@@ -1147,31 +1183,31 @@ if (!empty($PostBody)) {
                 <div id="wrkWorkplace" style="display:none;">
                     <div class="TopTabs">
                         <div id="WRKguestTabNavigate" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView();
-                                    i2b2.ONT.view.main.ZoomView();
-                                    i2b2.ONT.view.main.selectTab('nav')">
+                                i2b2.ONT.view.main.ZoomView();
+                                i2b2.ONT.view.main.selectTab('nav')">
                             <div>Terms</div>
                         </div>
                         <div id="WRKguestTabFind" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView();
-                                    i2b2.ONT.view.main.ZoomView();
-                                    i2b2.ONT.view.main.selectTab('find');">
+                                i2b2.ONT.view.main.ZoomView();
+                                i2b2.ONT.view.main.selectTab('find');">
                             <div>Find Trm</div>
                         </div>
                         <div id="WRKguestTabInfo" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView();
-                                    i2b2.ONT.view.main.ZoomView();
-                                    i2b2.ONT.view.main.selectTab('info');">
+                                i2b2.ONT.view.main.ZoomView();
+                                i2b2.ONT.view.main.selectTab('info');">
                             <div>Info</div>
                         </div>
                         <div class="tabBox active">
                             <div>Workplace</div>
                         </div>
                         <div id="WRKguestTabQueries" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView();
-                                    i2b2.CRC.view.history.ZoomView();
-                                    i2b2.CRC.view.history.selectTab('nav')">
+                                i2b2.CRC.view.history.ZoomView();
+                                i2b2.CRC.view.history.selectTab('nav')">
                             <div>Queries</div>
                         </div>
                         <div id="WRKguestTabFindQueries" class="tabBox" style="display:None" onClick="i2b2.WORK.view.main.ZoomView();
-                                    i2b2.CRC.view.history.ZoomView();
-                                    i2b2.CRC.view.history.selectTab('find')">
+                                i2b2.CRC.view.history.ZoomView();
+                                i2b2.CRC.view.history.selectTab('find')">
                             <div>Find Qry</div>
                         </div>
                         <div class="opXML"> 
@@ -1180,7 +1216,7 @@ if (!empty($PostBody)) {
                             <a href="JavaScript:showXML('WORK','main','Stack');" class="debug"><img src="assets/images/msg_stack.gif" border="0" width="16" height="16"  alt="Show XML Message Stack" title="Show XML Message Stack" /></a> 
                             <a href="JavaScript:i2b2.WORK.view.main.refreshTree();"><div style="display: inline;" id="refWorkQS"><img width="16" id="refreshWorkImg" border="0" height="16" src="assets/images/refreshButton.gif" alt="Refresh Workplace" title="Refresh Workplace"></div><div style="display: none;" id="refWork2QS"><img width="16" border="0" height="16" src="assets/images/loadera16.gif" alt="Refresh Workplace" title="Refresh Workplace"></div></a> 
 
-                                                                                                                                                                                                                                                                                                                                                            <!--				<a href="JavaScript:i2b2.WORK.view.main.showOptions();"><img src="assets/images/options.gif" border="0" width="16" height="16" alt="Show Options" title="Show Options" /></a> --> 
+                                                                                                                                                                                                                                                                                                                                                                <!--				<a href="JavaScript:i2b2.WORK.view.main.showOptions();"><img src="assets/images/options.gif" border="0" width="16" height="16" alt="Show Options" title="Show Options" /></a> --> 
                             <a href="JavaScript:i2b2.WORK.view.main.ZoomView();"><img id="wrkZoomImg" width="16" height="16" border="0" src="js-i2b2/cells/WORK/assets/zoom_icon.gif" alt="Resize Workspace" title="Resize Workspace" /></a> </div>
                     </div>
                     <div class="bodyBox">
@@ -1194,22 +1230,22 @@ if (!empty($PostBody)) {
                     <div class="TopTabs">
                         <div style="position:absolute;z-index:200;">
                             <div id="CRCguestTabNavigate" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView();
-                                        i2b2.ONT.view.main.ZoomView();
-                                        i2b2.ONT.view.main.selectTab('nav')">
+                                    i2b2.ONT.view.main.ZoomView();
+                                    i2b2.ONT.view.main.selectTab('nav')">
                                 <div>Terms</div>
                             </div>
                             <div id="CRCguestTabFind" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView();
-                                        i2b2.ONT.view.main.ZoomView();
-                                        i2b2.ONT.view.main.selectTab('find');">
+                                    i2b2.ONT.view.main.ZoomView();
+                                    i2b2.ONT.view.main.selectTab('find');">
                                 <div>Find Trm</div>
                             </div>
                             <div id="CRCguestTabInfo" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView();
-                                        i2b2.ONT.view.main.ZoomView();
-                                        i2b2.ONT.view.main.selectTab('info');">
+                                    i2b2.ONT.view.main.ZoomView();
+                                    i2b2.ONT.view.main.selectTab('info');">
                                 <div>Info</div>
                             </div>
                             <div id="CRCguestTabWorkplace" class="tabBox" style="display:None" onClick="i2b2.CRC.view.history.ZoomView();
-                                        i2b2.WORK.view.main.ZoomView()">
+                                    i2b2.WORK.view.main.ZoomView()">
                                 <div>Workplace</div>
                             </div>
                             <div id="crctabNavigate" class="tabBox active" onClick="i2b2.CRC.view.history.selectTab('nav')">
@@ -1273,17 +1309,17 @@ if (!empty($PostBody)) {
                 <div id="crcQueryToolBox">
                     <div class="TopTabs">
                         <div class="tabBox active" id="tabQT" onClick="i2b2.CRC.view.QT.selectTab('QT')">
-                          <div>Query Tool</div>
+                            <div>Query Tool</div>
                         </div>
                         <div class="tabBox" id="tabTQT" onClick="i2b2.CRC.view.QT.selectTab('TQT')">
-                          <div>Temporal Query</div>
+                            <div>Temporal Query</div>
                         </div>
                         <div class="tabBox" id="tabTimeline" style="display:none" onClick="i2b2.CRC.view.QT.selectTab('Timeline')">
-                          <div>Timeline</div>
+                            <div>Timeline</div>
                         </div>
                         <div class="tabBox" id="tabExport" style="display:none" onClick="i2b2.CRC.view.QT.selectTab('Export')">
-                          <div>CSV Export</div>
-						</div>
+                            <div>CSV Export</div>
+                        </div>
                         <div class="opXML"> 
                             <!--				<a href="JavaScript:showXML('CRC','QT','Request');" class="debug"><img src="assets/images/msg_request.gif" border="0" width="16" height="16" alt="Show XML Request" title="Show XML Request" /></a> --> 
                             <!--				<a href="JavaScript:showXML('CRC','QT','Response');" class="debug"><img src="assets/images/msg_response.gif" border="0" width="16" height="16" alt="Show XML Response" title="Show XML Response" /></a> --> 
@@ -1307,7 +1343,7 @@ if (!empty($PostBody)) {
                                 </select>
                             </div>
                             <div id="temporalUIToggleDiv">
-                                <a href="#" id="temporalUIToggleLink" onclick=i2b2.CRC.view.QT.toggleTemporalQueryMode(); return false;"> <span id="toggleTemporalQueryModeSpan"> Swtich to Advanced Temporal Query </span> </a>
+                                <a href="#" id="temporalUIToggleLink" onclick="i2b2.CRC.view.QT.toggleTemporalQueryMode(); return false;"> <span id="toggleTemporalQueryModeSpan"> Swtich to Advanced Temporal Query </span> </a>
                             </div>
                         </div>
                         <div class="queryNameBar" id="defineTemporalBar" style="width:512px;display:none;">
@@ -1330,8 +1366,8 @@ if (!empty($PostBody)) {
                                 <div id="outerTemporalSequenceUI" style="display:none">
                                     <div id="tutorialDiv" class="tutorialClass"> 
                                         <a href="#" onclick="i2b2.CRC.view.QT.toggleTutorial();
-                                                    return false;"> <span id="tutorialOnOffSpan"> Turn on Tutorial </span> </a> <span id="tutorialText" class="tutorialComponent"></span> <a href="#" id="tutorialShowMeLink" class="tutorialComponent"  onclick="i2b2.CRC.view.QT.runTutorialAtState();
-                                                            return false;"> <span id="tutorShowMeText"> Show Me </span> </a>
+                                                return false;"> <span id="tutorialOnOffSpan"> Turn on Tutorial </span> </a> <span id="tutorialText" class="tutorialComponent"></span> <a href="#" id="tutorialShowMeLink" class="tutorialComponent"  onclick="i2b2.CRC.view.QT.runTutorialAtState();
+                                                        return false;"> <span id="tutorShowMeText"> Show Me </span> </a>
                                     </div>
                                     <p id="temporalSequenceHeaderMessage" class="temporalSequenceMsgHeader">Drop a Concept into the Box to Start Building a Temporal Sequence</p>
                                     <!--<p id="temporalSequenceMessage" class="temporalSequenceMsg"><a href="#" onclick="i2b2.CRC.view.QT.runTutorial(1); return false;">(Show me)</a></p> -->
@@ -1349,7 +1385,7 @@ if (!empty($PostBody)) {
                                             <div id="temporalEvent_0" class="temporalEvent">
                                                 <div class="temporalEventHeader">
                                                     <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="i2b2.CRC.view.QT.deleteEventPressed(this);
-                                                                return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
+                                                            return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
                                                     Observation A
                                                 </div>
                                                 <div id="temporalEvent_0_P0" class="temporalPanel">
@@ -1358,13 +1394,13 @@ if (!empty($PostBody)) {
                                                         <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
                                                         <div class="temporalPanelDeleteDiv">
                                                             <div class="temporalPanelDeleteButton"><a href="#" onclick="i2b2.CRC.view.QT.deletePanelPressed(this);
-                                                                        return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
+                                                                    return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
                                                         </div>
                                                     </div>
                                                     <div id="temporalEvent_0_P0_content" class="temporalPanelContentDiv"></div>
                                                     <div class="temporalPanelAddDiv">
                                                         <div class="addPanelButton"><a href="#" onclick="i2b2.CRC.view.QT.addPanelPressed(this);
-                                                                    return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
+                                                                return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1379,7 +1415,7 @@ if (!empty($PostBody)) {
                                             <div id="temporalEvent_1" class="temporalEvent">
                                                 <div class="temporalEventHeader">
                                                     <div class="temporalEventDeleteDiv" style="float:right"><a href="#" onclick="i2b2.CRC.view.QT.deleteEventPressed(this);
-                                                                return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
+                                                            return false;"><img src="js-i2b2/cells/CRC/assets/QryTool_b_clear.gif" border="0" alt="Remove this Observation" title="Remove this Observation"></a></div>
                                                     Observation B
                                                 </div>
                                                 <div id="temporalEvent_1_P0" class="temporalPanel">
@@ -1388,13 +1424,13 @@ if (!empty($PostBody)) {
                                                         <div class="temporalPanelExcludeDiv temporalPanelButton">Exclude</div>
                                                         <div class="temporalPanelDeleteDiv">
                                                             <div class="temporalPanelDeleteButton"><a href="#" onclick="i2b2.CRC.view.QT.deletePanelPressed(this);
-                                                                        return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
+                                                                    return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_clear.gif" border="0" alt="Remove this Panel" title="Remove this Panel"></a></div>
                                                         </div>
                                                     </div>
                                                     <div id="temporalEvent_1_P0_content" class="temporalPanelContentDiv"></div>
                                                     <div class="temporalPanelAddDiv">
                                                         <div class="addPanelButton"><a href="#" onclick="i2b2.CRC.view.QT.addPanelPressed(this);
-                                                                    return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
+                                                                return false;"><img src="js-i2b2/cells/CRC/assets/TQryPanel_add.gif" border="0" alt="Add a New Panel" title="Add a New Panel"></a></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1666,9 +1702,9 @@ if (!empty($PostBody)) {
                         </div>
                         <div id="anaPluginList" oncontextmenu="return false"></div>
                         <div style="background:#667788;height:22px;padding-left:4px;"><span id="PluginGalleryFooter" style="display:none;float:left"><img src="assets/images/p_gallery.png" align="absbottom" style="margin-top:2px;" /> <a href="#" onClick="invokeWCPinstaller();
-                                    return false;" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:13px;color:#FFF;" >Click here to view more plugins in i2b2 Gallery...</a></span><span style="float:right;margin-right:5px"><a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');
-                                            return false;" style="text-decoration:none;font-size:13px;color:#FFF;" ><img src="assets/images/p_close.png" align="absbottom" border="0" style="margin-top:2px;" /></a> <a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');
-                                                    return false;" style="text-decoration:none;font-size:13px;color:#FFF;">Close</a></span></div>
+                                return false;" target="_blank" id="PluginsGalleryLink" style="text-decoration:none;font-size:13px;color:#FFF;" >Click here to view more plugins in i2b2 Gallery...</a></span><span style="float:right;margin-right:5px"><a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');
+                                        return false;" style="text-decoration:none;font-size:13px;color:#FFF;" ><img src="assets/images/p_close.png" align="absbottom" border="0" style="margin-top:2px;" /></a> <a href="#" onClick="jQuery('#pluginsMenu').qtip('hide');
+                                                return false;" style="text-decoration:none;font-size:13px;color:#FFF;">Close</a></span></div>
                     </div>
                     <div style="clear:both;"></div>
                 </div>
@@ -1687,7 +1723,7 @@ if (!empty($PostBody)) {
                     <div class="PluginViewBox">
                         <div id="anaPluginViewFrame" oncontextmenu="return false">
                             <div class="initialMsg"><a href="#" style="color:#6677aa" onclick="jQuery('#pluginsMenu').qtip('show');
-                                        return false;">Select a plugin to load</a></div>
+                                    return false;">Select a plugin to load</a></div>
                         </div>
                         <iframe id="anaPluginIFRAME" src="assets/blank.html" style="display:none"></iframe>
                     </div>
@@ -1748,7 +1784,7 @@ if (!empty($PostBody)) {
                                         </table><br/> </td>
                                 </tr>
                                 <tr>
-                                    <td><span id="HISTUserLabel">Get previous queries for: </a></td>
+                                    <td><span id="HISTUserLabel">Get previous queries for: </span></td>
                                     <td><select id="HISTUser" style="font-size:11px;"><option value="@">All Users</option></select></td>
                                 </tr>
                                 <tr>
@@ -2306,12 +2342,14 @@ if (!empty($PostBody)) {
                 <!-- ############### <Draggable Splitter> ############### --> 
             </div>
             <!-- Modal -->
-            <div class="modal fade" id="signup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="signUpLabel" aria-hidden="true">
+            <div class="modal fade" id="signup" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="signupLabel" aria-hidden="true">
                 <div class="modal-dialog" id="signup-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="signUpLabel">Sign Up</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                         <div class="modal-body">
                             <div class="card border-0">
@@ -2319,54 +2357,55 @@ if (!empty($PostBody)) {
                                     <form id="registration" action="registration/user/local/" method="post">
                                         <div class="row">
                                             <div class="col-6 local_signup">
-                                                <div class="card bg-light h-100">
+                                                <div class="card bg-light">
                                                     <div class="card-body">
                                                         <input type="hidden" id="hostName" name="hostName" value="" />
-                                                        <div class="row g-2">
-                                                            <div class="col-sm-6">
-                                                                <label for="firstName" class="form-label">First name:</label>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <label for="firstName">First name:</label>
                                                                 <input type="text" class="form-control form-control-sm" id="firstName" name="firstName" value="" required="required" />
                                                             </div>
-                                                            <div class="col-sm-6">
-                                                                <label for="lastName" class="form-label">Last name:</label>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="lastName">Last name:</label>
                                                                 <input type="text" class="form-control form-control-sm" id="lastName" name="lastName" value="" required="required" />
                                                             </div>
-                                                            <div class="col-12">
-                                                                <label for="email" class="form-label">Email:</label>
-                                                                <input type="email" class="form-control form-control-sm" id="email" name="email" value="" required="required" />
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <label for="username" class="form-label">Username:</label>
-                                                                <input type="text" class="form-control form-control-sm" id="username" name="username" value="" required="required" />
-                                                            </div>
-                                                            <div class="col-12 password_field">
-                                                                <label for="password" class="form-label">Password:</label>
-                                                                <input type="password" class="form-control form-control-sm mb-0" id="password" name="password" value="" required="required" />
-                                                            </div>
-                                                            <div class="col-12 password_field">
-                                                                <label for="confirmPassword" class="form-label">Confirm Password:</label>
-                                                                <input type="password" class="form-control form-control-sm mb-0" id="confirmPassword" name="confirmPassword" value="" required="required" />
-                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="email">Email:</label>
+                                                            <input type="email" class="form-control form-control-sm" id="email" name="email" value="" required="required" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="username">Username:</label>
+                                                            <input type="text" class="form-control form-control-sm" id="username" name="username" value="" required="required" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="password">Password:</label>
+                                                            <input type="password" class="form-control form-control-sm mb-0" id="password" name="password" value="" required="required" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="confirmPassword">Confirm Password:</label>
+                                                            <input type="password" class="form-control form-control-sm mb-0" id="confirmPassword" name="confirmPassword" value="" required="required" />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-6" id="terms-registration">
                                                 <div id="term_conditions">
-                                                    <div class="mb-3">
+                                                    <div class="form-group">
                                                         <textarea class="w-100" id="terms" rows="16" readonly="readonly" style="resize: none;"></textarea>
                                                     </div>
-                                                    <div class="form-check">
-                                                        <label class="form-check-label" for="agree-local">
-                                                            <input class="form-check-input" type="checkbox" id="agree-local" name="agree" onchange="handleAgreeChbx(this);" /> I accept the Terms & Conditions
-                                                        </label>
+                                                    <div class="form-group">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="agree-local" name="agree" onchange="handleAgreeChbx(this);" />
+                                                            <label class="form-check-label mt-1" for="agree-local">I accept the Terms & Conditions</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 local_signup">
-                                                    <button class="w-100 btn btn-sm btn-primary mt-4 register_btn" type="submit" disabled="disabled">Sign Up</button>
+                                                    <button class="w-100 btn btn-sm btn-primary btn-block mt-4 register_btn" type="submit" disabled="disabled">Sign Up</button>
                                                 </div>
-                                                <div class="d-grid col-12 mx-auto saml_signup">
-                                                    <button class="btn btn-sm btn-idp saml_signup register_btn mt-3" type="button" onclick="location.href = 'registration/user/federated/';" disabled="disabled">
+                                                <div class="col-12 mx-auto saml_signup">
+                                                    <button class="btn btn-sm btn-idp btn-block saml_signup register_btn mt-3" type="button" onclick="location.href = 'registration/user/federated/';" disabled="disabled">
                                                         <img role="img" id="loginIdpIcon" src="#" alt="" width="16" height="16" />Register via <span id="loginIdp"></span>
                                                     </button>
                                                 </div>
