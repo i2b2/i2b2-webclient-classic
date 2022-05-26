@@ -676,7 +676,7 @@ i2b2.ONT.ctrlr.FindBy = {
 				o.operator = i2b2.h.getXNodeVal(c[i],'operator');
 				o.dim_code = i2b2.h.getXNodeVal(c[i],'dimcode');
 				o.basecode = i2b2.h.getXNodeVal(c[i],'basecode');
-				o.synonym_cd = i2b2.h.getXNodeVal(c[i2],'synonym_cd');//("Search by Codes" found synonyms not displayed with blue labels)
+				o.synonym_cd = i2b2.h.getXNodeVal(c[i],'synonym_cd');//("Search by Codes" found synonyms not displayed with blue labels)
 
 				// append the data node
 				var sdxDataNode = i2b2.sdx.Master.EncapsulateData('CONCPT',o);
