@@ -284,7 +284,7 @@ i2b2.events.afterCellInit.subscribe(
 
 
 // -------------------------------------------------------
-		
+/* These options don't work so disabling for now 1.7.13		
 			i2b2.CRC.view.find.ContextMenu = new YAHOO.widget.ContextMenu( 
 					"divContextMenu-CRCFind",  
 					{ lazyload: true,
@@ -295,7 +295,7 @@ i2b2.events.afterCellInit.subscribe(
 					] }  
 			); 
 			i2b2.CRC.view.find.ContextMenu.subscribe("triggerContextMenu",i2b2.CRC.view.find.ContextMenuValidate); 
-
+*/
 // =========================================================			
 		}
 	})
