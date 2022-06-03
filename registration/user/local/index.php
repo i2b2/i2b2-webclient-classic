@@ -78,7 +78,7 @@ if (!empty($postData) && isValid()) {
 
     $full_name = "$firstName $lastName";
 
-    $user_exists = userExists($username, getUser($username));
+    $user_exists = userExists($username, getUser($username,$hostname));
     if ($user_exists) {
         $_SESSION['error_msg'] = "The username has already been taken.  Please try another.";
     } else {
@@ -89,7 +89,7 @@ if (!empty($postData) && isValid()) {
             $password = bin2hex(openssl_random_pseudo_bytes(256));
         }
 
-        $result_status_error = hasErrorStatus(setUser($full_name, $email, $username, $password));
+        $result_status_error = hasErrorStatus(setUser($full_name, $email, $username, $password, $hostname));
         if ($result_status_error) {
             $_SESSION['error_msg'] = "Sorry.  We are unable to sign you up at this time.  Please contact the admin.";
         } else {
@@ -102,6 +102,7 @@ if (!empty($postData) && isValid()) {
     }
 }
 
-$hostname = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING);
-$url = "https://${hostname}/webclient/";
-header("Location: ${url}");
+$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+header("Location: ${actual_link}/../../../..");
+

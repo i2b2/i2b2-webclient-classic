@@ -15,10 +15,11 @@ date_default_timezone_set('America/New_York');
 function isValid() {
     return filter_input(INPUT_POST, 'agree', FILTER_SANITIZE_STRING);
 }
+echo "here";
 
 $username = filter_input(INPUT_SERVER, 'AJP_eduPersonPrincipalName', FILTER_SANITIZE_STRING);
 if ($username) {
-    $user_exists = userExists($username, getUser($username));
+    $user_exists = userExists($username, getUser($username, $_COOKIE['hostName']));
     if ($user_exists) {
         $_SESSION['error_msg'] = "You have already registered.";
 
@@ -42,7 +43,7 @@ if ($username) {
             // generate secured, random password of lenght 256*2=512
             $password = bin2hex(openssl_random_pseudo_bytes(256));
 
-            $result_status_error = hasErrorStatus(setUser($full_name, $email, $username, $password));
+            $result_status_error = hasErrorStatus(setUser($full_name, $email, $username, $passwordi, $_COOKIE['hostName']));
             if ($result_status_error) {
                 $_SESSION['error_msg'] = "Sorry.  We are unable to sign you up at this time.  Please contact the admin.";
             } else {
@@ -51,9 +52,10 @@ if ($username) {
                 $_SESSION['success_msg'] = "Thank you for signing up!  We will contact you after your registration has been reviewed.";
             }
 
-            $hostname = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING);
-            $url = "https://${hostname}/webclient/logout.php";
-            header("Location: ${url}");
+
+	    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            header("Location: ${actual_link}/../../../../logout.php");
+
         } else {
             ?>
             <!doctype html>
@@ -137,6 +139,9 @@ if ($username) {
 } else {
     $hostname = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING);
     $shib_handler = filter_input(INPUT_SERVER, 'AJP_Shib-Handler', FILTER_SANITIZE_STRING);
-    $url = "${shib_handler}/Login?target=https://${hostname}/webclient/registration/user/federated";
+
+    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+    $url = "${shib_handler}/Login?target=${actual_link}";
     header("Location: ${url}");
 }

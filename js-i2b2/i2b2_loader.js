@@ -121,7 +121,7 @@ i2b2.Init = function() {
 	
 	var no_cache = '?____=' + Math.floor(Math.random() * 50000) + 10000;  
 	
-	var json = new Ajax.Request('i2b2_config_data.json' + no_cache, {
+	var json = new Ajax.Request('i2b2_config_data.js' + no_cache, {
 		method:'GET', 
 		asynchronous:false, 
 		sanitizeJSON:true,

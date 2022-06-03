@@ -91,19 +91,13 @@ $BLACKLIST = array(
 // There is nothing to configure below this line
 
 $matches = array();
-//$config_file = fopen("i2b2_config_data.js", "r");
-//if ($config_file) {
-//    while (($line = fgets($config_file)) !== false) {
-//        if (strpos($line, "urlCellPM:") !== false)
-//            $matches[] = $line;
-//    }
-//    fclose($config_file);
-//}
-$i2b2_config_data = json_decode(file_get_contents("i2b2_config_data.json"), true);
-if ($i2b2_config_data) {
-    foreach ($i2b2_config_data['lstDomains'] as $domain) {
-        $matches[] = $domain['urlCellPM'];
+$config_file = fopen("i2b2_config_data.js", "r");
+if ($config_file) {
+    while (($line = fgets($config_file)) !== false) {
+        if (strpos($line, "urlCellPM:") !== false)
+            $matches[] = $line;
     }
+    fclose($config_file);
 }
 
 foreach ($matches as $match) {
@@ -270,7 +264,7 @@ if (!empty($PostBody)) {
             <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
 
             <script type="text/javascript">
-                var i2b2build = "1.7.13   [4/5/22 12:00 PM] ";
+                var i2b2build = "1.7.13   [6/5/22 12:00 PM] ";
 
                 function handleAgreeChbx(chbx) {
                     let selectOpt = document.getElementById("logindomain");
@@ -728,6 +722,7 @@ if (!empty($PostBody)) {
                     document.getElementById("term_conditions").style.display = isSamlSignUp ? 'none' : 'block';
 
                     document.getElementById("hostName").value = hostName;
+		    document.cookie="hostName=" + hostName;
 
                     if (isSamlSignUp) {
                         document.getElementById("signup-dialog").classList.remove("modal-lg");

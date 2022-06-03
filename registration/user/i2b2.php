@@ -7,18 +7,13 @@
  * 
  * @author Kevin V. Bui
  */
-require_once('config.php');
 
-$i2b2_config_data = json_decode(file_get_contents("../../../i2b2_config_data.json"), true);
 
 function getRequestTemplate() {
     return <<<XML
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/pm/1.1/">
     <message_header>
-        <proxy>
-            <redirect_url>I2B2_PM_URI</redirect_url>
-        </proxy>
         <i2b2_version_compatible>1.1</i2b2_version_compatible>
         <hl7_version_compatible>2.4</hl7_version_compatible>
         <sending_application>
@@ -38,8 +33,8 @@ function getRequestTemplate() {
         <datetime_of_message>2007-04-09T15:19:18.906-04:00</datetime_of_message>
         <security>
             <domain>I2B2_DOMAIN</domain>
-            <username>I2B2_SERVICE_ACCOUNT_ID</username>
-            <password>I2B2_SERVICE_ACCOUNT_PW</password>
+            <username>AGG_SERVICE_ACCOUNT</username>
+            <password></password>
         </security>
         <message_control_id>
             <message_num>2pNloq58C28eP511z8nkB</message_num>
@@ -52,7 +47,7 @@ function getRequestTemplate() {
         <accept_acknowledgement_type>AL</accept_acknowledgement_type>
         <application_acknowledgement_type>AL</application_acknowledgement_type>
         <country_code>US</country_code>
-        <project_id>I2B2_PROJECT</project_id>
+        <project_id></project_id>
     </message_header>
     <request_header>
         <result_waittime_ms>180000</result_waittime_ms>
@@ -65,20 +60,46 @@ XML;
 }
 
 function getUrlCellPM($hostname) {
-    global $i2b2_config_data;
+	$config_file = fopen("../../../i2b2_config_data.js", "r");
+	if ($config_file) {
+	    $found = false;
+	    while (($line = fgets($config_file)) !== false) {
+	        if (strpos($line, $hostname) !== false)
+	            $found = true;
+	       if ($found == true && strpos($line, "urlCellPM:") !== false)
+	       {
+	            $str = substr($line, strpos($line, ":")+1);
+	            preg_match_all('`"([^"]*)"`', $str, $results);
+			    return $results[1][0];
+	       }
+	    }
+	    fclose($config_file);
+	}
 
-    $pm_uri = '';
-    if ($i2b2_config_data) {
-        foreach ($i2b2_config_data['lstDomains'] as $domain) {
-            if (strcmp($domain['name'], $hostname) === 0) {
-                $pm_uri = $domain['urlCellPM'];
-                break;
-            }
-        }
-    }
-
-    return $pm_uri;
+  return "";
 }
+
+function getDomain($hostname) {
+
+	$config_file = fopen("../../../i2b2_config_data.js", "r");
+	if ($config_file) {
+	    $found = false;
+	    while (($line = fgets($config_file)) !== false) {
+	        if (strpos($line, $hostname) !== false)
+	            $found = true;
+	       if ($found == true && strpos($line, "domain:") !== false)
+	       {
+	            $str = substr($line, strpos($line, ":")+1);
+	            preg_match_all('`"([^"]*)"`', $str, $results);
+			    return $results[1][0];
+	       }
+	    }
+	    fclose($config_file);
+	}
+
+  return "";
+}
+
 
 function getRegistrationMethod($hostname) {
     global $i2b2_config_data;
@@ -96,22 +117,16 @@ function getRegistrationMethod($hostname) {
     return $authMethod;
 }
 
-function getRequestXML($request_body) {
-    global $config_pm_uri, $config_domain, $config_service_account_id, $config_service_account_pw, $config_project_id;
+function getRequestXML($request_body, $domain) {
 
     $xml = getRequestTemplate();
-    $xml = str_replace("I2B2_PM_URI", $config_pm_uri, $xml);
-    $xml = str_replace("I2B2_DOMAIN", $config_domain, $xml);
-    $xml = str_replace("I2B2_SERVICE_ACCOUNT_ID", $config_service_account_id, $xml);
-    $xml = str_replace("I2B2_SERVICE_ACCOUNT_PW", $config_service_account_pw, $xml);
-    $xml = str_replace("I2B2_PROJECT", $config_project_id, $xml);
+    $xml = str_replace("I2B2_DOMAIN", getDomain($domain), $xml);
     $xml = str_replace("I2B2_XML_REQUEST_MESSAGE", $request_body, $xml);
 
     return $xml;
 }
 
-function setUser($full_name, $email, $username, $password, $status = 'A') {
-    global $config_pm_uri;
+function setUser($full_name, $email, $username, $password, $hostname, $status = 'A') {
 
     $request_body = <<<XML
 <pm:set_user>
@@ -129,9 +144,9 @@ XML;
     $request_body = str_replace("I2B2_STATUS_CD", $status, $request_body);
     $request_body = str_replace("I2B2_PASSWORD", $password, $request_body);
 
-    $request_xml = getRequestXML($request_body);
+    $request_xml = getRequestXML($request_body, $hostname);
 
-    $ch = curl_init($config_pm_uri);
+    $ch = curl_init(getUrlCellPM($hostname)."getServices");
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
@@ -142,7 +157,7 @@ XML;
     return $data;
 }
 
-function setUserParam($username, $param_type, $param_status, $param_name, $param_value) {
+function setUserParam($username, $param_type, $param_status, $param_name, $param_value, $hostname) {
     global $config_pm_uri;
 
     $request_body = <<<XML
@@ -158,9 +173,9 @@ XML;
     $request_body = str_replace("I2B2_PARAM_NAME", $param_name, $request_body);
     $request_body = str_replace("I2B2_PARAM_VALUE", $param_value, $request_body);
 
-    $request_xml = getRequestXML($request_body);
+    $request_xml = getRequestXML($request_body, $hostname);
 
-    $ch = curl_init($config_pm_uri);
+    $ch = curl_init(getUrlCellPM($hostname)."getServices");
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
@@ -171,14 +186,14 @@ XML;
     return $data;
 }
 
-function getUser($username) {
+function getUser($username, $hostname) {
     global $config_pm_uri;
 
     $request_body = "<pm:get_user>$username</pm:get_user>";
 
-    $request_xml = getRequestXML($request_body);
+    $request_xml = getRequestXML($request_body, $hostname);
 
-    $ch = curl_init($config_pm_uri);
+    $ch = curl_init(getUrlCellPM($hostname)."getServices");
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
