@@ -26,14 +26,15 @@
           //              showRegistration: true,
           //              debug: true
           //      }
-          //      ,				{ 
-						name: "i2b2 Demo",
-						domain: "i2b2demo",
-						urlCellPM: "http://services.i2b2.org/i2b2/services/PMService/",
-						allowAnalysis: false,
-						debug: true,
-						isSHRINE: false
-				}
+          //      ,				
+		{ 
+				name: "i2b2 Demo",
+				domain: "i2b2demo",
+				urlCellPM: "http://services.i2b2.org/i2b2/services/PMService/",
+				allowAnalysis: false,
+				debug: true,
+				isSHRINE: false
+		}
 	]
 	//-------------------------------------------------------------------------------------------
 }
