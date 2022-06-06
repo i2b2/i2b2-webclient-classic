@@ -123,10 +123,13 @@ if ($username) {
                     </main>
 
                     <script>
-                        document.getElementById("terms").innerHTML = `${i2b2.UI.cfg.termsCondition}`;
+                        document.getElementById("terms").innerHTML = i2b2.UI.cfg.termsCondition;
 
                         function handleAgreeChbx(chbx) {
-                            [].forEach.call(document.getElementsByClassName('register_btn'), e => e.disabled = !chbx.checked);
+                            let registerBtns = document.getElementsByClassName('register_btn');
+                            for (let i = 0; i < registerBtns.length; i++) {
+                                registerBtns[i].disabled = !chbx.checked;
+                            }
                         }
                     </script>
                 </body>
