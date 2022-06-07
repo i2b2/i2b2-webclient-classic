@@ -749,8 +749,8 @@ if (!empty($PostBody)) {
 
                     // hide password field for LDAP, NTLM, OKTA
                     if (authMethod) {
-                        document.getElementById("password").value = 'demouser';
-                        document.getElementById("confirmPassword").value = 'demouser';
+                        document.getElementById("password").value = '';
+                        document.getElementById("confirmPassword").value = '';
                         document.getElementById("terms").rows = isSamlSignUp ? "16" : "8";
 
                         classElements = document.getElementsByClassName('password_field');
