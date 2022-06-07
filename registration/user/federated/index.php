@@ -15,7 +15,6 @@ date_default_timezone_set('America/New_York');
 function isValid() {
     return filter_input(INPUT_POST, 'agree', FILTER_SANITIZE_STRING);
 }
-echo "here";
 
 $username = filter_input(INPUT_SERVER, 'AJP_eduPersonPrincipalName', FILTER_SANITIZE_STRING);
 if ($username) {
