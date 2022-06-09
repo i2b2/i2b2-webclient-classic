@@ -27,7 +27,6 @@ if ($username) {
 
         header("Location: ${actual_link}/../../../../logout.php");
         
-        header("Location: ${url}");
     } else {
         $first_name = filter_input(INPUT_SERVER, 'AJP_givenName', FILTER_SANITIZE_STRING);
         $last_name = filter_input(INPUT_SERVER, 'AJP_sn', FILTER_SANITIZE_STRING);
