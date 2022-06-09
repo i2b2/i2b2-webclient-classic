@@ -204,13 +204,13 @@ function getUser($username, $hostname) {
     return $data;
 }
 
-function addLoginRegistrationMethod($username, $authMethod) {
+function addLoginRegistrationMethod($username, $authMethod, $hostname) {
     $param_type = 'T';
     $param_status = 'A';
     $param_name = 'authentication_method';
     $param_value = $authMethod;
 
-    return setUserParam($username, $param_type, $param_status, $param_name, $param_value);
+    return setUserParam($username, $param_type, $param_status, $param_name, $param_value, $hostname);
 }
 
 function userExists($username, $xml_response) {
