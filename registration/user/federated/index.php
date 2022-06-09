@@ -23,7 +23,10 @@ if ($username) {
         $_SESSION['error_msg'] = "You have already registered.";
 
         $hostname = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_STRING);
-        $url = "https://${hostname}/webclient/logout.php";
+        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        header("Location: ${actual_link}/../../../../logout.php");
+        
         header("Location: ${url}");
     } else {
         $first_name = filter_input(INPUT_SERVER, 'AJP_givenName', FILTER_SANITIZE_STRING);
