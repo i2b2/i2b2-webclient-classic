@@ -11,7 +11,8 @@
  *     Hannah Murphy
  *     Nich Wattanasin
  *     Bhaswati Ghosh
-   *	 Jeffrey Klann, PhD
+ *     Jeffrey Klann, PhD
+ *     Kevin Bui
 
   PHP components:
  * PHP-BASED I2B2 PROXY "CELL"
@@ -26,7 +27,7 @@
 
   Author: Kevin Bui
   Contributors: Michele Morris, Justin Prosser, Mike Mendis, Jeff Klann
-  Last Revised: 04-22
+  Last Revised: 05-22
 **********************************************************************/
 
 session_start();
