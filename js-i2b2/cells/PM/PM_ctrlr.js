@@ -5,7 +5,7 @@
  * @author		Nick Benik, Griffin Weber MD PhD
  * @version 	1.5
  * ----------------------------------------------------------------------------------------
- * updated 9-15-09: Refactor loading process to allow CELL loading timeouts and failures [Nick Benik] 
+ * updated 9-15-09: Refactor loading process to allow CELL loading timeouts and failures [Nick Benik]
  * updated 11-9-09: Changes to announcement dialog functionality [Charles McGow]
  * updated 11-23-09: Bug Fix for Firefox's 4k XML node text limit [Nick Benik]
  */
@@ -76,12 +76,12 @@ i2b2.PM.doLogin = function () {
         domain: login_domain,
         is_shrine: shrine_domain,
         project: login_project,
-        username: login_username,
+        username: login_username.toLowerCase(),
         password_text: login_password
     };
     var transportOptions = {
         url: login_url,
-        user: login_username,
+        user: login_username.toLowerCase(),
         password: login_password,
         domain: login_domain,
         project: login_project
@@ -126,11 +126,11 @@ i2b2.PM._processUserConfig = function (data) {
         var timeout = t.getAttribute('token_ms_timeout');
         if (timeout == undefined || timeout < 300001)
         {
-            i2b2.PM.model.IdleTimer.start(1800000 - 300000); //timeout); //timeout-60000);		
+            i2b2.PM.model.IdleTimer.start(1800000 - 300000); //timeout); //timeout-60000);
 
         } else {
 
-            i2b2.PM.model.IdleTimer.start(timeout - 300000); //timeout); //timeout-60000);		
+            i2b2.PM.model.IdleTimer.start(timeout - 300000); //timeout); //timeout-60000);
         }
     } catch (e) {
         //console.error("Could not find returned password node in login XML");
@@ -208,7 +208,7 @@ i2b2.PM._processUserConfig = function (data) {
          if ((roledetails[d].textContent) && (roledetails[d].textContent  == "ADMIN")) {
          i2b2.PM.model.isAdmin = true
          } else if ((roledetails[d].firstChild) && (roledetails[d].firstChild.nodeValue.unescapeHTML() == "ADMIN")) {
-         i2b2.PM.model.isAdmin = true		
+         i2b2.PM.model.isAdmin = true
          }
          }
          */
@@ -248,7 +248,7 @@ i2b2.PM._processUserConfig = function (data) {
         i2b2.PM.model.login_project = ""; //i2b2.h.XPath(projs[0], 'attribute::id')[0].nodeValue;
         i2b2.PM._processLaunchFramework();
     } else if (projs.length == 0) {
-        // show project selection dialog if needed	
+        // show project selection dialog if needed
         try {
             i2b2.h.LoadingMask.hide();
         } catch (e) {
@@ -277,10 +277,10 @@ i2b2.PM._processUserConfig = function (data) {
                 window.location.href = window.location.href + "/logout.php";
             }
             //} else if (s == null || s == "") {
-            //	alert("The PM Cell is down or the address in the properties file is incorrect.");	
+            //	alert("The PM Cell is down or the address in the properties file is incorrect.");
         } else {
             alert("The PM Cell is down or the address in the properties file is incorrect.");
-            //alert("Your account does not have access to any i2b2 projects.");		
+            //alert("Your account does not have access to any i2b2 projects.");
         }
         try {
             i2b2.PM.view.modal.login.show();
@@ -325,7 +325,7 @@ i2b2.PM.changePassword = {
         if (!i2b2.PM.changePassword.yuiPanel) {
             // load the help page
 
-            // show non-modal dialog with help documentation		
+            // show non-modal dialog with help documentation
             var panel = new YAHOO.widget.Panel("changepassword-viewer-panel", {
                 draggable: true,
                 zindex: 10000,
@@ -528,7 +528,7 @@ i2b2.PM.view.modal.projectDialog = {
         }
 
         i2b2.PM.view.modal.projectDialog.yuiDialog.destroy();
-        //If admin project goto admin 
+        //If admin project goto admin
         if (ProjId == 'admin_HY!5Axu&') {
             $('crcQueryToolBox').hide();
             i2b2.PM.model.login_project = ""; //i2b2.h.XPath(projs[0], 'attribute::id')[0].nodeValue;
@@ -723,7 +723,7 @@ i2b2.PM._processLaunchFramework = function () {
         } else {
             //Remove cells.plugins that dont have right access to
             //if (i2b2.PM.model.userRoles.indexOf(i2b2.hive.cfg.lstCells[cellKey].roles) == -1) {
-            //	deleteKeys[cellKey] = true;				 
+            //	deleteKeys[cellKey] = true;
             //}
             if (!i2b2.PM.model.admin_only) {
                 var roleFound = -1;
@@ -782,7 +782,7 @@ i2b2.PM._processLaunchFramework = function () {
     i2b2.hive.cfg.LoadedCells = t;
     delete t;
 
-    // start our watchdog time (WDT) 
+    // start our watchdog time (WDT)
     if (i2b2.hive.cfg.loginTimeout) {
         var t = i2b2.hive.cfg.loginTimeout;
     } else {
