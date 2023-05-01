@@ -1,13 +1,14 @@
 <?php
- 
+
 #-------------------------------------------------------------------------------------------------------------------------
 # i2b2 Automatic Webclient Plugins Manager (helper.php)
 #-------------------------------------------------------------------------------------------------------------------------
 # 2015-12-17 1.0.004 S.W.Chan      initialized.
+# 2017-07-13 1.0.005 P.K.Ng (URMC) fixed some bugs that affect loading in PHP with warnings enabled, made easier to read
 #-------------------------------------------------------------------------------------------------------------------------
 
 function checkAuth($r, $d, $u, $k, $v, $dbg) {
-    $uDC = base64_decode(substr($u, 0, strpos($u, "%%enCryptEd%%") - 1));
+    $uDC = base64_decode(substr($u, 0, strpos($u, "%%enCryptEd%%") ));
     $s = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' .
          '<i2b2:request xmlns:i2b2="http://www.i2b2.org/xsd/hive/msg/1.1/" xmlns:pm="http://www.i2b2.org/xsd/cell/pm/1.1/">' .
          '    <message_header>' .
@@ -71,7 +72,7 @@ function checkAuth($r, $d, $u, $k, $v, $dbg) {
     if (!$curl_response) {
         echo curl_error($ch);
     }
-    curl_close($ch);   
+    curl_close($ch);
     $isAdmin = get_isAdmin($curl_response);
     if ('Y' == $dbg) {
         echo "<br/><hr/><div align='left'><code>" . htmlentities($curl_response) . "</code></div><br/><hr/><b>isAdmin='" . $isAdmin . "'</b><br/><hr/>";
@@ -80,13 +81,15 @@ function checkAuth($r, $d, $u, $k, $v, $dbg) {
 }
 
 function get_isAdmin($xml) {
-# note that the response to this 'getUserAuth using the sessionKey' somehow always states '<is_admin>false</is_admin>' for un-associated (with any proj) 'admin'
-# however, associated common users will always have '<role>' elements even though they also have '<is_admin>false</is_admin>' in response, 
-# whereas un-associated common users cannot log into either admin or webclient, and therefore cannot launch this installer
-# furthermore, if this invocation using mis-appropriated user name & session key would result in 'Session invalid'   
+
+	// note that the response to this 'getUserAuth using the sessionKey' somehow always states '<is_admin>false</is_admin>' for un-associated (with any proj) 'admin'
+	// however, associated common users will always have '<role>' elements even though they also have '<is_admin>false</is_admin>' in response,
+	// whereas un-associated common users cannot log into either admin or webclient, and therefore cannot launch this installer
+	// furthermore, if this invocation using mis-appropriated user name & session key would result in 'Session invalid'
+
     if (false === stripos($xml, '<is_admin>true</is_admin>')) {
-        if (false === stripos($xml, '<status type="ERROR">Session invalid</status>')  && 
-            false === stripos($xml, '<user_name>demo</user_name>') && #in case of hijacked, un-removed & un-assoxiated built-in 'demo' user 
+        if (false === stripos($xml, '<status type="ERROR">Session invalid</status>')  &&
+            false === stripos($xml, '<user_name>demo</user_name>') && #in case of hijacked, un-removed & un-assoxiated built-in 'demo' user
             false !== stripos($xml, '<user>') &&
             false === stripos($xml, '<role>')) {
             return 'Y';
@@ -116,36 +119,44 @@ function get_plugin_quick($manifest_url) {
 
 function get_plugin($manifest_url) {
   $manifest = get_plugin_quick($manifest_url);
-  $manifest->manifest = $manifest_url;
-  $manifest->installed = "";
-  $manifest->installedVersion = "";
-  $manifest->folder = "";
-  if ("" == $manifest->configuration) {
-      $manifest->configuration = "None required.";
+  //check if it's a valid object...
+  if( $manifest ){
+	  $manifest->manifest = $manifest_url;
+	  $manifest->installed = "";
+	  $manifest->installedVersion = "";
+	  $manifest->folder = "";
+	  if ("" == $manifest->configuration) {
+		  $manifest->configuration = "None required.";
+	  }
   }
   return $manifest;
 }
 
 function check_installed_plugin_versions($plugin, $wcp_top) {
-  $plugin_manifest = '';  
-  $plugin->folder = $wcp_top . $plugin->group . "/" . $plugin->id;
-  $dbg_msg = sprintf("%s: group='%s', folder='%s', manifest='", $plugin->id, $plugin->group, $plugin->folder);
-  if (file_exists($plugin->folder) && is_dir($plugin->folder)) {
-    $plugin->installed = "YES";
-    $plugin_manifest = $plugin->folder . "/" . $plugin->id . ".manifest";    
-    if (file_exists($plugin_manifest) && !is_dir($plugin_manifest)) {
-      $installed_plugin = get_plugin($plugin_manifest);
-      $plugin->installedVersion = $installed_plugin->plugin_version;
-    } else {
-      $plugin->installedVersion = "unknown";
-    }
+  //check if it's a valid object...
+  if( $plugin ){
+	  $plugin_manifest = '';
+	  $plugin->folder = $wcp_top . $plugin->group . "/" . $plugin->id;
+	  $dbg_msg = sprintf("%s: group='%s', folder='%s', manifest='", $plugin->id, $plugin->group, $plugin->folder);
+	  if (file_exists($plugin->folder) && is_dir($plugin->folder)) {
+		$plugin->installed = "YES";
+		$plugin_manifest = $plugin->folder . "/" . $plugin->id . ".manifest";
+		if (file_exists($plugin_manifest) && !is_dir($plugin_manifest)) {
+		  $installed_plugin = get_plugin($plugin_manifest);
+		  $plugin->installedVersion = $installed_plugin->plugin_version;
+		} else {
+		  $plugin->installedVersion = "unknown";
+		}
+	  }
+	  $dbg_msg .= sprintf("%s', installed='%s', installedVers='%s'<br/>", $plugin_manifest, $plugin->installed, $plugin->installedVersion);
+  } else {
+  	$dbg_msg = "installed='Huh'";
   }
-  $dbg_msg .= sprintf("%s', installed='%s', installedVers='%s'<br/>", $plugin_manifest, $plugin->installed, $plugin->installedVersion); 
   return $dbg_msg;
 }
 
 function dir_exist($dir, $webclient_path, $blue_phrase, $red_msg_start) {
-    $path = $dir; 
+    $path = $dir;
     $path_phrase = sprintf($blue_phrase, $path);
     $err_path_phrase = sprintf("<li>%sFolder</font> %s%s", $red_msg_start, $path_phrase, $red_msg_start);
     if (file_exists($path)) {
@@ -167,23 +178,64 @@ function dir_exist($dir, $webclient_path, $blue_phrase, $red_msg_start) {
 }
 
 function genJsPostNextPageFunc($url, $domain, $user, $key, $vers) {
-    $s = "<script type='text/javascript'>function postNextPage(nextPage,pluginFolder,pluginManifest){" . 
-         "var mapForm=document.createElement('form');mapForm.target='_self';mapForm.method='POST';mapForm.action=nextPage;" .
-         "var mapInput1=document.createElement('input');mapInput1.type='hidden';" . 
-         "mapInput1.name='rul';mapInput1.value='".$url."';mapForm.appendChild(mapInput1);" .
-         "var mapInput2=document.createElement('input');mapInput2.type='hidden';" . 
-         "mapInput2.name='noisreVcw';mapInput2.value='".$vers."';mapForm.appendChild(mapInput2);" .
-         "var mapInput3=document.createElement('input');mapInput3.type='hidden';" .
-         "mapInput3.name='niamod';mapInput3.value='".$domain."';mapForm.appendChild(mapInput3);" .
-         "var mapInput4=document.createElement('input');mapInput4.type='hidden';" . 
-         "mapInput4.name='esur';mapInput4.value='".$user."';mapForm.appendChild(mapInput4);" .
-         "var mapInput5=document.createElement('input');mapInput5.type='hidden';" . 
-         "mapInput5.name='yek';mapInput5.value='".$key."';mapForm.appendChild(mapInput5);" .
-         "var mapInput6=document.createElement('input');mapInput6.type='hidden';" . 
-         "mapInput6.name='dir';mapInput6.value=pluginFolder;mapForm.appendChild(mapInput6);" .
-         "var mapInput7=document.createElement('input');mapInput7.type='hidden';" . 
-         "mapInput7.name='pkg';mapInput7.value=pluginManifest;mapForm.appendChild(mapInput7);mapForm.submit();}</script>";
-    print $s;
+    ?><script type='text/javascript'>
+
+    function postNextPage(nextPage,pluginFolder,pluginManifest){
+
+        var mapForm=document.createElement('form');
+		mapForm.target='_self';
+		mapForm.method='POST';
+		mapForm.action=nextPage;
+
+        var mapInput1=document.createElement('input');mapInput1.type='hidden';
+        mapInput1.name='rul';
+		mapInput1.value='<?php echo($url);?>';
+		mapForm.appendChild(mapInput1);
+
+        var mapInput2=document.createElement('input');
+		mapInput2.type='hidden';
+        mapInput2.name='noisreVcw';
+		mapInput2.value='<?php echo($vers);?>';
+		mapForm.appendChild(mapInput2);
+
+        var mapInput3=document.createElement('input');
+		mapInput3.type='hidden';
+        mapInput3.name='niamod';
+		mapInput3.value='<?php echo($domain);?>';
+		mapForm.appendChild(mapInput3);
+
+        var mapInput4=document.createElement('input');
+		mapInput4.type='hidden';
+       	mapInput4.name='esur';
+		mapInput4.value='<?php echo($user);?>';
+		mapForm.appendChild(mapInput4);
+
+       	var mapInput5=document.createElement('input');
+		mapInput5.type='hidden';
+       	mapInput5.name='yek';
+		mapInput5.value='<?php echo($key);?>';
+		mapForm.appendChild(mapInput5);
+
+       	var mapInput6=document.createElement('input');
+		mapInput6.type='hidden';
+       	mapInput6.name='dir';
+		mapInput6.value=pluginFolder;
+		mapForm.appendChild(mapInput6);
+
+       	var mapInput7=document.createElement('input');
+		mapInput7.type='hidden';
+       	mapInput7.name='pkg';
+		mapInput7.value=pluginManifest;
+		mapForm.appendChild(mapInput7);
+
+		document.body.appendChild(mapForm); //important as you need to attach an item to the body for some browsers to actually execute it.
+
+		mapForm.submit();
+
+    }
+    </script>
+
+    <?php
 }
 
 ?>

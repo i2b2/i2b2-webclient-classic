@@ -1,5 +1,5 @@
 <?php
- 
+
 #-------------------------------------------------------------------------------------------------------------------------
 # i2b2 Automatic Webclient Plugins Manager (admin.php)
 #-------------------------------------------------------------------------------------------------------------------------
@@ -8,7 +8,8 @@
 # 2015-11-25 1.0.003 S.W.Chan      added options to launch under 'admin', 'user', or standalone (from i2b2 website), etc.
 # 2015-12-07 1.0.004 S.W.Chan      added extra security check for user authority, etc.
 # 2015-12-11 1.0.005 S.W.Chan      fine-tuned for QA-ready.
-# 2015-12-18 1.0.006 S.W.Chan      moved all functions to helper.php, moved input field vars to config.php  
+# 2015-12-18 1.0.006 S.W.Chan      moved all functions to helper.php, moved input field vars to config.php
+# 2017-07-13 1.0.007 P.K.Ng (URMC) fixed some bugs that affect loading in PHP with warnings enabled.
 #-------------------------------------------------------------------------------------------------------------------------
 
 require_once  'config.php'; # the configuration file defining the key variables
@@ -29,11 +30,12 @@ if (!isset($webclient_path) || 0 == strlen(trim($webclient_path))) {
     $go = true;
 }
 $wc_loc = $webclient_path;
-if (!file_exists($wc_loc) && 'Y' == $i2b2_admin) { #doesn't matter if it's a regular user, who can't install any way
+if (!file_exists($wc_loc) ) { //doesn't matter if it's a regular user, who can't install any way , removed useless i2b2_Admin check here. -pkn URMC 7/11/17
     $err_msg = sprintf("Folder '%s' does not exist!", $wc_loc);
 }
 $plugins_topfolder = str_replace("//", "/", $wc_loc . "/js-i2b2/cells/plugins/");
-if (!isset($dbg)) $dbg = 'N';
+if (!isset($dbg)) $dbg = 'Y';
+if (!isset($i2b2_admin)) $i2b2_admin = 'Y';
 if (isset($dbg) && 'Y' == $dbg) {
     $dbg_msg = sprintf("debugging...debug='%s', i2b2Admin='%s', plugins_topfolder ='%s'<br/>", $dbg, $i2b2_admin, $plugins_topfolder);
 }
@@ -84,7 +86,7 @@ if ('Y' == $dbg) {
 <br/><br/>
 <?php } ?>
 <?php if ($go) { ?>
-<h2>Gallery: 
+<h2>Gallery:
     <span style="font-size:24px;padding:10px;color:#fff;background:#642EFE;"><!--was background:#4264C8;-->
         <strong><?php echo $repo_name; ?></strong>
     </span>
@@ -118,46 +120,53 @@ if ('Y' == $dbg) {
  <tbody>
 
 <?php
+
 foreach($plugins as $plugin){
-  if ('' == trim($plugin->name) || '' == trim($plugin->id) || '' == trim($plugin->package)) { 
-      continue; // skip the ones corresponding to manifest that cannot be accessed, or missing folder name, or no zip 
-  } 
-  print "\n<tr>";
-  print "\n<td>$plugin->name</td>";
-  print "\n<td style='text-align:left'>$plugin->description</td>";
-  print "\n<td style='text-align:center'>$plugin->group</td>";
-  print "\n<td style='text-align:center'>$plugin->installed</td>";
-  print "\n<td style='text-align:center'>$plugin->installedVersion</td>";
-  print "\n<td style='text-align:center'>$plugin->plugin_version</td>";
-  print "\n<td style='text-align:left'>$plugin->changes</td>";
-  print "\n<td style='text-align:center'>$plugin->i2b2_version</td>";
-  if (isset($plugin->contributors)) {
-    print "\n<td style='text-align:center'><small>$plugin->contributors</small></td>";
-  } else { 
-    print "\n<td></td>";
-  }
-  $docs = "\n<td style='text-align:center'>&nbsp;<br/>";                             
-  if (isset($plugin->wikiSite) && '' != trim($plugin->wikiSite)) {
-    $docs .= "<a class='btn' href='$plugin->wikiSite' target='_blank' title='i2b2 Community wiki for this plugin'>Wiki</a><br/>";
-  }
-  if (isset($plugin->userManual) && '' != trim($plugin->userManual)) {
-    $docs .= "<br/><a class='btn' href='$plugin->userManual' target='_blank' title='User Manual for this plugin'><nobr>User Manual</nobr></a><br/>";
-  }
-if ('Y' == $i2b2_admin) { 
-  if (isset($plugin->installGuide) && '' != trim($plugin->installGuide)) {
-    $docs .= "<br/><a class='btn' href='$plugin->installGuide' target='_blank' title='Installation Guide for this plugin'><nobr>Installation Guide</nobr></a>";
-  }
-}
-  print ($docs . "<br/>&nbsp;</td>");
-if ('Y' == $i2b2_admin) { 
-  print "\n<td style='text-align:center'>$plugin->id</td>";
-  print "\n<td style='text-align:center'>" . str_replace("'", "\"", str_replace("]", "", str_replace("[", "", $plugin->roles))) . "</td>";
-  print "\n<td style='text-align:center'>&nbsp;<br/><a class='btn' onClick='postNextPage(\"installConfirm.php\", \"$plugin->folder\", \"$plugin->manifest\")' href='#'>Install</a><br/> ";
-  print "<br/><a class='btn' href='$plugin->package' title='download the package of this plugin only'>Download</a><br/>&nbsp;</td>";
-  print "\n<td style='text-align:center'>$plugin->configuration</td>";
-}
-  print "\n</tr>";
-}
+	//changed to isset for better PHP behaviour. URMC pkn 7/13/17
+	if ( !isset($plugin->name) || !isset($plugin->id) || !isset($plugin->package) ) {
+	  echo("<!-- bad plugin! BAD boy!" );
+	  var_dump( $plugin );
+	  echo("-->" );
+	  continue; // skip the ones corresponding to manifest that cannot be accessed, or missing folder name, or no zip
+	}
+	print "\n<tr>";
+	print "\n<td>$plugin->name</td>";
+	print "\n<td style='text-align:left'>$plugin->description</td>";
+	print "\n<td style='text-align:center'>$plugin->group</td>";
+	print "\n<td style='text-align:center'>$plugin->installed</td>";
+	print "\n<td style='text-align:center'>$plugin->installedVersion</td>";
+	print "\n<td style='text-align:center'>$plugin->plugin_version</td>";
+	print "\n<td style='text-align:left'>$plugin->changes</td>";
+	print "\n<td style='text-align:center'>$plugin->i2b2_version</td>";
+	if (isset($plugin->contributors)) {
+		print "\n<td style='text-align:center'><small>$plugin->contributors</small></td>";
+	} else {
+		print "\n<td></td>";
+	}
+
+	$docs = "\n<td style='text-align:center'>&nbsp;<br/>";
+	if (isset($plugin->wikiSite) && '' != trim($plugin->wikiSite)) {
+		$docs .= "<a class='btn' href='$plugin->wikiSite' target='_blank' title='i2b2 Community wiki for this plugin'>Wiki</a><br/>";
+	}
+	if (isset($plugin->userManual) && '' != trim($plugin->userManual)) {
+		$docs .= "<br/><a class='btn' href='$plugin->userManual' target='_blank' title='User Manual for this plugin'><nobr>User Manual</nobr></a><br/>";
+	}
+	if ('Y' == $i2b2_admin) {
+		if (isset($plugin->installGuide) && '' != trim($plugin->installGuide)) {
+			$docs .= "<br/><a class='btn' href='$plugin->installGuide' target='_blank' title='Installation Guide for this plugin'><nobr>Installation Guide</nobr></a>";
+		}
+	}
+	print ($docs . "<br/>&nbsp;</td>");
+	if ('Y' == $i2b2_admin) {
+		print "\n<td style='text-align:center'>$plugin->id</td>";
+		print "\n<td style='text-align:center'>" . str_replace("'", "\"", str_replace("]", "", str_replace("[", "", $plugin->roles))) . "</td>";
+		print "\n<td style='text-align:center'>&nbsp;<br/><a class='btn' onClick='postNextPage(\"installConfirm.php\", \"$plugin->folder\", \"$plugin->manifest\")' href='#'>Install</a><br/> ";
+		print "<br/><a class='btn' href='$plugin->package' title='download the package of this plugin only'>Download</a><br/>&nbsp;</td>";
+		print "\n<td style='text-align:center'>$plugin->configuration</td>";
+	}
+ 	print "\n</tr>";
+
+} //foreach plugin
 
 ?>
 
@@ -168,22 +177,22 @@ if ('Y' == $i2b2_admin) {
 <p align="left" style="font-size:12px; font-family:Helvetica; padding:4px;">
  NOTE:<br/>
  <br/>[1] Only "standalone" (i.e. NOT accompanying new or modified cells) webclient plugins are eligible for automated installation.
- <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) Please ensure that your i2b2 webclient folder write access has been set properly to enable 
+ <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) Please ensure that your i2b2 webclient folder write access has been set properly to enable
                                              installations.<br/>
  <br/>[2] Please contact us to submit your plugin to our repository for automated installation, with the following information:
  <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) any dependent standard javascript libraries to be included;
  <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) any installation guide, readme, or user's manual to be included.<br/>
  <br/>[3] Please check the resulting display to see if a plugin requires additional installation steps beyond the basic ones automated.<br/>
- <br/>[4] '<b>Plugin Group</b>' refers to the name of the webclient intermediary subdirectory 
+ <br/>[4] '<b>Plugin Group</b>' refers to the name of the webclient intermediary subdirectory
           ('<i>examples</i>', '<i>standard</i>', '<i>community</i>') that houses the codes for this plugin.
- <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) The '<i>examples</i>' group houses all plugins that are of example nature 
+ <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a) The '<i>examples</i>' group houses all plugins that are of example nature
                                              (e.g. '<i>ExampHello</i>', etc.);
  <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b) All the "standard issue" plugins that ship with the i2b2 webclient are under the '<i>standard</i>'
                                              group (e.g. '<i>Dem1Set</i>', etc.);
- <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) The '<i>community</i>' group contains all popular plugins not distributed with the i2b2 webclient; 
+ <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c) The '<i>community</i>' group contains all popular plugins not distributed with the i2b2 webclient;
                                              they are usually developed and shared by community institutions (e.g. '<i>ExportXLS</i>', etc.).
- <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>***** NOTICE that if a popular plugin has its previous version installed under the '<i>standard</i>' group, 
-                                          then it won't be detected (as it is expected under the '<i>community</i>' group only). *****</b><br/> 
+ <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>***** NOTICE that if a popular plugin has its previous version installed under the '<i>standard</i>' group,
+                                          then it won't be detected (as it is expected under the '<i>community</i>' group only). *****</b><br/>
  <br/>[5] '<b>Folder Name</b>' refers to the name of the subdirectory within the webclient directory that houses the codes for this plugin.
  <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We included this information here to facilitate your finding out if you already have
           the corresponding plugin installed.
