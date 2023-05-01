@@ -44,7 +44,7 @@ if ($username) {
             // generate secured, random password of lenght 256*2=512
             $password = bin2hex(openssl_random_pseudo_bytes(256));
 
-            $result_status_error = hasErrorStatus(setUser($full_name, $email, $username, $passwordi, $_COOKIE['hostName']));
+            $result_status_error = hasErrorStatus(setUser($full_name, $email, $username, $password, $_COOKIE['hostName']));
             if ($result_status_error) {
                 $_SESSION['error_msg'] = "Sorry.  We are unable to sign you up at this time.  Please contact the admin.";
             } else {
